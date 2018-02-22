@@ -1,0 +1,14 @@
+.idea/
+
+.git/
+.gitignore
+
+.dockerignore
+Dockerfile
+
+Makefile
+
+.npmrc
+
+node_modules/
+schematics/
