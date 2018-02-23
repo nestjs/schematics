@@ -1,20 +1,9 @@
 sudo: required
 services:
   - docker
-
-jobs:
-  include:
-    - stage: lint
-      script: make lint
-    - stage: test
-      script: make test
-    - stage: build
-      script: make build
-    - stage: package
-      script: make package
-
-stages:
-  - lint
-  - test
-  - build
-  - package
+install: make prepare
+script:
+  - make lint
+  - make test
+  - make build
+  

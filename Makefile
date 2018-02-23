@@ -3,17 +3,17 @@
 prepare:
 	docker build -t nestjs/schematics .
 
-lint: prepare
+lint:
 	docker run \
 		nestjs/schematics \
 		/bin/sh -c "npm run -s lint:test && npm run -s lint:src"
 
-test: prepare
+test:
 	docker run \
 		nestjs/schematics \
 		/bin/sh -c "npm run -s test"
 
-build: prepare
+build:
 	docker run \
 		-v $$(pwd):/usr/local/app \
 		nestjs/schematics \
@@ -23,8 +23,6 @@ build: prepare
 			cp -R src/* schematics && \
 			find schematics/ -name '*.ts' -delete && \
 			cp -R LICENSE package.json package-lock.json README.md schematics"
-
-package: build
 	docker run \
 		-v $$(pwd)/schematics:/usr/local/app \
 		nestjs/schematics \
