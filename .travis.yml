@@ -2,13 +2,13 @@ sudo: required
 services:
   - docker
 install: make prepare
-if: branch = master
+if: tag = /.*/
 script:
   - make lint
   - make test
   - make build
   - make publish
-if: branch = migration
+if: NOT tag = /.*/
 script:
   - make lint
   - make test
