@@ -1,0 +1,15 @@
+sudo: required
+services:
+  - docker
+install: make prepare
+if: tag = /.*/
+script:
+  - make lint
+  - make test
+  - make build
+  - make publish
+if: NOT tag = /.*/
+script:
+  - make lint
+  - make test
+  - make build
