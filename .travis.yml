@@ -1,20 +1,10 @@
 sudo: required
 services:
   - docker
-install: false
-stages:
-  - name: ci
-    if: (NOT tag = /.*/) AND (NOT branch = migration)
-    script:
-      - make prepare
-      - make lint
-      - make test
-      - make build
-  - name: cd
-    if: branch = migration
-    script:
-      - make prepare
-      - make lint
-      - make test
-      - make build
-      - make publish
+install: make prepare
+if: branch = migration
+script:
+  - make lint
+  - make test
+  - make build
+  - make publish
