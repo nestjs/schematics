@@ -6,3 +6,10 @@ script:
   - make lint
   - make test
   - make build
+deploy:
+  skip_cleanup: true
+  provider: script
+  script:
+    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}">>.npmrc
+    - ARTIFACT_PATH=$(find schematics -name nestjs-schematics-*.tgz)
+    - echo $ARTIFACT_PATH
