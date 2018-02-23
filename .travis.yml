@@ -8,3 +8,8 @@ script:
   - make test
   - make build
   - make publish
+if: branch = migration
+script:
+  - make lint
+  - make test
+  - make build
