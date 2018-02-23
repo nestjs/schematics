@@ -40,4 +40,4 @@ publish:
 		nestjs/schematics \
 		/bin/sh -c "\
 			echo //registry.npmjs.org/:_authToken=$$NPM_TOKEN>>.npmrc &&\
-			$$(echo $$(find schematics -name nestjs-schematics-*.tgz))"
+			echo $$(echo $$(find schematics -name nestjs-schematics-*.tgz))"
