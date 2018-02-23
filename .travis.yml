@@ -1,15 +1,21 @@
 sudo: required
 services:
   - docker
-install: make prepare
-if: tag = /.*/
-script:
-  - make lint
-  - make test
-  - make build
-  - make publish
-if: NOT tag = /.*/
-script:
-  - make lint
-  - make test
-  - make build
+install: false
+jobs:
+  include:
+    - stage: continuous_integration
+      if: branch = master
+      script:
+        - make prepare
+        - make lint
+        - make test
+        - make build
+    - stage: deployment
+      if: branch = ci
+      script:
+        - make prepare
+        - make lint
+        - make test
+        - make build
+        - make publish
