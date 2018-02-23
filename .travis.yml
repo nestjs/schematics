@@ -13,6 +13,5 @@ deploy:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}">>.npmrc
     - ARTIFACT_PATH=$(find schematics -name nestjs-schematics-*.tgz)
     - echo $ARTIFACT_PATH
-  branches:
-    only:
-      - migration
+  on:
+    branch: migration
