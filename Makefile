@@ -2,14 +2,20 @@
 
 prepare:
 	docker build -t nestjs/schematics .
+	docker run \
+		-v $$(pwd):/usr/local/app \
+		nestjs/schematics \
+		/bin/sh -c "npm install"
 
 lint:
 	docker run \
+		-v $$(pwd):/usr/local/app \
 		nestjs/schematics \
 		/bin/sh -c "npm run -s lint:test && npm run -s lint:src"
 
 test:
 	docker run \
+		-v $$(pwd):/usr/local/app \
 		nestjs/schematics \
 		/bin/sh -c "npm run -s test"
 
