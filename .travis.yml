@@ -2,14 +2,17 @@ sudo: required
 services:
   - docker
 install: make prepare
-jobs:
-  include:
-    - stage: lint
-      script: make lint
-    - stage: test
-      script: make test
-    - stage: build
-      script: make build
-    - stage: publish
-      if: type IN (push) AND branch = migration
-      script: make publish
+stages:
+  - name: ci
+    if: (NOT tag = /.*/) AND (NOT branch = migration)
+    script:
+      - make lint
+      - make test
+      - make build
+  - name: cd
+    if: branch = migration
+    script:
+      - make lint
+      - make test
+      - make build
+      - make publish
