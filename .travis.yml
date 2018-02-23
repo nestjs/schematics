@@ -1,18 +1,15 @@
 sudo: required
 services:
   - docker
-language: c
 install: make prepare
-script:
-  - make lint
-  - make test
-  - make build
-deploy:
-  skip_cleanup: true
-  provider: script
-  script:
-    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}">>.npmrc
-    - ARTIFACT_PATH=$(find schematics -name nestjs-schematics-*.tgz)
-    - echo $ARTIFACT_PATH
-  on:
-    branch: migration
+jobs:
+  include:
+    - stage: lint
+      script: make lint
+    - stage: test
+      script: make test
+    - stage: build
+      script: make build
+    - stage: publish
+      if: type IN (push) AND branch = migration
+      script: make publish

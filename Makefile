@@ -33,3 +33,12 @@ build:
 		-v $$(pwd)/schematics:/usr/local/app \
 		nestjs/schematics \
 		/bin/sh -c "npm pack"
+
+publish:
+	docker run \
+		-v $$(pwd):/usr/local/app \
+		nestjs/schematics \
+		/bin/sh -c "\
+			echo //registry.npmjs.org/:_authToken=$$NPM_TOKEN>>.npmrc &&\
+			echo $$(echo $$(find schematics -name nestjs-schematics-*.tgz))"
+
