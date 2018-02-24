@@ -28,16 +28,12 @@ build:
 			npm run -s build && \
 			cp -R src/* schematics && \
 			find schematics/ -name '*.ts' -delete && \
-			cp -R LICENSE package.json package-lock.json README.md schematics"
-	@docker run \
-		-v $$(pwd)/schematics:/usr/local/app \
-		nestjs/schematics \
-		/bin/sh -c "npm pack"
+			cp -R LICENSE package.json package-lock.json README.md .npmrc schematics"
 
 publish:
 	@docker run \
-		-v $$(pwd):/usr/local/app \
+		-v $$(pwd)/schematics:/usr/local/app \
 		nestjs/schematics \
 		/bin/sh -c "\
-			echo //registry.npmjs.org/:_authToken=$$NPM_TOKEN>>.npmrc &&\
-			npm publish $$(echo $$(find schematics -name nestjs-schematics-*.tgz))"
+			echo //registry.npmjs.org/:_authToken=$$NPM_TOKEN>>.npmrc && \
+			npm publish"
