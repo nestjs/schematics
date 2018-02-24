@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "Nestjs schematics project for @nestjs/cli",
   "main": "index.js",
-  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "lint:src": "tslint --project tsconfig.json",
