@@ -5,14 +5,14 @@ install: false
 jobs:
   include:
     - stage: continuous_integration
-      if: NOT tag = /.*/
+      if: NOT tag IS present
       script:
         - make prepare
         - make lint
         - make test
         - make build
     - stage: deployment
-      if: tag = /.*/
+      if: tag IS present
       script:
         - make prepare
         - make lint
