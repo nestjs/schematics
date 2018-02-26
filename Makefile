@@ -2,25 +2,25 @@
 
 prepare:
 	@docker build -t nestjs/schematics .
-	@docker run \
+	@docker run -t \
 		-v $$(pwd):/usr/local/app \
 		nestjs/schematics \
 		/bin/sh -c "npm install"
 
 lint:
-	@docker run \
+	@docker run -t \
 		-v $$(pwd):/usr/local/app \
 		nestjs/schematics \
 		/bin/sh -c "npm run -s lint:test && npm run -s lint:src"
 
 test:
-	@docker run \
+	@docker run -t \
 		-v $$(pwd):/usr/local/app \
 		nestjs/schematics \
 		/bin/sh -c "npm run -s test"
 
 build:
-	@docker run \
+	@docker run -t \
 		-v $$(pwd):/usr/local/app \
 		nestjs/schematics \
 		/bin/sh -c "\
@@ -28,10 +28,11 @@ build:
 			npm run -s build && \
 			cp -R src/* schematics && \
 			find schematics/ -name '*.ts' -delete && \
+			find src -name '*.js' -delete && \
 			cp -R LICENSE package.json package-lock.json README.md .npmrc schematics"
 
 publish:
-	@docker run \
+	@docker run -t \
 		-v $$(pwd)/schematics:/usr/local/app \
 		nestjs/schematics \
 		/bin/sh -c "\
