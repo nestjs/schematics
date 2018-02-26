@@ -1,8 +1,18 @@
+import { strings } from '@angular-devkit/core';
+import { apply, mergeWith, move, Rule, template, url } from '@angular-devkit/schematics';
+import * as path from 'path';
 import { AssetOptions } from '../schemas';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 
 export function main(options: AssetOptions): Rule {
-  return (tree: Tree, context: SchematicContext) => {
-    return tree;
-  }
+  return mergeWith(
+    apply(
+      url('./files'), [
+        template({
+          ...strings,
+          ...options
+        }),
+        move(path.join(options.rootDir, options.path))
+      ]
+    )
+  );
 }
