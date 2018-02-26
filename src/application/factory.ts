@@ -1,5 +1,5 @@
-import { classify } from '@angular-devkit/core';
-import { apply, mergeWith, Rule, template, url } from '@angular-devkit/schematics';
+import { strings } from '@angular-devkit/core';
+import { apply, mergeWith, move, Rule, template, url } from '@angular-devkit/schematics';
 import { ApplicationOptions } from '../schemas';
 
 export function main(options: ApplicationOptions): Rule {
@@ -8,9 +8,10 @@ export function main(options: ApplicationOptions): Rule {
       url('./files'),
       [
         template({
-          classify,
+          ...strings,
           ...options
-        })
+        }),
+        move(options.path)
       ]
     )
   );
