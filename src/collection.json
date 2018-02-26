@@ -12,6 +12,10 @@
     "controller": {
       "factory": "./controller/factory#main",
       "description": "Create a Nest controller."
+    },
+    "service": {
+      "factory": "./service/factory#main",
+      "description": "Create a Nest service."
     }
   }
 }
