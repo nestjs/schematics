@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import * as path from 'path';
 import { AssetOptions } from '../../src/schemas';
 
-describe.skip('Module Factory', () => {
+describe('Module Factory', () => {
   const options: AssetOptions = {
     extension: 'ts',
     name: 'name',
