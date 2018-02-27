@@ -2,10 +2,10 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
-import { AssetOptions } from '../../src/schemas';
+import { ControllerOptions } from '../../src/controller/schema';
 
 describe('Controller Factory', () => {
-  const options: AssetOptions = {
+  const options: ControllerOptions = {
     extension: 'ts',
     name: 'name',
     path: 'name',
