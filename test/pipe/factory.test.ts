@@ -27,4 +27,19 @@ describe('Pipe Factory', () => {
       )
     ).to.not.be.undefined;
   });
+  it('should generate the expect pipe file content', () => {
+    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
+    expect(
+      tree.readContent(`/${ options.rootDir }/${ options.path }/${ options.name }.pipe.${ options.extension }`)
+    ).to.be.equal(
+      'import { PipeTransform, Pipe, ArgumentMetadata } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Pipe()\n' +
+      'export class NamePipe implements PipeTransform<any> {\n' +
+      '  transform(value: any, metadata: ArgumentMetadata) {\n' +
+      '    return value;\n' +
+      '  }\n' +
+      '}\n'
+    );
+  });
 });
