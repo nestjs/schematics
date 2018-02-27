@@ -16,6 +16,10 @@
     "service": {
       "factory": "./service/factory#main",
       "description": "Create a Nest service."
+    },
+    "middleware": {
+      "factory": "./middleware/factory#main",
+      "description": "Create a Nest middleware"
     }
   }
 }
