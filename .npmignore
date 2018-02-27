@@ -9,6 +9,9 @@ Dockerfile
 .npmrc
 .npmignore
 
+.nyc_output/
+coverage/
+
 Makefile
 
 node_modules/

@@ -10,5 +10,8 @@ Makefile
 
 .npmrc
 
+.nyc_output/
+coverage/
+
 node_modules/
 schematics/
