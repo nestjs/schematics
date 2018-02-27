@@ -20,6 +20,10 @@
     "middleware": {
       "factory": "./middleware/factory#main",
       "description": "Create a Nest middleware"
+    },
+    "exception": {
+      "factory": "./exception/factory#main",
+      "description": "Create a Nest exception"
     }
   }
 }
