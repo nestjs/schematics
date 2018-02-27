@@ -2,10 +2,10 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
-import { AssetOptions } from '../../src/schemas';
+import { ServiceOptions } from '../../src/service/schema';
 
 describe('Service Factory', () => {
-  const options: AssetOptions = {
+  const options: ServiceOptions = {
     extension: 'ts',
     name: 'name',
     path: 'name',
@@ -18,7 +18,7 @@ describe('Service Factory', () => {
       path.join(process.cwd(), 'src/collection.json')
     );
   });
-  it('should create a new service file', () => {
+  it('should generate a new service file', () => {
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
@@ -27,7 +27,7 @@ describe('Service Factory', () => {
       )
     ).to.not.be.undefined;
   });
-  it('should create the expected content in the new service file', () => {
+  it('should generate the expected service file content', () => {
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     expect(
       tree

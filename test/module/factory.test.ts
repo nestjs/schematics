@@ -2,10 +2,10 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
-import { AssetOptions } from '../../src/schemas';
+import { ModuleOptions } from '../../src/module/schema';
 
 describe('Module Factory', () => {
-  const options: AssetOptions = {
+  const options: ModuleOptions = {
     extension: 'ts',
     name: 'name',
     path: 'name',
@@ -18,7 +18,7 @@ describe('Module Factory', () => {
       path.join(process.cwd(), 'src/collection.json')
     );
   });
-  it('should create a new module file', () => {
+  it('should generate a new module file', () => {
     const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
@@ -27,7 +27,7 @@ describe('Module Factory', () => {
       )
     ).to.not.be.undefined;
   });
-  it('should create the expected content in the new module file', () => {
+  it('should generate the expected module file content', () => {
     const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     expect(
       tree

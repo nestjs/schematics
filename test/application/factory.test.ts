@@ -2,7 +2,7 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
-import { ApplicationOptions } from '../../src/schemas';
+import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Application Factory', () => {
   const options: ApplicationOptions = {
@@ -28,7 +28,7 @@ describe('Application Factory', () => {
     expect(files.find((filename) => filename === `/${ options.path }/src/application.module.ts`))
       .to.not.be.undefined;
   });
-  it(`should have the right '${ options.path }/package.json' file content`, () => {
+  it(`should generate the right '${ options.path }/package.json' file content`, () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     expect(tree.read(`/${ options.path }/package.json`).toString())
       .to.be.equal(
@@ -55,7 +55,7 @@ describe('Application Factory', () => {
           2)
       );
   });
-  it(`should have the right '${ options.path }/nestconfig.json' file content`, () => {
+  it(`should generate the right '${ options.path }/nestconfig.json' file content`, () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     expect(tree.read(`/${ options.path }/nestconfig.json`).toString())
       .to.be.equal(
@@ -67,7 +67,7 @@ describe('Application Factory', () => {
         2)
     );
   });
-  it(`should have the right '${ options.path }/src/main.ts' file content`, () => {
+  it(`should generate the right '${ options.path }/src/main.ts' file content`, () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     expect(tree.read(`/${ options.path }/src/main.ts`).toString())
       .to.be.equal(
@@ -81,7 +81,7 @@ describe('Application Factory', () => {
         'bootstrap();\n'
       );
   });
-  it(`should have the right '${ options.path }/src/application.module.ts' file content`, () => {
+  it(`should generate the right '${ options.path }/src/application.module.ts' file content`, () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     expect(tree.read(`/${ options.path }/src/application.module.ts`).toString())
       .to.be.equal(

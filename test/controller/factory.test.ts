@@ -2,10 +2,10 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
-import { AssetOptions } from '../../src/schemas';
+import { ControllerOptions } from '../../src/controller/schema';
 
 describe('Controller Factory', () => {
-  const options: AssetOptions = {
+  const options: ControllerOptions = {
     extension: 'ts',
     name: 'name',
     path: 'name',
@@ -16,7 +16,7 @@ describe('Controller Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json')
   ));
-  it('should create a new controller file', () => {
+  it('should generate a new controller file', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
@@ -25,7 +25,7 @@ describe('Controller Factory', () => {
       )
     ).to.not.be.undefined;
   });
-  it('should create the expected content in the new controller file', () => {
+  it('should generate the expected controller file content', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     expect(
       tree
