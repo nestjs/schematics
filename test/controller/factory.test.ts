@@ -16,7 +16,7 @@ describe('Controller Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json')
   ));
-  it('should create a new controller file', () => {
+  it('should generate a new controller file', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
@@ -25,7 +25,7 @@ describe('Controller Factory', () => {
       )
     ).to.not.be.undefined;
   });
-  it('should create the expected content in the new controller file', () => {
+  it('should generate the expected controller file content', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     expect(
       tree
