@@ -1,6 +1,6 @@
 import { strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, template, url } from '@angular-devkit/schematics';
-import { ApplicationOptions } from '../schemas';
+import { ApplicationOptions } from './schema';
 
 export function main(options: ApplicationOptions): Rule {
   return mergeWith(

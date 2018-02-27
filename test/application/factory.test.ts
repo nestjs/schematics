@@ -2,7 +2,7 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
-import { ApplicationOptions } from '../../src/schemas';
+import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Application Factory', () => {
   const options: ApplicationOptions = {
