@@ -19,11 +19,15 @@
     },
     "middleware": {
       "factory": "./middleware/factory#main",
-      "description": "Create a Nest middleware"
+      "description": "Create a Nest middleware."
     },
     "exception": {
       "factory": "./exception/factory#main",
-      "description": "Create a Nest exception"
+      "description": "Create a Nest exception."
+    },
+    "pipe": {
+      "factory": "./pipe/factory#main",
+      "description": "Create a Nest pipe."
     }
   }
 }
