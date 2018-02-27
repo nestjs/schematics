@@ -18,7 +18,7 @@ describe('Middleware Factory', () => {
       path.join(process.cwd(), 'src/collection.json')
     );
   });
-  it('should create a new middleware file', () => {
+  it('should generate a new middleware file', () => {
     const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
@@ -27,7 +27,7 @@ describe('Middleware Factory', () => {
       )
     ).to.not.be.undefined;
   });
-  it('should create the expected middleware file content', () => {
+  it('should generate the expected middleware file content', () => {
     const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
     expect(
       tree.readContent(`/${ options.rootDir }/${ options.path }/${ options.name }.middleware.${ options.extension }`)
