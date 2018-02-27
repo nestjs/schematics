@@ -32,6 +32,10 @@
     "guard": {
       "factory": "./guard/factory#main",
       "description": "Create a Nest guard."
+    },
+    "interceptor": {
+      "factory": "./interceptor/factory#main",
+      "description": "Create a Nest interceptor."
     }
   }
 }
