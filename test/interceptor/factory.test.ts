@@ -24,9 +24,6 @@ describe('Interceptor Factory', () => {
       path.join(process.cwd(), 'src/collection.json')
     );
   });
-  it('can call interceptor schematics', () => {
-    runner.runSchematic('interceptor', options, new VirtualTree());
-  });
   it('should generate a new interceptor file', () => {
     const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
     const files: string[] = tree.files;
@@ -35,5 +32,21 @@ describe('Interceptor Factory', () => {
         filename === `/${ options.rootDir }/${ options.path }/${ options.name }.interceptor.${ options.extension }`
       )
     ).to.not.be.undefined;
+  });
+  it('should generate the expected interceptor file content', () => {
+    const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
+    expect(
+      tree.readContent(`/${ options.rootDir }/${ options.path }/${ options.name }.interceptor.${ options.extension }`)
+    ).to.be.equal(
+      'import { Interceptor, NestInterceptor, ExecutionContext } from \'@nestjs/common\';\n' +
+      'import { Observable } from \'rxjs/Observable\';\n' +
+      '\n' +
+      '@Interceptor()\n' +
+      'export class NameInterceptor implements NestInterceptor {\n' +
+      '  intercept(dataOrRequest, context: ExecutionContext, stream$: Observable<any>): Observable<any> {\n' +
+      '    return undefined;\n' +
+      '  }\n' +
+      '}\n'
+    );
   });
 });
