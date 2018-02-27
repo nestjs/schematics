@@ -10,7 +10,7 @@
     "build": "tsc --project tsconfig.json",
     "lint:src": "tslint --project tsconfig.json",
     "lint:test": "tslint --project test/tsconfig.json",
-    "test": "mocha test/**/*.ts --require ts-node/register"
+    "test": "nyc mocha test/**/*.ts --require ts-node/register"
   },
   "repository": {
     "type": "git",
@@ -31,9 +31,31 @@
     "@types/node": "^9.4.0",
     "chai": "^4.1.2",
     "mocha": "^5.0.0",
+    "nyc": "^11.4.1",
     "ts-lint": "^4.5.1",
     "ts-node": "^4.1.0",
     "typescript": "^2.7.1"
   },
-  "schematics": "./collection.json"
+  "schematics": "./collection.json",
+  "nyc": {
+    "include": [
+      "src"
+    ],
+    "exclude": [
+      "node_modules",
+      "test"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  }
 }
