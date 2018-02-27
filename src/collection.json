@@ -28,6 +28,10 @@
     "pipe": {
       "factory": "./pipe/factory#main",
       "description": "Create a Nest pipe."
+    },
+    "guard": {
+      "factory": "./guard/factory#main",
+      "description": "Create a Nest guard."
     }
   }
 }
