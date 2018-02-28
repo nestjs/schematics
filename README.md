@@ -28,39 +28,14 @@ run `schematics [path_to_nestjs_schematics]:<nestjs_schematic_name> [...options]
 
 ## Schematics:
 
-| Name        | Options     | Usage                                                                                                         |
-|-------------|-------------|---------------------------------------------------------------------------------------------------------------|
-| application | - extension | .:application --extension=[ts OR js] --path=[your_path]                                                       |
-|             | - path      |                                                                                                               |
-| controller  | - extension | .:controller --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]  |
-|             | - name      |                                                                                                               |
-|             | - path      |                                                                                                               |
-|             | - rootDir   |                                                                                                               |
-| exception   | - extension | .:exception --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]   |
-|             | - name      |                                                                                                               |
-|             | - path      |                                                                                                               |
-|             | - rootDir   |                                                                                                               |
-| guard       | - extension | .:guard --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]       |
-|             | - name      |                                                                                                               |
-|             | - path      |                                                                                                               |
-|             | - rootDir   |                                                                                                               |
-| interceptor | - extension | .:interceptor --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir] |
-|             | - name      |                                                                                                               |
-|             | - path      |                                                                                                               |
-|             | - rootDir   |                                                                                                               |
-| middleware  | - extension | .:middleware --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]  |
-|             | - name      |                                                                                                               |
-|             | - path      |                                                                                                               |
-|             | - rootDir   |                                                                                                               |
-| module      | - extension | .:module --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]      |
-|             | - name      |                                                                                                               |
-|             | - path      |                                                                                                               |
-|             | - rootDir   |                                                                                                               |
-| pipe        | - extension | .:pipe --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]        |
-|             | - name      |                                                                                                               |
-|             | - path      |                                                                                                               |
-|             | - rootDir   |                                                                                                               |
-| service     | - extension | .:service --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]     |
-|             | - name      |                                                                                                               |
-|             | - path      |                                                                                                               |
-|             | - rootDir   |                                                                                                               |
+| Name        | Usage                                                                                                         |
+|-------------|---------------------------------------------------------------------------------------------------------------|
+| application | .:application --extension=[ts OR js] --path=[your_path]                                                       |
+| controller  | .:controller --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]  |
+| exception   | .:exception --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]   |
+| guard       | .:guard --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]       |
+| interceptor | .:interceptor --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir] |
+| middleware  | .:middleware --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]  |
+| module      | .:module --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]      |
+| pipe        | .:pipe --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]        |
+| service     | .:service --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]     |
