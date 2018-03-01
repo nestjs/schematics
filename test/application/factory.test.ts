@@ -26,7 +26,7 @@ describe('Application Factory', () => {
       .to.not.be.undefined;
     expect(files.find((filename) => filename === `/${ options.directory }/src/main.ts`))
       .to.not.be.undefined;
-    expect(files.find((filename) => filename === `/${ options.directory }/src/${ options.name }/application.module.ts`))
+    expect(files.find((filename) => filename === `/${ options.directory }/src/application.module.ts`))
       .to.not.be.undefined;
     expect(files.find((filename) => filename === `/${ options.directory }/tsconfig.json`))
       .to.not.be.undefined;
@@ -91,10 +91,10 @@ describe('Application Factory', () => {
       'bootstrap();\n'
     );
   });
-  it(`should generate the right '${ options.directory }/src/${ options.name }/application.module.ts' file content`,
+  it(`should generate the right '${ options.directory }/src/application.module.ts' file content`,
     () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
-    expect(tree.read(`/${ options.directory }/src/${ options.name }/application.module.ts`).toString())
+    expect(tree.read(`/${ options.directory }/src/application.module.ts`).toString())
       .to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
