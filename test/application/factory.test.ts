@@ -10,16 +10,16 @@ describe('Application Factory', () => {
     'name': 'name',
     'extension': 'ts'
   };
-  let runner: SchematicTestRunner;
+  let tree: UnitTestTree;
   beforeEach(() => {
-    runner = new SchematicTestRunner(
+    const runner: SchematicTestRunner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
     );
+    tree = runner.runSchematic('application', options, new VirtualTree());
   });
   it('should generate Nest application files',
     () => {
-    const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === `/${ options.directory }/package.json`))
       .to.not.be.undefined;
@@ -36,7 +36,6 @@ describe('Application Factory', () => {
   });
   it(`should generate the right '${ options.directory }/package.json' file content`,
     () => {
-    const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     expect(tree.read(`/${ options.directory }/package.json`).toString())
       .to.be.equal(
       JSON.stringify(
@@ -66,7 +65,6 @@ describe('Application Factory', () => {
   });
   it(`should generate the right '${ options.directory }/.nest-cli.json' file content`,
     () => {
-    const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     expect(tree.read(`/${ options.directory }/.nest-cli.json`).toString())
       .to.be.equal(
       JSON.stringify(
@@ -86,7 +84,6 @@ describe('Application Factory', () => {
   });
   it(`should generate the right '${ options.directory }/src/main.ts' file content`,
     () => {
-    const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     expect(tree.read(`/${ options.directory }/src/main.ts`).toString())
       .to.be.equal(
       'import { NestFactory } from \'@nestjs/core\';\n' +
@@ -101,7 +98,6 @@ describe('Application Factory', () => {
   });
   it(`should generate the right '${ options.directory }/src/application.module.ts' file content`,
     () => {
-    const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     expect(tree.read(`/${ options.directory }/src/application.module.ts`).toString())
       .to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -110,4 +106,12 @@ describe('Application Factory', () => {
       'export class ApplicationModule {}\n'
     );
   });
+  it.skip(`should generate the right '${ options.directory }/src/tsconfig.json' file content`,
+    () => {
+      throw new Error('Test not implemented');
+    });
+  it.skip(`should generate the right '${ options.directory }/src/tslint.json' file content`,
+    () => {
+      throw new Error('Test not implemented');
+    });
 });
