@@ -36,7 +36,7 @@ describe('Application Factory', () => {
   });
   it(`should generate the right '${ options.directory }/package.json' file content`,
     () => {
-    expect(tree.read(`/${ options.directory }/package.json`).toString())
+    expect(tree.readContent(`/${ options.directory }/package.json`))
       .to.be.equal(
       JSON.stringify(
         {
@@ -65,7 +65,7 @@ describe('Application Factory', () => {
   });
   it(`should generate the right '${ options.directory }/.nest-cli.json' file content`,
     () => {
-    expect(tree.read(`/${ options.directory }/.nest-cli.json`).toString())
+    expect(tree.readContent(`/${ options.directory }/.nest-cli.json`))
       .to.be.equal(
       JSON.stringify(
         {
@@ -84,34 +84,40 @@ describe('Application Factory', () => {
   });
   it(`should generate the right '${ options.directory }/src/main.ts' file content`,
     () => {
-    expect(tree.read(`/${ options.directory }/src/main.ts`).toString())
+    expect(tree.readContent(`/${ options.directory }/src/main.ts`))
       .to.be.equal(
-      'import { NestFactory } from \'@nestjs/core\';\n' +
-      'import { ApplicationModule } from \'./application.module\';\n' +
-      '\n' +
-      'async function bootstrap() {\n' +
-      '\tconst app = await NestFactory.create(ApplicationModule);\n' +
-      '\tawait app.listen(3000);\n' +
-      '}\n' +
-      'bootstrap();\n'
+        'import { NestFactory } from \'@nestjs/core\';\n' +
+        'import { ApplicationModule } from \'./application.module\';\n' +
+        '\n' +
+        'async function bootstrap() {\n' +
+        '\tconst app = await NestFactory.create(ApplicationModule);\n' +
+        '\tawait app.listen(3000);\n' +
+        '}\n' +
+        'bootstrap();\n'
     );
   });
   it(`should generate the right '${ options.directory }/src/application.module.ts' file content`,
     () => {
-    expect(tree.read(`/${ options.directory }/src/application.module.ts`).toString())
+    expect(tree.readContent(`/${ options.directory }/src/application.module.ts`))
       .to.be.equal(
-      'import { Module } from \'@nestjs/common\';\n' +
-      '\n' +
-      '@Module({})\n' +
-      'export class ApplicationModule {}\n'
+        'import { Module } from \'@nestjs/common\';\n' +
+        '\n' +
+        '@Module({})\n' +
+        'export class ApplicationModule {}\n'
     );
   });
-  it.skip(`should generate the right '${ options.directory }/src/tsconfig.json' file content`,
+  it(`should generate the right '${ options.directory }/tsconfig.json' file content`,
     () => {
-      throw new Error('Test not implemented');
+      expect(tree.readContent(`${ options.directory }/tsconfig.json`))
+        .to.be.equal(
+          JSON.stringify({}, null, 2)
+      );
     });
-  it.skip(`should generate the right '${ options.directory }/src/tslint.json' file content`,
+  it(`should generate the right '${ options.directory }/tslint.json' file content`,
     () => {
-      throw new Error('Test not implemented');
+      expect(tree.readContent(`${ options.directory }/tslint.json`))
+        .to.be.equal(
+          JSON.stringify({}, null, 2)
+      );
     });
 });
