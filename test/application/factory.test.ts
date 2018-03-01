@@ -138,7 +138,60 @@ describe('Application Factory', () => {
     () => {
       expect(tree.readContent(`${ options.directory }/tslint.json`))
         .to.be.equal(
-        JSON.stringify({}, null, 2)
+        JSON.stringify({
+          defaultSeverity: "error",
+          extends: [
+            "tslint:recommended"
+          ],
+          jsRules: {
+            "no-unused-expression": true
+          },
+          rules: {
+            "eofline": false,
+            "quotemark": [
+              true,
+              "single"
+            ],
+            "indent": false,
+            "member-access": [
+              false
+            ],
+            "ordered-imports": [
+              false
+            ],
+            "max-line-length": [
+              150
+            ],
+            "member-ordering": [
+              false
+            ],
+            "curly": false,
+            "interface-name": [
+              false
+            ],
+            "array-type": [
+              false
+            ],
+            "no-empty-interface": false,
+            "no-empty": false,
+            "arrow-parens": false,
+            "object-literal-sort-keys": false,
+            "no-unused-expression": false,
+            "max-classes-per-file": [
+              false
+            ],
+            "variable-name": [
+              false
+            ],
+            "one-line": [
+              false
+            ],
+            "one-variable-per-declaration": [
+              false
+            ]
+          },
+          rulesDirectory: []
+        }, null, 2)
       );
     });
 });
