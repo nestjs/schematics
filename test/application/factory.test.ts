@@ -27,6 +27,10 @@ describe('Application Factory', () => {
       .to.not.be.undefined;
     expect(files.find((filename) => filename === `/${ options.path }/src/app/application.module.ts`))
       .to.not.be.undefined;
+    expect(files.find((filename) => filename === `/${ options.path }/tsconfig.json`))
+      .to.not.be.undefined;
+    expect(files.find((filename) => filename === `/${ options.path }/tslint.json`))
+      .to.not.be.undefined;
   });
   it(`should generate the right '${ options.path }/package.json' file content`, () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
