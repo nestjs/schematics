@@ -18,10 +18,7 @@
       true
     ],
     "trailing-comma": false,
-    "object-literal-sort-keys": false,
-    "object-literal-key-quotes": [
-      true
-    ]
+    "object-literal-sort-keys": false
   },
   "rulesDirectory": []
 }
