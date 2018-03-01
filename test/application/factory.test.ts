@@ -47,13 +47,13 @@ describe('Application Factory', () => {
               test: 'echo "Error: no test specified" && exit 1'
             },
             dependencies: {
-              '@nestjs/common': '^4.5.9',
-              '@nestjs/core': '^4.5.10',
-              'reflect-metadata': '^0.1.12',
+              '@nestjs/common': '^4.6.4',
+              '@nestjs/core': '^4.6.4',
+              'reflect-metadata': '^0.1.10',
               'rxjs': '^5.5.6'
             },
             devDependencies: {
-              '@nestjs/testing': '^4.5.5',
+              '@nestjs/testing': '^4.6.1',
               '@types/node': '^9.3.0',
               'ts-node': '^4.1.0',
               'typescript': '^2.6.2'
