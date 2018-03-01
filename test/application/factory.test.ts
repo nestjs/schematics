@@ -17,7 +17,8 @@ describe('Application Factory', () => {
       path.join(process.cwd(), 'src/collection.json')
     );
   });
-  it('should generate Nest application files', () => {
+  it('should generate Nest application files',
+    () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === `/${ options.directory }/package.json`))
@@ -33,7 +34,8 @@ describe('Application Factory', () => {
     expect(files.find((filename) => filename === `/${ options.directory }/tslint.json`))
       .to.not.be.undefined;
   });
-  it(`should generate the right '${ options.directory }/package.json' file content`, () => {
+  it(`should generate the right '${ options.directory }/package.json' file content`,
+    () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     expect(tree.read(`/${ options.directory }/package.json`).toString())
       .to.be.equal(
@@ -62,19 +64,28 @@ describe('Application Factory', () => {
         2)
     );
   });
-  it(`should generate the right '${ options.directory }/.nest-cli.json' file content`, () => {
+  it(`should generate the right '${ options.directory }/.nest-cli.json' file content`,
+    () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     expect(tree.read(`/${ options.directory }/.nest-cli.json`).toString())
       .to.be.equal(
       JSON.stringify(
         {
-          'language': 'ts'
+          'language': options.extension,
+          'project': {
+            'name': options.directory
+          },
+          'app': {
+            'root': 'src',
+            'main': `main.${ options.extension }`
+          }
         },
         null,
         2)
     );
   });
-  it(`should generate the right '${ options.directory }/src/main.ts' file content`, () => {
+  it(`should generate the right '${ options.directory }/src/main.ts' file content`,
+    () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     expect(tree.read(`/${ options.directory }/src/main.ts`).toString())
       .to.be.equal(
