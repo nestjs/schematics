@@ -6,16 +6,8 @@ jobs:
   include:
     - stage: continuous_integration
       if: NOT tag IS present
-      script:
-        - make prepare
-        - make lint
-        - make test
-        - make build
+      script: make prepare && make lint && make test && make build
     - stage: deployment
       if: tag IS present
-      script:
-        - make prepare
-        - make lint
-        - make test
-        - make build
-        - make publish
+      script: make prepare && make lint && make test && make build && make publish
+      
