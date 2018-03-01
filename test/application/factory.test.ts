@@ -110,7 +110,28 @@ describe('Application Factory', () => {
     () => {
       expect(tree.readContent(`${ options.directory }/tsconfig.json`))
         .to.be.equal(
-        JSON.stringify({}, null, 2)
+        JSON.stringify({
+          compilerOptions: {
+            module: "commonjs",
+            declaration: false,
+            noImplicitAny: false,
+            removeComments: true,
+            noLib: false,
+            emitDecoratorMetadata: true,
+            experimentalDecorators: true,
+            target: "es6",
+            sourceMap: true,
+            allowJs: true,
+            outDir: "./dist"
+          },
+          include: [
+            "src/**/*"
+          ],
+          exclude: [
+            "node_modules",
+            "**/*.spec.ts"
+          ]
+        }, null, 2)
       );
     });
   it(`should generate the right '${ options.directory }/tslint.json' file content`,
