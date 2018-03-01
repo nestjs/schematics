@@ -8,8 +8,7 @@ describe('Application Factory', () => {
   const options: ApplicationOptions = {
     'directory': 'directory',
     'name': 'name',
-    'extension': 'ts',
-    'path': 'path'
+    'extension': 'ts'
   };
   let runner: SchematicTestRunner;
   beforeEach(() => {
@@ -21,22 +20,22 @@ describe('Application Factory', () => {
   it('should generate Nest application files', () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === `/${ options.path }/package.json`))
+    expect(files.find((filename) => filename === `/${ options.directory }/package.json`))
       .to.not.be.undefined;
-    expect(files.find((filename) => filename === `/${ options.path }/.nest-cli.json`))
+    expect(files.find((filename) => filename === `/${ options.directory }/.nest-cli.json`))
       .to.not.be.undefined;
-    expect(files.find((filename) => filename === `/${ options.path }/src/main.ts`))
+    expect(files.find((filename) => filename === `/${ options.directory }/src/main.ts`))
       .to.not.be.undefined;
-    expect(files.find((filename) => filename === `/${ options.path }/src/app/application.module.ts`))
+    expect(files.find((filename) => filename === `/${ options.directory }/src/${ options.name }/application.module.ts`))
       .to.not.be.undefined;
-    expect(files.find((filename) => filename === `/${ options.path }/tsconfig.json`))
+    expect(files.find((filename) => filename === `/${ options.directory }/tsconfig.json`))
       .to.not.be.undefined;
-    expect(files.find((filename) => filename === `/${ options.path }/tslint.json`))
+    expect(files.find((filename) => filename === `/${ options.directory }/tslint.json`))
       .to.not.be.undefined;
   });
-  it(`should generate the right '${ options.path }/package.json' file content`, () => {
+  it(`should generate the right '${ options.directory }/package.json' file content`, () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
-    expect(tree.read(`/${ options.path }/package.json`).toString())
+    expect(tree.read(`/${ options.directory }/package.json`).toString())
       .to.be.equal(
       JSON.stringify(
         {
@@ -66,9 +65,9 @@ describe('Application Factory', () => {
         2)
     );
   });
-  it(`should generate the right '${ options.path }/.nest-cli.json' file content`, () => {
+  it(`should generate the right '${ options.directory }/.nest-cli.json' file content`, () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
-    expect(tree.read(`/${ options.path }/.nest-cli.json`).toString())
+    expect(tree.read(`/${ options.directory }/.nest-cli.json`).toString())
       .to.be.equal(
       JSON.stringify(
         {
@@ -78,9 +77,9 @@ describe('Application Factory', () => {
         2)
     );
   });
-  it(`should generate the right '${ options.path }/src/main.ts' file content`, () => {
+  it(`should generate the right '${ options.directory }/src/main.ts' file content`, () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
-    expect(tree.read(`/${ options.path }/src/main.ts`).toString())
+    expect(tree.read(`/${ options.directory }/src/main.ts`).toString())
       .to.be.equal(
       'import { NestFactory } from \'@nestjs/core\';\n' +
       'import { ApplicationModule } from \'./application.module\';\n' +
@@ -92,9 +91,10 @@ describe('Application Factory', () => {
       'bootstrap();\n'
     );
   });
-  it(`should generate the right '${ options.path }/src/application.module.ts' file content`, () => {
+  it(`should generate the right '${ options.directory }/src/${ options.name }/application.module.ts' file content`,
+    () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
-    expect(tree.read(`/${ options.path }/src/app/application.module.ts`).toString())
+    expect(tree.read(`/${ options.directory }/src/${ options.name }/application.module.ts`).toString())
       .to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +

@@ -11,7 +11,7 @@ export function main(options: ApplicationOptions): Rule {
           ...strings,
           ...options
         }),
-        move(options.path)
+        move(options.directory)
       ]
     )
   );
