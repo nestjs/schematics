@@ -8,31 +8,28 @@ describe('Module Factory', () => {
   const options: ModuleOptions = {
     extension: 'ts',
     name: 'name',
-    path: 'name',
-    rootDir: 'src/modules'
+    rootDir: 'src'
   };
-  let runner: SchematicTestRunner;
+  let tree: UnitTestTree;
   beforeEach(() => {
-    runner = new SchematicTestRunner(
+    const runner: SchematicTestRunner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
     );
+    tree = runner.runSchematic('module', options, new VirtualTree());
   });
   it('should generate a new module file', () => {
-    const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
-      files.find(
-        (filename) => filename === `/src/modules/${ options.path }/${ options.name }.module.${ options.extension }`
+      files.find((filename) =>
+        filename === `/${options.rootDir }/${ options.name }/${ options.name }.module.${ options.extension }`
       )
     ).to.not.be.undefined;
   });
   it('should generate the expected module file content', () => {
-    const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     expect(
       tree
-        .read(`/${ options.rootDir }/${ options.path }/${ options.name }.module.${ options.extension }`)
-        .toString()
+        .readContent(`/${ options.rootDir }/${ options.name }/${ options.name }.module.${ options.extension }`)
     ).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
