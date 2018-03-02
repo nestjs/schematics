@@ -27,7 +27,7 @@ describe('Application Factory', () => {
         .to.not.be.undefined;
       expect(files.find((filename) => filename === `/${ options.directory }/src/main.ts`))
         .to.not.be.undefined;
-      expect(files.find((filename) => filename === `/${ options.directory }/src/application.module.ts`))
+      expect(files.find((filename) => filename === `/${ options.directory }/src/app/app.module.ts`))
         .to.not.be.undefined;
       expect(files.find((filename) => filename === `/${ options.directory }/tsconfig.json`))
         .to.not.be.undefined;
@@ -87,7 +87,7 @@ describe('Application Factory', () => {
       expect(tree.readContent(`/${ options.directory }/src/main.ts`))
         .to.be.equal(
         'import { NestFactory } from \'@nestjs/core\';\n' +
-        'import { ApplicationModule } from \'./application.module\';\n' +
+        'import { ApplicationModule } from \'./app/app.module\';\n' +
         '\n' +
         'async function bootstrap() {\n' +
         '\tconst app = await NestFactory.create(ApplicationModule);\n' +
@@ -96,9 +96,9 @@ describe('Application Factory', () => {
         'bootstrap();\n'
       );
     });
-  it(`should generate the right '${ options.directory }/src/application.module.ts' file content`,
+  it(`should generate the right '${ options.directory }/src/app/app.module.ts' file content`,
     () => {
-      expect(tree.readContent(`/${ options.directory }/src/application.module.ts`))
+      expect(tree.readContent(`/${ options.directory }/src/app/app.module.ts`))
         .to.be.equal(
         'import { Module } from \'@nestjs/common\';\n' +
         '\n' +

@@ -3,20 +3,27 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import { expect } from 'chai';
 import * as path from 'path';
 import { ModuleOptions } from '../../src/module/schema';
+import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Module Factory', () => {
-  const options: ModuleOptions = {
+  const appOptions: ApplicationOptions = {
+    directory: '',
     extension: 'ts',
+    name: 'name'
+  };
+  const options: ModuleOptions = {
+    extension: appOptions.extension,
     name: 'name',
     rootDir: 'src'
   };
   let tree: UnitTestTree;
-  beforeEach(() => {
+  before(() => {
     const runner: SchematicTestRunner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
     );
-    tree = runner.runSchematic('module', options, new VirtualTree());
+    const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+    tree = runner.runSchematic('module', options, appTree);
   });
   it('should generate a new module file', () => {
     const files: string[] = tree.files;
@@ -36,5 +43,10 @@ describe('Module Factory', () => {
       '@Module({})\n' +
       'export class NameModule {}\n'
     );
+  });
+  it.skip('should import the new module in the application module', () => {
+    expect(
+      tree.readContent(`/${ appOptions.directory }/${ options.rootDir }/application.module.${ appOptions.extension }`)
+    ).to.match(/import { NameModule } from '.\/name\/name.module'/);
   });
 });
