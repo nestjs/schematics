@@ -8,14 +8,10 @@ import { ApplicationOptions } from '../../src/application/schema';
 describe('Module Factory', () => {
   const appOptions: ApplicationOptions = {
     directory: '',
-    extension: 'ts',
-    name: 'name'
   };
   const options: ModuleOptions = {
-    appDir: 'app',
-    extension: appOptions.extension,
-    module: 'app',
     name: 'name',
+    path: 'app',
     sourceDir: 'src'
   };
   let tree: UnitTestTree;
@@ -34,9 +30,9 @@ describe('Module Factory', () => {
         filename === path.join(
           '/',
           options.sourceDir,
-          options.appDir,
+          options.path,
           options.name,
-          `${ options.name }.module.${ options.extension }`
+          `${ options.name }.module.ts`
         )
       )
     ).to.not.be.undefined;
@@ -47,9 +43,9 @@ describe('Module Factory', () => {
         .readContent(path.join(
           '/',
           options.sourceDir,
-          options.appDir,
+          options.path,
           options.name,
-          `${ options.name }.module.${ options.extension }`
+          `${ options.name }.module.ts`
         ))
     ).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -63,8 +59,8 @@ describe('Module Factory', () => {
       tree.readContent(path.join(
         '/',
         options.sourceDir,
-        options.appDir,
-        `${ options.module }.module.${ options.extension }`
+        options.path,
+        `app.module.ts`
       ))
     ).to.match(/import { NameModule } from '.\/name\/name.module'/);
   });
