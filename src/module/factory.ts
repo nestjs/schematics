@@ -4,6 +4,8 @@ import { ModuleOptions } from './schema';
 import * as path from 'path';
 
 export function main(options: ModuleOptions): Rule {
+  options.path = options.path !== undefined && options.path !== null ? options.path : 'app';
+  options.sourceDir = options.sourceDir !== undefined && options.sourceDir !== null ? options.sourceDir : 'src';
   return mergeWith(
     apply(
       url('./files'), [
