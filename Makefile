@@ -26,7 +26,7 @@ build:
 		/bin/sh -c "\
 			rm -rf schematics && mkdir schematics && \
 			npm run -s build && \
-			cp -R src/ schematics/ && \
+			cp -R src/* schematics && \
 			cp -R LICENSE package.json package-lock.json README.md .npmrc schematics && \
 			find src/ -name '*.js' -delete"
 
