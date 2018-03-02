@@ -6,9 +6,7 @@ import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Application Factory', () => {
   const options: ApplicationOptions = {
-    directory: 'directory',
-    name: 'name',
-    extension: 'ts'
+    directory: 'directory'
   };
   let tree: UnitTestTree;
   beforeEach(() => {
@@ -40,7 +38,7 @@ describe('Application Factory', () => {
         .to.be.equal(
         JSON.stringify(
           {
-            name: options.name,
+            name: options.directory,
             version: '0.0.0',
             license: 'MIT',
             scripts: {
@@ -69,13 +67,12 @@ describe('Application Factory', () => {
         .to.be.equal(
         JSON.stringify(
           {
-            language: options.extension,
             project: {
               name: options.directory
             },
             app: {
               root: 'src',
-              main: `main.${ options.extension }`
+              main: 'main.ts'
             }
           },
           null,

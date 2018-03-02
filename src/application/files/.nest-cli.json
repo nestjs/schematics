@@ -1,10 +1,9 @@
 {
-  "language": "<%= extension %>",
   "project": {
     "name": "<%= directory %>"
   },
   "app": {
     "root": "src",
-    "main": "main.<%= extension %>"
+    "main": "main.ts"
   }
 }
