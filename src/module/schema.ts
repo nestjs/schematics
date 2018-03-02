@@ -1,5 +1,7 @@
 export interface ModuleOptions {
+  appDir: string;
   extension: string;
+  module: string;
   name: string;
-  rootDir: string;
+  sourceDir: string;
 }

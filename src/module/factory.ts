@@ -1,6 +1,7 @@
 import { strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, template, url } from '@angular-devkit/schematics';
 import { ModuleOptions } from './schema';
+import * as path from 'path';
 
 export function main(options: ModuleOptions): Rule {
   return mergeWith(
@@ -10,7 +11,7 @@ export function main(options: ModuleOptions): Rule {
           ...strings,
           ...options
         }),
-        move(options.rootDir)
+        move(path.join(options.sourceDir, options.appDir))
       ]
     )
   );

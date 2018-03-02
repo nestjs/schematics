@@ -12,9 +12,11 @@ describe('Module Factory', () => {
     name: 'name'
   };
   const options: ModuleOptions = {
+    appDir: 'app',
     extension: appOptions.extension,
+    module: 'app',
     name: 'name',
-    rootDir: 'src'
+    sourceDir: 'src'
   };
   let tree: UnitTestTree;
   before(() => {
@@ -29,14 +31,26 @@ describe('Module Factory', () => {
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
-        filename === `/${options.rootDir }/${ options.name }/${ options.name }.module.${ options.extension }`
+        filename === path.join(
+          '/',
+          options.sourceDir,
+          options.appDir,
+          options.name,
+          `${ options.name }.module.${ options.extension }`
+        )
       )
     ).to.not.be.undefined;
   });
   it('should generate the expected module file content', () => {
     expect(
       tree
-        .readContent(`/${ options.rootDir }/${ options.name }/${ options.name }.module.${ options.extension }`)
+        .readContent(path.join(
+          '/',
+          options.sourceDir,
+          options.appDir,
+          options.name,
+          `${ options.name }.module.${ options.extension }`
+        ))
     ).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
@@ -46,7 +60,12 @@ describe('Module Factory', () => {
   });
   it.skip('should import the new module in the application module', () => {
     expect(
-      tree.readContent(`/${ appOptions.directory }/${ options.rootDir }/application.module.${ appOptions.extension }`)
+      tree.readContent(path.join(
+        '/',
+        options.sourceDir,
+        options.appDir,
+        `${ options.module }.module.${ options.extension }`
+      ))
     ).to.match(/import { NameModule } from '.\/name\/name.module'/);
   });
 });
