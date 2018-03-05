@@ -1,7 +1,6 @@
 import { strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, template, url } from '@angular-devkit/schematics';
 import { ModuleOptions } from './schema';
-import * as path from 'path';
 
 export function main(options: ModuleOptions): Rule {
   options.path = options.path !== undefined && options.path !== null ? options.path : 'app';
