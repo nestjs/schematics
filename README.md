@@ -16,9 +16,8 @@ in the schematics folder :
 - `rm -rf schematics && mkdir schematics`
 - `npm run -s build`
 - `cp -R src/* schematics`
-- `find schematics/ -name '*.ts' -delete`
-- `find src -name '*.js' -delete`
 - `cp -R LICENSE package.json package-lock.json README.md .npmrc schematics`
+- `find src -name '*.js' -delete`
 
 ## Usages:
 ### With @angular-devkit/schematics-cli
@@ -27,15 +26,14 @@ install @angular-devkit/schematics-cli globally.
 run `schematics [path_to_nestjs_schematics]:<nestjs_schematic_name> [...options]`
 
 ## Schematics:
+### application:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| directory | The directory name to create the app in. | true | |
 
-| Name        | Usage                                                                                                         |
-|-------------|---------------------------------------------------------------------------------------------------------------|
-| application | .:application --extension=[ts OR js] --path=[your_path]                                                       |
-| controller  | .:controller --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]  |
-| exception   | .:exception --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]   |
-| guard       | .:guard --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]       |
-| interceptor | .:interceptor --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir] |
-| middleware  | .:middleware --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]  |
-| module      | .:module --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]      |
-| pipe        | .:pipe --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]        |
-| service     | .:service --extension=[ts OR js] --name=[your_name] --path=[relative_to_rooDir] --rootDir=[your_root_dir]     |
+### module:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the module. | true | |
+| path | The path to create the module. | false | 'app' |
+| sourceDir | The path of the source directory. | false | 'src' |

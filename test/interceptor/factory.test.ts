@@ -2,13 +2,7 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
-
-export interface InterceptorOptions {
-  extension: string;
-  name: string;
-  path: string;
-  rootDir: string;
-}
+import { InterceptorOptions } from '../../src/interceptor/schema';
 
 describe('Interceptor Factory', () => {
   const options: InterceptorOptions = {

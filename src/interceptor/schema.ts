@@ -1,4 +1,4 @@
-export interface ModuleOptions {
+export interface InterceptorOptions {
   extension: string;
   name: string;
   path: string;

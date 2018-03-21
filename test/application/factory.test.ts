@@ -6,9 +6,7 @@ import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Application Factory', () => {
   const options: ApplicationOptions = {
-    directory: 'directory',
-    name: 'name',
-    extension: 'ts'
+    directory: 'directory'
   };
   let tree: UnitTestTree;
   beforeEach(() => {
@@ -27,7 +25,7 @@ describe('Application Factory', () => {
         .to.not.be.undefined;
       expect(files.find((filename) => filename === `/${ options.directory }/src/main.ts`))
         .to.not.be.undefined;
-      expect(files.find((filename) => filename === `/${ options.directory }/src/application.module.ts`))
+      expect(files.find((filename) => filename === `/${ options.directory }/src/app/app.module.ts`))
         .to.not.be.undefined;
       expect(files.find((filename) => filename === `/${ options.directory }/tsconfig.json`))
         .to.not.be.undefined;
@@ -40,7 +38,7 @@ describe('Application Factory', () => {
         .to.be.equal(
         JSON.stringify(
           {
-            name: options.name,
+            name: options.directory,
             version: '0.0.0',
             license: 'MIT',
             scripts: {
@@ -69,13 +67,12 @@ describe('Application Factory', () => {
         .to.be.equal(
         JSON.stringify(
           {
-            language: options.extension,
             project: {
               name: options.directory
             },
             app: {
               root: 'src',
-              main: `main.${ options.extension }`
+              main: 'main.ts'
             }
           },
           null,
@@ -87,7 +84,7 @@ describe('Application Factory', () => {
       expect(tree.readContent(`/${ options.directory }/src/main.ts`))
         .to.be.equal(
         'import { NestFactory } from \'@nestjs/core\';\n' +
-        'import { ApplicationModule } from \'./application.module\';\n' +
+        'import { ApplicationModule } from \'./app/app.module\';\n' +
         '\n' +
         'async function bootstrap() {\n' +
         '\tconst app = await NestFactory.create(ApplicationModule);\n' +
@@ -96,9 +93,9 @@ describe('Application Factory', () => {
         'bootstrap();\n'
       );
     });
-  it(`should generate the right '${ options.directory }/src/application.module.ts' file content`,
+  it(`should generate the right '${ options.directory }/src/app/app.module.ts' file content`,
     () => {
-      expect(tree.readContent(`/${ options.directory }/src/application.module.ts`))
+      expect(tree.readContent(`/${ options.directory }/src/app/app.module.ts`))
         .to.be.equal(
         'import { Module } from \'@nestjs/common\';\n' +
         '\n' +

@@ -2,13 +2,7 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
-
-export interface GuardOptions {
-  extension: string;
-  name: string;
-  path: string;
-  rootDir: string;
-}
+import { GuardOptions } from '../../src/guard/schema';
 
 describe('Guard Factory', () => {
   const options: GuardOptions = {

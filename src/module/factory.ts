@@ -1,9 +1,10 @@
 import { strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, template, url } from '@angular-devkit/schematics';
-import * as path from 'path';
 import { ModuleOptions } from './schema';
 
 export function main(options: ModuleOptions): Rule {
+  options.path = options.path !== undefined && options.path !== null ? options.path : 'app';
+  options.sourceDir = options.sourceDir !== undefined && options.sourceDir !== null ? options.sourceDir : 'src';
   return mergeWith(
     apply(
       url('./files'), [
@@ -11,7 +12,7 @@ export function main(options: ModuleOptions): Rule {
           ...strings,
           ...options
         }),
-        move(path.join(options.rootDir, options.path))
+        move(options.sourceDir)
       ]
     )
   );
