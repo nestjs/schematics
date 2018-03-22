@@ -16,23 +16,69 @@ describe('Application Factory', () => {
     );
     tree = runner.runSchematic('application', options, new VirtualTree());
   });
-  it('should generate Nest application project structure',
+  it('should generate Nest application starter project structure',
     () => {
       const files: string[] = tree.files;
-      expect(files.find((filename) => filename === `/${ options.directory }/package.json`))
-        .to.not.be.undefined;
-      expect(files.find((filename) => filename === `/${ options.directory }/.nest-cli.json`))
-        .to.not.be.undefined;
       expect(files.find((filename) => filename === `/${ options.directory }/src/main.ts`))
         .to.not.be.undefined;
       expect(files.find((filename) => filename === `/${ options.directory }/src/app.module.ts`))
         .to.not.be.undefined;
       expect(files.find((filename) => filename === `/${ options.directory }/src/app.controller.ts`))
         .to.not.be.undefined;
+      expect(files.find((filename) => filename === `/${ options.directory }/index.js`))
+        .to.not.be.undefined;
+      expect(files.find((filename) => filename === `/${ options.directory }/nodemon.json`))
+        .to.not.be.undefined;
+      expect(files.find((filename) => filename === `/${ options.directory }/package.json`))
+        .to.not.be.undefined;
       expect(files.find((filename) => filename === `/${ options.directory }/tsconfig.json`))
         .to.not.be.undefined;
       expect(files.find((filename) => filename === `/${ options.directory }/tslint.json`))
         .to.not.be.undefined;
+    });
+  it(`should generate the right '${ options.directory }/src/main.ts' file content`,
+    () => {
+      expect(tree.readContent(`/${ options.directory }/src/main.ts`))
+        .to.be.equal(
+        'import { NestFactory } from \'@nestjs/core\';\n' +
+        'import { ApplicationModule } from \'./app.module\';\n' +
+        '\n' +
+        'async function bootstrap() {\n' +
+        '\tconst app = await NestFactory.create(ApplicationModule);\n' +
+        '\tawait app.listen(3000);\n' +
+        '}\n' +
+        'bootstrap();\n'
+      );
+    });
+  it(`should generate the right '${ options.directory }/src/app.module.ts' file content`,
+    () => {
+      expect(tree.readContent(`/${ options.directory }/src/app.module.ts`))
+        .to.be.equal(
+        'import { Module } from \'@nestjs/common\';\n' +
+        'import { AppController } from \'./app.controller\';\n' +
+        '\n' +
+        '@Module({\n' +
+        '  imports: [],\n' +
+        '  controllers: [AppController],\n' +
+        '  components: [],\n' +
+        '})\n' +
+        'export class ApplicationModule {}\n'
+      );
+    });
+  it(`should generate the right '${ options.directory }/src/app.controller.ts' file content`,
+    () => {
+      expect(tree.readContent(`/${ options.directory }/src/app.controller.ts`))
+        .to.be.equal(
+        'import { Get, Controller } from \'@nestjs/common\';\n' +
+        '\n' +
+        '@Controller()\n' +
+        'export class AppController {\n' +
+        '  @Get()\n' +
+        '  root(): string {\n' +
+        '    return \'Hello World!\';\n' +
+        '  }\n' +
+        '}\n'
+      );
     });
   it(`should generate the right '${ options.directory }/package.json' file content`,
     () => {
@@ -62,68 +108,6 @@ describe('Application Factory', () => {
           null,
           2)
       );
-    });
-  it(`should generate the right '${ options.directory }/.nest-cli.json' file content`,
-    () => {
-      expect(tree.readContent(`/${ options.directory }/.nest-cli.json`))
-        .to.be.equal(
-        JSON.stringify(
-          {
-            project: {
-              name: options.directory
-            },
-            app: {
-              root: 'src',
-              main: 'main.ts'
-            }
-          },
-          null,
-          2)
-      );
-    });
-  it(`should generate the right '${ options.directory }/src/main.ts' file content`,
-    () => {
-      expect(tree.readContent(`/${ options.directory }/src/main.ts`))
-        .to.be.equal(
-        'import { NestFactory } from \'@nestjs/core\';\n' +
-        'import { ApplicationModule } from \'./app.module\';\n' +
-        '\n' +
-        'async function bootstrap() {\n' +
-        '\tconst app = await NestFactory.create(ApplicationModule);\n' +
-        '\tawait app.listen(3000);\n' +
-        '}\n' +
-        'bootstrap();\n'
-      );
-    });
-  it(`should generate the right '${ options.directory }/src/app.module.ts' file content`,
-    () => {
-      expect(tree.readContent(`/${ options.directory }/src/app.module.ts`))
-        .to.be.equal(
-          'import { Module } from \'@nestjs/common\';\n' +
-          'import { AppController } from \'./app.controller\';\n' +
-          '\n' +
-          '@Module({\n' +
-          '  imports: [],\n' +
-          '  controllers: [AppController],\n' +
-          '  components: [],\n' +
-          '})\n' +
-          'export class ApplicationModule {}\n'
-        );
-    });
-  it(`should generate the right '${ options.directory }/src/app.controller.ts' file content`,
-    () => {
-      expect(tree.readContent(`/${ options.directory }/src/app.controller.ts`))
-        .to.be.equal(
-          'import { Get, Controller } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Controller()\n' +
-          'export class AppController {\n' +
-          '  @Get()\n' +
-          '  root(): string {\n' +
-          '    return \'Hello World!\';\n' +
-          '  }\n' +
-          '}\n'
-        );
     });
   it(`should generate the right '${ options.directory }/tsconfig.json' file content`,
     () => {
