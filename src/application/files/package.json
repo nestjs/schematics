@@ -1,20 +1,29 @@
 {
-  "name": "<%= directory %>",
-  "version": "0.0.0",
+  "name": "nest-typescript-starter",
+  "version": "1.0.0",
+  "description": "Nest TypeScript starter repository",
   "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "start:watch": "nodemon",
+    "prestart:prod": "tsc",
+    "start:prod": "node dist/main.js"
   },
   "dependencies": {
-    "@nestjs/common": "^4.6.4",
-    "@nestjs/core": "^4.6.4",
-    "reflect-metadata": "^0.1.10",
-    "rxjs": "^5.5.6"
+    "@nestjs/common": "^4.5.9",
+    "@nestjs/core": "^4.5.10",
+    "@nestjs/microservices": "^4.5.8",
+    "@nestjs/testing": "^4.5.5",
+    "@nestjs/websockets": "^4.5.8",
+    "redis": "^2.7.1",
+    "reflect-metadata": "^0.1.12",
+    "rxjs": "^5.5.6",
+    "typescript": "^2.6.2"
   },
   "devDependencies": {
-    "@nestjs/testing": "^4.6.1",
     "@types/node": "^9.3.0",
-    "ts-node": "^4.1.0",
-    "typescript": "^2.6.2"
+    "nodemon": "^1.14.1",
+    "tslint": "5.3.2",
+    "ts-node": "^4.1.0"
   }
 }
