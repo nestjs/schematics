@@ -81,12 +81,12 @@ describe('Application Factory', () => {
           2)
       );
     });
-  it.skip(`should generate the right '${ options.directory }/src/main.ts' file content`,
+  it(`should generate the right '${ options.directory }/src/main.ts' file content`,
     () => {
       expect(tree.readContent(`/${ options.directory }/src/main.ts`))
         .to.be.equal(
         'import { NestFactory } from \'@nestjs/core\';\n' +
-        'import { ApplicationModule } from \'./app/app.module\';\n' +
+        'import { ApplicationModule } from \'./app.module\';\n' +
         '\n' +
         'async function bootstrap() {\n' +
         '\tconst app = await NestFactory.create(ApplicationModule);\n' +
@@ -95,9 +95,9 @@ describe('Application Factory', () => {
         'bootstrap();\n'
       );
     });
-  it.skip(`should generate the right '${ options.directory }/src/app/app.module.ts' file content`,
+  it(`should generate the right '${ options.directory }/src/app.module.ts' file content`,
     () => {
-      expect(tree.readContent(`/${ options.directory }/src/app/app.module.ts`))
+      expect(tree.readContent(`/${ options.directory }/src/app.module.ts`))
         .to.be.equal(
         'import { Module } from \'@nestjs/common\';\n' +
         '\n' +
@@ -105,7 +105,7 @@ describe('Application Factory', () => {
         'export class ApplicationModule {}\n'
       );
     });
-  it.skip(`should generate the right '${ options.directory }/tsconfig.json' file content`,
+  it(`should generate the right '${ options.directory }/tsconfig.json' file content`,
     () => {
       expect(tree.readContent(`${ options.directory }/tsconfig.json`))
         .to.be.equal(
@@ -133,7 +133,7 @@ describe('Application Factory', () => {
         }, null, 2)
       );
     });
-  it.skip(`should generate the right '${ options.directory }/tslint.json' file content`,
+  it(`should generate the right '${ options.directory }/tslint.json' file content`,
     () => {
       expect(tree.readContent(`${ options.directory }/tslint.json`))
         .to.be.equal(
