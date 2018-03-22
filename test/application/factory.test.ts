@@ -99,11 +99,31 @@ describe('Application Factory', () => {
     () => {
       expect(tree.readContent(`/${ options.directory }/src/app.module.ts`))
         .to.be.equal(
-        'import { Module } from \'@nestjs/common\';\n' +
-        '\n' +
-        '@Module({})\n' +
-        'export class ApplicationModule {}\n'
-      );
+          'import { Module } from \'@nestjs/common\';\n' +
+          'import { AppController } from \'./app.controller\';\n' +
+          '\n' +
+          '@Module({\n' +
+          '  imports: [],\n' +
+          '  controllers: [AppController],\n' +
+          '  components: [],\n' +
+          '})\n' +
+          'export class ApplicationModule {}\n'
+        );
+    });
+  it(`should generate the right '${ options.directory }/src/app.controller.ts' file content`,
+    () => {
+      expect(tree.readContent(`/${ options.directory }/src/app.controller.ts`))
+        .to.be.equal(
+          'import { Get, Controller } from \'@nestjs/common\';\n' +
+          '\n' +
+          '@Controller()\n' +
+          'export class AppController {\n' +
+          '  @Get()\n' +
+          '  root(): string {\n' +
+          '    return \'Hello World!\';\n' +
+          '  }\n' +
+          '}\n'
+        );
     });
   it(`should generate the right '${ options.directory }/tsconfig.json' file content`,
     () => {
