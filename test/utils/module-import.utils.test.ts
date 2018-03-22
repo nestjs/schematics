@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { ModuleImportUtils } from '../../src/utils/module-import.utils';
 
 describe('Module Import Utils', () => {
-  let source =
+  const source =
     'import { Module } from \'@nestjs/common\';\n' +
     'import { AppController } from \'./app.controller\';\n' +
     '\n' +
