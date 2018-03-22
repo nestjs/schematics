@@ -3,7 +3,6 @@ import { apply, mergeWith, move, Rule, template, url } from '@angular-devkit/sch
 import { ModuleOptions } from './schema';
 
 export function main(options: ModuleOptions): Rule {
-  options.path = options.path !== undefined && options.path !== null ? options.path : 'app';
   options.sourceDir = options.sourceDir !== undefined && options.sourceDir !== null ? options.sourceDir : 'src';
   return mergeWith(
     apply(
