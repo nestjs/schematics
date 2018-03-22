@@ -2,8 +2,9 @@
 
 prepare:
 	@docker run -t \
-		-v $$(pwd):/usr/local/app \
-		$$(docker build -qf .docker/build/Dockerfile .) \
+		-w /home/schematics \
+		-v $$(pwd):/home/schematics \
+		node:carbon-alpine \
 		/bin/sh -c "\
 			npm install && \
 			echo 'PREPARE DONE' \
@@ -11,8 +12,9 @@ prepare:
 
 lint:
 	@docker run -t \
-		-v $$(pwd):/usr/local/app \
-		$$(docker build -qf .docker/build/Dockerfile .) \
+		-w /home/schematics \
+		-v $$(pwd):/home/schematics \
+		node:carbon-alpine \
 		/bin/sh -c "\
 			npm run -s lint:test && \
 			npm run -s lint:src && \
@@ -21,8 +23,9 @@ lint:
 
 test:
 	@docker run -t \
-		-v $$(pwd):/usr/local/app \
-		$$(docker build -qf .docker/build/Dockerfile .) \
+		-w /home/schematics \
+		-v $$(pwd):/home/schematics \
+		node:carbon-alpine \
 		/bin/sh -c "\
 			npm run -s test && \
 			echo 'TEST DONE' \
@@ -30,8 +33,9 @@ test:
 
 build:
 	@docker run -t \
-		-v $$(pwd):/usr/local/app \
-		$$(docker build -qf .docker/build/Dockerfile .) \
+		-w /home/schematics \
+		-v $$(pwd):/home/schematics \
+		node:carbon-alpine \
 		/bin/sh -c "\
 			rm -rf schematics && mkdir schematics && \
 			npm run -s build && \
@@ -43,8 +47,9 @@ build:
 
 publish:
 	@docker run -t \
-		-v $$(pwd)/schematics:/usr/local/app \
-		$$(docker build -qf .docker/build/Dockerfile .) \
+		-w /home/schematics \
+		-v $$(pwd):/home/schematics \
+		node:carbon-alpine \
 		/bin/sh -c "\
 			echo //registry.npmjs.org/:_authToken=$$NPM_TOKEN >> .npmrc && \
 			npm publish && \
