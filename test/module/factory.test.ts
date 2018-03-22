@@ -20,7 +20,6 @@ describe('Module Factory', () => {
   describe('All options are provided', () => {
     const options: ModuleOptions = {
       name: 'name',
-      path: 'app',
       sourceDir: 'src'
     };
     let tree: UnitTestTree;
@@ -34,7 +33,6 @@ describe('Module Factory', () => {
           filename === path.join(
           '/',
           options.sourceDir,
-          options.path,
           options.name,
           `${ options.name }.module.ts`
           )
@@ -47,7 +45,6 @@ describe('Module Factory', () => {
           .readContent(path.join(
             '/',
             options.sourceDir,
-            options.path,
             options.name,
             `${ options.name }.module.ts`
           ))
@@ -84,7 +81,6 @@ describe('Module Factory', () => {
           filename === path.join(
           '/',
           'src',
-          'app',
           options.name,
           `${ options.name }.module.ts`
           )
