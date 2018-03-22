@@ -80,29 +80,57 @@ describe('Application Factory', () => {
         '}\n'
       );
     });
+  it(`should generate the right '${ options.directory }/index.js' file content`,
+    () => {
+      expect(tree.readContent(`/${ options.directory }/index.js`))
+        .to.be.equal(
+        'require(\'ts-node/register\');\n' +
+        'require(\'./src/main\');\n'
+      );
+    });
+  it(`should generate the right '${ options.directory }/nodemon.json' file content`,
+    () => {
+      expect(tree.readContent(`/${ options.directory }/nodemon.json`))
+        .to.be.equal(JSON.stringify({
+          watch: [ 'src' ],
+          ext: 'ts',
+          ignore: [ 'src/**/*.spec.ts' ],
+          exec: 'node ./index'
+        }, null, 2)
+      );
+    });
   it(`should generate the right '${ options.directory }/package.json' file content`,
     () => {
       expect(tree.readContent(`/${ options.directory }/package.json`))
         .to.be.equal(
         JSON.stringify(
           {
-            name: options.directory,
-            version: '0.0.0',
+            name: 'nest-typescript-starter',
+            version: '1.0.0',
+            description: 'Nest TypeScript starter repository',
             license: 'MIT',
             scripts: {
-              test: 'echo "Error: no test specified" && exit 1'
+              'start': 'node index.js',
+              'start:watch': 'nodemon',
+              'prestart:prod': 'tsc',
+              'start:prod': 'node dist/main.js'
             },
             dependencies: {
-              '@nestjs/common': '^4.6.4',
-              '@nestjs/core': '^4.6.4',
-              'reflect-metadata': '^0.1.10',
-              'rxjs': '^5.5.6'
+              '@nestjs/common': '^4.5.9',
+              '@nestjs/core': '^4.5.10',
+              '@nestjs/microservices': '^4.5.8',
+              '@nestjs/testing': '^4.5.5',
+              '@nestjs/websockets': '^4.5.8',
+              'redis': '^2.7.1',
+              'reflect-metadata': '^0.1.12',
+              'rxjs': '^5.5.6',
+              'typescript': '^2.6.2'
             },
             devDependencies: {
-              '@nestjs/testing': '^4.6.1',
               '@types/node': '^9.3.0',
-              'ts-node': '^4.1.0',
-              'typescript': '^2.6.2'
+              'nodemon': '^1.14.1',
+              'tslint': '5.3.2',
+              'ts-node': '^4.1.0'
             }
           },
           null,
@@ -115,24 +143,24 @@ describe('Application Factory', () => {
         .to.be.equal(
         JSON.stringify({
           compilerOptions: {
-            module: "commonjs",
+            module: 'commonjs',
             declaration: false,
             noImplicitAny: false,
             removeComments: true,
             noLib: false,
             emitDecoratorMetadata: true,
             experimentalDecorators: true,
-            target: "es6",
+            target: 'es6',
             sourceMap: true,
             allowJs: true,
-            outDir: "./dist"
+            outDir: './dist'
           },
           include: [
-            "src/**/*"
+            'src/**/*'
           ],
           exclude: [
-            "node_modules",
-            "**/*.spec.ts"
+            'node_modules',
+            '**/*.spec.ts'
           ]
         }, null, 2)
       );
@@ -142,54 +170,55 @@ describe('Application Factory', () => {
       expect(tree.readContent(`${ options.directory }/tslint.json`))
         .to.be.equal(
         JSON.stringify({
-          defaultSeverity: "error",
+          defaultSeverity: 'error',
           extends: [
-            "tslint:recommended"
+            'tslint:recommended'
           ],
           jsRules: {
-            "no-unused-expression": true
+            'no-unused-expression': true
           },
           rules: {
-            "eofline": false,
-            "quotemark": [
+            'eofline': false,
+            'quotemark': [
               true,
-              "single"
+              'single'
             ],
-            "indent": false,
-            "member-access": [
+            'indent': false,
+            'member-access': [
               false
             ],
-            "ordered-imports": [
+            'ordered-imports': [
               false
             ],
-            "max-line-length": [
+            'max-line-length': [
+              true,
               150
             ],
-            "member-ordering": [
+            'member-ordering': [
               false
             ],
-            "curly": false,
-            "interface-name": [
+            'curly': false,
+            'interface-name': [
               false
             ],
-            "array-type": [
+            'array-type': [
               false
             ],
-            "no-empty-interface": false,
-            "no-empty": false,
-            "arrow-parens": false,
-            "object-literal-sort-keys": false,
-            "no-unused-expression": false,
-            "max-classes-per-file": [
+            'no-empty-interface': false,
+            'no-empty': false,
+            'arrow-parens': false,
+            'object-literal-sort-keys': false,
+            'no-unused-expression': false,
+            'max-classes-per-file': [
               false
             ],
-            "variable-name": [
+            'variable-name': [
               false
             ],
-            "one-line": [
+            'one-line': [
               false
             ],
-            "one-variable-per-declaration": [
+            'one-variable-per-declaration': [
               false
             ]
           },
