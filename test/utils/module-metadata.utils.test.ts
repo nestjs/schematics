@@ -14,11 +14,11 @@ describe('Module Metadata Utils', () => {
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
       '\n' +
-      `@Module(${ JSON.stringify({ imports: [ "FooModule" ]}, null, 2)})\n` +
+      `@Module(${ JSON.stringify({ imports: [ 'FooModule' ]}, null, 2)})\n` +
       'export class ApplicationModule {}\n'
     );
   });
-  it.skip('should add a module to modules metadata', () => {
+  it('should add the module symbol to the existing metadata when insert', () => {
     const source =
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
@@ -30,6 +30,16 @@ describe('Module Metadata Utils', () => {
       '})\n' +
       'export class ApplicationModule {}\n';
     const output: string = ModuleMetadataUtils.insert(source, 'FooModule');
-    expect(output).to.match(/imports: \[ FooModule \]/);
+    expect(output).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      'import { AppController } from \'./app.controller\';\n' +
+      '\n' +
+      `@Module(${ JSON.stringify({
+        imports: [ 'FooModule' ],
+        controllers: [ 'AppController' ],
+        components: []
+      }, null, 2) })\n` +
+      'export class ApplicationModule {}\n'
+    );
   });
 });
