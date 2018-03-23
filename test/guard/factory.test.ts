@@ -6,10 +6,7 @@ import { GuardOptions } from '../../src/guard/schema';
 
 describe('Guard Factory', () => {
   const options: GuardOptions = {
-    extension: 'ts',
     name: 'name',
-    path: 'path',
-    rootDir: 'src/modules'
   };
   let runner: SchematicTestRunner;
   beforeEach(() => {
@@ -23,14 +20,14 @@ describe('Guard Factory', () => {
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
-        filename === `/${ options.rootDir }/${ options.path }/${ options.name }.guard.${ options.extension }`
+        filename === `/src/${ options.name }.guard.ts`
       )
     ).to.not.be.undefined;
   });
   it('should generate the expected guard file content', () => {
     const tree: UnitTestTree = runner.runSchematic('guard', options, new VirtualTree());
     expect(
-      tree.readContent(`/${ options.rootDir }/${ options.path }/${ options.name }.guard.${ options.extension }`)
+      tree.readContent(`/src/${ options.name }.guard.ts`)
     ).to.be.equal(
       'import { Guard, CanActivate, ExecutionContext } from \'@nestjs/common\';\n' +
       'import { Observable } from \'rxjs/Observable\';\n' +
