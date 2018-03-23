@@ -3,7 +3,6 @@ import { apply, mergeWith, move, Rule, template, url } from '@angular-devkit/sch
 import { ModuleOptions } from './schema';
 
 export function main(options: ModuleOptions): Rule {
-  options.sourceDir = options.sourceDir !== undefined && options.sourceDir !== null ? options.sourceDir : 'src';
   return mergeWith(
     apply(
       url('./files'), [
@@ -11,7 +10,7 @@ export function main(options: ModuleOptions): Rule {
           ...strings,
           ...options
         }),
-        move(options.sourceDir)
+        move('src')
       ]
     )
   );
