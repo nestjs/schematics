@@ -35,5 +35,3 @@ run `schematics [path_to_nestjs_schematics]:<nestjs_schematic_name> [...options]
 | Option | description | required | default value |
 |--------|-------------|:--------:|:-------------:|
 | name | The name of the module. | true | |
-| path | The path to create the module. | false | 'app' |
-| sourceDir | The path of the source directory. | false | 'src' |
