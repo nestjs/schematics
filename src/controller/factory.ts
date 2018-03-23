@@ -31,7 +31,7 @@ function addDeclarationToModule(options: ModuleOptions): Rule {
     const relativePath: string = `./${ options.name }/${ options.name }.controller`;
     let content = tree.read('/src/app.module.ts').toString();
     content = ModuleImportUtils.insert(content, symbol, relativePath);
-    content = ModuleMetadataUtils.insert(content, symbol);
+    content = ModuleMetadataUtils.insert(content, 'controllers', symbol);
     tree.overwrite('/src/app.module.ts', content);
     return tree;
   };

@@ -44,7 +44,7 @@ describe('Controller Factory', () => {
       'export class NameController {}\n'
     );
   });
-  it.skip('should import the new controller in the application module', () => {
+  it('should import the new controller in the application module', () => {
     expect(
       tree.readContent(path.join(
         '/src',
