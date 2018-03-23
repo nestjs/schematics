@@ -9,24 +9,26 @@ describe('Controller Factory', () => {
     name: 'name',
   };
   let runner: SchematicTestRunner;
-  beforeEach(() => runner = new SchematicTestRunner(
-    '.',
-    path.join(process.cwd(), 'src/collection.json')
-  ));
-  it.skip('should generate a new controller file', () => {
+  beforeEach(() => {
+    runner = new SchematicTestRunner(
+      '.',
+      path.join(process.cwd(), 'src/collection.json')
+    );
+  });
+  it('should generate a new controller file', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
       files.find(
-        (filename) => filename === `/src/${ options.name }.controller.ts`
+        (filename) => filename === `/src/${ options.name }/${ options.name }.controller.ts`
       )
     ).to.not.be.undefined;
   });
-  it.skip('should generate the expected controller file content', () => {
+  it('should generate the expected controller file content', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     expect(
       tree
-        .read(`/src/${ options.name }/.controller.ts`)
+        .read(`/src/${ options.name }/${ options.name }.controller.ts`)
         .toString()
     ).to.be.equal(
       'import { Controller } from \'@nestjs/common\';\n' +
