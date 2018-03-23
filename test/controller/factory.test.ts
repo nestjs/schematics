@@ -2,6 +2,7 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
+import { ApplicationOptions } from '../../src/application/schema';
 import { ControllerOptions } from '../../src/controller/schema';
 
 describe('Controller Factory', () => {
@@ -9,12 +10,16 @@ describe('Controller Factory', () => {
     name: 'name',
   };
   let tree: UnitTestTree;
-  beforeEach(() => {
+  before(() => {
     const runner: SchematicTestRunner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
     );
-    tree = runner.runSchematic('controller', options, new VirtualTree());
+    const appOptions: ApplicationOptions = {
+      directory: '',
+    };
+    const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+    tree = runner.runSchematic('controller', options, appTree);
   });
   it('should generate a new controller file', () => {
     const files: string[] = tree.files;
@@ -37,6 +42,28 @@ describe('Controller Factory', () => {
       '\n' +
       '@Controller()\n' +
       'export class NameController {}\n'
+    );
+  });
+  it('should import the new controller in the application module', () => {
+    expect(
+      tree.readContent(path.join(
+        '/src',
+        'app.module.ts'
+      ))
+    ).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      'import { AppController } from \'./app.controller\';\n' +
+      'import { NameController } from \'./name/name.controller\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [],\n' +
+      '  controllers: [\n' +
+      '    AppController,\n' +
+      '    NameController\n' +
+      '  ],\n' +
+      '  components: []\n' +
+      '})\n' +
+      'export class ApplicationModule {}\n'
     );
   });
 });
