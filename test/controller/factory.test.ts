@@ -8,15 +8,15 @@ describe('Controller Factory', () => {
   const options: ControllerOptions = {
     name: 'name',
   };
-  let runner: SchematicTestRunner;
+  let tree: UnitTestTree;
   beforeEach(() => {
-    runner = new SchematicTestRunner(
+    const runner: SchematicTestRunner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
     );
+    tree = runner.runSchematic('controller', options, new VirtualTree());
   });
   it('should generate a new controller file', () => {
-    const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
       files.find(
@@ -25,11 +25,13 @@ describe('Controller Factory', () => {
     ).to.not.be.undefined;
   });
   it('should generate the expected controller file content', () => {
-    const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     expect(
       tree
-        .read(`/src/${ options.name }/${ options.name }.controller.ts`)
-        .toString()
+        .readContent(path.join(
+          '/src',
+          options.name,
+          `${ options.name }.controller.ts`
+        ))
     ).to.be.equal(
       'import { Controller } from \'@nestjs/common\';\n' +
       '\n' +
