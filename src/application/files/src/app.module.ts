@@ -6,6 +6,6 @@ import { AppController } from './app.controller';
   controllers: [
     AppController
   ],
-  components: [],
+  components: []
 })
 export class ApplicationModule {}

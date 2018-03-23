@@ -62,7 +62,7 @@ describe('Application Factory', () => {
         '  controllers: [\n' +
         '    AppController\n' +
         '  ],\n' +
-        '  components: [],\n' +
+        '  components: []\n' +
         '})\n' +
         'export class ApplicationModule {}\n'
       );
