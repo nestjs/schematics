@@ -11,7 +11,8 @@ export class ModuleMetadataUtils {
       .replace(
         this.METADATA_REGEXP,
         `@Module(${ JSON.stringify(this.addSymbol(metadata, symbol), null, 2) })`
-      );
+      )
+      .replace(/"/g, '');
   }
 
   private static extract(source: string): ModuleMetadata {

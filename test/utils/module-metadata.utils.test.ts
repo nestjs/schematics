@@ -14,7 +14,11 @@ describe('Module Metadata Utils', () => {
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
       '\n' +
-      `@Module(${ JSON.stringify({ imports: [ 'FooModule' ]}, null, 2)})\n` +
+      '@Module({\n' +
+      '  imports: [\n' +
+      '    FooModule\n' +
+      '  ]\n' +
+      '})\n' +
       'export class ApplicationModule {}\n'
     );
   });
@@ -25,8 +29,10 @@ describe('Module Metadata Utils', () => {
       '\n' +
       '@Module({\n' +
       '  imports: [],\n' +
-      '  controllers: [AppController],\n' +
-      '  components: [],\n' +
+      '  controllers: [\n' +
+      '    AppController\n' +
+      '  ],\n' +
+      '  components: []\n' +
       '})\n' +
       'export class ApplicationModule {}\n';
     const output: string = ModuleMetadataUtils.insert(source, 'FooModule');
@@ -34,11 +40,48 @@ describe('Module Metadata Utils', () => {
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
       '\n' +
-      `@Module(${ JSON.stringify({
-        imports: [ 'FooModule' ],
-        controllers: [ 'AppController' ],
-        components: []
-      }, null, 2) })\n` +
+      '@Module({\n' +
+      '  imports: [\n' +
+      '    FooModule\n' +
+      '  ],\n' +
+      '  controllers: [\n' +
+      '    AppController\n' +
+      '  ],\n' +
+      '  components: []\n' +
+      '})\n' +
+      'export class ApplicationModule {}\n'
+    );
+  });
+  it('should add the symbol to the existing ones when insert', () => {
+    const source =
+      'import { Module } from \'@nestjs/common\';\n' +
+      'import { AppController } from \'./app.controller\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [\n' +
+      '    BarModule\n' +
+      '  ],\n' +
+      '  controllers: [\n' +
+      '    AppController\n' +
+      '  ],\n' +
+      '  components: []\n' +
+      '})\n' +
+      'export class ApplicationModule {}\n';
+    const output: string = ModuleMetadataUtils.insert(source, 'FooModule');
+    expect(output).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      'import { AppController } from \'./app.controller\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [\n' +
+      '    BarModule,\n' +
+      '    FooModule\n' +
+      '  ],\n' +
+      '  controllers: [\n' +
+      '    AppController\n' +
+      '  ],\n' +
+      '  components: []\n' +
+      '})\n' +
       'export class ApplicationModule {}\n'
     );
   });
