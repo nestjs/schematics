@@ -1,6 +1,6 @@
 export interface InterceptorOptions {
-  extension: string;
+  /**
+   * The name of the interceptor.
+   */
   name: string;
-  path: string;
-  rootDir: string;
 }
