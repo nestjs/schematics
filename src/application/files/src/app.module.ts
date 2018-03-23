@@ -8,5 +8,4 @@ import { AppController } from './app.controller';
   ],
   components: [],
 })
-export class ApplicationModule {
-}
+export class ApplicationModule {}
