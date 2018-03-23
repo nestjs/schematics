@@ -1,6 +1,6 @@
 export interface ControllerOptions {
   /**
-   * The name of the module.
+   * The name of the controller.
    */
   name: string;
 }

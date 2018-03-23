@@ -1,6 +1,6 @@
 export interface ExceptionOptions {
-  extension: string;
+  /**
+   * The name of the exception.
+   */
   name: string;
-  path: string;
-  rootDir: string;
 }
