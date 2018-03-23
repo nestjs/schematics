@@ -48,12 +48,27 @@ describe('Module Factory', () => {
       'export class NameModule {}\n'
     );
   });
-  it.skip('should import the new module in the application module', () => {
+  it('should import the new module in the application module', () => {
     expect(
       tree.readContent(path.join(
         '/src',
         'app.module.ts'
       ))
-    ).to.match(/import { NameModule } from '.\/name\/name.module'/);
+    ).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      'import { AppController } from \'./app.controller\';\n' +
+      'import { NameModule } from \'./name/name.module\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [\n' +
+      '    NameModule\n' +
+      '  ],\n' +
+      '  controllers: [\n' +
+      '    AppController\n' +
+      '  ],\n' +
+      '  components: []\n' +
+      '})\n' +
+      'export class ApplicationModule {}\n'
+    );
   });
 });
