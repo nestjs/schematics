@@ -89,7 +89,7 @@ describe('Controller Factory', () => {
       root = runner.runSchematic('module', moduleOptions, root);
       tree = runner.runSchematic('controller', options, root);
     });
-    it.skip('should import the new controller in the generated directory module', () => {
+    it('should import the new controller in the generated directory module', () => {
       expect(tree.readContent(`/src/${options.name}/${options.name}.module.ts`))
         .to.be.equal(
         'import { Module } from \'@nestjs/common\';\n' +
@@ -98,7 +98,7 @@ describe('Controller Factory', () => {
         '@Module({\n' +
         '  controllers: [\n' +
         '    NameController\n' +
-        '  ],\n' +
+        '  ]\n' +
         '})\n' +
         'export class NameModule {}\n'
       );
