@@ -7,7 +7,7 @@ import { ModuleOptions } from '../../src/module/schema';
 import { ServiceOptions } from '../../src/service/schema';
 
 describe('Service Factory', () => {
-  describe('No module in controller generate directory', () => {
+  describe('Schematic definition', () => {
     const options: ServiceOptions = {
       name: 'name',
     };
@@ -41,63 +41,118 @@ describe('Service Factory', () => {
         'export class NameService {}\n'
       );
     });
-    it('should import the new service in the application module', () => {
-      expect(
-        tree.readContent(path.join(
-          '/src',
-          'app.module.ts'
-        ))
-      ).to.be.equal(
-        'import { Module } from \'@nestjs/common\';\n' +
-        'import { AppController } from \'./app.controller\';\n' +
-        'import { NameService } from \'./name/name.service\';\n' +
-        '\n' +
-        '@Module({\n' +
-        '  imports: [],\n' +
-        '  controllers: [\n' +
-        '    AppController\n' +
-        '  ],\n' +
-        '  components: [\n' +
-        '    NameService\n' +
-        '  ]\n' +
-        '})\n' +
-        'export class ApplicationModule {}\n'
-      );
-    });
   });
-  describe('Generated module before controller generation', () => {
-    const options: ServiceOptions = {
-      name: 'name',
-    };
-    let tree: UnitTestTree;
-    before(() => {
-      const runner: SchematicTestRunner = new SchematicTestRunner(
-        '.',
-        path.join(process.cwd(), 'src/collection.json')
-      );
-      const appOptions: ApplicationOptions = {
-        directory: '',
+  describe('Schematic tree modifications', () => {
+    context('Generated service is an app module service', () => {
+      const options: ServiceOptions = {
+        name: 'name',
       };
-      let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-      const moduleOptions: ModuleOptions = {
-        name: options.name
-      };
-      root = runner.runSchematic('module', moduleOptions, root);
-      tree = runner.runSchematic('service', options, root);
+      let tree: UnitTestTree;
+      before(() => {
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        tree = runner.runSchematic('service', options, appTree);
+      });
+      it('should import the new service in the app module', () => {
+        expect(
+          tree.readContent(path.join(
+            '/src',
+            'app.module.ts'
+          ))
+        ).to.be.equal(
+          'import { Module } from \'@nestjs/common\';\n' +
+          'import { AppController } from \'./app.controller\';\n' +
+          'import { NameService } from \'./name/name.service\';\n' +
+          '\n' +
+          '@Module({\n' +
+          '  imports: [],\n' +
+          '  controllers: [\n' +
+          '    AppController\n' +
+          '  ],\n' +
+          '  components: [\n' +
+          '    NameService\n' +
+          '  ]\n' +
+          '})\n' +
+          'export class ApplicationModule {}\n'
+        );
+      });
     });
-    it('should import the new controller in the generated directory module', () => {
-      expect(tree.readContent(`/src/${options.name}/${options.name}.module.ts`))
-        .to.be.equal(
-        'import { Module } from \'@nestjs/common\';\n' +
-        'import { NameService } from \'./name.service\';\n' +
-        '\n' +
-        '@Module({\n' +
-        '  components: [\n' +
-        '    NameService\n' +
-        '  ]\n' +
-        '})\n' +
-        'export class NameModule {}\n'
-      );
+    context('Generated service is an app sub module service', () => {
+      const options: ServiceOptions = {
+        name: 'name',
+      };
+      let tree: UnitTestTree;
+      before(() => {
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        const moduleOptions: ModuleOptions = {
+          name: options.name
+        };
+        root = runner.runSchematic('module', moduleOptions, root);
+        tree = runner.runSchematic('service', options, root);
+      });
+      it('should import the new service in the sub module', () => {
+        expect(tree.readContent(`/src/${options.name}/${options.name}.module.ts`))
+          .to.be.equal(
+          'import { Module } from \'@nestjs/common\';\n' +
+          'import { NameService } from \'./name.service\';\n' +
+          '\n' +
+          '@Module({\n' +
+          '  components: [\n' +
+          '    NameService\n' +
+          '  ]\n' +
+          '})\n' +
+          'export class NameModule {}\n'
+        );
+      });
+    });
+    context('Generated service is an app nested sub module service', () => {
+      const options: ServiceOptions = {
+        name: 'name',
+        path: 'nested/name'
+      };
+      let tree: UnitTestTree;
+      before(() => {
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        const moduleOptions: ModuleOptions = {
+          name: 'nested'
+        };
+        root = runner.runSchematic('module', moduleOptions, root);
+        tree = runner.runSchematic('service', options, root);
+      });
+      it('should import the new service in the nested module', () => {
+        expect(tree.readContent(`/src/nested/nested.module.ts`))
+          .to.be.equal(
+          'import { Module } from \'@nestjs/common\';\n' +
+          'import { NameService } from \'./name/name.service\';\n' +
+          '\n' +
+          '@Module({\n' +
+          '  components: [\n' +
+          '    NameService\n' +
+          '  ]\n' +
+          '})\n' +
+          'export class NestedModule {}\n'
+        );
+      });
     });
   });
 });
