@@ -1,7 +1,16 @@
-import { Path, strings } from '@angular-devkit/core';
+import { basename, dirname, normalize, Path, relative, strings } from '@angular-devkit/core';
 import { classify } from '@angular-devkit/core/src/utils/strings';
 import {
-  apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicContext, Source, template, Tree,
+  apply,
+  branchAndMerge,
+  chain,
+  mergeWith,
+  move,
+  Rule,
+  SchematicContext,
+  Source,
+  template,
+  Tree,
   url
 } from '@angular-devkit/schematics';
 import { ModuleImportUtils } from '../utils/module-import.utils';
@@ -40,7 +49,7 @@ function addDeclarationToModule(options: ModuleOptions): Rule {
       path: options.path,
       kind: 'module'
     });
-    const relativePath: string = `./${ options.name }/${ options.name }.module`;
+    const relativePath: string = computeRelativePath(options, moduleToInsertPath);
     let content = tree.read(moduleToInsertPath).toString();
     const symbol: string = `${ classify(options.name) }Module`;
     content = ModuleImportUtils.insert(content, symbol, relativePath);
@@ -48,4 +57,11 @@ function addDeclarationToModule(options: ModuleOptions): Rule {
     tree.overwrite(moduleToInsertPath, content);
     return tree;
   };
+}
+
+function computeRelativePath(options: ModuleOptions, moduleToInsertPath: Path): string {
+  const importModulePath: Path = normalize(`/src/${ options.path }/${ options.name }.module`);
+  const relativeDir: Path = relative(dirname(moduleToInsertPath), dirname(importModulePath));
+  return (relativeDir.startsWith('.') ? relativeDir : './' + relativeDir)
+    .concat(relativeDir.length === 0 ? basename(importModulePath) : '/' + basename(importModulePath));
 }
