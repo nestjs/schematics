@@ -6,31 +6,27 @@ import { MiddlewareOptions } from '../../src/middleware/schema';
 
 describe('Middleware Factory', () => {
   const options: MiddlewareOptions = {
-    extension: 'ts',
     name: 'name',
-    path: 'name',
-    rootDir: 'src/modules'
   };
-  let runner: SchematicTestRunner;
+  let tree: UnitTestTree;
   beforeEach(() => {
-    runner = new SchematicTestRunner(
+    const runner: SchematicTestRunner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
     );
+    tree = runner.runSchematic('middleware', options, new VirtualTree());
   });
   it('should generate a new middleware file', () => {
-    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
-          filename === `/${ options.rootDir }/${ options.path }/${ options.name }.middleware.${ options.extension }`
+          filename === `/src/${ options.name }.middleware.ts`
       )
     ).to.not.be.undefined;
   });
   it('should generate the expected middleware file content', () => {
-    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
     expect(
-      tree.readContent(`/${ options.rootDir }/${ options.path }/${ options.name }.middleware.${ options.extension }`)
+      tree.readContent(`/src/${ options.name }.middleware.ts`)
     ).to.be.equal(
       'import { Middleware, NestMiddleware, ExpressMiddleware } from \'@nestjs/common\';\n' +
       '\n' +

@@ -1,6 +1,6 @@
 export interface MiddlewareOptions {
-  extension: string;
+  /**
+   * The name of the middleware.
+   */
   name: string;
-  path: string;
-  rootDir: string;
 }
