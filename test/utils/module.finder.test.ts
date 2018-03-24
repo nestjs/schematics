@@ -1,6 +1,6 @@
 import { EmptyTree } from '@angular-devkit/schematics';
 import { expect } from 'chai';
-import { ModuleFinder, Options } from '../../src/utils/module.finder';
+import { ModuleFinder, FindOptions } from '../../src/utils/module.finder';
 
 describe('Module Finder', () => {
   it('should return the app module path', () => {
@@ -8,7 +8,7 @@ describe('Module Finder', () => {
     tree.create('/src/app.module.ts', 'app module content');
     tree.create('/src/name/name.controller.ts', 'name controller content');
     const finder = new ModuleFinder(tree);
-    const options: Options = {
+    const options: FindOptions = {
       name: 'name',
       path: 'name',
       kind: 'controller'
@@ -21,7 +21,7 @@ describe('Module Finder', () => {
     tree.create('/src/name/name.module.ts', 'name module content');
     tree.create('/src/name/name.controller.ts', 'name controller content');
     const finder = new ModuleFinder(tree);
-    const options: Options = {
+    const options: FindOptions = {
       name: 'name',
       path: 'name',
       kind: 'controller'
@@ -35,7 +35,7 @@ describe('Module Finder', () => {
     tree.create('/src/nested/nested.module.ts', 'nested module content');
     tree.create('/src/nested/name/name.module.ts', 'name module content');
     const finder = new ModuleFinder(tree);
-    const options: Options = {
+    const options: FindOptions = {
       name: 'name',
       path: 'nested/name',
       kind: 'module'
