@@ -25,13 +25,13 @@ describe('Service Factory', () => {
     const files: string[] = tree.files;
     expect(
       files.find(
-        (filename) => filename === `/src/${ options.name }.service.ts`
+        (filename) => filename === `/src/${options.name}/${ options.name }.service.ts`
       )
     ).to.not.be.undefined;
   });
   it('should generate the expected service file content', () => {
     expect(
-      tree.readContent(`/src/${ options.name }.service.ts`)
+      tree.readContent(`/src/${options.name}/${ options.name }.service.ts`)
     ).to.be.equal(
       'import { Component } from \'@nestjs/common\';\n' +
       '\n' +
