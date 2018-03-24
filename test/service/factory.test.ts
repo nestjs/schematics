@@ -3,9 +3,8 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import { expect } from 'chai';
 import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
-import { ServiceOptions } from '../../src/service/schema';
-import { ControllerOptions } from '../../src/controller/schema';
 import { ModuleOptions } from '../../src/module/schema';
+import { ServiceOptions } from '../../src/service/schema';
 
 describe('Service Factory', () => {
   describe('No module in controller generate directory', () => {
