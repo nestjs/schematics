@@ -1,4 +1,4 @@
-import { normalize, Path, relative, strings } from '@angular-devkit/core';
+import { basename, dirname, normalize, Path, relative, strings } from '@angular-devkit/core';
 import { classify } from '@angular-devkit/core/src/utils/strings';
 import { apply, chain, mergeWith, move, Rule, template, Tree, url } from '@angular-devkit/schematics';
 import { ModuleImportUtils } from '../utils/module-import.utils';
@@ -34,14 +34,18 @@ function addDeclarationToModule(options: ControllerOptions): Rule {
       path: options.path,
       kind: 'controller'
     });
-    const generatedDirectoryPath: string = normalize(`/src/${ options.path }`);
-    let relativePath: string = relative(moduleToInsertPath as Path, generatedDirectoryPath as Path);
-    relativePath = `${ relativePath.substring(1, relativePath.length) }/${ options.name }.controller`;
     let content = tree.read(moduleToInsertPath).toString();
     const symbol: string = `${ classify(options.name) }Controller`;
-    content = ModuleImportUtils.insert(content, symbol, relativePath);
+    content = ModuleImportUtils.insert(content, symbol, computeRelativePath(options, moduleToInsertPath as Path));
     content = ModuleMetadataUtils.insert(content, 'controllers', symbol);
     tree.overwrite(moduleToInsertPath, content);
     return tree;
   };
+}
+
+function computeRelativePath(options: ControllerOptions, moduleToInsertPath: Path): string {
+  const importModulePath: Path = normalize(`/src/${ options.path }/${ options.name }.controller`);
+  const relativeDir: Path = relative(dirname(moduleToInsertPath), dirname(importModulePath));
+  return (relativeDir.startsWith('.') ? relativeDir : './' + relativeDir)
+    .concat(relativeDir.length === 0 ? basename(importModulePath) : '/' + basename(importModulePath));
 }
