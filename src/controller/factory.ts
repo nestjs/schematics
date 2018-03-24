@@ -29,14 +29,14 @@ function generate(options: ControllerOptions) {
 function addDeclarationToModule(options: ControllerOptions): Rule {
   return (tree: Tree) => {
     const finder: ModuleFinder = new ModuleFinder(tree);
-    const moduleToInsertPath: string = finder.find({
+    const moduleToInsertPath: Path = finder.find({
       name: options.name,
       path: options.path,
       kind: 'controller'
     });
     let content = tree.read(moduleToInsertPath).toString();
     const symbol: string = `${ classify(options.name) }Controller`;
-    content = ModuleImportUtils.insert(content, symbol, computeRelativePath(options, moduleToInsertPath as Path));
+    content = ModuleImportUtils.insert(content, symbol, computeRelativePath(options, moduleToInsertPath));
     content = ModuleMetadataUtils.insert(content, 'controllers', symbol);
     tree.overwrite(moduleToInsertPath, content);
     return tree;

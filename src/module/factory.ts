@@ -1,4 +1,4 @@
-import { strings } from '@angular-devkit/core';
+import { Path, strings } from '@angular-devkit/core';
 import { classify } from '@angular-devkit/core/src/utils/strings';
 import {
   apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicContext, Source, template, Tree,
@@ -35,7 +35,7 @@ function generate(options: ModuleOptions): Source {
 function addDeclarationToModule(options: ModuleOptions): Rule {
   return (tree: Tree) => {
     const finder: ModuleFinder = new ModuleFinder(tree);
-    const moduleToInsertPath: string = finder.find({
+    const moduleToInsertPath: Path = finder.find({
       name: options.name,
       path: options.path,
       kind: 'module'
