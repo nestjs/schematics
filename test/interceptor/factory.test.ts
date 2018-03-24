@@ -8,15 +8,15 @@ describe('Interceptor Factory', () => {
   const options: InterceptorOptions = {
     name: 'name',
   };
-  let runner: SchematicTestRunner;
+  let tree: UnitTestTree;
   beforeEach(() => {
-    runner = new SchematicTestRunner(
+    const runner: SchematicTestRunner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
     );
+    tree = runner.runSchematic('interceptor', options, new VirtualTree());
   });
   it('should generate a new interceptor file', () => {
-    const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
@@ -25,7 +25,6 @@ describe('Interceptor Factory', () => {
     ).to.not.be.undefined;
   });
   it('should generate the expected interceptor file content', () => {
-    const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
     expect(
       tree.readContent(`/src/${ options.name }.interceptor.ts`)
     ).to.be.equal(
