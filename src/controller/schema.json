@@ -7,6 +7,11 @@
     "name": {
       "type": "string",
       "description": "The name of the controller."
+    },
+    "path": {
+      "type": "string",
+      "format": "path",
+      "description": "The path to create the controller"
     }
   },
   "required": [
