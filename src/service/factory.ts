@@ -1,10 +1,10 @@
 import { strings } from '@angular-devkit/core';
-import { apply, chain, mergeWith, move, Rule, template, Tree, url } from '@angular-devkit/schematics';
-import { ServiceOptions } from './schema';
-import { ModuleMetadataUtils } from '../utils/module-metadata.utils';
-import { ModuleImportUtils } from '../utils/module-import.utils';
-import { ModuleOptions } from '../module/schema';
 import { classify } from '@angular-devkit/core/src/utils/strings';
+import { apply, chain, mergeWith, move, Rule, template, Tree, url } from '@angular-devkit/schematics';
+import { ModuleOptions } from '../module/schema';
+import { ModuleImportUtils } from '../utils/module-import.utils';
+import { ModuleMetadataUtils } from '../utils/module-metadata.utils';
+import { ServiceOptions } from './schema';
 
 export function main(options: ServiceOptions): Rule {
   return chain([
