@@ -14,7 +14,8 @@
       "description": "The path to create the module."
     },
     "module": {
-      "type": "Path",
+      "type": "string",
+      "format": "path",
       "description": "The path to insert the module declaration."
     }
   },
