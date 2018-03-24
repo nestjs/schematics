@@ -5,7 +5,10 @@ export class ModuleFindUtils {
   public static find(tree: Tree, generateDirectoryPath: string): string {
     const directory: DirEntry = tree.getDir(generateDirectoryPath);
     const files: PathFragment[] = directory.subfiles;
-    const moduleFilename: string = files.find((filename) => filename.match(/\.module\.ts/));
-    return moduleFilename !== undefined ? join(generateDirectoryPath as Path, moduleFilename) : '/src/app.module.ts';
+    const moduleFilename: PathFragment = files.find((filename) => filename.includes('.module.ts'));
+    return moduleFilename !== undefined ?
+      join(generateDirectoryPath as Path, moduleFilename.valueOf())
+      :
+      '/src/app.module.ts';
   }
 }
