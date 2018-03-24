@@ -1,3 +1,5 @@
+import { Path } from '@angular-devkit/core';
+
 export interface ModuleOptions {
   /**
    * The name of the module.
@@ -7,4 +9,8 @@ export interface ModuleOptions {
    * The path to create the module.
    */
   path?: string;
+  /**
+   * The path to insert the module declaration.
+   */
+  module?: Path;
 }
