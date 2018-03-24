@@ -1,6 +1,6 @@
 import { EmptyTree } from '@angular-devkit/schematics';
 import { expect } from 'chai';
-import { ModuleFinder, FindOptions } from '../../src/utils/module.finder';
+import { FindOptions, ModuleFinder } from '../../src/utils/module.finder';
 
 describe('Module Finder', () => {
   it('should return the app module path', () => {
