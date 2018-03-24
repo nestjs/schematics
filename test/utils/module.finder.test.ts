@@ -1,6 +1,7 @@
 import { EmptyTree } from '@angular-devkit/schematics';
 import { expect } from 'chai';
 import { FindOptions, ModuleFinder } from '../../src/utils/module.finder';
+import { normalize } from '@angular-devkit/core';
 
 describe('Module Finder', () => {
   it('should return the app module path', () => {
@@ -13,7 +14,8 @@ describe('Module Finder', () => {
       path: 'name',
       kind: 'controller'
     };
-    expect(finder.find(options)).to.be.equal('/src/app.module.ts');
+    expect(finder.find(options))
+      .to.be.equal(normalize('/src/app.module.ts'));
   });
   it('should return the generated directory module path', () => {
     const tree = new EmptyTree();
@@ -27,7 +29,7 @@ describe('Module Finder', () => {
       kind: 'controller'
     };
     expect(finder.find(options))
-      .to.equal('/src/name/name.module.ts');
+      .to.equal(normalize('/src/name/name.module.ts'));
   });
   it('should return the intermediate module path', () => {
     const tree = new EmptyTree();
@@ -41,6 +43,6 @@ describe('Module Finder', () => {
       kind: 'module'
     };
     expect(finder.find(options))
-      .to.equal('/src/nested/nested.module.ts');
+      .to.equal(normalize('/src/nested/nested.module.ts'));
   });
 });

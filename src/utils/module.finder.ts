@@ -12,13 +12,13 @@ export class ModuleFinder {
 
   constructor(private tree: Tree) {}
 
-  public find(options: FindOptions): string {
+  public find(options: FindOptions): Path {
     const generatedDirectoryPath: Path = join(this.ROOT_PATH, normalize(options.path));
     const generatedDirectory: DirEntry = this.tree.getDir(generatedDirectoryPath);
     return this.findIn(generatedDirectory, options);
   }
 
-  private findIn(directory: DirEntry, options: FindOptions): string {
+  private findIn(directory: DirEntry, options: FindOptions): Path {
     const moduleFilename: PathFragment = directory
       .subfiles
       .find((filename) =>
