@@ -1,12 +1,12 @@
-import { basename, dirname, normalize, Path, relative, strings } from '@angular-devkit/core';
+import { strings } from '@angular-devkit/core';
+import { classify } from '@angular-devkit/core/src/utils/strings';
 import {
   apply, chain, mergeWith, move, Rule, SchematicContext, Source, template, Tree,
   url
 } from '@angular-devkit/schematics';
-import { ModuleOptions } from './schema';
-import { classify } from '@angular-devkit/core/src/utils/strings';
 import { ModuleImportUtils } from '../utils/module-import.utils';
 import { ModuleMetadataUtils } from '../utils/module-metadata.utils';
+import { ModuleOptions } from './schema';
 
 export function main(options: ModuleOptions): Rule {
   return (tree: Tree, context: SchematicContext) => {
