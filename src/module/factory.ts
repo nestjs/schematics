@@ -1,14 +1,13 @@
-import { join, Path, strings } from '@angular-devkit/core';
+import { strings } from '@angular-devkit/core';
 import { classify } from '@angular-devkit/core/src/utils/strings';
 import {
   apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicContext, Source, template, Tree,
   url
 } from '@angular-devkit/schematics';
-import { ModuleFindUtils } from '../utils/module-find.utils';
 import { ModuleImportUtils } from '../utils/module-import.utils';
 import { ModuleMetadataUtils } from '../utils/module-metadata.utils';
-import { ModuleOptions } from './schema';
 import { ModuleFinder } from '../utils/module.finder';
+import { ModuleOptions } from './schema';
 
 export function main(options: ModuleOptions): Rule {
   options.path = options.path !== undefined ? options.path : options.name;
