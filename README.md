@@ -31,7 +31,42 @@ run `schematics [path_to_nestjs_schematics]:<nestjs_schematic_name> [...options]
 |--------|-------------|:--------:|:-------------:|
 | directory | The directory name to create the app in. | true | |
 
+### controller:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the controller. | true | |
+
+### exception:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the exception. | true | |
+
+### guard:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the guard. | true | |
+
+### interceptor:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the interceptor. | true | |
+
+### middleware:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the middleware. | true | |
+
 ### module:
 | Option | description | required | default value |
 |--------|-------------|:--------:|:-------------:|
 | name | The name of the module. | true | |
+
+### pipe:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the pipe. | true | |
+
+### service:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the service. | true | |
