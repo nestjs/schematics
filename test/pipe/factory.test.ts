@@ -9,7 +9,7 @@ describe('Pipe Factory', () => {
     name: 'name',
   };
   let tree: UnitTestTree;
-  beforeEach(() => {
+  before(() => {
     const runner: SchematicTestRunner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')

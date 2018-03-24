@@ -9,7 +9,7 @@ describe('Guard Factory', () => {
     name: 'name',
   };
   let runner: SchematicTestRunner;
-  beforeEach(() => {
+  before(() => {
     runner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
