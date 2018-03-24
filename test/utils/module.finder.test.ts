@@ -1,7 +1,7 @@
+import { normalize } from '@angular-devkit/core';
 import { EmptyTree } from '@angular-devkit/schematics';
 import { expect } from 'chai';
 import { FindOptions, ModuleFinder } from '../../src/utils/module.finder';
-import { normalize } from '@angular-devkit/core';
 
 describe('Module Finder', () => {
   it('should return the app module path', () => {
