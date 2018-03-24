@@ -1,7 +1,7 @@
 import { join, normalize, Path, PathFragment, split } from '@angular-devkit/core';
 import { DirEntry, Tree } from '@angular-devkit/schematics';
 
-export interface Options {
+export interface FindOptions {
   name?: string;
   path: string;
   kind: 'module' | 'controller' | 'service';
@@ -12,7 +12,7 @@ export class ModuleFinder {
 
   constructor(private tree: Tree) {}
 
-  public find(options: Options): string {
+  public find(options: FindOptions): string {
     const generatedDirectoryPath: Path = join(this.ROOT_PATH, normalize(options.path));
     const generatedDirectory: DirEntry = this.tree.getDir(generatedDirectoryPath);
     const moduleFilename: PathFragment = generatedDirectory
@@ -28,8 +28,8 @@ export class ModuleFinder {
       this.findInParent(options);
   }
 
-  private findInParent(options: Options): string {
-    const copyOfOptions: Options = Object.assign({}, options);
+  private findInParent(options: FindOptions): string {
+    const copyOfOptions: FindOptions = Object.assign({}, options);
     copyOfOptions.path = this.computeParentPath(options.path);
     return this.find(copyOfOptions);
   }

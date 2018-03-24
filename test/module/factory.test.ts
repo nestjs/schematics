@@ -124,7 +124,7 @@ describe('Module Factory', () => {
           )
         ).to.not.be.undefined;
       });
-      it.skip('should import the new module in the nested module', () => {
+      it('should import the new module in the nested module', () => {
         expect(tree.readContent('/src/nested/nested.module.ts'))
           .to.be.equal(
           'import { Module } from \'@nestjs/common\';\n' +
