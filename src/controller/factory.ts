@@ -26,7 +26,7 @@ function generate(options: ControllerOptions) {
   );
 }
 
-function addDeclarationToModule(options: ModuleOptions): Rule {
+function addDeclarationToModule(options: ControllerOptions): Rule {
   return (tree: Tree) => {
     const generatedDirectoryPath: string = normalize(`/src/${ options.name }`);
     const moduleToInsertPath: string = ModuleFindUtils.find(tree, generatedDirectoryPath);
