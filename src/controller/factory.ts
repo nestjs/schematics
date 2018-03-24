@@ -1,13 +1,13 @@
 import { normalize, Path, relative, strings } from '@angular-devkit/core';
 import { classify } from '@angular-devkit/core/src/utils/strings';
 import { apply, chain, mergeWith, move, Rule, template, Tree, url } from '@angular-devkit/schematics';
-import { ModuleOptions } from '../module/schema';
 import { ModuleFindUtils } from '../utils/module-find.utils';
 import { ModuleImportUtils } from '../utils/module-import.utils';
 import { ModuleMetadataUtils } from '../utils/module-metadata.utils';
 import { ControllerOptions } from './schema';
 
 export function main(options: ControllerOptions): Rule {
+  options.path = options.path !== undefined ? options.path : options.name;
   return chain([
     mergeWith(generate(options)),
     addDeclarationToModule(options)
