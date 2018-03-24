@@ -1,6 +1,6 @@
 export interface PipeOptions {
-  extension: string;
+  /**
+   * The name of the pipe.
+   */
   name: string;
-  path: string;
-  rootDir: string;
 }
