@@ -2,6 +2,7 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
+import { ApplicationOptions } from '../../src/application/schema';
 import { ServiceOptions } from '../../src/service/schema';
 
 describe('Service Factory', () => {
@@ -9,12 +10,16 @@ describe('Service Factory', () => {
     name: 'name',
   };
   let tree: UnitTestTree;
-  beforeEach(() => {
+  before(() => {
     const runner: SchematicTestRunner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
     );
-    tree = runner.runSchematic('service', options, new VirtualTree());
+    const appOptions: ApplicationOptions = {
+      directory: '',
+    };
+    const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+    tree = runner.runSchematic('service', options, appTree);
   });
   it('should generate a new service file', () => {
     const files: string[] = tree.files;
@@ -32,6 +37,29 @@ describe('Service Factory', () => {
       '\n' +
       '@Component()\n' +
       'export class NameService {}\n'
+    );
+  });
+  it('should import the new service in the application module', () => {
+    expect(
+      tree.readContent(path.join(
+        '/src',
+        'app.module.ts'
+      ))
+    ).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      'import { AppController } from \'./app.controller\';\n' +
+      'import { NameService } from \'./name/name.service\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [],\n' +
+      '  controllers: [\n' +
+      '    AppController\n' +
+      '  ],\n' +
+      '  components: [\n' +
+      '    NameService\n' +
+      '  ]\n' +
+      '})\n' +
+      'export class ApplicationModule {}\n'
     );
   });
 });
