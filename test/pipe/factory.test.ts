@@ -6,31 +6,27 @@ import { PipeOptions } from '../../src/pipe/schema';
 
 describe('Pipe Factory', () => {
   const options: PipeOptions = {
-    extension: 'ts',
     name: 'name',
-    path: 'path',
-    rootDir: 'src/modules'
   };
-  let runner: SchematicTestRunner;
+  let tree: UnitTestTree;
   beforeEach(() => {
-    runner = new SchematicTestRunner(
+    const runner: SchematicTestRunner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
     );
+    tree = runner.runSchematic('pipe', options, new VirtualTree());
   });
   it('should generate a new pipe file', () => {
-    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
-        filename === `/${ options.rootDir }/${ options.path }/${ options.name }.pipe.${ options.extension }`
+        filename === `/src/${ options.name }.pipe.ts`
       )
     ).to.not.be.undefined;
   });
   it('should generate the expect pipe file content', () => {
-    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
     expect(
-      tree.readContent(`/${ options.rootDir }/${ options.path }/${ options.name }.pipe.${ options.extension }`)
+      tree.readContent(`/src/${ options.name }.pipe.ts`)
     ).to.be.equal(
       'import { PipeTransform, Pipe, ArgumentMetadata } from \'@nestjs/common\';\n' +
       '\n' +

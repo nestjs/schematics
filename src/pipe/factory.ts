@@ -1,6 +1,5 @@
 import { strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, template, url } from '@angular-devkit/schematics';
-import * as path from 'path';
 import { PipeOptions } from './schema';
 
 export function main(options: PipeOptions): Rule {
@@ -11,7 +10,7 @@ export function main(options: PipeOptions): Rule {
           ...strings,
           ...options
         }),
-        move(path.join(options.rootDir, options.path))
+        move('/src')
       ]
     )
   );
