@@ -12,6 +12,11 @@
       "type": "string",
       "format": "path",
       "description": "The path to create the controller"
+    },
+    "module": {
+      "type": "string",
+      "format": "path",
+      "description": "The path to insert the controller declaration."
     }
   },
   "required": [

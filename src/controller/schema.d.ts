@@ -1,3 +1,5 @@
+import { Path } from '@angular-devkit/core';
+
 export interface ControllerOptions {
   /**
    * The name of the controller.
@@ -7,4 +9,8 @@ export interface ControllerOptions {
    * The path to create the controller.
    */
   path?: string;
+  /**
+   * The path to insert the controller declaration.
+   */
+  module?: Path;
 }
