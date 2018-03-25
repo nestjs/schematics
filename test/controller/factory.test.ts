@@ -266,7 +266,7 @@ describe('Controller Factory', () => {
           );
         });
       });
-      context.skip('Manage name as a path', () => {
+      context('Manage name as a path', () => {
         const options: ControllerOptions = {
           name: 'foo/bar',
         };
