@@ -11,7 +11,6 @@ export class ModuleFinder {
   constructor(private tree: Tree) {}
 
   public find(options: FindOptions): Path {
-    console.log(options);
     const generatedDirectoryPath: Path = join(options.path, options.name);
     const generatedDirectory: DirEntry = this.tree.getDir(generatedDirectoryPath);
     return this.findIn(generatedDirectory);

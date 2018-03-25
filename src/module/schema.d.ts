@@ -13,4 +13,8 @@ export interface ModuleOptions {
    * The path to insert the module declaration.
    */
   module?: Path;
+  /**
+   * Directive to insert import in module.
+   */
+  skipImport?: boolean;
 }
