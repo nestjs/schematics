@@ -1,5 +1,5 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
-import { classify } from '@angular-devkit/core/src/utils/strings';
+import { capitalize, classify } from '@angular-devkit/core/src/utils/strings';
 import {
   apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicContext, template, Tree,
   url
@@ -12,10 +12,7 @@ import { PathSolver } from '../utils/path.solver';
 import { ControllerOptions } from './schema';
 
 export function main(options: ControllerOptions): Rule {
-  options.path = options.path !== undefined ? join(normalize('src'), options.path) : normalize('src');
-  const location: Location = new NameParser().parse(options);
-  options.name = location.name;
-  options.path = location.path;
+  options = transform(options);
   return (tree: Tree, context: SchematicContext) => {
     return branchAndMerge(
       chain([
@@ -24,6 +21,17 @@ export function main(options: ControllerOptions): Rule {
       ])
     )(tree, context);
   };
+}
+
+function transform(source: ControllerOptions): ControllerOptions {
+  let target: ControllerOptions = Object.assign({}, source);
+  target.metadata = 'controllers';
+  target.type = 'controller';
+  target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
+  const location: Location = new NameParser().parse(target);
+  target.name = location.name;
+  target.path = location.path;
+  return target;
 }
 
 function generate(options: ControllerOptions) {
@@ -48,15 +56,15 @@ function addDeclarationToModule(options: ControllerOptions): Rule {
       path: options.path as Path
     });
     let content = tree.read(options.module).toString();
-    const symbol: string = `${ classify(options.name) }Controller`;
+    const symbol: string = `${ classify(options.name) }${ capitalize(options.type) }`;
     content = ModuleImportUtils.insert(content, symbol, computeRelativePath(options));
-    content = ModuleMetadataUtils.insert(content, 'controllers', symbol);
+    content = ModuleMetadataUtils.insert(content, options.metadata, symbol);
     tree.overwrite(options.module, content);
     return tree;
   };
 }
 
 function computeRelativePath(options: ControllerOptions): string {
-  const importModulePath: Path = normalize(`/${ options.path }/${options.name}/${ options.name }.controller`);
+  const importModulePath: Path = normalize(`/${ options.path }/${options.name}/${ options.name }.${ options.type }`);
   return new PathSolver().relative(options.module, importModulePath);
 }
