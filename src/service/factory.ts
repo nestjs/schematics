@@ -1,5 +1,5 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
-import { classify } from '@angular-devkit/core/src/utils/strings';
+import { capitalize, classify } from '@angular-devkit/core/src/utils/strings';
 import {
   apply,
   branchAndMerge,
@@ -20,10 +20,7 @@ import { PathSolver } from '../utils/path.solver';
 import { ServiceOptions } from './schema';
 
 export function main(options: ServiceOptions): Rule {
-  options.path = options.path !== undefined ? join(normalize('src'), options.path) : normalize('src');
-  const location: Location = new NameParser().parse(options);
-  options.name = location.name;
-  options.path = location.path;
+  options = transform(options);
   return (tree: Tree, context: SchematicContext) => {
     return branchAndMerge(
       chain([
@@ -32,6 +29,17 @@ export function main(options: ServiceOptions): Rule {
       ])
     )(tree, context);
   };
+}
+
+function transform(source: ServiceOptions): ServiceOptions {
+  let target: ServiceOptions = Object.assign({}, source);
+  target.metadata = 'components';
+  target.type = 'service';
+  target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
+  const location: Location = new NameParser().parse(target);
+  target.name = location.name;
+  target.path = location.path;
+  return target;
 }
 
 function generate(options: ServiceOptions) {
@@ -56,15 +64,15 @@ function addDeclarationToModule(options: ServiceOptions): Rule {
       path: options.path as Path
     });
     let content = tree.read(options.module).toString();
-    const symbol: string = `${ classify(options.name) }Service`;
+    const symbol: string = `${ classify(options.name) }${ capitalize(options.type) }`;
     content = ModuleImportUtils.insert(content, symbol, computeRelativePath(options));
-    content = ModuleMetadataUtils.insert(content, 'components', symbol);
+    content = ModuleMetadataUtils.insert(content, options.metadata, symbol);
     tree.overwrite(options.module, content);
     return tree;
   };
 }
 
 function computeRelativePath(options: ServiceOptions): string {
-  const importModulePath: Path = normalize(`/${ options.path }/${options.name}/${ options.name }.service`);
+  const importModulePath: Path = normalize(`/${ options.path }/${options.name}/${ options.name }.${ options.type }`);
   return new PathSolver().relative(options.module, importModulePath);
 }

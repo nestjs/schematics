@@ -1,7 +1,15 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { capitalize, classify } from '@angular-devkit/core/src/utils/strings';
 import {
-  apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicContext, template, Tree,
+  apply,
+  branchAndMerge,
+  chain,
+  mergeWith,
+  move,
+  Rule,
+  SchematicContext,
+  template,
+  Tree,
   url
 } from '@angular-devkit/schematics';
 import { ModuleImportUtils } from '../utils/module-import.utils';
