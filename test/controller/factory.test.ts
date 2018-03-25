@@ -120,7 +120,7 @@ describe('Controller Factory', () => {
     });
   });
   describe('Schematic tree modifications', () => {
-    context('Import generated controller is an app module controller', () => {
+    context('Import generated controller in the app module', () => {
       const options: ControllerOptions = {
         name: 'foo',
       };
@@ -156,7 +156,7 @@ describe('Controller Factory', () => {
         );
       });
     });
-    context.skip('Import generated controller is the generated directory module', () => {
+    context.skip('Import generated controller in the generated directory module', () => {
       const options: ControllerOptions = {
         name: 'foo',
       };

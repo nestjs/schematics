@@ -1,4 +1,4 @@
-import { basename, dirname, normalize, Path, relative, strings } from '@angular-devkit/core';
+import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { classify } from '@angular-devkit/core/src/utils/strings';
 import {
   apply,
@@ -15,17 +15,17 @@ import {
 } from '@angular-devkit/schematics';
 import { ModuleImportUtils } from '../utils/module-import.utils';
 import { ModuleMetadataUtils } from '../utils/module-metadata.utils';
-import { ModuleFinder } from '../utils/module.finder';
+import { Location, NameParser } from '../utils/name.parser';
+import { PathSolver } from '../utils/path.solver';
 import { ModuleOptions } from './schema';
+import { ModuleFinder } from '../utils/module.finder';
 
 export function main(options: ModuleOptions): Rule {
+  options.path = options.path !== undefined ? join(normalize('src'), options.path) : normalize('src');
+  const location: Location = new NameParser().parse(options);
+  options.name = location.name;
+  options.path = location.path;
   return (tree: Tree, context: SchematicContext) => {
-    options.path = options.path !== undefined ? options.path : options.name;
-    options.module = new ModuleFinder(tree).find({
-      name: options.name,
-      path: options.path,
-      kind: 'module'
-    });
     return branchAndMerge(
       chain([
         addDeclarationToModule(options),
@@ -42,17 +42,23 @@ function generate(options: ModuleOptions): Source {
         ...strings,
         ...options
       }),
-      move('src')
+      move(join(options.path as Path, options.name))
     ]
   );
 }
 
 function addDeclarationToModule(options: ModuleOptions): Rule {
   return (tree: Tree) => {
-    const relativePath: string = computeRelativePath(options);
+    if (options.skipImport !== undefined && options.skipImport) {
+      return tree;
+    }
+    options.module = new ModuleFinder(tree).find({
+      name: options.name,
+      path: options.path as Path
+    });
     let content = tree.read(options.module).toString();
     const symbol: string = `${ classify(options.name) }Module`;
-    content = ModuleImportUtils.insert(content, symbol, relativePath);
+    content = ModuleImportUtils.insert(content, symbol, computeRelativePath(options));
     content = ModuleMetadataUtils.insert(content, 'imports', symbol);
     tree.overwrite(options.module, content);
     return tree;
@@ -60,8 +66,6 @@ function addDeclarationToModule(options: ModuleOptions): Rule {
 }
 
 function computeRelativePath(options: ModuleOptions): string {
-  const importModulePath: Path = normalize(`/src/${ options.path }/${ options.name }.module`);
-  const relativeDir: Path = relative(dirname(options.module), dirname(importModulePath));
-  return (relativeDir.startsWith('.') ? relativeDir : './' + relativeDir)
-    .concat(relativeDir.length === 0 ? basename(importModulePath) : '/' + basename(importModulePath));
+  const importModulePath: Path = normalize(`/${ options.path }/${options.name}/${ options.name }.module`);
+  return new PathSolver().relative(options.module, importModulePath);
 }
