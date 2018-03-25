@@ -8,7 +8,6 @@ import {
   move,
   Rule,
   SchematicContext,
-  Source,
   template,
   Tree,
   url
@@ -21,7 +20,7 @@ import { PathSolver } from '../utils/path.solver';
 import { ModuleOptions } from './schema';
 import { ControllerOptions } from '../controller/schema';
 
-export function main(options: ControllerOptions): Rule {
+export function main(options: ModuleOptions): Rule {
   options = transform(options);
   return (tree: Tree, context: SchematicContext) => {
     return branchAndMerge(
@@ -33,7 +32,7 @@ export function main(options: ControllerOptions): Rule {
   };
 }
 
-function transform(source: ControllerOptions): ControllerOptions {
+function transform(source: ModuleOptions): ControllerOptions {
   let target: ControllerOptions = Object.assign({}, source);
   target.metadata = 'imports';
   target.type = 'module';
@@ -44,7 +43,7 @@ function transform(source: ControllerOptions): ControllerOptions {
   return target;
 }
 
-function generate(options: ControllerOptions) {
+function generate(options: ModuleOptions) {
   return apply(
     url('./files'), [
       template({
@@ -56,7 +55,7 @@ function generate(options: ControllerOptions) {
   );
 }
 
-function addDeclarationToModule(options: ControllerOptions): Rule {
+function addDeclarationToModule(options: ModuleOptions): Rule {
   return (tree: Tree) => {
     if (options.skipImport !== undefined && options.skipImport) {
       return tree;
@@ -74,7 +73,7 @@ function addDeclarationToModule(options: ControllerOptions): Rule {
   };
 }
 
-function computeRelativePath(options: ControllerOptions): string {
+function computeRelativePath(options: ModuleOptions): string {
   const importModulePath: Path = normalize(`/${ options.path }/${options.name}/${ options.name }.${ options.type }`);
   return new PathSolver().relative(options.module, importModulePath);
 }
