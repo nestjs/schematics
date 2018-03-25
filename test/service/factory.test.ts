@@ -6,7 +6,7 @@ import { ApplicationOptions } from '../../src/application/schema';
 import { ModuleOptions } from '../../src/module/schema';
 import { ServiceOptions } from '../../src/service/schema';
 
-describe('Service Factory', () => {
+describe.skip('Service Factory', () => {
   describe('Schematic definition', () => {
     const options: ServiceOptions = {
       name: 'name',

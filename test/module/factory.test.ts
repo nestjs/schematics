@@ -5,7 +5,7 @@ import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
 import { ModuleOptions } from '../../src/module/schema';
 
-describe('Module Factory', () => {
+describe.skip('Module Factory', () => {
   describe('Schematic definition', () => {
     const options: ModuleOptions = {
       name: 'name',

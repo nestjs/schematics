@@ -3,32 +3,26 @@ import { DirEntry, Tree } from '@angular-devkit/schematics';
 
 export interface FindOptions {
   name?: string;
-  path: string;
-  kind: 'module' | 'controller' | 'service';
+  path: Path;
+  kind?: 'module' | 'controller' | 'service';
 }
 
 export class ModuleFinder {
-  private readonly ROOT_PATH: Path = normalize('/src');
-
   constructor(private tree: Tree) {}
 
   public find(options: FindOptions): Path {
-    const generatedDirectoryPath: Path = join(this.ROOT_PATH, normalize(options.path));
+    const generatedDirectoryPath: Path = join(options.path, options.name);
     const generatedDirectory: DirEntry = this.tree.getDir(generatedDirectoryPath);
-    return this.findIn(generatedDirectory, options);
+    return this.findIn(generatedDirectory);
   }
 
-  private findIn(directory: DirEntry, options: FindOptions): Path {
+  private findIn(directory: DirEntry): Path {
     const moduleFilename: PathFragment = directory
       .subfiles
-      .find((filename) =>
-        filename.includes('.module.ts')
-        &&
-        (options.kind !== 'module' || !filename.includes(options.name))
-      );
+      .find((filename) => filename.includes('.module.ts'));
     return moduleFilename !== undefined ?
       join(directory.path, moduleFilename.valueOf())
       :
-      this.findIn(directory.parent, options);
+      this.findIn(directory.parent);
   }
 }
