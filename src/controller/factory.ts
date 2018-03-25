@@ -1,4 +1,4 @@
-import { basename, dirname, join, normalize, Path, relative, strings } from '@angular-devkit/core';
+import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { classify } from '@angular-devkit/core/src/utils/strings';
 import {
   apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicContext, template, Tree,
@@ -8,6 +8,7 @@ import { ModuleImportUtils } from '../utils/module-import.utils';
 import { ModuleMetadataUtils } from '../utils/module-metadata.utils';
 import { ModuleFinder } from '../utils/module.finder';
 import { Location, NameParser } from '../utils/name.parser';
+import { PathSolver } from '../utils/path.solver';
 import { ControllerOptions } from './schema';
 
 export function main(options: ControllerOptions): Rule {
@@ -57,7 +58,5 @@ function addDeclarationToModule(options: ControllerOptions): Rule {
 
 function computeRelativePath(options: ControllerOptions): string {
   const importModulePath: Path = normalize(`/${ options.path }/${options.name}/${ options.name }.controller`);
-  const relativeDir: Path = relative(dirname(options.module), dirname(importModulePath));
-  return (relativeDir.startsWith('.') ? relativeDir : './' + relativeDir)
-    .concat(relativeDir.length === 0 ? basename(importModulePath) : '/' + basename(importModulePath));
+  return new PathSolver().relative(options.module, importModulePath);
 }
