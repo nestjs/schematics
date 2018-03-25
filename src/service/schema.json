@@ -17,6 +17,10 @@
       "type": "string",
       "format": "path",
       "description": "The path to insert the service declaration."
+    },
+    "skipImport": {
+      "type": "boolean",
+      "description": "Directive to insert declaration in module."
     }
   },
   "required": [
