@@ -1,3 +1,4 @@
+import { normalize } from '@angular-devkit/core';
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
@@ -5,8 +6,6 @@ import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
 import { ModuleOptions } from '../../src/module/schema';
 import { ServiceOptions } from '../../src/service/schema';
-import { ControllerOptions } from '../../src/controller/schema';
-import { normalize } from '@angular-devkit/core';
 
 describe('Service Factory', () => {
   describe('Schematic definition', () => {
@@ -120,10 +119,10 @@ describe('Service Factory', () => {
       });
     });
   });
-  describe.skip('Schematic tree modifications', () => {
-    context('Declare controller in the app module', () => {
+  describe('Schematic tree modifications', () => {
+    context('Declare service in the app module', () => {
       context('Manage name only', () => {
-        const options: ControllerOptions = {
+        const options: ServiceOptions = {
           name: 'foo',
         };
         let tree: UnitTestTree;
@@ -136,30 +135,31 @@ describe('Service Factory', () => {
             directory: '',
           };
           const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-          tree = runner.runSchematic('controller', options, appTree);
+          tree = runner.runSchematic('service', options, appTree);
         });
-        it('should declare the foo controller in the app module', () => {
+        it('should declare the foo service in the app module', () => {
           expect(
             tree.readContent(normalize('/src/app.module.ts'))
           ).to.be.equal(
             'import { Module } from \'@nestjs/common\';\n' +
             'import { AppController } from \'./app.controller\';\n' +
-            'import { FooController } from \'./foo/foo.controller\';\n' +
+            'import { FooService } from \'./foo/foo.service\';\n' +
             '\n' +
             '@Module({\n' +
             '  imports: [],\n' +
             '  controllers: [\n' +
-            '    AppController,\n' +
-            '    FooController\n' +
+            '    AppController\n' +
             '  ],\n' +
-            '  components: []\n' +
+            '  components: [\n' +
+            '    FooService\n' +
+            '  ]\n' +
             '})\n' +
             'export class ApplicationModule {}\n'
           );
         });
       });
       context('Manage name as a path', () => {
-        const options: ControllerOptions = {
+        const options: ServiceOptions = {
           name: 'foo/bar',
         };
         let tree: UnitTestTree;
@@ -172,29 +172,30 @@ describe('Service Factory', () => {
             directory: '',
           };
           let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-          tree = runner.runSchematic('controller', options, root);
+          tree = runner.runSchematic('service', options, root);
         });
-        it('should declare the foo controller in the app module', () => {
+        it('should declare the bar service in the app module', () => {
           expect(tree.readContent('/src/app.module.ts'))
             .to.be.equal(
             'import { Module } from \'@nestjs/common\';\n' +
             'import { AppController } from \'./app.controller\';\n' +
-            'import { BarController } from \'./foo/bar/bar.controller\';\n' +
+            'import { BarService } from \'./foo/bar/bar.service\';\n' +
             '\n' +
             '@Module({\n' +
             '  imports: [],\n' +
             '  controllers: [\n' +
-            '    AppController,\n' +
-            '    BarController\n' +
+            '    AppController\n' +
             '  ],\n' +
-            '  components: []\n' +
+            '  components: [\n' +
+            '    BarService\n' +
+            '  ]\n' +
             '})\n' +
             'export class ApplicationModule {}\n'
           );
         });
       });
       context('Manage name and path', () => {
-        const options: ControllerOptions = {
+        const options: ServiceOptions = {
           name: 'foo',
           path: 'bar'
         };
@@ -208,31 +209,32 @@ describe('Service Factory', () => {
             directory: '',
           };
           let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-          tree = runner.runSchematic('controller', options, root);
+          tree = runner.runSchematic('service', options, root);
         });
-        it('should declare the foo controller in the app module', () => {
+        it('should declare the foo service in the app module', () => {
           expect(tree.readContent('/src/app.module.ts'))
             .to.be.equal(
             'import { Module } from \'@nestjs/common\';\n' +
             'import { AppController } from \'./app.controller\';\n' +
-            'import { FooController } from \'./bar/foo/foo.controller\';\n' +
+            'import { FooService } from \'./bar/foo/foo.service\';\n' +
             '\n' +
             '@Module({\n' +
             '  imports: [],\n' +
             '  controllers: [\n' +
-            '    AppController,\n' +
-            '    FooController\n' +
+            '    AppController\n' +
             '  ],\n' +
-            '  components: []\n' +
+            '  components: [\n' +
+            '    FooService\n' +
+            '  ]\n' +
             '})\n' +
             'export class ApplicationModule {}\n'
           );
         });
       });
     });
-    context('Declare controller in an intermediate module', () => {
+    context('Declare service in an intermediate module', () => {
       context('Manage name only', () => {
-        const options: ControllerOptions = {
+        const options: ServiceOptions = {
           name: 'foo',
         };
         let tree: UnitTestTree;
@@ -249,18 +251,18 @@ describe('Service Factory', () => {
             name: 'foo'
           };
           root = runner.runSchematic('module', moduleOptions, root);
-          tree = runner.runSchematic('controller', options, root);
+          tree = runner.runSchematic('service', options, root);
         });
-        it('should declare the foo controller in the foo module', () => {
+        it('should declare the foo service in the foo module', () => {
           expect(
             tree.readContent(normalize('/src/foo/foo.module.ts'))
           ).to.be.equal(
             'import { Module } from \'@nestjs/common\';\n' +
-            'import { FooController } from \'./foo.controller\';\n' +
+            'import { FooService } from \'./foo.service\';\n' +
             '\n' +
             '@Module({\n' +
-            '  controllers: [\n' +
-            '    FooController\n' +
+            '  components: [\n' +
+            '    FooService\n' +
             '  ]\n' +
             '})\n' +
             'export class FooModule {}\n'
@@ -268,7 +270,7 @@ describe('Service Factory', () => {
         });
       });
       context('Manage name as a path', () => {
-        const options: ControllerOptions = {
+        const options: ServiceOptions = {
           name: 'foo/bar',
         };
         let tree: UnitTestTree;
@@ -285,18 +287,18 @@ describe('Service Factory', () => {
             name: 'foo'
           };
           root = runner.runSchematic('module', moduleOptions, root);
-          tree = runner.runSchematic('controller', options, root);
+          tree = runner.runSchematic('service', options, root);
         });
-        it('should declare the bar controller in the foo module', () => {
+        it('should declare the bar service in the foo module', () => {
           expect(
             tree.readContent(normalize('/src/foo/foo.module.ts'))
           ).to.be.equal(
             'import { Module } from \'@nestjs/common\';\n' +
-            'import { BarController } from \'./bar/bar.controller\';\n' +
+            'import { BarService } from \'./bar/bar.service\';\n' +
             '\n' +
             '@Module({\n' +
-            '  controllers: [\n' +
-            '    BarController\n' +
+            '  components: [\n' +
+            '    BarService\n' +
             '  ]\n' +
             '})\n' +
             'export class FooModule {}\n'
@@ -304,7 +306,7 @@ describe('Service Factory', () => {
         });
       });
       context('Manage name and path', () => {
-        const options: ControllerOptions = {
+        const options: ServiceOptions = {
           name: 'foo',
           path: 'bar'
         };
@@ -322,18 +324,18 @@ describe('Service Factory', () => {
             name: 'bar'
           };
           root = runner.runSchematic('module', moduleOptions, root);
-          tree = runner.runSchematic('controller', options, root);
+          tree = runner.runSchematic('service', options, root);
         });
-        it('should declare the foo controller in the bar module', () => {
+        it('should declare the foo service in the bar module', () => {
           expect(
             tree.readContent(normalize('/src/bar/bar.module.ts'))
           ).to.be.equal(
             'import { Module } from \'@nestjs/common\';\n' +
-            'import { FooController } from \'./foo/foo.controller\';\n' +
+            'import { FooService } from \'./foo/foo.service\';\n' +
             '\n' +
             '@Module({\n' +
-            '  controllers: [\n' +
-            '    FooController\n' +
+            '  components: [\n' +
+            '    FooService\n' +
             '  ]\n' +
             '})\n' +
             'export class BarModule {}\n'
