@@ -1,15 +1,23 @@
-import { basename, dirname, join, normalize, Path, relative, strings } from '@angular-devkit/core';
+import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { classify } from '@angular-devkit/core/src/utils/strings';
 import {
-  apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicContext, template, Tree,
+  apply,
+  branchAndMerge,
+  chain,
+  mergeWith,
+  move,
+  Rule,
+  SchematicContext,
+  template,
+  Tree,
   url
 } from '@angular-devkit/schematics';
 import { ModuleImportUtils } from '../utils/module-import.utils';
 import { ModuleMetadataUtils } from '../utils/module-metadata.utils';
 import { ModuleFinder } from '../utils/module.finder';
-import { ServiceOptions } from './schema';
 import { Location, NameParser } from '../utils/name.parser';
 import { PathSolver } from '../utils/path.solver';
+import { ServiceOptions } from './schema';
 
 export function main(options: ServiceOptions): Rule {
   options.path = options.path !== undefined ? join(normalize('src'), options.path) : normalize('src');
