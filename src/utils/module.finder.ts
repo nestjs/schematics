@@ -1,4 +1,4 @@
-import { join, normalize, Path, PathFragment } from '@angular-devkit/core';
+import { join, Path, PathFragment } from '@angular-devkit/core';
 import { DirEntry, Tree } from '@angular-devkit/schematics';
 
 export interface FindOptions {
