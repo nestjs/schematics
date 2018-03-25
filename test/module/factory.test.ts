@@ -1,10 +1,10 @@
+import { normalize } from '@angular-devkit/core';
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
 import { ModuleOptions } from '../../src/module/schema';
-import { normalize } from '@angular-devkit/core';
 
 describe('Module Factory', () => {
   describe('Schematic definition', () => {

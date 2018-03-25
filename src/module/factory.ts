@@ -15,10 +15,10 @@ import {
 } from '@angular-devkit/schematics';
 import { ModuleImportUtils } from '../utils/module-import.utils';
 import { ModuleMetadataUtils } from '../utils/module-metadata.utils';
+import { ModuleFinder } from '../utils/module.finder';
 import { Location, NameParser } from '../utils/name.parser';
 import { PathSolver } from '../utils/path.solver';
 import { ModuleOptions } from './schema';
-import { ModuleFinder } from '../utils/module.finder';
 
 export function main(options: ModuleOptions): Rule {
   options.path = options.path !== undefined ? join(normalize('src'), options.path) : normalize('src');

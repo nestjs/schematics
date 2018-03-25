@@ -1,3 +1,4 @@
+import { normalize } from '@angular-devkit/core';
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
@@ -5,11 +6,10 @@ import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
 import { ControllerOptions } from '../../src/controller/schema';
 import { ModuleOptions } from '../../src/module/schema';
-import { normalize } from '@angular-devkit/core';
 
 describe('Controller Factory', () => {
   describe('Schematic definition', () => {
-    context('Manage name only in options', () => {
+    context('Manage name only', () => {
       const options: ControllerOptions = {
         name: 'foo',
         skipImport: true
@@ -45,7 +45,7 @@ describe('Controller Factory', () => {
         );
       });
     });
-    context('Manage name has a path in options', () => {
+    context('Manage name as a path', () => {
       const options: ControllerOptions = {
         name: 'foo/bar',
         skipImport: true
@@ -81,7 +81,7 @@ describe('Controller Factory', () => {
         );
       });
     });
-    context('Manage name and path in options', () => {
+    context('Manage name and path', () => {
       const options: ControllerOptions = {
         name: 'foo',
         path: 'bar',
@@ -120,111 +120,224 @@ describe('Controller Factory', () => {
     });
   });
   describe('Schematic tree modifications', () => {
-    context('Import generated controller in the app module', () => {
-      const options: ControllerOptions = {
-        name: 'foo',
-      };
-      let tree: UnitTestTree;
-      before(() => {
-        const runner: SchematicTestRunner = new SchematicTestRunner(
-          '.',
-          path.join(process.cwd(), 'src/collection.json')
-        );
-        const appOptions: ApplicationOptions = {
-          directory: '',
+    context('Declare controller in the app module', () => {
+      context('Manage name only', () => {
+        const options: ControllerOptions = {
+          name: 'foo',
         };
-        const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-        tree = runner.runSchematic('controller', options, appTree);
+        let tree: UnitTestTree;
+        before(() => {
+          const runner: SchematicTestRunner = new SchematicTestRunner(
+            '.',
+            path.join(process.cwd(), 'src/collection.json')
+          );
+          const appOptions: ApplicationOptions = {
+            directory: '',
+          };
+          const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+          tree = runner.runSchematic('controller', options, appTree);
+        });
+        it('should declare the foo controller in the app module', () => {
+          expect(
+            tree.readContent(normalize('/src/app.module.ts'))
+          ).to.be.equal(
+            'import { Module } from \'@nestjs/common\';\n' +
+            'import { AppController } from \'./app.controller\';\n' +
+            'import { FooController } from \'./foo/foo.controller\';\n' +
+            '\n' +
+            '@Module({\n' +
+            '  imports: [],\n' +
+            '  controllers: [\n' +
+            '    AppController,\n' +
+            '    FooController\n' +
+            '  ],\n' +
+            '  components: []\n' +
+            '})\n' +
+            'export class ApplicationModule {}\n'
+          );
+        });
       });
-      it('should import the new controller in the app module', () => {
-        expect(
-          tree.readContent(normalize('/src/app.module.ts'))
-        ).to.be.equal(
-          'import { Module } from \'@nestjs/common\';\n' +
-          'import { AppController } from \'./app.controller\';\n' +
-          'import { FooController } from \'./foo/foo.controller\';\n' +
-          '\n' +
-          '@Module({\n' +
-          '  imports: [],\n' +
-          '  controllers: [\n' +
-          '    AppController,\n' +
-          '    FooController\n' +
-          '  ],\n' +
-          '  components: []\n' +
-          '})\n' +
-          'export class ApplicationModule {}\n'
-        );
+      context('Manage name as a path', () => {
+        const options: ControllerOptions = {
+          name: 'foo/bar',
+        };
+        let tree: UnitTestTree;
+        before(() => {
+          const runner: SchematicTestRunner = new SchematicTestRunner(
+            '.',
+            path.join(process.cwd(), 'src/collection.json')
+          );
+          const appOptions: ApplicationOptions = {
+            directory: '',
+          };
+          let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+          tree = runner.runSchematic('controller', options, root);
+        });
+        it('should declare the foo controller in the app module', () => {
+          expect(tree.readContent('/src/app.module.ts'))
+            .to.be.equal(
+            'import { Module } from \'@nestjs/common\';\n' +
+            'import { AppController } from \'./app.controller\';\n' +
+            'import { BarController } from \'./foo/bar/bar.controller\';\n' +
+            '\n' +
+            '@Module({\n' +
+            '  imports: [],\n' +
+            '  controllers: [\n' +
+            '    AppController,\n' +
+            '    BarController\n' +
+            '  ],\n' +
+            '  components: []\n' +
+            '})\n' +
+            'export class ApplicationModule {}\n'
+          );
+        });
+      });
+      context('Manage name and path', () => {
+        const options: ControllerOptions = {
+          name: 'foo',
+          path: 'bar'
+        };
+        let tree: UnitTestTree;
+        before(() => {
+          const runner: SchematicTestRunner = new SchematicTestRunner(
+            '.',
+            path.join(process.cwd(), 'src/collection.json')
+          );
+          const appOptions: ApplicationOptions = {
+            directory: '',
+          };
+          let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+          tree = runner.runSchematic('controller', options, root);
+        });
+        it('should declare the foo controller in the app module', () => {
+          expect(tree.readContent('/src/app.module.ts'))
+            .to.be.equal(
+            'import { Module } from \'@nestjs/common\';\n' +
+            'import { AppController } from \'./app.controller\';\n' +
+            'import { FooController } from \'./bar/foo/foo.controller\';\n' +
+            '\n' +
+            '@Module({\n' +
+            '  imports: [],\n' +
+            '  controllers: [\n' +
+            '    AppController,\n' +
+            '    FooController\n' +
+            '  ],\n' +
+            '  components: []\n' +
+            '})\n' +
+            'export class ApplicationModule {}\n'
+          );
+        });
       });
     });
-    context.skip('Import generated controller in the generated directory module', () => {
-      const options: ControllerOptions = {
-        name: 'foo',
-      };
-      let tree: UnitTestTree;
-      before(() => {
-        const runner: SchematicTestRunner = new SchematicTestRunner(
-          '.',
-          path.join(process.cwd(), 'src/collection.json')
-        );
-        const appOptions: ApplicationOptions = {
-          directory: '',
+    context('Declare controller in an intermediate module', () => {
+      context('Manage name only', () => {
+        const options: ControllerOptions = {
+          name: 'foo',
         };
-        let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-        const moduleOptions: ModuleOptions = {
-          name: options.name
-        };
-        root = runner.runSchematic('module', moduleOptions, root);
-        tree = runner.runSchematic('controller', options, root);
+        let tree: UnitTestTree;
+        before(() => {
+          const runner: SchematicTestRunner = new SchematicTestRunner(
+            '.',
+            path.join(process.cwd(), 'src/collection.json')
+          );
+          const appOptions: ApplicationOptions = {
+            directory: '',
+          };
+          let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+          const moduleOptions: ModuleOptions = {
+            name: 'foo'
+          };
+          root = runner.runSchematic('module', moduleOptions, root);
+          tree = runner.runSchematic('controller', options, root);
+        });
+        it('should declare the foo controller in the foo module', () => {
+          expect(
+            tree.readContent(normalize('/src/foo/foo.module.ts'))
+          ).to.be.equal(
+            'import { Module } from \'@nestjs/common\';\n' +
+            'import { FooController } from \'./foo.controller\';\n' +
+            '\n' +
+            '@Module({\n' +
+            '  controllers: [\n' +
+            '    FooController\n' +
+            '  ]\n' +
+            '})\n' +
+            'export class FooModule {}\n'
+          );
+        });
       });
-      it('should import the new controller in the foo module', () => {
-        expect(tree.readContent('/src/foo/foo.module.ts'))
-          .to.be.equal(
-          'import { Module } from \'@nestjs/common\';\n' +
-          'import { NameController } from \'./name.controller\';\n' +
-          '\n' +
-          '@Module({\n' +
-          '  controllers: [\n' +
-          '    NameController\n' +
-          '  ]\n' +
-          '})\n' +
-          'export class NameModule {}\n'
-        );
-      });
-    });
-    context.skip('Generated controller is an app nested sub module controller', () => {
-      const options: ControllerOptions = {
-        name: 'name',
-        path: 'nested/name'
-      };
-      let tree: UnitTestTree;
-      before(() => {
-        const runner: SchematicTestRunner = new SchematicTestRunner(
-          '.',
-          path.join(process.cwd(), 'src/collection.json')
-        );
-        const appOptions: ApplicationOptions = {
-          directory: '',
+      context.skip('Manage name as a path', () => {
+        const options: ControllerOptions = {
+          name: 'foo/bar',
         };
-        let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-        const moduleOptions: ModuleOptions = {
-          name: 'nested'
-        };
-        root = runner.runSchematic('module', moduleOptions, root);
-        tree = runner.runSchematic('controller', options, root);
+        let tree: UnitTestTree;
+        before(() => {
+          const runner: SchematicTestRunner = new SchematicTestRunner(
+            '.',
+            path.join(process.cwd(), 'src/collection.json')
+          );
+          const appOptions: ApplicationOptions = {
+            directory: '',
+          };
+          let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+          const moduleOptions: ModuleOptions = {
+            name: 'foo'
+          };
+          root = runner.runSchematic('module', moduleOptions, root);
+          tree = runner.runSchematic('controller', options, root);
+        });
+        it('should declare the bar controller in the foo module', () => {
+          expect(
+            tree.readContent(normalize('/src/foo/foo.module.ts'))
+          ).to.be.equal(
+            'import { Module } from \'@nestjs/common\';\n' +
+            'import { BarController } from \'./bar/bar.controller\';\n' +
+            '\n' +
+            '@Module({\n' +
+            '  controllers: [\n' +
+            '    BarController\n' +
+            '  ]\n' +
+            '})\n' +
+            'export class FooModule {}\n'
+          );
+        });
       });
-      it('should import the new controller in the nested module', () => {
-        expect(tree.readContent(`/src/nested/nested.module.ts`))
-          .to.be.equal(
-          'import { Module } from \'@nestjs/common\';\n' +
-          'import { NameController } from \'./name/name.controller\';\n' +
-          '\n' +
-          '@Module({\n' +
-          '  controllers: [\n' +
-          '    NameController\n' +
-          '  ]\n' +
-          '})\n' +
-          'export class NestedModule {}\n'
-        );
+      context('Manage name and path', () => {
+        const options: ControllerOptions = {
+          name: 'foo',
+          path: 'bar'
+        };
+        let tree: UnitTestTree;
+        before(() => {
+          const runner: SchematicTestRunner = new SchematicTestRunner(
+            '.',
+            path.join(process.cwd(), 'src/collection.json')
+          );
+          const appOptions: ApplicationOptions = {
+            directory: '',
+          };
+          let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+          const moduleOptions: ModuleOptions = {
+            name: 'bar'
+          };
+          root = runner.runSchematic('module', moduleOptions, root);
+          tree = runner.runSchematic('controller', options, root);
+        });
+        it('should declare the foo controller in the bar module', () => {
+          expect(
+            tree.readContent(normalize('/src/bar/bar.module.ts'))
+          ).to.be.equal(
+            'import { Module } from \'@nestjs/common\';\n' +
+            'import { FooController } from \'./foo/foo.controller\';\n' +
+            '\n' +
+            '@Module({\n' +
+            '  controllers: [\n' +
+            '    FooController\n' +
+            '  ]\n' +
+            '})\n' +
+            'export class BarModule {}\n'
+          );
+        });
       });
     });
   });
