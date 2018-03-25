@@ -156,9 +156,9 @@ describe('Controller Factory', () => {
         );
       });
     });
-    context.skip('Generated controller is an app sub module controller', () => {
+    context.skip('Import generated controller is the generated directory module', () => {
       const options: ControllerOptions = {
-        name: 'name',
+        name: 'foo',
       };
       let tree: UnitTestTree;
       before(() => {
@@ -176,8 +176,8 @@ describe('Controller Factory', () => {
         root = runner.runSchematic('module', moduleOptions, root);
         tree = runner.runSchematic('controller', options, root);
       });
-      it('should import the new controller in the sub module', () => {
-        expect(tree.readContent(`/src/${options.name}/${options.name}.module.ts`))
+      it('should import the new controller in the foo module', () => {
+        expect(tree.readContent('/src/foo/foo.module.ts'))
           .to.be.equal(
           'import { Module } from \'@nestjs/common\';\n' +
           'import { NameController } from \'./name.controller\';\n' +

@@ -40,12 +40,12 @@ function generate(options: ControllerOptions) {
 
 function addDeclarationToModule(options: ControllerOptions): Rule {
   return (tree: Tree) => {
-    if (options.skipImport) {
+    if (options.skipImport !== undefined && options.skipImport) {
       return tree;
     }
     options.module = new ModuleFinder(tree).find({
       name: options.name,
-      path: normalize(options.path)
+      path: options.path as Path
     });
     let content = tree.read(options.module).toString();
     const symbol: string = `${ classify(options.name) }Controller`;
