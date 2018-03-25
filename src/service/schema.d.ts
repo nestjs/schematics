@@ -17,4 +17,12 @@ export interface ServiceOptions {
    * Directive to insert declaration in module.
    */
   skipImport?: boolean;
+  /**
+   * Metadata name affected by declaration insertion.
+   */
+  metadata?: string;
+  /**
+   * Nest element type name
+   */
+  type?: string;
 }

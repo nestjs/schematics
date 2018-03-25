@@ -18,7 +18,6 @@ import { ModuleFinder } from '../utils/module.finder';
 import { Location, NameParser } from '../utils/name.parser';
 import { PathSolver } from '../utils/path.solver';
 import { ModuleOptions } from './schema';
-import { ControllerOptions } from '../controller/schema';
 
 export function main(options: ModuleOptions): Rule {
   options = transform(options);
@@ -32,8 +31,8 @@ export function main(options: ModuleOptions): Rule {
   };
 }
 
-function transform(source: ModuleOptions): ControllerOptions {
-  let target: ControllerOptions = Object.assign({}, source);
+function transform(source: ModuleOptions): ModuleOptions {
+  let target: ModuleOptions = Object.assign({}, source);
   target.metadata = 'imports';
   target.type = 'module';
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
