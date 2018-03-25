@@ -1,7 +1,7 @@
 import { normalize } from '@angular-devkit/core';
 import { expect } from 'chai';
-import { DeclarationOptions } from '../../src/utils/module.declarator';
 import { ModuleImportDeclarator } from '../../src/utils/module-import.declarator';
+import { DeclarationOptions } from '../../src/utils/module.declarator';
 
 describe('Module Import Declarator', () => {
   it('should add import to the buffered module content', () => {
