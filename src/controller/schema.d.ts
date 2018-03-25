@@ -8,9 +8,13 @@ export interface ControllerOptions {
   /**
    * The path to create the controller.
    */
-  path?: string;
+  path?: string | Path;
   /**
    * The path to insert the controller declaration.
    */
   module?: Path;
+  /**
+   * Directive to insert import in module.
+   */
+  skipImport?: boolean;
 }

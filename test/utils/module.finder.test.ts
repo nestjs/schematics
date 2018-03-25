@@ -7,12 +7,10 @@ describe('Module Finder', () => {
   it('should return the app module path', () => {
     const tree = new EmptyTree();
     tree.create('/src/app.module.ts', 'app module content');
-    tree.create('/src/name/name.controller.ts', 'name controller content');
     const finder = new ModuleFinder(tree);
     const options: FindOptions = {
-      name: 'name',
-      path: 'name',
-      kind: 'controller'
+      name: 'foo',
+      path: normalize('/src')
     };
     expect(finder.find(options))
       .to.be.equal(normalize('/src/app.module.ts'));
@@ -20,29 +18,25 @@ describe('Module Finder', () => {
   it('should return the generated directory module path', () => {
     const tree = new EmptyTree();
     tree.create('/src/app.module.ts', 'app module content');
-    tree.create('/src/name/name.module.ts', 'name module content');
-    tree.create('/src/name/name.controller.ts', 'name controller content');
+    tree.create('/src/foo/foo.module.ts', 'foo module content');
     const finder = new ModuleFinder(tree);
     const options: FindOptions = {
-      name: 'name',
-      path: 'name',
-      kind: 'controller'
+      name: 'foo',
+      path: normalize('/src')
     };
     expect(finder.find(options))
-      .to.equal(normalize('/src/name/name.module.ts'));
+      .to.equal(normalize('/src/foo/foo.module.ts'));
   });
   it('should return the intermediate module path', () => {
     const tree = new EmptyTree();
     tree.create('/src/app.module.ts', 'app module content');
-    tree.create('/src/nested/nested.module.ts', 'nested module content');
-    tree.create('/src/nested/name/name.module.ts', 'name module content');
+    tree.create('/src/foo/foo.module.ts', 'foo module content');
     const finder = new ModuleFinder(tree);
     const options: FindOptions = {
       name: 'name',
-      path: 'nested/name',
-      kind: 'module'
+      path: normalize('/src/foo')
     };
     expect(finder.find(options))
-      .to.equal(normalize('/src/nested/nested.module.ts'));
+      .to.equal(normalize('/src/foo/foo.module.ts'));
   });
 });

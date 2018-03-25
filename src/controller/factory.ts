@@ -1,4 +1,4 @@
-import { basename, dirname, normalize, Path, relative, strings } from '@angular-devkit/core';
+import { basename, dirname, join, normalize, Path, relative, strings } from '@angular-devkit/core';
 import { classify } from '@angular-devkit/core/src/utils/strings';
 import {
   apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicContext, template, Tree,
@@ -7,16 +7,15 @@ import {
 import { ModuleImportUtils } from '../utils/module-import.utils';
 import { ModuleMetadataUtils } from '../utils/module-metadata.utils';
 import { ModuleFinder } from '../utils/module.finder';
+import { Location, NameParser } from '../utils/name.parser';
 import { ControllerOptions } from './schema';
 
 export function main(options: ControllerOptions): Rule {
+  options.path = options.path !== undefined ? join(normalize('src'), options.path) : normalize('src');
+  const location: Location = new NameParser().parse(options);
+  options.name = location.name;
+  options.path = location.path;
   return (tree: Tree, context: SchematicContext) => {
-    options.path = options.path !== undefined ? options.path : options.name;
-    options.module = new ModuleFinder(tree).find({
-      name: options.name,
-      path: options.path,
-      kind: 'controller'
-    });
     return branchAndMerge(
       chain([
         addDeclarationToModule(options),
@@ -33,13 +32,20 @@ function generate(options: ControllerOptions) {
         ...strings,
         ...options
       }),
-      move('/src')
+      move(join(options.path as Path, options.name))
     ]
   );
 }
 
 function addDeclarationToModule(options: ControllerOptions): Rule {
   return (tree: Tree) => {
+    if (options.skipImport) {
+      return tree;
+    }
+    options.module = new ModuleFinder(tree).find({
+      name: options.name,
+      path: normalize(options.path)
+    });
     let content = tree.read(options.module).toString();
     const symbol: string = `${ classify(options.name) }Controller`;
     content = ModuleImportUtils.insert(content, symbol, computeRelativePath(options));
@@ -50,7 +56,7 @@ function addDeclarationToModule(options: ControllerOptions): Rule {
 }
 
 function computeRelativePath(options: ControllerOptions): string {
-  const importModulePath: Path = normalize(`/src/${ options.path }/${ options.name }.controller`);
+  const importModulePath: Path = normalize(`/${ options.path }/${options.name}/${ options.name }.controller`);
   const relativeDir: Path = relative(dirname(options.module), dirname(importModulePath));
   return (relativeDir.startsWith('.') ? relativeDir : './' + relativeDir)
     .concat(relativeDir.length === 0 ? basename(importModulePath) : '/' + basename(importModulePath));

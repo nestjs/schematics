@@ -5,52 +5,124 @@ import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
 import { ControllerOptions } from '../../src/controller/schema';
 import { ModuleOptions } from '../../src/module/schema';
+import { normalize } from '@angular-devkit/core';
 
 describe('Controller Factory', () => {
   describe('Schematic definition', () => {
-    const options: ControllerOptions = {
-      name: 'name',
-    };
-    let tree: UnitTestTree;
-    before(() => {
-      const runner: SchematicTestRunner = new SchematicTestRunner(
-        '.',
-        path.join(process.cwd(), 'src/collection.json')
-      );
-      const appOptions: ApplicationOptions = {
-        directory: '',
+    context('Manage name only in options', () => {
+      const options: ControllerOptions = {
+        name: 'foo',
+        skipImport: true
       };
-      const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-      tree = runner.runSchematic('controller', options, appTree);
+      let tree: UnitTestTree;
+      before(() => {
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        tree = runner.runSchematic('controller', options, appTree);
+      });
+      it('should generate a new controller file', () => {
+        const files: string[] = tree.files;
+        expect(
+          files.find(
+            (filename) => filename === normalize(`/src/foo/foo.controller.ts`)
+          )
+        ).to.not.be.undefined;
+      });
+      it('should generate the expected controller file content', () => {
+        expect(
+          tree.readContent(normalize(`/src/foo/foo.controller.ts`))
+        ).to.be.equal(
+          'import { Controller } from \'@nestjs/common\';\n' +
+          '\n' +
+          '@Controller()\n' +
+          'export class FooController {}\n'
+        );
+      });
     });
-    it('should generate a new controller file', () => {
-      const files: string[] = tree.files;
-      expect(
-        files.find(
-          (filename) => filename === `/src/${ options.name }/${ options.name }.controller.ts`
-        )
-      ).to.not.be.undefined;
+    context('Manage name has a path in options', () => {
+      const options: ControllerOptions = {
+        name: 'foo/bar',
+        skipImport: true
+      };
+      let tree: UnitTestTree;
+      before(() => {
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        tree = runner.runSchematic('controller', options, appTree);
+      });
+      it('should generate a new controller file', () => {
+        const files: string[] = tree.files;
+        expect(
+          files.find(
+            (filename) => filename === normalize(`/src/foo/bar/bar.controller.ts`)
+          )
+        ).to.not.be.undefined;
+      });
+      it('should generate the expected controller file content', () => {
+        expect(
+          tree.readContent(normalize(`/src/foo/bar/bar.controller.ts`))
+        ).to.be.equal(
+          'import { Controller } from \'@nestjs/common\';\n' +
+          '\n' +
+          '@Controller()\n' +
+          'export class BarController {}\n'
+        );
+      });
     });
-    it('should generate the expected controller file content', () => {
-      expect(
-        tree
-          .readContent(path.join(
-            '/src',
-            options.name,
-            `${ options.name }.controller.ts`
-          ))
-      ).to.be.equal(
-        'import { Controller } from \'@nestjs/common\';\n' +
-        '\n' +
-        '@Controller()\n' +
-        'export class NameController {}\n'
-      );
+    context('Manage name and path in options', () => {
+      const options: ControllerOptions = {
+        name: 'foo',
+        path: 'bar',
+        skipImport: true
+      };
+      let tree: UnitTestTree;
+      before(() => {
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        tree = runner.runSchematic('controller', options, appTree);
+      });
+      it('should generate a new controller file', () => {
+        const files: string[] = tree.files;
+        expect(
+          files.find(
+            (filename) => filename === normalize(`/src/bar/foo/foo.controller.ts`)
+          )
+        ).to.not.be.undefined;
+      });
+      it('should generate the expected controller file content', () => {
+        expect(
+          tree.readContent(normalize(`/src/bar/foo/foo.controller.ts`))
+        ).to.be.equal(
+          'import { Controller } from \'@nestjs/common\';\n' +
+          '\n' +
+          '@Controller()\n' +
+          'export class FooController {}\n'
+        );
+      });
     });
   });
   describe('Schematic tree modifications', () => {
-    context('Generated controller is an app module controller', () => {
+    context('Import generated controller is an app module controller', () => {
       const options: ControllerOptions = {
-        name: 'name',
+        name: 'foo',
       };
       let tree: UnitTestTree;
       before(() => {
@@ -66,20 +138,17 @@ describe('Controller Factory', () => {
       });
       it('should import the new controller in the app module', () => {
         expect(
-          tree.readContent(path.join(
-            '/src',
-            'app.module.ts'
-          ))
+          tree.readContent(normalize('/src/app.module.ts'))
         ).to.be.equal(
           'import { Module } from \'@nestjs/common\';\n' +
           'import { AppController } from \'./app.controller\';\n' +
-          'import { NameController } from \'./name/name.controller\';\n' +
+          'import { FooController } from \'./foo/foo.controller\';\n' +
           '\n' +
           '@Module({\n' +
           '  imports: [],\n' +
           '  controllers: [\n' +
           '    AppController,\n' +
-          '    NameController\n' +
+          '    FooController\n' +
           '  ],\n' +
           '  components: []\n' +
           '})\n' +
@@ -87,7 +156,7 @@ describe('Controller Factory', () => {
         );
       });
     });
-    context('Generated controller is an app sub module controller', () => {
+    context.skip('Generated controller is an app sub module controller', () => {
       const options: ControllerOptions = {
         name: 'name',
       };
@@ -122,7 +191,7 @@ describe('Controller Factory', () => {
         );
       });
     });
-    context('Generated controller is an app nested sub module controller', () => {
+    context.skip('Generated controller is an app nested sub module controller', () => {
       const options: ControllerOptions = {
         name: 'name',
         path: 'nested/name'
