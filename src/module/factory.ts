@@ -1,5 +1,5 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
-import { classify } from '@angular-devkit/core/src/utils/strings';
+import { capitalize, classify } from '@angular-devkit/core/src/utils/strings';
 import {
   apply,
   branchAndMerge,
@@ -19,12 +19,10 @@ import { ModuleFinder } from '../utils/module.finder';
 import { Location, NameParser } from '../utils/name.parser';
 import { PathSolver } from '../utils/path.solver';
 import { ModuleOptions } from './schema';
+import { ControllerOptions } from '../controller/schema';
 
-export function main(options: ModuleOptions): Rule {
-  options.path = options.path !== undefined ? join(normalize('src'), options.path) : normalize('src');
-  const location: Location = new NameParser().parse(options);
-  options.name = location.name;
-  options.path = location.path;
+export function main(options: ControllerOptions): Rule {
+  options = transform(options);
   return (tree: Tree, context: SchematicContext) => {
     return branchAndMerge(
       chain([
@@ -35,7 +33,18 @@ export function main(options: ModuleOptions): Rule {
   };
 }
 
-function generate(options: ModuleOptions): Source {
+function transform(source: ControllerOptions): ControllerOptions {
+  let target: ControllerOptions = Object.assign({}, source);
+  target.metadata = 'imports';
+  target.type = 'module';
+  target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
+  const location: Location = new NameParser().parse(target);
+  target.name = location.name;
+  target.path = location.path;
+  return target;
+}
+
+function generate(options: ControllerOptions) {
   return apply(
     url('./files'), [
       template({
@@ -47,7 +56,7 @@ function generate(options: ModuleOptions): Source {
   );
 }
 
-function addDeclarationToModule(options: ModuleOptions): Rule {
+function addDeclarationToModule(options: ControllerOptions): Rule {
   return (tree: Tree) => {
     if (options.skipImport !== undefined && options.skipImport) {
       return tree;
@@ -57,15 +66,15 @@ function addDeclarationToModule(options: ModuleOptions): Rule {
       path: options.path as Path
     });
     let content = tree.read(options.module).toString();
-    const symbol: string = `${ classify(options.name) }Module`;
+    const symbol: string = `${ classify(options.name) }${ capitalize(options.type) }`;
     content = ModuleImportUtils.insert(content, symbol, computeRelativePath(options));
-    content = ModuleMetadataUtils.insert(content, 'imports', symbol);
+    content = ModuleMetadataUtils.insert(content, options.metadata, symbol);
     tree.overwrite(options.module, content);
     return tree;
   };
 }
 
-function computeRelativePath(options: ModuleOptions): string {
-  const importModulePath: Path = normalize(`/${ options.path }/${options.name}/${ options.name }.module`);
+function computeRelativePath(options: ControllerOptions): string {
+  const importModulePath: Path = normalize(`/${ options.path }/${options.name}/${ options.name }.${ options.type }`);
   return new PathSolver().relative(options.module, importModulePath);
 }
