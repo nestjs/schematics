@@ -1,5 +1,4 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
-import { capitalize, classify } from '@angular-devkit/core/src/utils/strings';
 import {
   apply,
   branchAndMerge,
@@ -12,11 +11,9 @@ import {
   Tree,
   url
 } from '@angular-devkit/schematics';
-import { ModuleImportUtils } from '../utils/module-import.utils';
-import { ModuleMetadataUtils } from '../utils/module-metadata.utils';
+import { DeclarationOptions, ModuleDeclarator } from '../utils/module.declarator';
 import { ModuleFinder } from '../utils/module.finder';
 import { Location, NameParser } from '../utils/name.parser';
-import { PathSolver } from '../utils/path.solver';
 import { ControllerOptions } from './schema';
 
 export function main(options: ControllerOptions): Rule {
@@ -64,15 +61,8 @@ function addDeclarationToModule(options: ControllerOptions): Rule {
       path: options.path as Path
     });
     let content = tree.read(options.module).toString();
-    const symbol: string = `${ classify(options.name) }${ capitalize(options.type) }`;
-    content = ModuleImportUtils.insert(content, symbol, computeRelativePath(options));
-    content = ModuleMetadataUtils.insert(content, options.metadata, symbol);
-    tree.overwrite(options.module, content);
+    const declarator: ModuleDeclarator = new ModuleDeclarator();
+    tree.overwrite(options.module, declarator.declare(content, options as DeclarationOptions));
     return tree;
   };
-}
-
-function computeRelativePath(options: ControllerOptions): string {
-  const importModulePath: Path = normalize(`/${ options.path }/${options.name}/${ options.name }.${ options.type }`);
-  return new PathSolver().relative(options.module, importModulePath);
 }
