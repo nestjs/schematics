@@ -227,6 +227,43 @@ describe('Service Factory', () => {
           );
         });
       });
+      context('Manage name to dasherize', () => {
+        const options: ServiceOptions = {
+          name: 'barFoo',
+        };
+        let tree: UnitTestTree;
+        before(() => {
+          const runner: SchematicTestRunner = new SchematicTestRunner(
+            '.',
+            path.join(process.cwd(), 'src/collection.json')
+          );
+          const appOptions: ApplicationOptions = {
+            directory: '',
+          };
+          const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+          tree = runner.runSchematic('service', options, appTree);
+        });
+        it('should declare the foo service in the app module', () => {
+          expect(
+            tree.readContent(normalize('/src/app.module.ts'))
+          ).to.be.equal(
+            'import { Module } from \'@nestjs/common\';\n' +
+            'import { AppController } from \'./app.controller\';\n' +
+            'import { BarFooService } from \'./bar-foo/bar-foo.service\';\n' +
+            '\n' +
+            '@Module({\n' +
+            '  imports: [],\n' +
+            '  controllers: [\n' +
+            '    AppController\n' +
+            '  ],\n' +
+            '  components: [\n' +
+            '    BarFooService\n' +
+            '  ]\n' +
+            '})\n' +
+            'export class ApplicationModule {}\n'
+          );
+        });
+      });
     });
     context('Declare service in an intermediate module', () => {
       context('Manage name only', () => {
@@ -335,6 +372,42 @@ describe('Service Factory', () => {
             '  ]\n' +
             '})\n' +
             'export class BarModule {}\n'
+          );
+        });
+      });
+      context('Manage name to dasherize', () => {
+        const options: ServiceOptions = {
+          name: 'barFoo',
+        };
+        let tree: UnitTestTree;
+        before(() => {
+          const runner: SchematicTestRunner = new SchematicTestRunner(
+            '.',
+            path.join(process.cwd(), 'src/collection.json')
+          );
+          const appOptions: ApplicationOptions = {
+            directory: '',
+          };
+          let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+          const moduleOptions: ModuleOptions = {
+            name: 'barFoo'
+          };
+          root = runner.runSchematic('module', moduleOptions, root);
+          tree = runner.runSchematic('service', options, root);
+        });
+        it('should declare the foo service in the foo module', () => {
+          expect(
+            tree.readContent(normalize('/src/bar-foo/bar-foo.module.ts'))
+          ).to.be.equal(
+            'import { Module } from \'@nestjs/common\';\n' +
+            'import { BarFooService } from \'./bar-foo.service\';\n' +
+            '\n' +
+            '@Module({\n' +
+            '  components: [\n' +
+            '    BarFooService\n' +
+            '  ]\n' +
+            '})\n' +
+            'export class BarFooModule {}\n'
           );
         });
       });

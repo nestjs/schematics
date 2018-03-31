@@ -211,5 +211,42 @@ describe('Module Factory', () => {
         );
       });
     });
+    context('Manage name to dasherize', () => {
+      const options: ModuleOptions = {
+        name: 'barFoo',
+      };
+      let tree: UnitTestTree;
+      before(() => {
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        tree = runner.runSchematic('module', options, appTree);
+      });
+      it('should declare foo module in the app module', () => {
+        expect(
+          tree.readContent(normalize('/src/app.module.ts'))
+        ).to.be.equal(
+          'import { Module } from \'@nestjs/common\';\n' +
+          'import { AppController } from \'./app.controller\';\n' +
+          'import { BarFooModule } from \'./bar-foo/bar-foo.module\';\n' +
+          '\n' +
+          '@Module({\n' +
+          '  imports: [\n' +
+          '    BarFooModule\n' +
+          '  ],\n' +
+          '  controllers: [\n' +
+          '    AppController\n' +
+          '  ],\n' +
+          '  components: []\n' +
+          '})\n' +
+          'export class ApplicationModule {}\n'
+        );
+      });
+    });
   });
 });

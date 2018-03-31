@@ -13,7 +13,7 @@ function transform(source: ExceptionOptions): ExceptionOptions {
   let target: ExceptionOptions = Object.assign({}, source);
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
   const location: Location = new NameParser().parse(target);
-  target.name = location.name;
+  target.name = dasherize(location.name);
   target.path = location.path;
   return target;
 }
@@ -25,7 +25,7 @@ function generate(options: ExceptionOptions) {
         ...strings,
         ...options
       }),
-      move(join(options.path as Path, dasherize(options.name)))
+      move(join(options.path as Path, options.name))
     ]
   );
 }
