@@ -1,7 +1,7 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, Source, template, url } from '@angular-devkit/schematics';
-import { MiddlewareOptions } from './schema';
 import { Location, NameParser } from '../utils/name.parser';
+import { MiddlewareOptions } from './schema';
 
 export function main(options: MiddlewareOptions): Rule {
   options = transform(options);

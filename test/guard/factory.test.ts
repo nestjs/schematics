@@ -3,8 +3,6 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import { expect } from 'chai';
 import * as path from 'path';
 import { GuardOptions } from '../../src/guard/schema';
-import { ApplicationOptions } from '../../src/application/schema';
-import { ExceptionOptions } from '../../src/exception/schema';
 
 describe('Guard Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));

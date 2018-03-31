@@ -1,7 +1,7 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, Source, template, url } from '@angular-devkit/schematics';
-import { GuardOptions } from './schema';
 import { Location, NameParser } from '../utils/name.parser';
+import { GuardOptions } from './schema';
 
 export function main(options: GuardOptions): Rule {
   options = transform(options);

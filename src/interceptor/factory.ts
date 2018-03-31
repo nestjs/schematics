@@ -1,7 +1,7 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, Source, template, url } from '@angular-devkit/schematics';
-import { InterceptorOptions } from './schema';
 import { Location, NameParser } from '../utils/name.parser';
+import { InterceptorOptions } from './schema';
 
 export function main(options: InterceptorOptions): Rule {
   options = transform(options);
