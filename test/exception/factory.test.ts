@@ -7,7 +7,7 @@ import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Exception Factory', () => {
   const options: ExceptionOptions = {
-    name: 'name'
+    name: 'foo'
   };
   let tree: UnitTestTree;
   before(() => {
@@ -19,25 +19,21 @@ describe('Exception Factory', () => {
       directory: '',
     };
     const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-    tree = runner.runSchematic('controller', options, root);
+    tree = runner.runSchematic('exception', options, root);
   });
   it('should generate a new exception file', () => {
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/${ options.name }.exception.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo.exception.ts'))
+      .to.not.be.undefined;
   });
   it('should generate the expected exception file content', () => {
-    expect(
-      tree.readContent(`/src/${ options.name }.exception.ts`)
-    ).to.be.equal(
+    expect(tree.readContent('/src/foo.exception.ts'))
+      .to.be.equal(
       'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
       '\n' +
-      'export class NameException extends HttpException {\n' +
+      'export class FooException extends HttpException {\n' +
       '  constructor() {\n' +
-      '    super(\'Name\', HttpStatus.NOT_FOUND);\n' +
+      '    super(\'Foo\', HttpStatus.NOT_FOUND);\n' +
       '  }\n' +
       '}\n'
     );
