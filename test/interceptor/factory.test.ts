@@ -3,24 +3,56 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import { expect } from 'chai';
 import * as path from 'path';
 import { InterceptorOptions } from '../../src/interceptor/schema';
+import { GuardOptions } from '../../src/guard/schema';
+import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Interceptor Factory', () => {
-  const options: InterceptorOptions = {
-    name: 'name',
-  };
   let tree: UnitTestTree;
+  let runner: SchematicTestRunner;
   before(() => {
-    const runner: SchematicTestRunner = new SchematicTestRunner(
+    runner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
     );
-    tree = runner.runSchematic('interceptor', options, new VirtualTree());
+    const options: ApplicationOptions = {
+      name: '',
+    };
+    tree = runner.runSchematic('application', options, new VirtualTree());
   });
-  it('should generate a new interceptor file', () => {
+  it('should manage name only', () => {
+    const options: InterceptorOptions = {
+      name: 'foo'
+    };
+    tree = runner.runSchematic('interceptor', options, tree);
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
-        filename === `/src/${ options.name }.interceptor.ts`
+        filename === `/src/foo/foo.interceptor.ts`
+      )
+    ).to.not.be.undefined;
+  });
+  it('should manage name as a path', () => {
+    const options: InterceptorOptions = {
+      name: 'bar/foo'
+    };
+    tree = runner.runSchematic('interceptor', options, tree);
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/bar/foo/foo.interceptor.ts`
+      )
+    ).to.not.be.undefined;
+  });
+  it('should manage name and path', () => {
+    const options: InterceptorOptions = {
+      name: 'foo',
+      path: 'baz'
+    };
+    tree = runner.runSchematic('interceptor', options, tree);
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/baz/foo/foo.interceptor.ts`
       )
     ).to.not.be.undefined;
   });
