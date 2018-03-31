@@ -1,7 +1,8 @@
 {
   "name": "<%= name %>",
-  "version": "1.0.0",
-  "description": "Nest TypeScript starter repository",
+  "version": "<%= version %>",
+  "description": "<%= description %>",
+  "author": "<%= author %>",
   "license": "MIT",
   "scripts": {
     "format": "prettier --write \"**/*.ts\"",
