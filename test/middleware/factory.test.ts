@@ -3,41 +3,68 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import { expect } from 'chai';
 import * as path from 'path';
 import { MiddlewareOptions } from '../../src/middleware/schema';
+import { InterceptorOptions } from '../../src/interceptor/schema';
+import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Middleware Factory', () => {
-  const options: MiddlewareOptions = {
-    name: 'name',
-  };
-  let tree: UnitTestTree;
-  before(() => {
-    const runner: SchematicTestRunner = new SchematicTestRunner(
-      '.',
-      path.join(process.cwd(), 'src/collection.json')
-    );
-    tree = runner.runSchematic('middleware', options, new VirtualTree());
-  });
-  it('should generate a new middleware file', () => {
-    const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-          filename === `/src/${ options.name }.middleware.ts`
-      )
-    ).to.not.be.undefined;
-  });
-  it('should generate the expected middleware file content', () => {
-    expect(
-      tree.readContent(`/src/${ options.name }.middleware.ts`)
-    ).to.be.equal(
-      'import { Middleware, NestMiddleware, ExpressMiddleware } from \'@nestjs/common\';\n' +
-      '\n' +
-      '@Middleware()\n' +
-      'export class NameMiddleware implements NestMiddleware {\n' +
-      '  resolve(...args: any[]): ExpressMiddleware {\n' +
-      '    return (req, res, next) => {\n' +
-      '      next();\n' +
-      '    };\n' +
-      '  }\n' +
-      '}\n'
-    );
+  describe('Schematic definition', () => {
+    context('Manage name only', () => {
+      it('should generate a new guard file', () => {
+        const options: MiddlewareOptions = {
+          name: 'foo'
+        };
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        const tree: UnitTestTree = runner.runSchematic('middleware', options, root);
+        const files: string[] = tree.files;
+        expect(files.find((filename) => filename === '/src/foo/foo.middleware.ts'))
+          .to.not.be.undefined;
+      });
+    });
+    context('Manage name as a path', () => {
+      it('should generate a new guard file', () => {
+        const options: MiddlewareOptions = {
+          name: 'bar/foo'
+        };
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        const tree: UnitTestTree = runner.runSchematic('middleware', options, root);
+        const files: string[] = tree.files;
+        expect(files.find((filename) => filename === '/src/bar/foo/foo.middleware.ts'))
+          .to.not.be.undefined;
+      });
+    });
+    context('Manage name and path', () => {
+      it('should generate a new guard file', () => {
+        const options: MiddlewareOptions = {
+          name: 'foo',
+          path: 'bar'
+        };
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        const tree: UnitTestTree = runner.runSchematic('middleware', options, root);
+        const files: string[] = tree.files;
+        expect(files.find((filename) => filename === '/src/bar/foo/foo.middleware.ts'))
+          .to.not.be.undefined;
+      });
+    });
   });
 });
