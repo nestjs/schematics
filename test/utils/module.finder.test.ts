@@ -15,7 +15,7 @@ describe('Module Finder', () => {
     expect(finder.find(options))
       .to.be.equal(normalize('/src/app.module.ts'));
   });
-  it('should return the generated directory module path', () => {
+  it('should return the generated name module path', () => {
     const tree = new EmptyTree();
     tree.create('/src/app.module.ts', 'app module content');
     tree.create('/src/foo/foo.module.ts', 'foo module content');

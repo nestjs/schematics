@@ -5,37 +5,66 @@ import * as path from 'path';
 import { PipeOptions } from '../../src/pipe/schema';
 
 describe('Pipe Factory', () => {
-  const options: PipeOptions = {
-    name: 'name',
-  };
-  let tree: UnitTestTree;
-  before(() => {
-    const runner: SchematicTestRunner = new SchematicTestRunner(
-      '.',
-      path.join(process.cwd(), 'src/collection.json')
-    );
-    tree = runner.runSchematic('pipe', options, new VirtualTree());
-  });
-  it('should generate a new pipe file', () => {
+  const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
+  it('should manage name only', () => {
+    const options: PipeOptions = {
+      name: 'foo'
+    };
+    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
-        filename === `/src/${ options.name }.pipe.ts`
+        filename === `/src/foo/foo.pipe.ts`
       )
     ).to.not.be.undefined;
   });
-  it('should generate the expect pipe file content', () => {
+  it('should manage name as a path', () => {
+    const options: PipeOptions = {
+      name: 'bar/foo'
+    };
+    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
+    const files: string[] = tree.files;
     expect(
-      tree.readContent(`/src/${ options.name }.pipe.ts`)
-    ).to.be.equal(
-      'import { PipeTransform, Pipe, ArgumentMetadata } from \'@nestjs/common\';\n' +
-      '\n' +
-      '@Pipe()\n' +
-      'export class NamePipe implements PipeTransform<any> {\n' +
-      '  transform(value: any, metadata: ArgumentMetadata) {\n' +
-      '    return value;\n' +
-      '  }\n' +
-      '}\n'
-    );
+      files.find((filename) =>
+        filename === `/src/bar/foo/foo.pipe.ts`
+      )
+    ).to.not.be.undefined;
+  });
+  it('should manage name and path', () => {
+    const options: PipeOptions = {
+      name: 'foo',
+      path: 'baz'
+    };
+    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/baz/foo/foo.pipe.ts`
+      )
+    ).to.not.be.undefined;
+  });
+  it('should manage name to dasherize', () => {
+    const options: PipeOptions = {
+      name: 'fooBar'
+    };
+    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/foo-bar/foo-bar.pipe.ts`
+      )
+    ).to.not.be.undefined;
+  });
+  it('should manage path to dasherize', () => {
+    const options: PipeOptions = {
+      name: 'barBaz/foo'
+    };
+    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/bar-baz/foo/foo.pipe.ts`
+      )
+    ).to.not.be.undefined;
   });
 });
