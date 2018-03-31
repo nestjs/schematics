@@ -9,7 +9,7 @@ export function main(options: ExceptionOptions): Rule {
 }
 
 function transform(options: ExceptionOptions): ExceptionOptions {
-  const target = Object.assign({}, options);
+  const target: ExceptionOptions = Object.assign({}, options);
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
   const location: Location = new NameParser().parse(target);
   target.name = location.name;

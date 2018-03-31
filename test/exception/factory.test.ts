@@ -22,7 +22,7 @@ describe('Exception Factory', () => {
     const options: ExceptionOptions = {
       name: 'foo'
     };
-    tree = runner.runSchematic('exception', options, new VirtualTree());
+    tree = runner.runSchematic('exception', options, tree);
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
@@ -34,7 +34,7 @@ describe('Exception Factory', () => {
     const options: ExceptionOptions = {
       name: 'bar/foo'
     };
-    tree = runner.runSchematic('exception', options, new VirtualTree());
+    tree = runner.runSchematic('exception', options, tree);
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
@@ -45,13 +45,13 @@ describe('Exception Factory', () => {
   it('should manage name and path', () => {
     const options: ExceptionOptions = {
       name: 'foo',
-      path: 'bar'
+      path: 'baz'
     };
-    tree = runner.runSchematic('exception', options, new VirtualTree());
+    tree = runner.runSchematic('exception', options, tree);
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
-        filename === `/src/bar/foo/foo.exception.ts`
+        filename === `/src/baz/foo/foo.exception.ts`
       )
     ).to.not.be.undefined;
   });
