@@ -1,6 +1,6 @@
 .PHONY: test
 
-install:
+prepare:
 	@docker run -t \
 		-w /home/schematics \
 		-v $$(pwd):/home/schematics \

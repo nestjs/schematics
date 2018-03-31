@@ -1,18 +1,6 @@
 export interface ApplicationOptions {
   /**
-   * The NestJS application name.
+   * The directory name to create the app in.
    */
-  name: string;
-  /**
-   * The NestJS application version.
-   */
-  version?: string;
-  /**
-   * The NestJS application description.
-   */
-  description?: string;
-  /**
-   * The NestJS application author.
-   */
-  author?: string;
+  directory: string;
 }

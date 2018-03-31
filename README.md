@@ -1,33 +1,72 @@
-Tool to manage NestJS projects: Modern, powerful web application framework for [Node.js](http://nodejs.org).
+[![Build Status](https://travis-ci.org/nestjs/schematics.svg?branch=master)](https://travis-ci.org/nestjs/schematics)
+# @nestjs/schematics
+Nestjs project and architecture element generation based on @angular-dekit/schematics engine
 
-[![Nest Logo](http://kamilmysliwiec.com/public/nest-logo.png)](http://kamilmysliwiec.com/)
+## Build :
+- `git clone https://github.com/nestjs/schematics.git`
 
-# NestJS Schematics
+### Steps with Docker
+in the schematics folder :
+- `make prepare`
+- `make build`
 
-[![Join the chat at https://gitter.im/nestjs/nest-cli](https://badges.gitter.im/nestjs/nest-cli.svg)](https://gitter.im/nestjs/nest-cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/nestjs/schematics.svg?branch=nest-v4)](https://travis-ci.org/nestjs/schematics)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+### Steps without Docker
+in the schematics folder :
+- `npm install`
+- `rm -rf schematics && mkdir schematics`
+- `npm run -s build`
+- `cp -R src/* schematics`
+- `cp -R LICENSE package.json package-lock.json README.md .npmrc schematics`
+- `find src -name '*.js' -delete`
 
-## Description
-NestJS is a powerful web framework for [Node.js](http://nodejs.org), which helps you effortlessly build efficient, scalable applications. It uses modern JavaScript, is built with [TypeScript](http://www.typescriptlang.org) and combines best concepts of both OOP (Object Oriented Progamming) and FP (Functional Programming).
-It is not just another framework. You do not have to wait for a large community, because NestJS is built with awesome, popular well-known libraries - [Express](https://github.com/expressjs/express) and [socket.io](https://github.com/socketio/socket.io)! It means, that you could quickly start using framework without worrying about a third party plugins.
-The Schematics tool helps to create, manage application architecture entities in your project. 
+## Usages:
+### With @angular-devkit/schematics-cli
+install @angular-devkit/schematics-cli globally.
 
-## Installation
-### NPM :
+run `schematics [path_to_nestjs_schematics]:<nestjs_schematic_name> [...options]`
 
-```
-$ npm install -g @nestjs/schematics
-```
+## Schematics:
+### application:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| directory | The directory name to create the app in. | true | |
 
-### Git :
-```
-$ git clone https://github.com/nestjs/schematics.git <project>
-$ cd <project>
-$ npm install
-$ npm link
-```
+### controller:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the controller. | true | |
 
-## Usage
-The NestJS Schematics are integrated to @nestjs/cli tool.
-See the [NestJS documentation](https://docs.nestjs.com/)
+### exception:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the exception. | true | |
+
+### guard:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the guard. | true | |
+
+### interceptor:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the interceptor. | true | |
+
+### middleware:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the middleware. | true | |
+
+### module:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the module. | true | |
+
+### pipe:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the pipe. | true | |
+
+### service:
+| Option | description | required | default value |
+|--------|-------------|:--------:|:-------------:|
+| name | The name of the service. | true | |
