@@ -3,6 +3,7 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import { expect } from 'chai';
 import * as path from 'path';
 import { GuardOptions } from '../../src/guard/schema';
+import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Guard Factory', () => {
   describe('Schematic definition', () => {
@@ -15,7 +16,11 @@ describe('Guard Factory', () => {
           '.',
           path.join(process.cwd(), 'src/collection.json')
         );
-        const tree: UnitTestTree = runner.runSchematic('guard', options, new VirtualTree());
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        const tree: UnitTestTree = runner.runSchematic('guard', options, root);
         const files: string[] = tree.files;
         expect(files.find((filename) => filename === '/src/foo/foo.guard.ts'))
           .to.not.be.undefined;
@@ -30,7 +35,11 @@ describe('Guard Factory', () => {
           '.',
           path.join(process.cwd(), 'src/collection.json')
         );
-        const tree: UnitTestTree = runner.runSchematic('guard', options, new VirtualTree());
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        const tree: UnitTestTree = runner.runSchematic('guard', options, root);
         const files: string[] = tree.files;
         expect(files.find((filename) => filename === '/src/bar/foo/foo.guard.ts'))
           .to.not.be.undefined;
@@ -46,7 +55,11 @@ describe('Guard Factory', () => {
           '.',
           path.join(process.cwd(), 'src/collection.json')
         );
-        const tree: UnitTestTree = runner.runSchematic('guard', options, new VirtualTree());
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        const tree: UnitTestTree = runner.runSchematic('guard', options, root);
         const files: string[] = tree.files;
         expect(files.find((filename) => filename === '/src/bar/foo/foo.guard.ts'))
           .to.not.be.undefined;

@@ -8,11 +8,10 @@ import { ExceptionOptions } from '../../src/exception/schema';
 describe('Exception Factory', () => {
   describe('Schematic definition', () => {
     context('Manage name only', () => {
-      const options: ExceptionOptions = {
-        name: 'foo'
-      };
-      let tree: UnitTestTree;
-      before(() => {
+      it('should generate a new exception file', () => {
+        const options: ExceptionOptions = {
+          name: 'foo'
+        };
         const runner: SchematicTestRunner = new SchematicTestRunner(
           '.',
           path.join(process.cwd(), 'src/collection.json')
@@ -21,94 +20,46 @@ describe('Exception Factory', () => {
           directory: '',
         };
         const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-        tree = runner.runSchematic('exception', options, root);
-      });
-      it('should generate a new exception file', () => {
+        const tree: UnitTestTree = runner.runSchematic('exception', options, root);
         const files: string[] = tree.files;
         expect(files.find((filename) => filename === '/src/foo/foo.exception.ts'))
           .to.not.be.undefined;
-      });
-      it('should generate the expected exception file content', () => {
-        expect(tree.readContent('/src/foo/foo.exception.ts'))
-          .to.be.equal(
-          'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
-          '\n' +
-          'export class FooException extends HttpException {\n' +
-          '  constructor() {\n' +
-          '    super(\'Foo\', HttpStatus.NOT_FOUND);\n' +
-          '  }\n' +
-          '}\n'
-        );
       });
     });
     context('Manage name as a path', () => {
       const options: ExceptionOptions = {
         name: 'bar/foo'
       };
-      let tree: UnitTestTree;
-      before(() => {
-        const runner: SchematicTestRunner = new SchematicTestRunner(
-          '.',
-          path.join(process.cwd(), 'src/collection.json')
-        );
-        const appOptions: ApplicationOptions = {
-          directory: '',
-        };
-        const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-        tree = runner.runSchematic('exception', options, root);
-      });
-      it('should generate a new exception file', () => {
-        const files: string[] = tree.files;
-        expect(files.find((filename) => filename === '/src/bar/foo/foo.exception.ts'))
-          .to.not.be.undefined;
-      });
-      it('should generate the expected exception file content', () => {
-        expect(tree.readContent('/src/bar/foo/foo.exception.ts'))
-          .to.be.equal(
-          'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
-          '\n' +
-          'export class FooException extends HttpException {\n' +
-          '  constructor() {\n' +
-          '    super(\'Foo\', HttpStatus.NOT_FOUND);\n' +
-          '  }\n' +
-          '}\n'
-        );
-      });
+      const runner: SchematicTestRunner = new SchematicTestRunner(
+        '.',
+        path.join(process.cwd(), 'src/collection.json')
+      );
+      const appOptions: ApplicationOptions = {
+        directory: '',
+      };
+      const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+      const tree: UnitTestTree = runner.runSchematic('exception', options, root);
+      const files: string[] = tree.files;
+      expect(files.find((filename) => filename === '/src/bar/foo/foo.exception.ts'))
+        .to.not.be.undefined;
     });
     context('Manage name and path', () => {
       const options: ExceptionOptions = {
         name: 'foo',
         path: 'bar'
       };
-      let tree: UnitTestTree;
-      before(() => {
-        const runner: SchematicTestRunner = new SchematicTestRunner(
-          '.',
-          path.join(process.cwd(), 'src/collection.json')
-        );
-        const appOptions: ApplicationOptions = {
-          directory: '',
-        };
-        const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-        tree = runner.runSchematic('exception', options, root);
-      });
-      it('should generate a new exception file', () => {
-        const files: string[] = tree.files;
-        expect(files.find((filename) => filename === '/src/bar/foo/foo.exception.ts'))
-          .to.not.be.undefined;
-      });
-      it('should generate the expected exception file content', () => {
-        expect(tree.readContent('/src/bar/foo/foo.exception.ts'))
-          .to.be.equal(
-          'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
-          '\n' +
-          'export class FooException extends HttpException {\n' +
-          '  constructor() {\n' +
-          '    super(\'Foo\', HttpStatus.NOT_FOUND);\n' +
-          '  }\n' +
-          '}\n'
-        );
-      });
+      const runner: SchematicTestRunner = new SchematicTestRunner(
+        '.',
+        path.join(process.cwd(), 'src/collection.json')
+      );
+      const appOptions: ApplicationOptions = {
+        directory: '',
+      };
+      const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+      const tree: UnitTestTree = runner.runSchematic('exception', options, root);
+      const files: string[] = tree.files;
+      expect(files.find((filename) => filename === '/src/bar/foo/foo.exception.ts'))
+        .to.not.be.undefined;
     });
   });
 });
