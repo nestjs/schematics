@@ -21,7 +21,7 @@ describe('Service Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         tree = runner.runSchematic('service', options, appTree);
@@ -57,7 +57,7 @@ describe('Service Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         tree = runner.runSchematic('service', options, appTree);
@@ -94,7 +94,7 @@ describe('Service Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         tree = runner.runSchematic('service', options, appTree);
@@ -132,7 +132,7 @@ describe('Service Factory', () => {
             path.join(process.cwd(), 'src/collection.json')
           );
           const appOptions: ApplicationOptions = {
-            directory: '',
+            name: '',
           };
           const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
           tree = runner.runSchematic('service', options, appTree);
@@ -169,7 +169,7 @@ describe('Service Factory', () => {
             path.join(process.cwd(), 'src/collection.json')
           );
           const appOptions: ApplicationOptions = {
-            directory: '',
+            name: '',
           };
           let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
           tree = runner.runSchematic('service', options, root);
@@ -206,7 +206,7 @@ describe('Service Factory', () => {
             path.join(process.cwd(), 'src/collection.json')
           );
           const appOptions: ApplicationOptions = {
-            directory: '',
+            name: '',
           };
           let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
           tree = runner.runSchematic('service', options, root);
@@ -244,7 +244,7 @@ describe('Service Factory', () => {
             path.join(process.cwd(), 'src/collection.json')
           );
           const appOptions: ApplicationOptions = {
-            directory: '',
+            name: '',
           };
           let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
           const moduleOptions: ModuleOptions = {
@@ -280,7 +280,7 @@ describe('Service Factory', () => {
             path.join(process.cwd(), 'src/collection.json')
           );
           const appOptions: ApplicationOptions = {
-            directory: '',
+            name: '',
           };
           let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
           const moduleOptions: ModuleOptions = {
@@ -317,7 +317,7 @@ describe('Service Factory', () => {
             path.join(process.cwd(), 'src/collection.json')
           );
           const appOptions: ApplicationOptions = {
-            directory: '',
+            name: '',
           };
           let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
           const moduleOptions: ModuleOptions = {

@@ -6,7 +6,7 @@ import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Application Factory', () => {
   const options: ApplicationOptions = {
-    directory: 'directory'
+    name: 'name'
   };
   let tree: UnitTestTree;
   before(() => {
@@ -20,18 +20,18 @@ describe('Application Factory', () => {
     () => {
       const files: string[] = tree.files;
       expect(files).to.be.deep.equal([
-        '/directory/.prettierrc',
-        '/directory/README.md',
-        '/directory/nodemon.json',
-        '/directory/package.json',
-        '/directory/src/app.controller.spec.ts',
-        '/directory/src/app.controller.ts',
-        '/directory/src/app.module.ts',
-        '/directory/src/main.ts',
-        '/directory/test/app.e2e-spec.ts',
-        '/directory/test/jest-e2e.json',
-        '/directory/tsconfig.json',
-        '/directory/tslint.json'
+        '/name/.prettierrc',
+        '/name/README.md',
+        '/name/nodemon.json',
+        '/name/package.json',
+        '/name/src/app.controller.spec.ts',
+        '/name/src/app.controller.ts',
+        '/name/src/app.module.ts',
+        '/name/src/main.ts',
+        '/name/test/app.e2e-spec.ts',
+        '/name/test/jest-e2e.json',
+        '/name/tsconfig.json',
+        '/name/tslint.json'
       ]);
     });
 });

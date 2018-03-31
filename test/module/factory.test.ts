@@ -20,7 +20,7 @@ describe('Module Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         tree = runner.runSchematic('module', options, appTree);
@@ -52,7 +52,7 @@ describe('Module Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         tree = runner.runSchematic('module', options, appTree);
@@ -85,7 +85,7 @@ describe('Module Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         tree = runner.runSchematic('module', options, appTree);
@@ -118,7 +118,7 @@ describe('Module Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         tree = runner.runSchematic('module', options, appTree);
@@ -155,7 +155,7 @@ describe('Module Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         const appNestedModuleOptions: ModuleOptions = {
@@ -191,7 +191,7 @@ describe('Module Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         const appNestedModuleOptions: ModuleOptions = {

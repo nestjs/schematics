@@ -1,7 +1,8 @@
 {
-  "name": "nest-typescript-starter",
-  "version": "1.0.0",
-  "description": "Nest TypeScript starter repository",
+  "name": "<%= name %>",
+  "version": "<%= version %>",
+  "description": "<%= description %>",
+  "author": "<%= author %>",
   "license": "MIT",
   "scripts": {
     "format": "prettier --write \"**/*.ts\"",
