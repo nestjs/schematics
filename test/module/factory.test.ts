@@ -20,7 +20,7 @@ describe('Module Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         tree = runner.runSchematic('module', options, appTree);
@@ -30,19 +30,10 @@ describe('Module Factory', () => {
         expect(files.find((filename) => filename === normalize('/src/foo/foo.module.ts'))
         ).to.not.be.undefined;
       });
-      it('should generate the expected module file content', () => {
-        expect(tree.readContent(normalize('/src/foo/foo.module.ts')))
-          .to.be.equal(
-          'import { Module } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Module({})\n' +
-          'export class FooModule {}\n'
-        );
-      });
     });
     context('Manage name as a path', () => {
       const options: ModuleOptions = {
-        name: 'foo/bar',
+        name: 'bar/foo',
         skipImport: true
       };
       let tree: UnitTestTree;
@@ -52,24 +43,15 @@ describe('Module Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         tree = runner.runSchematic('module', options, appTree);
       });
       it('should generate a new module file', () => {
         const files: string[] = tree.files;
-        expect(files.find((filename) => filename === normalize('/src/foo/bar/bar.module.ts'))
+        expect(files.find((filename) => filename === normalize('/src/bar/foo/foo.module.ts'))
         ).to.not.be.undefined;
-      });
-      it('should generate the expected module file content', () => {
-        expect(tree.readContent(normalize('/src/foo/bar/bar.module.ts')))
-          .to.be.equal(
-          'import { Module } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Module({})\n' +
-          'export class BarModule {}\n'
-        );
       });
     });
     context('Manage name and path', () => {
@@ -85,7 +67,7 @@ describe('Module Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         tree = runner.runSchematic('module', options, appTree);
@@ -95,14 +77,28 @@ describe('Module Factory', () => {
         expect(files.find((filename) => filename === normalize('/src/bar/foo/foo.module.ts'))
         ).to.not.be.undefined;
       });
-      it('should generate the expected module file content', () => {
-        expect(tree.readContent(normalize('/src/bar/foo/foo.module.ts')))
-          .to.be.equal(
-          'import { Module } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Module({})\n' +
-          'export class FooModule {}\n'
+    });
+    context('Manage name to dasherize', () => {
+      const options: ModuleOptions = {
+        name: 'barFoo',
+        skipImport: true
+      };
+      let tree: UnitTestTree;
+      before(() => {
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
         );
+        const appOptions: ApplicationOptions = {
+          name: '',
+        };
+        const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        tree = runner.runSchematic('module', options, appTree);
+      });
+      it('should generate a new module file', () => {
+        const files: string[] = tree.files;
+        expect(files.find((filename) => filename === normalize('/src/bar-foo/bar-foo.module.ts'))
+        ).to.not.be.undefined;
       });
     });
   });
@@ -118,7 +114,7 @@ describe('Module Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         tree = runner.runSchematic('module', options, appTree);
@@ -155,7 +151,7 @@ describe('Module Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         const appNestedModuleOptions: ModuleOptions = {
@@ -191,7 +187,7 @@ describe('Module Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         let root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         const appNestedModuleOptions: ModuleOptions = {
@@ -212,6 +208,43 @@ describe('Module Factory', () => {
           '  ]\n' +
           '})\n' +
           'export class BarModule {}\n'
+        );
+      });
+    });
+    context('Manage name to dasherize', () => {
+      const options: ModuleOptions = {
+        name: 'barFoo',
+      };
+      let tree: UnitTestTree;
+      before(() => {
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          name: '',
+        };
+        const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        tree = runner.runSchematic('module', options, appTree);
+      });
+      it('should declare foo module in the app module', () => {
+        expect(
+          tree.readContent(normalize('/src/app.module.ts'))
+        ).to.be.equal(
+          'import { Module } from \'@nestjs/common\';\n' +
+          'import { AppController } from \'./app.controller\';\n' +
+          'import { BarFooModule } from \'./bar-foo/bar-foo.module\';\n' +
+          '\n' +
+          '@Module({\n' +
+          '  imports: [\n' +
+          '    BarFooModule\n' +
+          '  ],\n' +
+          '  controllers: [\n' +
+          '    AppController\n' +
+          '  ],\n' +
+          '  components: []\n' +
+          '})\n' +
+          'export class ApplicationModule {}\n'
         );
       });
     });

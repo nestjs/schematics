@@ -2,40 +2,83 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
+import { ApplicationOptions } from '../../src/application/schema';
 import { ExceptionOptions } from '../../src/exception/schema';
 
 describe('Exception Factory', () => {
-  const options: ExceptionOptions = {
-    name: 'name',
-  };
-  let runner: SchematicTestRunner;
-  before(() => {
-    runner = new SchematicTestRunner(
-      '.',
-      path.join(process.cwd(), 'src/collection.json')
-    );
-  });
-  it('should generate a new exception file', () => {
-    const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
-    const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/${ options.name }.exception.ts`
-      )
-    ).to.not.be.undefined;
-  });
-  it('should generate the expected exception file content', () => {
-    const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
-    expect(
-      tree.readContent(`/src/${ options.name }.exception.ts`)
-    ).to.be.equal(
-      'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
-      '\n' +
-      'export class NameException extends HttpException {\n' +
-      '  constructor() {\n' +
-      '    super(\'Name\', HttpStatus.NOT_FOUND);\n' +
-      '  }\n' +
-      '}\n'
-    );
+  describe('Schematic definition', () => {
+    context('Manage name only', () => {
+      it('should generate a new exception file', () => {
+        const options: ExceptionOptions = {
+          name: 'foo'
+        };
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          name: '',
+        };
+        const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        const tree: UnitTestTree = runner.runSchematic('exception', options, root);
+        const files: string[] = tree.files;
+        expect(files.find((filename) => filename === '/src/foo/foo.exception.ts'))
+          .to.not.be.undefined;
+      });
+    });
+    context('Manage name as a path', () => {
+      const options: ExceptionOptions = {
+        name: 'bar/foo'
+      };
+      const runner: SchematicTestRunner = new SchematicTestRunner(
+        '.',
+        path.join(process.cwd(), 'src/collection.json')
+      );
+      const appOptions: ApplicationOptions = {
+        name: '',
+      };
+      const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+      const tree: UnitTestTree = runner.runSchematic('exception', options, root);
+      const files: string[] = tree.files;
+      expect(files.find((filename) => filename === '/src/bar/foo/foo.exception.ts'))
+        .to.not.be.undefined;
+    });
+    context('Manage name and path', () => {
+      const options: ExceptionOptions = {
+        name: 'foo',
+        path: 'bar'
+      };
+      const runner: SchematicTestRunner = new SchematicTestRunner(
+        '.',
+        path.join(process.cwd(), 'src/collection.json')
+      );
+      const appOptions: ApplicationOptions = {
+        name: '',
+      };
+      const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+      const tree: UnitTestTree = runner.runSchematic('exception', options, root);
+      const files: string[] = tree.files;
+      expect(files.find((filename) => filename === '/src/bar/foo/foo.exception.ts'))
+        .to.not.be.undefined;
+    });
+    context('Manage name to dasherize', () => {
+      it('should generate a new exception file', () => {
+        const options: ExceptionOptions = {
+          name: 'barFoo'
+        };
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          name: '',
+        };
+        const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        const tree: UnitTestTree = runner.runSchematic('exception', options, root);
+        const files: string[] = tree.files;
+        expect(files.find((filename) => filename === '/src/bar-foo/bar-foo.exception.ts'))
+          .to.not.be.undefined;
+      });
+    });
   });
 });
