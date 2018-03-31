@@ -7,23 +7,12 @@ import { InterceptorOptions } from '../../src/interceptor/schema';
 import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Middleware Factory', () => {
-  let tree: UnitTestTree;
-  let runner: SchematicTestRunner;
-  before(() => {
-    runner = new SchematicTestRunner(
-      '.',
-      path.join(process.cwd(), 'src/collection.json')
-    );
-    const options: ApplicationOptions = {
-      name: '',
-    };
-    tree = runner.runSchematic('application', options, new VirtualTree());
-  });
+  const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
   it('should manage name only', () => {
     const options: MiddlewareOptions = {
       name: 'foo'
     };
-    tree = runner.runSchematic('middleware', options, tree);
+    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
@@ -35,7 +24,7 @@ describe('Middleware Factory', () => {
     const options: MiddlewareOptions = {
       name: 'bar/foo'
     };
-    tree = runner.runSchematic('middleware', options, tree);
+    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
@@ -48,7 +37,7 @@ describe('Middleware Factory', () => {
       name: 'foo',
       path: 'baz'
     };
-    tree = runner.runSchematic('middleware', options, tree);
+    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
