@@ -12,7 +12,7 @@ function transform(options: MiddlewareOptions): MiddlewareOptions {
   const target: MiddlewareOptions = Object.assign({}, options);
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
   const location: Location = new NameParser().parse(target);
-  target.name = location.name;
+  target.name = strings.dasherize(location.name);
   target.path = location.path;
   return target;
 }

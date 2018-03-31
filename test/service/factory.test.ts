@@ -49,6 +49,19 @@ describe('Service Factory', () => {
       )
     ).to.not.be.undefined;
   });
+  it('should manage name to dasherize', () => {
+    const options: ServiceOptions = {
+      name: 'fooBar',
+      skipImport: true
+    };
+    const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/foo-bar/foo-bar.service.ts`
+      )
+    ).to.not.be.undefined;
+  });
   it('should manage declaration in app module', () => {
     const app: ApplicationOptions = {
       name: '',

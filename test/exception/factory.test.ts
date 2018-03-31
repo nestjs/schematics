@@ -43,4 +43,16 @@ describe('Exception Factory', () => {
       )
     ).to.not.be.undefined;
   });
+  it('should manage name to dasherize', () => {
+    const options: ExceptionOptions = {
+      name: 'fooBar'
+    };
+    const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/foo-bar/foo-bar.exception.ts`
+      )
+    ).to.not.be.undefined;
+  });
 });

@@ -49,6 +49,19 @@ describe('Controller Factory', () => {
       )
     ).to.not.be.undefined;
   });
+  it('should manage name to dasherize', () => {
+    const options: ControllerOptions = {
+      name: 'fooBar',
+      skipImport: true
+    };
+    const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/foo-bar/foo-bar.controller.ts`
+      )
+    ).to.not.be.undefined;
+  });
   it('should manage declaration in app module', () => {
     const app: ApplicationOptions = {
       name: '',

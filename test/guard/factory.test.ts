@@ -43,4 +43,16 @@ describe('Guard Factory', () => {
       )
     ).to.not.be.undefined;
   });
+  it('should manage name only', () => {
+    const options: GuardOptions = {
+      name: 'fooBar'
+    };
+    const tree: UnitTestTree = runner.runSchematic('guard', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/foo-bar/foo-bar.guard.ts`
+      )
+    ).to.not.be.undefined;
+  });
 });

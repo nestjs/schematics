@@ -43,4 +43,16 @@ describe('Middleware Factory', () => {
       )
     ).to.not.be.undefined;
   });
+  it('should manage name to dasherize', () => {
+    const options: MiddlewareOptions = {
+      name: 'fooBar'
+    };
+    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/foo-bar/foo-bar.middleware.ts`
+      )
+    ).to.not.be.undefined;
+  });
 });

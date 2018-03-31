@@ -5,32 +5,47 @@ import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Application Factory', () => {
-  const options: ApplicationOptions = {
-    name: 'name'
-  };
-  let tree: UnitTestTree;
-  before(() => {
-    const runner: SchematicTestRunner = new SchematicTestRunner(
-      '.',
-      path.join(process.cwd(), 'src/collection.json')
-    );
-    tree = runner.runSchematic('application', options, new VirtualTree());
-  });
-  it('should generate Nest application starter project structure', () => {
+  const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
+  it('should manage name only', () => {
+    const options: ApplicationOptions = {
+      name: 'project'
+    };
+    const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(files).to.be.deep.equal([
-      '/name/.prettierrc',
-      '/name/README.md',
-      '/name/nodemon.json',
-      '/name/package.json',
-      '/name/src/app.controller.spec.ts',
-      '/name/src/app.controller.ts',
-      '/name/src/app.module.ts',
-      '/name/src/main.ts',
-      '/name/test/app.e2e-spec.ts',
-      '/name/test/jest-e2e.json',
-      '/name/tsconfig.json',
-      '/name/tslint.json'
+      '/project/.prettierrc',
+      '/project/README.md',
+      '/project/nodemon.json',
+      '/project/package.json',
+      '/project/src/app.controller.spec.ts',
+      '/project/src/app.controller.ts',
+      '/project/src/app.module.ts',
+      '/project/src/main.ts',
+      '/project/test/app.e2e-spec.ts',
+      '/project/test/jest-e2e.json',
+      '/project/tsconfig.json',
+      '/project/tslint.json'
+    ]);
+  });
+  it('should manage name to dasherize', () => {
+    const options: ApplicationOptions = {
+      name: 'awesomeProject'
+    };
+    const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files).to.be.deep.equal([
+      '/awesome-project/.prettierrc',
+      '/awesome-project/README.md',
+      '/awesome-project/nodemon.json',
+      '/awesome-project/package.json',
+      '/awesome-project/src/app.controller.spec.ts',
+      '/awesome-project/src/app.controller.ts',
+      '/awesome-project/src/app.module.ts',
+      '/awesome-project/src/main.ts',
+      '/awesome-project/test/app.e2e-spec.ts',
+      '/awesome-project/test/jest-e2e.json',
+      '/awesome-project/tsconfig.json',
+      '/awesome-project/tslint.json'
     ]);
   });
 });

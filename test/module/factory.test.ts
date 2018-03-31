@@ -48,6 +48,19 @@ describe('Module Factory', () => {
       )
     ).to.not.be.undefined;
   });
+  it('should manage name to dasherize', () => {
+    const options: ModuleOptions = {
+      name: 'fooBar',
+      skipImport: true
+    };
+    const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/foo-bar/foo-bar.module.ts`
+      )
+    ).to.not.be.undefined;
+  });
   it('should manage declaration in app module', () => {
     const app: ApplicationOptions = {
       name: '',

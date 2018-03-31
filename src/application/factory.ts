@@ -11,6 +11,7 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   const target: ApplicationOptions = Object.assign({}, options);
   target.author = target.author !== undefined ? target.author : '';
   target.description = target.description !== undefined ? target.description : '';
+  target.name = strings.dasherize(target.name);
   target.version = target.version !== undefined ? target.version : '1.0.0';
   return target;
 }
