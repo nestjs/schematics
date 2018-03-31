@@ -18,7 +18,6 @@ describe('Application Factory', () => {
     expect(files).to.be.deep.equal([
       '/project/.prettierrc',
       '/project/nodemon.json',
-      '/project/package-lock.json',
       '/project/package.json',
       '/project/src/app.controller.spec.ts',
       '/project/src/app.controller.ts',
@@ -43,7 +42,6 @@ describe('Application Factory', () => {
     expect(files).to.be.deep.equal([
       '/awesome-project/.prettierrc',
       '/awesome-project/nodemon.json',
-      '/awesome-project/package-lock.json',
       '/awesome-project/package.json',
       '/awesome-project/src/app.controller.spec.ts',
       '/awesome-project/src/app.controller.ts',
