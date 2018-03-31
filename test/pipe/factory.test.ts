@@ -3,24 +3,56 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import { expect } from 'chai';
 import * as path from 'path';
 import { PipeOptions } from '../../src/pipe/schema';
+import { MiddlewareOptions } from '../../src/middleware/schema';
+import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Pipe Factory', () => {
-  const options: PipeOptions = {
-    name: 'name',
-  };
   let tree: UnitTestTree;
+  let runner: SchematicTestRunner;
   before(() => {
-    const runner: SchematicTestRunner = new SchematicTestRunner(
+    runner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
     );
-    tree = runner.runSchematic('pipe', options, new VirtualTree());
+    const options: ApplicationOptions = {
+      name: '',
+    };
+    tree = runner.runSchematic('application', options, new VirtualTree());
   });
-  it('should generate a new pipe file', () => {
+  it('should manage name only', () => {
+    const options: PipeOptions = {
+      name: 'foo'
+    };
+    tree = runner.runSchematic('pipe', options, tree);
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
-        filename === `/src/${ options.name }.pipe.ts`
+        filename === `/src/foo/foo.pipe.ts`
+      )
+    ).to.not.be.undefined;
+  });
+  it('should manage name as a path', () => {
+    const options: PipeOptions = {
+      name: 'bar/foo'
+    };
+    tree = runner.runSchematic('pipe', options, tree);
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/bar/foo/foo.pipe.ts`
+      )
+    ).to.not.be.undefined;
+  });
+  it('should manage name and path', () => {
+    const options: PipeOptions = {
+      name: 'foo',
+      path: 'baz'
+    };
+    tree = runner.runSchematic('pipe', options, tree);
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/baz/foo/foo.pipe.ts`
       )
     ).to.not.be.undefined;
   });
