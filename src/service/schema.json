@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "SchematicsNestService",
+  "title": "Nest Service Options Schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the service."
+    },
+    "path": {
+      "type": "string",
+      "format": "path",
+      "description": "The path to create the service"
+    },
+    "module": {
+      "type": "string",
+      "format": "path",
+      "description": "The path to insert the service declaration."
+    },
+    "skipImport": {
+      "type": "boolean",
+      "description": "Directive to insert declaration in module."
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

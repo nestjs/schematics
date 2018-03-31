@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "SchematicsNestController",
+  "title": "Nest Controller Options Schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the controller."
+    },
+    "path": {
+      "type": "string",
+      "format": "path",
+      "description": "The path to create the controller"
+    },
+    "module": {
+      "type": "string",
+      "format": "path",
+      "description": "The path to insert the controller declaration."
+    },
+    "skipImport": {
+      "type": "boolean",
+      "description": "Directive to insert declaration in module."
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

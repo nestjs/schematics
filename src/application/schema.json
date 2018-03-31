@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "SchematicsNestApp",
+  "title": "Nest Application Options Schema",
+  "type": "object",
+  "properties": {
+    "directory": {
+      "type": "string",
+      "format": "path",
+      "description": "The directory name to create the app in.",
+      "alias": "dir"
+    },
+    "required": [
+      "directory"
+    ]
+  }
+}
