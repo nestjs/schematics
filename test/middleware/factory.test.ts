@@ -3,24 +3,56 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import { expect } from 'chai';
 import * as path from 'path';
 import { MiddlewareOptions } from '../../src/middleware/schema';
+import { InterceptorOptions } from '../../src/interceptor/schema';
+import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Middleware Factory', () => {
-  const options: MiddlewareOptions = {
-    name: 'name',
-  };
   let tree: UnitTestTree;
+  let runner: SchematicTestRunner;
   before(() => {
-    const runner: SchematicTestRunner = new SchematicTestRunner(
+    runner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
     );
-    tree = runner.runSchematic('middleware', options, new VirtualTree());
+    const options: ApplicationOptions = {
+      name: '',
+    };
+    tree = runner.runSchematic('application', options, new VirtualTree());
   });
-  it('should generate a new middleware file', () => {
+  it('should manage name only', () => {
+    const options: MiddlewareOptions = {
+      name: 'foo'
+    };
+    tree = runner.runSchematic('middleware', options, tree);
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
-          filename === `/src/${ options.name }.middleware.ts`
+        filename === `/src/foo/foo.middleware.ts`
+      )
+    ).to.not.be.undefined;
+  });
+  it('should manage name as a path', () => {
+    const options: MiddlewareOptions = {
+      name: 'bar/foo'
+    };
+    tree = runner.runSchematic('middleware', options, tree);
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/bar/foo/foo.middleware.ts`
+      )
+    ).to.not.be.undefined;
+  });
+  it('should manage name and path', () => {
+    const options: MiddlewareOptions = {
+      name: 'foo',
+      path: 'baz'
+    };
+    tree = runner.runSchematic('middleware', options, tree);
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/baz/foo/foo.middleware.ts`
       )
     ).to.not.be.undefined;
   });
