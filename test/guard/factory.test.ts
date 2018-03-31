@@ -17,7 +17,7 @@ describe('Guard Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         const tree: UnitTestTree = runner.runSchematic('guard', options, root);
@@ -36,7 +36,7 @@ describe('Guard Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         const tree: UnitTestTree = runner.runSchematic('guard', options, root);
@@ -56,7 +56,7 @@ describe('Guard Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         const tree: UnitTestTree = runner.runSchematic('guard', options, root);
@@ -75,7 +75,7 @@ describe('Guard Factory', () => {
           path.join(process.cwd(), 'src/collection.json')
         );
         const appOptions: ApplicationOptions = {
-          directory: '',
+          name: '',
         };
         const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
         const tree: UnitTestTree = runner.runSchematic('guard', options, root);

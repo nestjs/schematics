@@ -1,6 +1,6 @@
 export interface ApplicationOptions {
   /**
-   * The directory name to create the app in.
+   * The NestJS application name.
    */
-  directory: string;
+  name: string;
 }
