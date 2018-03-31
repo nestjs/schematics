@@ -34,7 +34,7 @@ function transform(source: ModuleOptions): ModuleOptions {
   target.type = 'module';
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
   const location: Location = new NameParser().parse(target);
-  target.name = strings.dasherize(location.name);
+  target.name = location.name;
   target.path = location.path;
   return target;
 }
