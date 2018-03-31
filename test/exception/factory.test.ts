@@ -3,20 +3,25 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import { expect } from 'chai';
 import * as path from 'path';
 import { ExceptionOptions } from '../../src/exception/schema';
+import { ApplicationOptions } from '../../src/application/schema';
 
 describe('Exception Factory', () => {
   const options: ExceptionOptions = {
-    name: 'name',
+    name: 'name'
   };
-  let runner: SchematicTestRunner;
+  let tree: UnitTestTree;
   before(() => {
-    runner = new SchematicTestRunner(
+    const runner: SchematicTestRunner = new SchematicTestRunner(
       '.',
       path.join(process.cwd(), 'src/collection.json')
     );
+    const appOptions: ApplicationOptions = {
+      directory: '',
+    };
+    const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+    tree = runner.runSchematic('controller', options, root);
   });
   it('should generate a new exception file', () => {
-    const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(
       files.find((filename) =>
@@ -25,7 +30,6 @@ describe('Exception Factory', () => {
     ).to.not.be.undefined;
   });
   it('should generate the expected exception file content', () => {
-    const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
     expect(
       tree.readContent(`/src/${ options.name }.exception.ts`)
     ).to.be.equal(
