@@ -2,6 +2,7 @@ import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, template, url } from '@angular-devkit/schematics';
 import { Location, NameParser } from '../utils/name.parser';
 import { PipeOptions } from './schema';
+import { dasherize } from '@angular-devkit/core/src/utils/strings';
 
 export function main(options: PipeOptions): Rule {
   options = transform(options);
@@ -24,7 +25,7 @@ function generate(options: PipeOptions) {
         ...strings,
         ...options
       }),
-      move(join(options.path as Path, options.name))
+      move(join(options.path as Path, dasherize(options.name)))
     ]
   );
 }

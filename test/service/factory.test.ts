@@ -88,6 +88,32 @@ describe('Service Factory', () => {
         ).to.not.be.undefined;
       });
     });
+    context('Manage name to dasherize', () => {
+      const options: ServiceOptions = {
+        name: 'barFoo',
+        skipImport: true
+      };
+      let tree: UnitTestTree;
+      before(() => {
+        const runner: SchematicTestRunner = new SchematicTestRunner(
+          '.',
+          path.join(process.cwd(), 'src/collection.json')
+        );
+        const appOptions: ApplicationOptions = {
+          directory: '',
+        };
+        const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        tree = runner.runSchematic('service', options, appTree);
+      });
+      it('should generate a new service file', () => {
+        const files: string[] = tree.files;
+        expect(
+          files.find(
+            (filename) => filename === normalize('/src/bar-foo/bar-foo.service.ts')
+          )
+        ).to.not.be.undefined;
+      });
+    });
   });
   describe('Schematic tree modifications', () => {
     context('Declare service in the app module', () => {

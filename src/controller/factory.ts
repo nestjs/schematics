@@ -15,6 +15,7 @@ import { DeclarationOptions, ModuleDeclarator } from '../utils/module.declarator
 import { ModuleFinder } from '../utils/module.finder';
 import { Location, NameParser } from '../utils/name.parser';
 import { ControllerOptions } from './schema';
+import { dasherize } from '@angular-devkit/core/src/utils/strings';
 
 export function main(options: ControllerOptions): Rule {
   options = transform(options);
@@ -46,7 +47,7 @@ function generate(options: ControllerOptions) {
         ...strings,
         ...options
       }),
-      move(join(options.path as Path, options.name))
+      move(join(options.path as Path, dasherize(options.name)))
     ]
   );
 }
