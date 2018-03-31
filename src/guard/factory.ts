@@ -8,7 +8,7 @@ export function main(options: GuardOptions): Rule {
   return mergeWith(generate(options));
 }
 
-function transform(source: GuardOptions): GuardOptions{
+function transform(source: GuardOptions): GuardOptions {
   let target: GuardOptions = Object.assign({}, source);
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
   const location: Location = new NameParser().parse(target);
