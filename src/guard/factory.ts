@@ -2,7 +2,6 @@ import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, template, url } from '@angular-devkit/schematics';
 import { Location, NameParser } from '../utils/name.parser';
 import { GuardOptions } from './schema';
-import { dasherize } from '@angular-devkit/core/src/utils/strings';
 
 export function main(options: GuardOptions): Rule {
   options = transform(options);
@@ -13,7 +12,7 @@ function transform(source: GuardOptions): GuardOptions {
   let target: GuardOptions = Object.assign({}, source);
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
   const location: Location = new NameParser().parse(target);
-  target.name = dasherize(location.name);
+  target.name = strings.dasherize(location.name);
   target.path = location.path;
   return target;
 }

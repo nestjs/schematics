@@ -15,7 +15,6 @@ import { DeclarationOptions, ModuleDeclarator } from '../utils/module.declarator
 import { ModuleFinder } from '../utils/module.finder';
 import { Location, NameParser } from '../utils/name.parser';
 import { ModuleOptions } from './schema';
-import { dasherize } from '@angular-devkit/core/src/utils/strings';
 
 export function main(options: ModuleOptions): Rule {
   options = transform(options);
@@ -35,7 +34,7 @@ function transform(source: ModuleOptions): ModuleOptions {
   target.type = 'module';
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
   const location: Location = new NameParser().parse(target);
-  target.name = dasherize(location.name);
+  target.name = strings.dasherize(location.name);
   target.path = location.path;
   return target;
 }
