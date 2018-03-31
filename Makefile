@@ -48,7 +48,7 @@ build:
 publish:
 	@docker run -t \
 		-w /home/schematics \
-		-v $$(pwd):/home/schematics \
+		-v $$(pwd)/schematics:/home/schematics \
 		node:carbon-alpine \
 		/bin/sh -c "\
 			echo //registry.npmjs.org/:_authToken=$$NPM_TOKEN >> .npmrc && \
