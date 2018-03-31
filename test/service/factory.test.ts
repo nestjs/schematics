@@ -34,16 +34,6 @@ describe('Service Factory', () => {
           )
         ).to.not.be.undefined;
       });
-      it('should generate the expected service file content', () => {
-        expect(
-          tree.readContent(normalize(`/src/foo/foo.service.ts`))
-        ).to.be.equal(
-          'import { Component } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Component()\n' +
-          'export class FooService {}\n'
-        );
-      });
     });
     context('Manage name as a path', () => {
       const options: ServiceOptions = {
@@ -69,16 +59,6 @@ describe('Service Factory', () => {
             (filename) => filename === normalize(`/src/foo/bar/bar.service.ts`)
           )
         ).to.not.be.undefined;
-      });
-      it('should generate the expected service file content', () => {
-        expect(
-          tree.readContent(normalize(`/src/foo/bar/bar.service.ts`))
-        ).to.be.equal(
-          'import { Component } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Component()\n' +
-          'export class BarService {}\n'
-        );
       });
     });
     context('Manage name and path', () => {
@@ -106,16 +86,6 @@ describe('Service Factory', () => {
             (filename) => filename === normalize(`/src/bar/foo/foo.service.ts`)
           )
         ).to.not.be.undefined;
-      });
-      it('should generate the expected service file content', () => {
-        expect(
-          tree.readContent(normalize(`/src/bar/foo/foo.service.ts`))
-        ).to.be.equal(
-          'import { Component } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Component()\n' +
-          'export class FooService {}\n'
-        );
       });
     });
   });

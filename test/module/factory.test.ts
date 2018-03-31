@@ -30,15 +30,6 @@ describe('Module Factory', () => {
         expect(files.find((filename) => filename === normalize('/src/foo/foo.module.ts'))
         ).to.not.be.undefined;
       });
-      it('should generate the expected module file content', () => {
-        expect(tree.readContent(normalize('/src/foo/foo.module.ts')))
-          .to.be.equal(
-          'import { Module } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Module({})\n' +
-          'export class FooModule {}\n'
-        );
-      });
     });
     context('Manage name as a path', () => {
       const options: ModuleOptions = {
@@ -61,15 +52,6 @@ describe('Module Factory', () => {
         const files: string[] = tree.files;
         expect(files.find((filename) => filename === normalize('/src/foo/bar/bar.module.ts'))
         ).to.not.be.undefined;
-      });
-      it('should generate the expected module file content', () => {
-        expect(tree.readContent(normalize('/src/foo/bar/bar.module.ts')))
-          .to.be.equal(
-          'import { Module } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Module({})\n' +
-          'export class BarModule {}\n'
-        );
       });
     });
     context('Manage name and path', () => {
@@ -94,15 +76,6 @@ describe('Module Factory', () => {
         const files: string[] = tree.files;
         expect(files.find((filename) => filename === normalize('/src/bar/foo/foo.module.ts'))
         ).to.not.be.undefined;
-      });
-      it('should generate the expected module file content', () => {
-        expect(tree.readContent(normalize('/src/bar/foo/foo.module.ts')))
-          .to.be.equal(
-          'import { Module } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Module({})\n' +
-          'export class FooModule {}\n'
-        );
       });
     });
   });

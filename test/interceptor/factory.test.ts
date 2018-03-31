@@ -24,19 +24,4 @@ describe('Interceptor Factory', () => {
       )
     ).to.not.be.undefined;
   });
-  it('should generate the expected interceptor file content', () => {
-    expect(
-      tree.readContent(`/src/${ options.name }.interceptor.ts`)
-    ).to.be.equal(
-      'import { Interceptor, NestInterceptor, ExecutionContext } from \'@nestjs/common\';\n' +
-      'import { Observable } from \'rxjs/Observable\';\n' +
-      '\n' +
-      '@Interceptor()\n' +
-      'export class NameInterceptor implements NestInterceptor {\n' +
-      '  intercept(dataOrRequest, context: ExecutionContext, stream$: Observable<any>): Observable<any> {\n' +
-      '    return undefined;\n' +
-      '  }\n' +
-      '}\n'
-    );
-  });
 });

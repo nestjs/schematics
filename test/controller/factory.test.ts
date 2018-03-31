@@ -34,16 +34,6 @@ describe('Controller Factory', () => {
           )
         ).to.not.be.undefined;
       });
-      it('should generate the expected controller file content', () => {
-        expect(
-          tree.readContent(normalize(`/src/foo/foo.controller.ts`))
-        ).to.be.equal(
-          'import { Controller } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Controller()\n' +
-          'export class FooController {}\n'
-        );
-      });
     });
     context('Manage name as a path', () => {
       const options: ControllerOptions = {
@@ -69,16 +59,6 @@ describe('Controller Factory', () => {
             (filename) => filename === normalize(`/src/foo/bar/bar.controller.ts`)
           )
         ).to.not.be.undefined;
-      });
-      it('should generate the expected controller file content', () => {
-        expect(
-          tree.readContent(normalize(`/src/foo/bar/bar.controller.ts`))
-        ).to.be.equal(
-          'import { Controller } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Controller()\n' +
-          'export class BarController {}\n'
-        );
       });
     });
     context('Manage name and path', () => {
@@ -106,16 +86,6 @@ describe('Controller Factory', () => {
             (filename) => filename === normalize(`/src/bar/foo/foo.controller.ts`)
           )
         ).to.not.be.undefined;
-      });
-      it('should generate the expected controller file content', () => {
-        expect(
-          tree.readContent(normalize(`/src/bar/foo/foo.controller.ts`))
-        ).to.be.equal(
-          'import { Controller } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Controller()\n' +
-          'export class FooController {}\n'
-        );
       });
     });
   });

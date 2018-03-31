@@ -24,18 +24,4 @@ describe('Pipe Factory', () => {
       )
     ).to.not.be.undefined;
   });
-  it('should generate the expect pipe file content', () => {
-    expect(
-      tree.readContent(`/src/${ options.name }.pipe.ts`)
-    ).to.be.equal(
-      'import { PipeTransform, Pipe, ArgumentMetadata } from \'@nestjs/common\';\n' +
-      '\n' +
-      '@Pipe()\n' +
-      'export class NamePipe implements PipeTransform<any> {\n' +
-      '  transform(value: any, metadata: ArgumentMetadata) {\n' +
-      '    return value;\n' +
-      '  }\n' +
-      '}\n'
-    );
-  });
 });

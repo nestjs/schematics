@@ -24,20 +24,4 @@ describe('Middleware Factory', () => {
       )
     ).to.not.be.undefined;
   });
-  it('should generate the expected middleware file content', () => {
-    expect(
-      tree.readContent(`/src/${ options.name }.middleware.ts`)
-    ).to.be.equal(
-      'import { Middleware, NestMiddleware, ExpressMiddleware } from \'@nestjs/common\';\n' +
-      '\n' +
-      '@Middleware()\n' +
-      'export class NameMiddleware implements NestMiddleware {\n' +
-      '  resolve(...args: any[]): ExpressMiddleware {\n' +
-      '    return (req, res, next) => {\n' +
-      '      next();\n' +
-      '    };\n' +
-      '  }\n' +
-      '}\n'
-    );
-  });
 });
