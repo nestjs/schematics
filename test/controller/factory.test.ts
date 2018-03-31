@@ -23,8 +23,8 @@ describe('Controller Factory', () => {
         const appOptions: ApplicationOptions = {
           directory: '',
         };
-        const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-        tree = runner.runSchematic('controller', options, appTree);
+        const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        tree = runner.runSchematic('controller', options, root);
       });
       it('should generate a new controller file', () => {
         const files: string[] = tree.files;
@@ -34,20 +34,10 @@ describe('Controller Factory', () => {
           )
         ).to.not.be.undefined;
       });
-      it('should generate the expected controller file content', () => {
-        expect(
-          tree.readContent(normalize(`/src/foo/foo.controller.ts`))
-        ).to.be.equal(
-          'import { Controller } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Controller()\n' +
-          'export class FooController {}\n'
-        );
-      });
     });
     context('Manage name as a path', () => {
       const options: ControllerOptions = {
-        name: 'foo/bar',
+        name: 'bar/foo',
         skipImport: true
       };
       let tree: UnitTestTree;
@@ -59,26 +49,16 @@ describe('Controller Factory', () => {
         const appOptions: ApplicationOptions = {
           directory: '',
         };
-        const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-        tree = runner.runSchematic('controller', options, appTree);
+        const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        tree = runner.runSchematic('controller', options, root);
       });
       it('should generate a new controller file', () => {
         const files: string[] = tree.files;
         expect(
           files.find(
-            (filename) => filename === normalize(`/src/foo/bar/bar.controller.ts`)
+            (filename) => filename === normalize('/src/bar/foo/foo.controller.ts')
           )
         ).to.not.be.undefined;
-      });
-      it('should generate the expected controller file content', () => {
-        expect(
-          tree.readContent(normalize(`/src/foo/bar/bar.controller.ts`))
-        ).to.be.equal(
-          'import { Controller } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Controller()\n' +
-          'export class BarController {}\n'
-        );
       });
     });
     context('Manage name and path', () => {
@@ -96,8 +76,8 @@ describe('Controller Factory', () => {
         const appOptions: ApplicationOptions = {
           directory: '',
         };
-        const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-        tree = runner.runSchematic('controller', options, appTree);
+        const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+        tree = runner.runSchematic('controller', options, root);
       });
       it('should generate a new controller file', () => {
         const files: string[] = tree.files;
@@ -106,16 +86,6 @@ describe('Controller Factory', () => {
             (filename) => filename === normalize(`/src/bar/foo/foo.controller.ts`)
           )
         ).to.not.be.undefined;
-      });
-      it('should generate the expected controller file content', () => {
-        expect(
-          tree.readContent(normalize(`/src/bar/foo/foo.controller.ts`))
-        ).to.be.equal(
-          'import { Controller } from \'@nestjs/common\';\n' +
-          '\n' +
-          '@Controller()\n' +
-          'export class FooController {}\n'
-        );
       });
     });
   });
@@ -134,8 +104,8 @@ describe('Controller Factory', () => {
           const appOptions: ApplicationOptions = {
             directory: '',
           };
-          const appTree: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
-          tree = runner.runSchematic('controller', options, appTree);
+          const root: UnitTestTree = runner.runSchematic('application', appOptions, new VirtualTree());
+          tree = runner.runSchematic('controller', options, root);
         });
         it('should declare the foo controller in the app module', () => {
           expect(

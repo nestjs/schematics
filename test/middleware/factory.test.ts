@@ -2,9 +2,8 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
-import { MiddlewareOptions } from '../../src/middleware/schema';
-import { InterceptorOptions } from '../../src/interceptor/schema';
 import { ApplicationOptions } from '../../src/application/schema';
+import { MiddlewareOptions } from '../../src/middleware/schema';
 
 describe('Middleware Factory', () => {
   describe('Schematic definition', () => {

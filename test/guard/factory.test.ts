@@ -2,8 +2,8 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
-import { GuardOptions } from '../../src/guard/schema';
 import { ApplicationOptions } from '../../src/application/schema';
+import { GuardOptions } from '../../src/guard/schema';
 
 describe('Guard Factory', () => {
   describe('Schematic definition', () => {
