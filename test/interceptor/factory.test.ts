@@ -55,4 +55,16 @@ describe('Interceptor Factory', () => {
       )
     ).to.not.be.undefined;
   });
+  it('should manage path to dasherize', () => {
+    const options: InterceptorOptions = {
+      name: 'barBaz/foo'
+    };
+    const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/bar-baz/foo/foo.interceptor.ts`
+      )
+    ).to.not.be.undefined;
+  });
 });

@@ -62,6 +62,19 @@ describe('Controller Factory', () => {
       )
     ).to.not.be.undefined;
   });
+  it('should manage path to dasherize', () => {
+    const options: ControllerOptions = {
+      name: 'barBaz/foo',
+      skipImport: true
+    };
+    const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/bar-baz/foo/foo.controller.ts`
+      )
+    ).to.not.be.undefined;
+  });
   it('should manage declaration in app module', () => {
     const app: ApplicationOptions = {
       name: '',

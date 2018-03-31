@@ -55,4 +55,16 @@ describe('Middleware Factory', () => {
       )
     ).to.not.be.undefined;
   });
+  it('should manage path to dasherize', () => {
+    const options: MiddlewareOptions = {
+      name: 'barBaz/foo'
+    };
+    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) =>
+        filename === `/src/bar-baz/foo/foo.middleware.ts`
+      )
+    ).to.not.be.undefined;
+  });
 });
