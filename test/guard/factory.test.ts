@@ -14,12 +14,16 @@ describe('Guard Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.guard.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/foo/foo.guard.ts')).to.be.equal(
-      'import { Guard, CanActivate, ExecutionContext } from \'@nestjs/common\';\n' +
+      'import { Injectable, CanActivate, ExecutionContext } from \'@nestjs/common\';\n' +
+      'import { Reflector } from \'@nestjs/core\';\n' +
       'import { Observable } from \'rxjs/Observable\';\n' +
       '\n' +
-      '@Guard()\n' +
+      '@Injectable()\n' +
       'export class FooGuard implements CanActivate {\n' +
-      '  canActivate(dataOrRequest, context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {\n' +
+      '\n' +
+      '  constructor(private readonly reflector: Reflector) {}\n' +
+      '\n' +
+      '  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {\n' +
       '    return true;\n' +
       '  }\n' +
       '}\n'
@@ -33,12 +37,16 @@ describe('Guard Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.guard.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/bar/foo/foo.guard.ts')).to.be.equal(
-      'import { Guard, CanActivate, ExecutionContext } from \'@nestjs/common\';\n' +
+      'import { Injectable, CanActivate, ExecutionContext } from \'@nestjs/common\';\n' +
+      'import { Reflector } from \'@nestjs/core\';\n' +
       'import { Observable } from \'rxjs/Observable\';\n' +
       '\n' +
-      '@Guard()\n' +
+      '@Injectable()\n' +
       'export class FooGuard implements CanActivate {\n' +
-      '  canActivate(dataOrRequest, context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {\n' +
+      '\n' +
+      '  constructor(private readonly reflector: Reflector) {}\n' +
+      '\n' +
+      '  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {\n' +
       '    return true;\n' +
       '  }\n' +
       '}\n'
@@ -53,12 +61,16 @@ describe('Guard Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo/foo.guard.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/baz/foo/foo.guard.ts')).to.be.equal(
-      'import { Guard, CanActivate, ExecutionContext } from \'@nestjs/common\';\n' +
+      'import { Injectable, CanActivate, ExecutionContext } from \'@nestjs/common\';\n' +
+      'import { Reflector } from \'@nestjs/core\';\n' +
       'import { Observable } from \'rxjs/Observable\';\n' +
       '\n' +
-      '@Guard()\n' +
+      '@Injectable()\n' +
       'export class FooGuard implements CanActivate {\n' +
-      '  canActivate(dataOrRequest, context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {\n' +
+      '\n' +
+      '  constructor(private readonly reflector: Reflector) {}\n' +
+      '\n' +
+      '  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {\n' +
       '    return true;\n' +
       '  }\n' +
       '}\n'
@@ -72,12 +84,16 @@ describe('Guard Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.guard.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/foo-bar/foo-bar.guard.ts')).to.be.equal(
-      'import { Guard, CanActivate, ExecutionContext } from \'@nestjs/common\';\n' +
+      'import { Injectable, CanActivate, ExecutionContext } from \'@nestjs/common\';\n' +
+      'import { Reflector } from \'@nestjs/core\';\n' +
       'import { Observable } from \'rxjs/Observable\';\n' +
       '\n' +
-      '@Guard()\n' +
+      '@Injectable()\n' +
       'export class FooBarGuard implements CanActivate {\n' +
-      '  canActivate(dataOrRequest, context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {\n' +
+      '\n' +
+      '  constructor(private readonly reflector: Reflector) {}\n' +
+      '\n' +
+      '  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {\n' +
       '    return true;\n' +
       '  }\n' +
       '}\n'
@@ -91,12 +107,16 @@ describe('Guard Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.guard.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/bar-baz/foo/foo.guard.ts')).to.be.equal(
-      'import { Guard, CanActivate, ExecutionContext } from \'@nestjs/common\';\n' +
+      'import { Injectable, CanActivate, ExecutionContext } from \'@nestjs/common\';\n' +
+      'import { Reflector } from \'@nestjs/core\';\n' +
       'import { Observable } from \'rxjs/Observable\';\n' +
       '\n' +
-      '@Guard()\n' +
+      '@Injectable()\n' +
       'export class FooGuard implements CanActivate {\n' +
-      '  canActivate(dataOrRequest, context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {\n' +
+      '\n' +
+      '  constructor(private readonly reflector: Reflector) {}\n' +
+      '\n' +
+      '  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {\n' +
       '    return true;\n' +
       '  }\n' +
       '}\n'

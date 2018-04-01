@@ -6,7 +6,6 @@ import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
 import { ControllerOptions } from '../../src/controller/schema';
 import { ModuleOptions } from '../../src/module/schema';
-import { AppService } from '../../src/application/files/src/app.service';
 
 describe('Controller Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
