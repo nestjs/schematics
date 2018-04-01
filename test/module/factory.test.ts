@@ -6,7 +6,7 @@ import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
 import { ModuleOptions } from '../../src/module/schema';
 
-describe.skip('Module Factory', () => {
+describe('Module Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
   it('should manage name only', () => {
     const options: ModuleOptions = {
@@ -98,6 +98,7 @@ describe.skip('Module Factory', () => {
     ).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
+      'import { AppService } from \'./app.service\';\n' +
       'import { FooModule } from \'./foo/foo.module\';\n' +
       '\n' +
       '@Module({\n' +
@@ -107,9 +108,11 @@ describe.skip('Module Factory', () => {
       '  controllers: [\n' +
       '    AppController\n' +
       '  ],\n' +
-      '  components: []\n' +
+      '  providers: [\n' +
+      '    AppService\n' +
+      '  ]\n' +
       '})\n' +
-      'export class ApplicationModule {}\n'
+      'export class AppModule {}\n'
     );
   });
   it('should manage declaration in bar module', () => {
