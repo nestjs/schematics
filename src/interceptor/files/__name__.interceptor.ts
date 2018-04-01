@@ -1,9 +1,10 @@
-import { Interceptor, NestInterceptor, ExecutionContext } from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext } from '@nestjs/common';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
 
-@Interceptor()
+@Injectable()
 export class <%= classify(name) %>Interceptor implements NestInterceptor {
-  intercept(dataOrRequest, context: ExecutionContext, stream$: Observable<any>): Observable<any> {
-    return undefined;
+  intercept(context: ExecutionContext, stream$: Observable<any>): Observable<any> {
+    return stream$.pipe(map((data) => data));
   }
 }
