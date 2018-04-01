@@ -1,8 +1,8 @@
-import { Middleware, NestMiddleware, ExpressMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware, FunctionMiddleware } from '@nestjs/common';
 
-@Middleware()
+@Injectable()
 export class <%= classify(name) %>Middleware implements NestMiddleware {
-  resolve(...args: any[]): ExpressMiddleware {
+  resolve(context: string): FunctionMiddleware {
     return (req, res, next) => {
       next();
     };
