@@ -7,7 +7,7 @@ import { ApplicationOptions } from '../../src/application/schema';
 import { ControllerOptions } from '../../src/controller/schema';
 import { ModuleOptions } from '../../src/module/schema';
 
-describe('Controller Factory', () => {
+describe.skip('Controller Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
   it('should manage name only', () => {
     const options: ControllerOptions = {
