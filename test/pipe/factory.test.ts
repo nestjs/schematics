@@ -18,7 +18,7 @@ describe('Pipe Factory', () => {
       '\n' +
       '@Pipe()\n' +
       'export class FooPipe implements PipeTransform<any> {\n' +
-      '  transform(value: any, metadata: ArgumentMetadata) {\n' +
+      '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
       '    return value;\n' +
       '  }\n' +
       '}\n'
@@ -36,7 +36,7 @@ describe('Pipe Factory', () => {
       '\n' +
       '@Pipe()\n' +
       'export class FooPipe implements PipeTransform<any> {\n' +
-      '  transform(value: any, metadata: ArgumentMetadata) {\n' +
+      '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
       '    return value;\n' +
       '  }\n' +
       '}\n'
@@ -55,7 +55,7 @@ describe('Pipe Factory', () => {
       '\n' +
       '@Pipe()\n' +
       'export class FooPipe implements PipeTransform<any> {\n' +
-      '  transform(value: any, metadata: ArgumentMetadata) {\n' +
+      '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
       '    return value;\n' +
       '  }\n' +
       '}\n'
@@ -73,7 +73,7 @@ describe('Pipe Factory', () => {
       '\n' +
       '@Pipe()\n' +
       'export class FooBarPipe implements PipeTransform<any> {\n' +
-      '  transform(value: any, metadata: ArgumentMetadata) {\n' +
+      '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
       '    return value;\n' +
       '  }\n' +
       '}\n'
@@ -91,7 +91,7 @@ describe('Pipe Factory', () => {
       '\n' +
       '@Pipe()\n' +
       'export class FooPipe implements PipeTransform<any> {\n' +
-      '  transform(value: any, metadata: ArgumentMetadata) {\n' +
+      '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
       '    return value;\n' +
       '  }\n' +
       '}\n'
