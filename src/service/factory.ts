@@ -30,7 +30,7 @@ export function main(options: ServiceOptions): Rule {
 
 function transform(source: ServiceOptions): ServiceOptions {
   let target: ServiceOptions = Object.assign({}, source);
-  target.metadata = 'components';
+  target.metadata = 'providers';
   target.type = 'service';
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
   const location: Location = new NameParser().parse(target);
