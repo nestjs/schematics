@@ -7,7 +7,7 @@ import { ApplicationOptions } from '../../src/application/schema';
 import { ModuleOptions } from '../../src/module/schema';
 import { ServiceOptions } from '../../src/service/schema';
 
-describe.skip('Service Factory', () => {
+describe('Service Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
   it('should manage name only', () => {
     const options: ServiceOptions = {
@@ -18,9 +18,9 @@ describe.skip('Service Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.service.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/foo/foo.service.ts')).to.be.equal(
-      'import { Component } from \'@nestjs/common\';\n' +
+      'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Component()\n' +
+      '@Injectable()\n' +
       'export class FooService {}\n'
     );
   });
@@ -33,9 +33,9 @@ describe.skip('Service Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.service.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/bar/foo/foo.service.ts')).to.be.equal(
-      'import { Component } from \'@nestjs/common\';\n' +
+      'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Component()\n' +
+      '@Injectable()\n' +
       'export class FooService {}\n'
     );
   });
@@ -49,9 +49,9 @@ describe.skip('Service Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.service.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/bar/foo/foo.service.ts')).to.be.equal(
-      'import { Component } from \'@nestjs/common\';\n' +
+      'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Component()\n' +
+      '@Injectable()\n' +
       'export class FooService {}\n'
     );
   });
@@ -64,9 +64,9 @@ describe.skip('Service Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.service.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/foo-bar/foo-bar.service.ts')).to.be.equal(
-      'import { Component } from \'@nestjs/common\';\n' +
+      'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Component()\n' +
+      '@Injectable()\n' +
       'export class FooBarService {}\n'
     );
   });
@@ -79,9 +79,9 @@ describe.skip('Service Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.service.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/bar-baz/foo/foo.service.ts')).to.be.equal(
-      'import { Component } from \'@nestjs/common\';\n' +
+      'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Component()\n' +
+      '@Injectable()\n' +
       'export class FooService {}\n'
     );
   });
@@ -99,6 +99,7 @@ describe.skip('Service Factory', () => {
     ).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
+      'import { AppService } from \'./app.service\';\n' +
       'import { FooService } from \'./foo/foo.service\';\n' +
       '\n' +
       '@Module({\n' +
@@ -106,11 +107,12 @@ describe.skip('Service Factory', () => {
       '  controllers: [\n' +
       '    AppController\n' +
       '  ],\n' +
-      '  components: [\n' +
+      '  providers: [\n' +
+      '    AppService,\n' +
       '    FooService\n' +
       '  ]\n' +
       '})\n' +
-      'export class ApplicationModule {}\n'
+      'export class AppModule {}\n'
     );
   });
   it('should manage declaration in foo module', () => {
@@ -133,7 +135,7 @@ describe.skip('Service Factory', () => {
       'import { FooService } from \'./foo.service\';\n' +
       '\n' +
       '@Module({\n' +
-      '  components: [\n' +
+      '  providers: [\n' +
       '    FooService\n' +
       '  ]\n' +
       '})\n' +
