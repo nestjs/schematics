@@ -8,8 +8,8 @@ publish-docker-artifact:
 publish-docker-edge:
 	@docker login -u $$DOCKER_USER -p $$DOCKER_PASSWORD
 	@docker pull nestjs/schematics:$$ARTIFACT_ID
-	@docker tag nestjs/schematics:$$ARTIFACT_ID nestjs/schematics:4-edge
-	@docker push nestjs/schematics:4-edge
+	@docker tag nestjs/schematics:$$ARTIFACT_ID nestjs/schematics:5-edge
+	@docker push nestjs/schematics:5-edge
 
 publish-docker-release:
 	@docker login -u $$DOCKER_USER -p $$DOCKER_PASSWORD
