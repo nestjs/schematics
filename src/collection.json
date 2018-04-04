@@ -44,6 +44,10 @@
     "gateway": {
       "factory": "./gateway/factory#main",
       "description": "Crate a Nest gateway."
+    },
+    "filter": {
+      "factory": "./filter/factory#main",
+      "description": "Crate a Nest filter."
     }
   }
 }
