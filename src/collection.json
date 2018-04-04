@@ -40,6 +40,10 @@
     "class": {
       "factory": "./class/factory#main",
       "description": "Create a new class."
+    },
+    "gateway": {
+      "factory": "./gateway/factory#main",
+      "description": "Crate a Nest gateway."
     }
   }
 }
