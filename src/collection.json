@@ -36,6 +36,10 @@
     "interceptor": {
       "factory": "./interceptor/factory#main",
       "description": "Create a Nest interceptor."
+    },
+    "class": {
+      "factory": "./class/factory#main",
+      "description": "Create a new class."
     }
   }
 }
