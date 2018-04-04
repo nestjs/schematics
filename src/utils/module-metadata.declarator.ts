@@ -19,8 +19,9 @@ export class ModuleMetadataDeclarator {
     const results: RegExpExecArray | null = this.METADATA_REGEXP.exec(source);
     return JSON.parse(
       results[ 1 ]
+        .replace(/([a-zA-Z]+)(,)(.*\n.*])/, '$1$3')
+        .replace(/(])(,)(.*\n.*})/, '$1$3')
         .replace(/([a-zA-Z]+)/g, '"$1"')
-        .replace(/(,)(\n})/, '$2')
     );
   }
 
