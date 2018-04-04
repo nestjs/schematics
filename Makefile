@@ -16,8 +16,8 @@ publish-docker-release:
 	@docker pull nestjs/schematics:$$ARTIFACT_ID
 	@docker tag nestjs/schematics:$$ARTIFACT_ID nestjs/schematics:$$RELEASE_VERSION
 	@docker push nestjs/schematics:$$RELEASE_VERSION
-	@docker tag nestjs/schematics:$$ARTIFACT_ID nestjs/schematics:4
-	@docker push nestjs/schematics:4
+	@docker tag nestjs/schematics:$$ARTIFACT_ID nestjs/schematics:5
+	@docker push nestjs/schematics:5
 	@docker tag nestjs/schematics:$$ARTIFACT_ID nestjs/schematics:latest
 	@docker push nestjs/schematics:latest
 
