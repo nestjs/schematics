@@ -12,11 +12,16 @@ describe('Exception Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/foo/foo.exception.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo/foo.exception.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.exception.ts')).to.be.equal(
+      'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
+      '\n' +
+      'export class FooException extends HttpException {\n' +
+      '  constructor() {\n' +
+      '    super(\'Foo\', HttpStatus.NOT_FOUND);\n' +
+      '  }\n' +
+      '}\n'
+    );
   });
   it('should manage name as a path', () => {
     const options: ExceptionOptions = {
@@ -24,11 +29,16 @@ describe('Exception Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar/foo/foo.exception.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.exception.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar/foo/foo.exception.ts')).to.be.equal(
+      'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
+      '\n' +
+      'export class FooException extends HttpException {\n' +
+      '  constructor() {\n' +
+      '    super(\'Foo\', HttpStatus.NOT_FOUND);\n' +
+      '  }\n' +
+      '}\n'
+    );
   });
   it('should manage name and path', () => {
     const options: ExceptionOptions = {
@@ -37,11 +47,16 @@ describe('Exception Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/baz/foo/foo.exception.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/baz/foo/foo.exception.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/baz/foo/foo.exception.ts')).to.be.equal(
+      'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
+      '\n' +
+      'export class FooException extends HttpException {\n' +
+      '  constructor() {\n' +
+      '    super(\'Foo\', HttpStatus.NOT_FOUND);\n' +
+      '  }\n' +
+      '}\n'
+    );
   });
   it('should manage name to dasherize', () => {
     const options: ExceptionOptions = {
@@ -49,11 +64,16 @@ describe('Exception Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/foo-bar/foo-bar.exception.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.exception.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo-bar/foo-bar.exception.ts')).to.be.equal(
+      'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
+      '\n' +
+      'export class FooBarException extends HttpException {\n' +
+      '  constructor() {\n' +
+      '    super(\'FooBar\', HttpStatus.NOT_FOUND);\n' +
+      '  }\n' +
+      '}\n'
+    );
   });
   it('should manage path to dasherize', () => {
     const options: ExceptionOptions = {
@@ -61,10 +81,15 @@ describe('Exception Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar-baz/foo/foo.exception.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.exception.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar-baz/foo/foo.exception.ts')).to.be.equal(
+      'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
+      '\n' +
+      'export class FooException extends HttpException {\n' +
+      '  constructor() {\n' +
+      '    super(\'Foo\', HttpStatus.NOT_FOUND);\n' +
+      '  }\n' +
+      '}\n'
+    );
   });
 });

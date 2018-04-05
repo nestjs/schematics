@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/schematics",
-  "version": "4.0.0-rc3",
+  "version": "4.0.0-rc4",
   "description": "Nestjs schematics project for @nestjs/cli",
   "main": "index.js",
   "publishConfig": {
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ThomRick/nest-cli-schematics.git"
+    "url": "git+https://github.com/nestjs/schematics.git"
   },
   "author": "ThomRick",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ThomRick/nest-cli-schematics/issues"
+    "url": "https://github.com/nestjs/schematics/issues"
   },
-  "homepage": "https://github.com/ThomRick/nest-cli-schematics#readme",
+  "homepage": "https://github.com/nestjs/schematics#readme",
   "dependencies": {
     "@angular-devkit/core": "^0.4.8",
     "@angular-devkit/schematics": "^0.4.8"
