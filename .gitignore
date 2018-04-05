@@ -5,4 +5,3 @@ coverage/
 
 node_modules
 schematics/
-src/**/*.js

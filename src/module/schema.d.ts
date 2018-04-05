@@ -1,3 +1,5 @@
+import { Path } from '@angular-devkit/core';
+
 export interface ModuleOptions {
   /**
    * The name of the module.
@@ -8,7 +10,19 @@ export interface ModuleOptions {
    */
   path?: string;
   /**
-   * The path of the source directory
+   * The path to insert the module declaration.
    */
-  sourceDir?: string;
+  module?: Path;
+  /**
+   * Directive to insert declaration in module.
+   */
+  skipImport?: boolean;
+  /**
+   * Metadata name affected by declaration insertion.
+   */
+  metadata?: string;
+  /**
+   * Nest element type name
+   */
+  type?: string;
 }

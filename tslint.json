@@ -18,7 +18,9 @@
       true
     ],
     "trailing-comma": false,
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "member-ordering": false,
+    "member-access": []
   },
   "rulesDirectory": []
 }

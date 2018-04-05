@@ -1,9 +1,0 @@
-{
-  "project": {
-    "name": "<%= directory %>"
-  },
-  "app": {
-    "root": "src",
-    "main": "main.ts"
-  }
-}

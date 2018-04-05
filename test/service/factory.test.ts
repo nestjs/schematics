@@ -1,43 +1,143 @@
+import { normalize } from '@angular-devkit/core';
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
 import * as path from 'path';
+import { ApplicationOptions } from '../../src/application/schema';
+import { ModuleOptions } from '../../src/module/schema';
 import { ServiceOptions } from '../../src/service/schema';
 
 describe('Service Factory', () => {
-  const options: ServiceOptions = {
-    extension: 'ts',
-    name: 'name',
-    path: 'name',
-    rootDir: 'src/modules'
-  };
-  let runner: SchematicTestRunner;
-  beforeEach(() => {
-    runner = new SchematicTestRunner(
-      '.',
-      path.join(process.cwd(), 'src/collection.json')
-    );
-  });
-  it('should generate a new service file', () => {
+  const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
+  it('should manage name only', () => {
+    const options: ServiceOptions = {
+      name: 'foo',
+      skipImport: true
+    };
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find(
-        (filename) => filename === `/src/modules/${ options.path }/${ options.name }.service.${ options.extension }`
-      )
-    ).to.not.be.undefined;
-  });
-  it('should generate the expected service file content', () => {
-    const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
-    expect(
-      tree
-        .read(`/${ options.rootDir }/${ options.path }/${ options.name }.service.${ options.extension }`)
-        .toString()
-    ).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.service.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.service.ts')).to.be.equal(
       'import { Component } from \'@nestjs/common\';\n' +
       '\n' +
       '@Component()\n' +
-      'export class NameService {}\n'
+      'export class FooService {}\n'
+    );
+  });
+  it('should manage name as a path', () => {
+    const options: ServiceOptions = {
+      name: 'bar/foo',
+      skipImport: true
+    };
+    const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.service.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar/foo/foo.service.ts')).to.be.equal(
+      'import { Component } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Component()\n' +
+      'export class FooService {}\n'
+    );
+  });
+  it('should manage name and path', () => {
+    const options: ServiceOptions = {
+      name: 'foo',
+      path: 'bar',
+      skipImport: true
+    };
+    const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.service.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar/foo/foo.service.ts')).to.be.equal(
+      'import { Component } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Component()\n' +
+      'export class FooService {}\n'
+    );
+  });
+  it('should manage name to dasherize', () => {
+    const options: ServiceOptions = {
+      name: 'fooBar',
+      skipImport: true
+    };
+    const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.service.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo-bar/foo-bar.service.ts')).to.be.equal(
+      'import { Component } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Component()\n' +
+      'export class FooBarService {}\n'
+    );
+  });
+  it('should manage path to dasherize', () => {
+    const options: ServiceOptions = {
+      name: 'barBaz/foo',
+      skipImport: true
+    };
+    const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.service.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar-baz/foo/foo.service.ts')).to.be.equal(
+      'import { Component } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Component()\n' +
+      'export class FooService {}\n'
+    );
+  });
+  it('should manage declaration in app module', () => {
+    const app: ApplicationOptions = {
+      name: '',
+    };
+    let tree: UnitTestTree = runner.runSchematic('application', app, new VirtualTree());
+    const options: ServiceOptions = {
+      name: 'foo'
+    };
+    tree = runner.runSchematic('service', options, tree);
+    expect(
+      tree.readContent(normalize('/src/app.module.ts'))
+    ).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      'import { AppController } from \'./app.controller\';\n' +
+      'import { FooService } from \'./foo/foo.service\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [],\n' +
+      '  controllers: [\n' +
+      '    AppController\n' +
+      '  ],\n' +
+      '  components: [\n' +
+      '    FooService\n' +
+      '  ]\n' +
+      '})\n' +
+      'export class ApplicationModule {}\n'
+    );
+  });
+  it('should manage declaration in foo module', () => {
+    const app: ApplicationOptions = {
+      name: '',
+    };
+    let tree: UnitTestTree = runner.runSchematic('application', app, new VirtualTree());
+    const module: ModuleOptions = {
+      name: 'foo'
+    };
+    tree = runner.runSchematic('module', module, tree);
+    const options: ServiceOptions = {
+      name: 'foo'
+    };
+    tree = runner.runSchematic('service', options, tree);
+    expect(
+      tree.readContent(normalize('/src/foo/foo.module.ts'))
+    ).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      'import { FooService } from \'./foo.service\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  components: [\n' +
+      '    FooService\n' +
+      '  ]\n' +
+      '})\n' +
+      'export class FooModule {}\n'
     );
   });
 });

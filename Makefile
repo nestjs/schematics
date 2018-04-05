@@ -1,52 +1,30 @@
-.PHONY: test
+build-docker-artifact:
+	@docker build -t nestjs/schematics:$$ARTIFACT_ID .
 
-prepare:
-	@docker run -t \
-		-v $$(pwd):/usr/local/app \
-		$$(docker build -qf .docker/build/Dockerfile .) \
-		/bin/sh -c "\
-			npm install && \
-			echo 'PREPARE DONE' \
-		"
+publish-docker-artifact:
+	@docker login -u $$DOCKER_USER -p $$DOCKER_PASSWORD
+	@docker push nestjs/schematics:$$ARTIFACT_ID
 
-lint:
-	@docker run -t \
-		-v $$(pwd):/usr/local/app \
-		$$(docker build -qf .docker/build/Dockerfile .) \
-		/bin/sh -c "\
-			npm run -s lint:test && \
-			npm run -s lint:src && \
-			echo 'LINT DONE' \
-		"
+publish-docker-edge:
+	@docker login -u $$DOCKER_USER -p $$DOCKER_PASSWORD
+	@docker pull nestjs/schematics:$$ARTIFACT_ID
+	@docker tag nestjs/schematics:$$ARTIFACT_ID nestjs/schematics:4-edge
+	@docker push nestjs/schematics:4-edge
 
-test:
-	@docker run -t \
-		-v $$(pwd):/usr/local/app \
-		$$(docker build -qf .docker/build/Dockerfile .) \
-		/bin/sh -c "\
-			npm run -s test && \
-			echo 'TEST DONE' \
-		"
+publish-docker-release:
+	@docker login -u $$DOCKER_USER -p $$DOCKER_PASSWORD
+	@docker pull nestjs/schematics:$$ARTIFACT_ID
+	@docker tag nestjs/schematics:$$ARTIFACT_ID nestjs/schematics:$$RELEASE_VERSION
+	@docker push nestjs/schematics:$$RELEASE_VERSION
+	@docker tag nestjs/schematics:$$ARTIFACT_ID nestjs/schematics:4
+	@docker push nestjs/schematics:4
+	@docker tag nestjs/schematics:$$ARTIFACT_ID nestjs/schematics:latest
+	@docker push nestjs/schematics:latest
 
-build:
-	@docker run -t \
-		-v $$(pwd):/usr/local/app \
-		$$(docker build -qf .docker/build/Dockerfile .) \
-		/bin/sh -c "\
-			rm -rf schematics && mkdir schematics && \
-			npm run -s build && \
-			cp -R src/* schematics && \
-			cp -R LICENSE package.json package-lock.json README.md .npmrc schematics && \
-			find src/ -name '*.js' -delete && \
-			echo 'BUILD DONE' \
-		"
-
-publish:
-	@docker run -t \
-		-v $$(pwd)/schematics:/usr/local/app \
-		$$(docker build -qf .docker/build/Dockerfile .) \
+publish-npm-release:
+	@docker pull nestjs/schematics:$$ARTIFACT_ID
+	@docker run -w /nestjs/schematics nestjs/schematics:$$ARTIFACT_ID \
 		/bin/sh -c "\
 			echo //registry.npmjs.org/:_authToken=$$NPM_TOKEN >> .npmrc && \
-			npm publish && \
-			echo 'PUBLISH DONE \'
+			npm publish \
 		"
