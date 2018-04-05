@@ -12,11 +12,10 @@ describe('Class Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('class', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/foo/foo.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo/foo.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.ts')).to.be.equal(
+      'export class Foo {}\n'
+    );
   });
   it('should manage name as a path', () => {
     const options: ClassOptions = {
@@ -24,11 +23,10 @@ describe('Class Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('class', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar/foo/foo.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar/foo/foo.ts')).to.be.equal(
+      'export class Foo {}\n'
+    );
   });
   it('should manage name and path', () => {
     const options: ClassOptions = {
@@ -37,11 +35,10 @@ describe('Class Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('class', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/baz/foo/foo.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/baz/foo/foo.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/baz/foo/foo.ts')).to.be.equal(
+      'export class Foo {}\n'
+    );
   });
   it('should manage name to dasherize', () => {
     const options: ClassOptions = {
@@ -49,11 +46,10 @@ describe('Class Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('class', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/foo-bar/foo-bar.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo-bar/foo-bar.ts')).to.be.equal(
+      'export class FooBar {}\n'
+    );
   });
   it('should manage path to dasherize', () => {
     const options: ClassOptions = {
@@ -61,10 +57,9 @@ describe('Class Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('class', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar-baz/foo/foo.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar-baz/foo/foo.ts')).to.be.equal(
+      'export class Foo {}\n'
+    );
   });
 });

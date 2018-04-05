@@ -16,11 +16,7 @@ describe('Controller Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/foo/foo.controller.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo/foo.controller.ts')).to.not.be.undefined;
   });
   it('should manage name as a path', () => {
     const options: ControllerOptions = {
@@ -29,11 +25,7 @@ describe('Controller Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar/foo/foo.controller.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.controller.ts')).to.not.be.undefined;
   });
   it('should manage name and path', () => {
     const options: ControllerOptions = {
@@ -43,11 +35,7 @@ describe('Controller Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar/foo/foo.controller.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.controller.ts')).to.not.be.undefined;
   });
   it('should manage name to dasherize', () => {
     const options: ControllerOptions = {
@@ -56,11 +44,7 @@ describe('Controller Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/foo-bar/foo-bar.controller.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.controller.ts')).to.not.be.undefined;
   });
   it('should manage path to dasherize', () => {
     const options: ControllerOptions = {
@@ -69,11 +53,7 @@ describe('Controller Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar-baz/foo/foo.controller.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.controller.ts')).to.not.be.undefined;
   });
   it('should manage declaration in app module', () => {
     const app: ApplicationOptions = {
@@ -84,9 +64,7 @@ describe('Controller Factory', () => {
       name: 'foo'
     };
     tree = runner.runSchematic('controller', options, tree);
-    expect(
-      tree.readContent(normalize('/src/app.module.ts'))
-    ).to.be.equal(
+    expect(tree.readContent(normalize('/src/app.module.ts'))).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
       'import { FooController } from \'./foo/foo.controller\';\n' +
@@ -115,9 +93,7 @@ describe('Controller Factory', () => {
       name: 'foo'
     };
     tree = runner.runSchematic('controller', options, tree);
-    expect(
-      tree.readContent(normalize('/src/foo/foo.module.ts'))
-    ).to.be.equal(
+    expect(tree.readContent(normalize('/src/foo/foo.module.ts'))).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { FooController } from \'./foo.controller\';\n' +
       '\n' +
