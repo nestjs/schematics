@@ -12,11 +12,22 @@ describe('Gateway Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/foo/foo.gateway.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo/foo.gateway.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.gateway.ts')).to.be.equal(
+      'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
+      'import \'rxjs/add/observable/from\';\n' +
+      'import { Observable } from \'rxjs/Observable\';\n' +
+      '\n' +
+      '@WebSocketGateway()\n' +
+      'export class FooGateway {\n' +
+      '  @WebSocketServer() server;\n' +
+      '\n' +
+      '  @SubscribeMessage()\n' +
+      '  onEvent(): Observable<WsResponse<any>> {\n' +
+      '    return Observable.from({});\n' +
+      '  }\n' +
+      '}\n'
+    );
   });
   it('should manage name as a path', () => {
     const options: GatewayOptions = {
@@ -24,11 +35,22 @@ describe('Gateway Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar/foo/foo.gateway.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.gateway.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar/foo/foo.gateway.ts')).to.be.equal(
+      'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
+      'import \'rxjs/add/observable/from\';\n' +
+      'import { Observable } from \'rxjs/Observable\';\n' +
+      '\n' +
+      '@WebSocketGateway()\n' +
+      'export class FooGateway {\n' +
+      '  @WebSocketServer() server;\n' +
+      '\n' +
+      '  @SubscribeMessage()\n' +
+      '  onEvent(): Observable<WsResponse<any>> {\n' +
+      '    return Observable.from({});\n' +
+      '  }\n' +
+      '}\n'
+    );
   });
   it('should manage name and path', () => {
     const options: GatewayOptions = {
@@ -37,11 +59,22 @@ describe('Gateway Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/baz/foo/foo.gateway.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/baz/foo/foo.gateway.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/baz/foo/foo.gateway.ts')).to.be.equal(
+      'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
+      'import \'rxjs/add/observable/from\';\n' +
+      'import { Observable } from \'rxjs/Observable\';\n' +
+      '\n' +
+      '@WebSocketGateway()\n' +
+      'export class FooGateway {\n' +
+      '  @WebSocketServer() server;\n' +
+      '\n' +
+      '  @SubscribeMessage()\n' +
+      '  onEvent(): Observable<WsResponse<any>> {\n' +
+      '    return Observable.from({});\n' +
+      '  }\n' +
+      '}\n'
+    );
   });
   it('should manage name to dasherize', () => {
     const options: GatewayOptions = {
@@ -49,11 +82,22 @@ describe('Gateway Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/foo-bar/foo-bar.gateway.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.gateway.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo-bar/foo-bar.gateway.ts')).to.be.equal(
+      'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
+      'import \'rxjs/add/observable/from\';\n' +
+      'import { Observable } from \'rxjs/Observable\';\n' +
+      '\n' +
+      '@WebSocketGateway()\n' +
+      'export class FooBarGateway {\n' +
+      '  @WebSocketServer() server;\n' +
+      '\n' +
+      '  @SubscribeMessage()\n' +
+      '  onEvent(): Observable<WsResponse<any>> {\n' +
+      '    return Observable.from({});\n' +
+      '  }\n' +
+      '}\n'
+    );
   });
   it('should manage path to dasherize', () => {
     const options: GatewayOptions = {
@@ -61,10 +105,21 @@ describe('Gateway Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar-baz/foo/foo.gateway.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.gateway.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar-baz/foo/foo.gateway.ts')).to.be.equal(
+      'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
+      'import \'rxjs/add/observable/from\';\n' +
+      'import { Observable } from \'rxjs/Observable\';\n' +
+      '\n' +
+      '@WebSocketGateway()\n' +
+      'export class FooGateway {\n' +
+      '  @WebSocketServer() server;\n' +
+      '\n' +
+      '  @SubscribeMessage()\n' +
+      '  onEvent(): Observable<WsResponse<any>> {\n' +
+      '    return Observable.from({});\n' +
+      '  }\n' +
+      '}\n'
+    );
   });
 });
