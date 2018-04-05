@@ -48,6 +48,10 @@
     "filter": {
       "factory": "./filter/factory#main",
       "description": "Crate a Nest filter."
+    },
+    "decorator": {
+      "factory": "./decorator/factory#main",
+      "description": "Crate a Nest decorator."
     }
   }
 }
