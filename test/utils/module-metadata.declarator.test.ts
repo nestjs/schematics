@@ -108,7 +108,7 @@ describe('Module Metadata Declarator', () => {
       '@Module({\n' +
       '  imports: [ConfigModule, PlayersModule,],\n' +
       '  controllers: [],\n' +
-      '  components: [AuthService, JwtStrategy]\n' +
+      '  components: [AuthService, Jwt3Strategy]\n' +
       '})\n' +
       'export class AppModule {\n' +
       '  public configure(consumer: MiddlewaresConsumer): void {\n' +
@@ -145,7 +145,7 @@ describe('Module Metadata Declarator', () => {
       '  controllers: [],\n' +
       '  components: [\n' + 
       '    AuthService,\n' +
-      '    JwtStrategy\n' +
+      '    Jwt3Strategy\n' +
       '  ]\n' +
       '})\n' +
       'export class AppModule {\n' +
