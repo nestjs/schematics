@@ -95,7 +95,7 @@ describe('Module Metadata Declarator', () => {
       'export class FooModule {}\n'
     );
   });
-  it('should manage unformated metadata definition', () => {
+  it('should manage unformated metadata definition', () => {
     const content =
       'import { HelmetMiddleware } from \'@nest-middlewares/helmet\';\n' +
       'import { MiddlewaresConsumer, Module, RequestMethod } from \'@nestjs/common\';\n' +
@@ -113,12 +113,12 @@ describe('Module Metadata Declarator', () => {
       'export class AppModule {\n' +
       '  public configure(consumer: MiddlewaresConsumer): void {\n' +
       '    consumer\n' +
-      '      .apply(HelmetMiddleware)\n' + 
+      '      .apply(HelmetMiddleware)\n' +
       '      .forRoutes({ path: \'*\', method: RequestMethod.GET })\n' +
       '      .apply(AuthMiddleware)\n' +
       '      .forRoutes({ path: \'*\', method: RequestMethod.GET });\n' +
       '  }\n' +
-      '};\n'
+      '};\n';
     const options: DeclarationOptions = {
       metadata: 'imports',
       type: 'module',
@@ -138,12 +138,12 @@ describe('Module Metadata Declarator', () => {
       '\n' +
       '@Module({\n' +
       '  imports: [\n' +
-      '    ConfigModule,\n' + 
+      '    ConfigModule,\n' +
       '    PlayersModule,\n' +
       '    BarModule\n' +
       '  ],\n' +
       '  controllers: [],\n' +
-      '  components: [\n' + 
+      '  components: [\n' +
       '    AuthService,\n' +
       '    Jwt3Strategy\n' +
       '  ]\n' +
@@ -151,7 +151,7 @@ describe('Module Metadata Declarator', () => {
       'export class AppModule {\n' +
       '  public configure(consumer: MiddlewaresConsumer): void {\n' +
       '    consumer\n' +
-      '      .apply(HelmetMiddleware)\n' + 
+      '      .apply(HelmetMiddleware)\n' +
       '      .forRoutes({ path: \'*\', method: RequestMethod.GET })\n' +
       '      .apply(AuthMiddleware)\n' +
       '      .forRoutes({ path: \'*\', method: RequestMethod.GET });\n' +
