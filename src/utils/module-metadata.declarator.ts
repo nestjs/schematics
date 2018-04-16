@@ -17,11 +17,11 @@ export class ModuleMetadataDeclarator {
 
   private extract(source: string): any {
     const results: RegExpExecArray | null = this.METADATA_REGEXP.exec(source);
-    return JSON.parse(
-      results[ 1 ]
-        .replace(/([a-zA-Z]+)(,)(.*\n.*])/, '$1$3')
-        .replace(/(])(,)(.*\n.*})/, '$1$3')
-        .replace(/([a-zA-Z]+)/g, '"$1"')
+    return JSON.parse(results[ 1 ]
+      .replace(/([a-zA-Z]+)(,)(|\s)]/g, '$1$3]')
+      .replace(/([a-zA-Z]+)(,)(\n.*|\s\n.*)]/g, '$1$3\n]')
+      .replace(/(])(,)(.*\n.*})/, '$1$3')
+      .replace(/([a-zA-Z]+)/g, '"$1"')
     );
   }
 
