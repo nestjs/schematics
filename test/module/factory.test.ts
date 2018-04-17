@@ -15,11 +15,13 @@ describe('Module Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/foo/foo.module.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo/foo.module.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.module.ts')).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({})\n' +
+      'export class FooModule {}\n'
+    );
   });
   it('should manage name as a path', () => {
     const options: ModuleOptions = {
@@ -28,11 +30,13 @@ describe('Module Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar/foo/foo.module.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.module.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar/foo/foo.module.ts')).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({})\n' +
+      'export class FooModule {}\n'
+    );
   });
   it('should manage name and path', () => {
     const options: ModuleOptions = {
@@ -42,11 +46,13 @@ describe('Module Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar/foo/foo.module.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.module.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar/foo/foo.module.ts')).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({})\n' +
+      'export class FooModule {}\n'
+    );
   });
   it('should manage name to dasherize', () => {
     const options: ModuleOptions = {
@@ -55,11 +61,13 @@ describe('Module Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/foo-bar/foo-bar.module.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.module.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo-bar/foo-bar.module.ts')).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({})\n' +
+      'export class FooBarModule {}\n'
+    );
   });
   it('should manage path to dasherize', () => {
     const options: ModuleOptions = {
@@ -68,11 +76,13 @@ describe('Module Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar-baz/foo/foo.module.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.module.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar-baz/foo/foo.module.ts')).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({})\n' +
+      'export class FooModule {}\n'
+    );
   });
   it('should manage declaration in app module', () => {
     const app: ApplicationOptions = {
@@ -88,6 +98,7 @@ describe('Module Factory', () => {
     ).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
+      'import { AppService } from \'./app.service\';\n' +
       'import { FooModule } from \'./foo/foo.module\';\n' +
       '\n' +
       '@Module({\n' +
@@ -97,9 +108,11 @@ describe('Module Factory', () => {
       '  controllers: [\n' +
       '    AppController\n' +
       '  ],\n' +
-      '  components: []\n' +
+      '  providers: [\n' +
+      '    AppService\n' +
+      '  ]\n' +
       '})\n' +
-      'export class ApplicationModule {}\n'
+      'export class AppModule {}\n'
     );
   });
   it('should manage declaration in bar module', () => {

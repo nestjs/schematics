@@ -20,11 +20,14 @@ describe('Application Factory', () => {
       '/project/src/app.controller.spec.ts',
       '/project/src/app.controller.ts',
       '/project/src/app.module.ts',
+      '/project/src/app.service.ts',
+      '/project/src/main.hmr.ts',
       '/project/src/main.ts',
       '/project/test/app.e2e-spec.ts',
       '/project/test/jest-e2e.json',
       '/project/tsconfig.json',
-      '/project/tslint.json'
+      '/project/tslint.json',
+      '/project/webpack.config.js'
     ]);
   });
   it('should manage name to dasherize', () => {
@@ -41,11 +44,14 @@ describe('Application Factory', () => {
       '/awesome-project/src/app.controller.spec.ts',
       '/awesome-project/src/app.controller.ts',
       '/awesome-project/src/app.module.ts',
+      '/awesome-project/src/app.service.ts',
+      '/awesome-project/src/main.hmr.ts',
       '/awesome-project/src/main.ts',
       '/awesome-project/test/app.e2e-spec.ts',
       '/awesome-project/test/jest-e2e.json',
       '/awesome-project/tsconfig.json',
-      '/awesome-project/tslint.json'
+      '/awesome-project/tslint.json',
+      '/awesome-project/webpack.config.js'
     ]);
   });
 });

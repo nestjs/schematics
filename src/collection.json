@@ -36,6 +36,22 @@
     "interceptor": {
       "factory": "./interceptor/factory#main",
       "description": "Create a Nest interceptor."
+    },
+    "class": {
+      "factory": "./class/factory#main",
+      "description": "Create a new class."
+    },
+    "gateway": {
+      "factory": "./gateway/factory#main",
+      "description": "Crate a Nest gateway."
+    },
+    "filter": {
+      "factory": "./filter/factory#main",
+      "description": "Crate a Nest filter."
+    },
+    "decorator": {
+      "factory": "./decorator/factory#main",
+      "description": "Crate a Nest decorator."
     }
   }
 }

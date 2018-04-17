@@ -16,11 +16,13 @@ describe('Service Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/foo/foo.service.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo/foo.service.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.service.ts')).to.be.equal(
+      'import { Injectable } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Injectable()\n' +
+      'export class FooService {}\n'
+    );
   });
   it('should manage name as a path', () => {
     const options: ServiceOptions = {
@@ -29,11 +31,13 @@ describe('Service Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar/foo/foo.service.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.service.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar/foo/foo.service.ts')).to.be.equal(
+      'import { Injectable } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Injectable()\n' +
+      'export class FooService {}\n'
+    );
   });
   it('should manage name and path', () => {
     const options: ServiceOptions = {
@@ -43,11 +47,13 @@ describe('Service Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar/foo/foo.service.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.service.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar/foo/foo.service.ts')).to.be.equal(
+      'import { Injectable } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Injectable()\n' +
+      'export class FooService {}\n'
+    );
   });
   it('should manage name to dasherize', () => {
     const options: ServiceOptions = {
@@ -56,11 +62,13 @@ describe('Service Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/foo-bar/foo-bar.service.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.service.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo-bar/foo-bar.service.ts')).to.be.equal(
+      'import { Injectable } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Injectable()\n' +
+      'export class FooBarService {}\n'
+    );
   });
   it('should manage path to dasherize', () => {
     const options: ServiceOptions = {
@@ -69,11 +77,13 @@ describe('Service Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(
-      files.find((filename) =>
-        filename === `/src/bar-baz/foo/foo.service.ts`
-      )
-    ).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.service.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar-baz/foo/foo.service.ts')).to.be.equal(
+      'import { Injectable } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Injectable()\n' +
+      'export class FooService {}\n'
+    );
   });
   it('should manage declaration in app module', () => {
     const app: ApplicationOptions = {
@@ -89,6 +99,7 @@ describe('Service Factory', () => {
     ).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
+      'import { AppService } from \'./app.service\';\n' +
       'import { FooService } from \'./foo/foo.service\';\n' +
       '\n' +
       '@Module({\n' +
@@ -96,11 +107,12 @@ describe('Service Factory', () => {
       '  controllers: [\n' +
       '    AppController\n' +
       '  ],\n' +
-      '  components: [\n' +
+      '  providers: [\n' +
+      '    AppService,\n' +
       '    FooService\n' +
       '  ]\n' +
       '})\n' +
-      'export class ApplicationModule {}\n'
+      'export class AppModule {}\n'
     );
   });
   it('should manage declaration in foo module', () => {
@@ -123,7 +135,7 @@ describe('Service Factory', () => {
       'import { FooService } from \'./foo.service\';\n' +
       '\n' +
       '@Module({\n' +
-      '  components: [\n' +
+      '  providers: [\n' +
       '    FooService\n' +
       '  ]\n' +
       '})\n' +
