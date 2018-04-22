@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/schematics",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Nestjs schematics project for @nestjs/cli",
   "main": "index.js",
   "publishConfig": {
