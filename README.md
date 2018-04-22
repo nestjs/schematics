@@ -1,72 +1,56 @@
-[![Build Status](https://travis-ci.org/nestjs/schematics.svg?branch=master)](https://travis-ci.org/nestjs/schematics)
-# @nestjs/schematics
-Nestjs project and architecture element generation based on @angular-dekit/schematics engine
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
+</p>
 
-## Build :
-- `git clone https://github.com/nestjs/schematics.git`
+  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/schematics.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/schematics.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/schematics.svg" alt="NPM Downloads" /></a>
+<a href="https://gitter.im/nestjs/nestjs-cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
 
-### Steps with Docker
-in the schematics folder :
-- `make prepare`
-- `make build`
+## Description
 
-### Steps without Docker
-in the schematics folder :
-- `npm install`
-- `rm -rf schematics && mkdir schematics`
-- `npm run -s build`
-- `cp -R src/* schematics`
-- `cp -R LICENSE package.json package-lock.json README.md .npmrc schematics`
-- `find src -name '*.js' -delete`
+In order to help people manage their projects, the CLI tool has been created. It helps on many grounds at once, from scaffolding the project to build well-structured applications. The Nest CLI is based on the [@angular-devkit](https://github.com/angular/devkit) package. Also, there're special schematics that are dedicated to the Nest development [@nestjs/schematics](https://github.com/nestjs/schematics).
 
-## Usages:
-### With @angular-devkit/schematics-cli
-install @angular-devkit/schematics-cli globally.
 
-run `schematics [path_to_nestjs_schematics]:<nestjs_schematic_name> [...options]`
+## Installation
+### NPM:
 
-## Schematics:
-### application:
-| Option | description | required | default value |
-|--------|-------------|:--------:|:-------------:|
-| directory | The directory name to create the app in. | true | |
+```
+$ npm install -g @nestjs/schematics
+```
 
-### controller:
-| Option | description | required | default value |
-|--------|-------------|:--------:|:-------------:|
-| name | The name of the controller. | true | |
+### Docker:
+```
+$ docker pull nestjs/cli[:version]
+$ docker run -it -rm -p 3000:3000 -v $(pwd)/workspace nestjs/schematics[:version]
+```
 
-### exception:
-| Option | description | required | default value |
-|--------|-------------|:--------:|:-------------:|
-| name | The name of the exception. | true | |
+### GIT:
+```
+$ git clone https://github.com/nestjs/schematics.git <project>
+$ cd <project>
+```
 
-### guard:
-| Option | description | required | default value |
-|--------|-------------|:--------:|:-------------:|
-| name | The name of the guard. | true | |
+With your Node runtime:
+```
+$ npm install
+$ npm link
+```
 
-### interceptor:
-| Option | description | required | default value |
-|--------|-------------|:--------:|:-------------:|
-| name | The name of the interceptor. | true | |
+With Docker:
 
-### middleware:
-| Option | description | required | default value |
-|--------|-------------|:--------:|:-------------:|
-| name | The name of the middleware. | true | |
+```
+$ docker build -t nestjs/schematics .
+```
 
-### module:
-| Option | description | required | default value |
-|--------|-------------|:--------:|:-------------:|
-| name | The name of the module. | true | |
+## Usage
 
-### pipe:
-| Option | description | required | default value |
-|--------|-------------|:--------:|:-------------:|
-| name | The name of the pipe. | true | |
+Learn more in the [official documentation](https://docs.nestjs.com/).
 
-### service:
-| Option | description | required | default value |
-|--------|-------------|:--------:|:-------------:|
-| name | The name of the service. | true | |
+## Stay in touch
+
+* CLI Author - [Thomas Ricart](https://github.com/ThomRick)
+* Website - [https://nestjs.com](https://nestjs.com/)
+* Twitter - [@nestframework](https://twitter.com/nestframework)
