@@ -1,8 +1,8 @@
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { ConfigurationOptions } from '../../src/configuration/schema';
-import * as path from 'path';
 import { VirtualTree } from '@angular-devkit/schematics';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
+import * as path from 'path';
+import { ConfigurationOptions } from '../../src/configuration/schema';
 
 describe('Configuration Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
