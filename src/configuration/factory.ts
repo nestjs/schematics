@@ -1,5 +1,5 @@
 import { strings } from '@angular-devkit/core';
-import { apply, mergeWith, Rule, Source, template, url } from '@angular-devkit/schematics';
+import { apply, mergeWith, move, Rule, Source, template, url } from '@angular-devkit/schematics';
 import { ConfigurationOptions } from './schema';
 
 export function main(options: ConfigurationOptions): Rule {
@@ -20,7 +20,8 @@ function generate(options: ConfigurationOptions): Source {
       template({
         ...strings,
         ...options
-      })
+      }),
+      move(options.project)
     ]
   );
 }
