@@ -1,13 +1,14 @@
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { join, normalize } from 'path';
-import { ProviderOptions } from '../../src/provider/schema';
+import { normalize } from '@angular-devkit/core';
 import { VirtualTree } from '@angular-devkit/schematics';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { expect } from 'chai';
+import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
 import { ModuleOptions } from '../../src/module/schema';
+import { ProviderOptions } from '../../src/provider/schema';
 
 describe('Provider Factory', () => {
-  const runner: SchematicTestRunner = new SchematicTestRunner('.', join(process.cwd(), 'src/collection.json'));
+  const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
   it('should manage name only', () => {
     const options: ProviderOptions = {
       name: 'foo',
