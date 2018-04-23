@@ -56,6 +56,10 @@
     "configuration": {
       "factory": "./configuration/factory#main",
       "description": "Create a NestCLI configuration file"
+    },
+    "provider": {
+      "factory": "./provider/factory#main",
+      "description": "Create a Nest provider."
     }
   }
 }
