@@ -31,7 +31,6 @@ export function main(options: ProviderOptions): Rule {
 function transform(options: ProviderOptions): ProviderOptions {
   const target: ProviderOptions = Object.assign({}, options);
   target.metadata = 'providers';
-  target.type = 'provider';
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);

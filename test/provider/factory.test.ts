@@ -15,12 +15,12 @@ describe('Provider Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.provider.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo/foo.provider.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.ts')).to.be.equal(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
       '@Injectable()\n' +
-      'export class FooProvider {}\n'
+      'export class Foo {}\n'
     );
   });
   it('should manage name has a path', () => {
@@ -30,12 +30,12 @@ describe('Provider Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo/foo.provider.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar/foo/foo.provider.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar/foo/foo.ts')).to.be.equal(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
       '@Injectable()\n' +
-      'export class FooProvider {}\n'
+      'export class Foo {}\n'
     );
   });
   it('should manage name and path', () => {
@@ -46,12 +46,12 @@ describe('Provider Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo/foo.provider.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar/foo/foo.provider.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar/foo/foo.ts')).to.be.equal(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
       '@Injectable()\n' +
-      'export class FooProvider {}\n'
+      'export class Foo {}\n'
     );
   });
   it('should manage name to dasherize', () => {
@@ -61,12 +61,12 @@ describe('Provider Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar-foo/bar-foo.provider.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar-foo/bar-foo.provider.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar-foo/bar-foo.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar-foo/bar-foo.ts')).to.be.equal(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
       '@Injectable()\n' +
-      'export class BarFooProvider {}\n'
+      'export class BarFoo {}\n'
     );
   });
   it('should manage declaration in app module', () => {
@@ -84,7 +84,7 @@ describe('Provider Factory', () => {
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
       'import { AppService } from \'./app.service\';\n' +
-      'import { FooProvider } from \'./foo/foo.provider\';\n' +
+      'import { Foo } from \'./foo/foo\';\n' +
       '\n' +
       '@Module({\n' +
       '  imports: [],\n' +
@@ -93,7 +93,7 @@ describe('Provider Factory', () => {
       '  ],\n' +
       '  providers: [\n' +
       '    AppService,\n' +
-      '    FooProvider\n' +
+      '    Foo\n' +
       '  ]\n' +
       '})\n' +
       'export class AppModule {}\n'
@@ -116,11 +116,11 @@ describe('Provider Factory', () => {
       tree.readContent(normalize('/src/foo/foo.module.ts'))
     ).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
-      'import { FooProvider } from \'./foo.provider\';\n' +
+      'import { Foo } from \'./foo\';\n' +
       '\n' +
       '@Module({\n' +
       '  providers: [\n' +
-      '    FooProvider\n' +
+      '    Foo\n' +
       '  ]\n' +
       '})\n' +
       'export class FooModule {}\n'

@@ -5,7 +5,7 @@ import { ModuleMetadataDeclarator } from './module-metadata.declarator';
 
 export interface DeclarationOptions {
   metadata: string;
-  type: string;
+  type?: string;
   name: string;
   path: Path;
   module: Path;
@@ -26,7 +26,11 @@ export class ModuleDeclarator {
 
   private computeSymbol(options: DeclarationOptions): DeclarationOptions {
     let target: DeclarationOptions = Object.assign({}, options);
-    target.symbol = classify(options.name).concat(capitalize(options.type));
+    if (options.type !== undefined) {
+      target.symbol = classify(options.name).concat(capitalize(options.type));
+    } else {
+      target.symbol = classify(options.name);
+    }
     return target;
   }
 }

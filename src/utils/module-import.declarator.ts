@@ -28,7 +28,12 @@ export class ModuleImportDeclarator {
   }
 
   private computeRelativePath(options: DeclarationOptions): string {
-    const importModulePath: Path = normalize(`/${ options.path }/${options.name}/${ options.name }.${ options.type }`);
+    let importModulePath: Path;
+    if (options.type !== undefined) {
+      importModulePath = normalize(`/${ options.path }/${options.name}/${ options.name }.${ options.type }`);
+    } else {
+      importModulePath = normalize(`/${ options.path }/${options.name}/${ options.name }`);
+    }
     return this.solver.relative(options.module, importModulePath);
   }
 }
