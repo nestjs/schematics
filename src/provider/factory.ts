@@ -65,4 +65,3 @@ function addDeclarationToModule(options: ProviderOptions): Rule {
     return tree;
   };
 }
-
