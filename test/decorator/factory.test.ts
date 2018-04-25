@@ -72,4 +72,18 @@ describe('Decorator Factory', () => {
       'export const Foo = (...args: string[]) => ReflectMetadata(\'foo\', args);\n'
     );
   });
+  it('should manage javascript file', () => {
+    const options: DecoratorOptions = {
+      name: 'foo',
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('decorator', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.decorator.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.decorator.js')).to.be.equal(
+      'import { ReflectMetadata } from \'@nestjs/common\';\n' +
+      '\n' +
+      'export const Foo = (...args: string[]) => ReflectMetadata(\'foo\', args);\n'
+    );
+  });
 });

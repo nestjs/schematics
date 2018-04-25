@@ -9,4 +9,8 @@ export interface DecoratorOptions {
    * The path to create the decorator.
    */
   path?: string | Path;
+  /**
+   * The Nest configuration language.
+   */
+  language?: string;
 }
