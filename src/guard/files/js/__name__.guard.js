@@ -1,9 +1,9 @@
-import { Injectable, CanActivate } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class <%= classify(name) %>Guard implements CanActivate {
+export class <%= classify(name) %>Guard {
 
-  constructor(private readonly reflector) {}
+  constructor(private reflector) {}
 
   canActivate(context) {
     return true;
