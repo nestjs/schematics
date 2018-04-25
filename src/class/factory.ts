@@ -13,7 +13,8 @@ export function main(options: ClassOptions): Rule {
 
 function transform(options: ClassOptions): ClassOptions {
   const target: ClassOptions = Object.assign({}, options);
-  target.path = target.path !== undefined ? join(normalize(DEFAULT_PATH_NAME), target.path) : normalize(DEFAULT_PATH_NAME);
+  target.path = target.path !== undefined ?
+    join(normalize(DEFAULT_PATH_NAME), target.path) : normalize(DEFAULT_PATH_NAME);
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
   target.path = strings.dasherize(location.path);
