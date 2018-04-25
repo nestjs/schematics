@@ -54,4 +54,13 @@ describe('Application Factory', () => {
       '/awesome-project/webpack.config.js'
     ]);
   });
+  it('should manage javascript files', () => {
+    const options: ApplicationOptions = {
+      name: 'project',
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files).to.be.deep.equal([]);
+  });
 });
