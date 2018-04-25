@@ -25,4 +25,8 @@ export interface ControllerOptions {
    * Nest element type name
    */
   type?: string;
+  /**
+   * The Nest configuration language.
+   */
+  language?: string;
 }
