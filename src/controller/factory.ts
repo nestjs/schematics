@@ -16,6 +16,12 @@ import { ModuleFinder } from '../utils/module.finder';
 import { Location, NameParser } from '../utils/name.parser';
 import { ControllerOptions } from './schema';
 
+const DEFAULT_PATH_NAME = 'src';
+const DEFAULT_LANGUAGE = 'ts';
+
+const ELEMENT_METADATA = 'controllers'
+const ELEMENT_TYPE = 'controller';
+
 export function main(options: ControllerOptions): Rule {
   options = transform(options);
   return (tree: Tree, context: SchematicContext) => {
@@ -30,18 +36,20 @@ export function main(options: ControllerOptions): Rule {
 
 function transform(source: ControllerOptions): ControllerOptions {
   let target: ControllerOptions = Object.assign({}, source);
-  target.metadata = 'controllers';
-  target.type = 'controller';
-  target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
+  target.metadata = ELEMENT_METADATA;
+  target.type = ELEMENT_TYPE;
+  target.path = target.path !== undefined ?
+    join(normalize(DEFAULT_PATH_NAME), target.path) : normalize(DEFAULT_PATH_NAME);
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
   target.path = strings.dasherize(location.path);
+  target.language = target.language !== undefined ? target.language : DEFAULT_LANGUAGE;
   return target;
 }
 
 function generate(options: ControllerOptions) {
   return apply(
-    url('./files'), [
+    url(join('files' as Path, options.language)), [
       template({
         ...strings,
         ...options
