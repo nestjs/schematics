@@ -9,4 +9,8 @@ export interface ClassOptions {
    * The path to create the class.
    */
   path?: string | Path;
+  /**
+   * The Nest configuration language.
+   */
+  language?: string;
 }
