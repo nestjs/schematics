@@ -1,7 +1,7 @@
-import { Catch, WsExceptionFilter } from '@nestjs/common';
+import { Catch } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 
 @Catch(WsException)
-export class <%= classify(name) %>Filter implements WsExceptionFilter {
+export class <%= classify(name) %>Filter {
   catch(exception, client) {}
 }

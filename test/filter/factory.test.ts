@@ -101,11 +101,11 @@ describe('Filter Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.filter.js')).to.not.be.undefined;
     expect(tree.readContent('/src/foo/foo.filter.js')).to.be.equal(
-      'import { Catch, WsExceptionFilter } from \'@nestjs/common\';\n' +
+      'import { Catch } from \'@nestjs/common\';\n' +
       'import { WsException } from \'@nestjs/websockets\';\n' +
       '\n' +
       '@Catch(WsException)\n' +
-      'export class FooFilter implements WsExceptionFilter {\n' +
+      'export class FooFilter {\n' +
       '  catch(exception, client) {}\n' +
       '}\n'
     );

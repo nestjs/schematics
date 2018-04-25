@@ -131,12 +131,12 @@ describe('Guard Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.guard.js')).to.not.be.undefined;
     expect(tree.readContent('/src/foo/foo.guard.js')).to.be.equal(
-      'import { Injectable, CanActivate } from \'@nestjs/common\';\n' +
+      'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
       '@Injectable()\n' +
-      'export class FooGuard implements CanActivate {\n' +
+      'export class FooGuard {\n' +
       '\n' +
-      '  constructor(private readonly reflector) {}\n' +
+      '  constructor(private reflector) {}\n' +
       '\n' +
       '  canActivate(context) {\n' +
       '    return true;\n' +
