@@ -9,4 +9,8 @@ export interface GatewayOptions {
    * The path to create the gateway.
    */
   path?: string | Path;
+  /**
+   * The Nest configuration language.
+   */
+  language?: string;
 }
