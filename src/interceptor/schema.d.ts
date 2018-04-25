@@ -9,4 +9,8 @@ export interface InterceptorOptions {
    * The path to create the interceptor.
    */
   path?: string | Path;
+  /**
+   * The Nest configuration language.
+   */
+  language?: string;
 }
