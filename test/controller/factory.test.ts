@@ -90,6 +90,23 @@ describe('Controller Factory', () => {
       'export class FooController {}\n'
     );
   });
+  it('should manage javascript file', () => {
+    const options: ControllerOptions = {
+      name: 'foo',
+      language: 'js',
+      skipImport: true
+    };
+    const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.controller.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.controller.js'))
+      .to.be.equal(
+      'import { Controller } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Controller()\n' +
+      'export class FooController {}\n'
+    );
+  });
   it('should manage declaration in app module', () => {
     const app: ApplicationOptions = {
       name: '',

@@ -62,4 +62,16 @@ describe('Class Factory', () => {
       'export class Foo {}\n'
     );
   });
+  it('should manage javascript file', () => {
+    const options: ClassOptions = {
+      name: 'foo',
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('class', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.js')).to.be.equal(
+      'export class Foo {}\n'
+    );
+  });
 });

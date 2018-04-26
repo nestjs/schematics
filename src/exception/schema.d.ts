@@ -9,4 +9,8 @@ export interface ExceptionOptions {
    * The path to create the exception.
    */
   path?: string | Path;
+  /**
+   * The Nest configuration language.
+   */
+  language?: string;
 }

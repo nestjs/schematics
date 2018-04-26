@@ -9,4 +9,8 @@ export interface FilterOptions {
    * The path to create the filter.
    */
   path?: string | Path;
+  /**
+   * The Nest configuration language.
+   */
+  language?: string;
 }

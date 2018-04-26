@@ -122,4 +122,28 @@ describe('Gateway Factory', () => {
       '}\n'
     );
   });
+  it('should manage javascript file', () => {
+    const options: GatewayOptions = {
+      name: 'foo',
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.gateway.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.gateway.js')).to.be.equal(
+      'import { SubscribeMessage, WebSocketGateway, WebSocketServer, } from \'@nestjs/websockets\';\n' +
+      'import \'rxjs/add/observable/from\';\n' +
+      'import { Observable } from \'rxjs/Observable\';\n' +
+      '\n' +
+      '@WebSocketGateway()\n' +
+      'export class FooGateway {\n' +
+      '  @WebSocketServer() server;\n' +
+      '\n' +
+      '  @SubscribeMessage()\n' +
+      '  onEvent() {\n' +
+      '    return Observable.from({});\n' +
+      '  }\n' +
+      '}\n'
+    );
+  });
 });

@@ -92,4 +92,22 @@ describe('Exception Factory', () => {
       '}\n'
     );
   });
+  it('should manage javascript file', () => {
+    const options: ExceptionOptions = {
+      name: 'foo',
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.exception.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.exception.js')).to.be.equal(
+      'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
+      '\n' +
+      'export class FooException extends HttpException {\n' +
+      '  constructor() {\n' +
+      '    super(\'Foo\', HttpStatus.NOT_FOUND);\n' +
+      '  }\n' +
+      '}\n'
+    );
+  });
 });

@@ -36,12 +36,13 @@ function transform(source: ServiceOptions): ServiceOptions {
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
   target.path = strings.dasherize(location.path);
+  target.language = target.language !== undefined ? target.language : 'ts';
   return target;
 }
 
 function generate(options: ServiceOptions) {
   return apply(
-    url('./files'), [
+    url(join('files' as Path, options.language)), [
       template({
         ...strings,
         ...options

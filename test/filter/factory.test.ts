@@ -92,4 +92,22 @@ describe('Filter Factory', () => {
       '}\n'
     );
   });
+  it('should manage javascript file', () => {
+    const options: FilterOptions = {
+      name: 'foo',
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('filter', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.filter.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.filter.js')).to.be.equal(
+      'import { Catch } from \'@nestjs/common\';\n' +
+      'import { WsException } from \'@nestjs/websockets\';\n' +
+      '\n' +
+      '@Catch(WsException)\n' +
+      'export class FooFilter {\n' +
+      '  catch(exception, client) {}\n' +
+      '}\n'
+    );
+  });
 });

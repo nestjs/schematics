@@ -107,4 +107,24 @@ describe('Interceptor Factory', () => {
       '}\n'
     );
   });
+  it('should manage javascript file', () => {
+    const options: InterceptorOptions = {
+      name: 'foo',
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.interceptor.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.interceptor.js')).to.be.equal(
+      'import { Injectable } from \'@nestjs/common\';\n' +
+      'import { map } from \'rxjs/operators\';\n' +
+      '\n' +
+      '@Injectable()\n' +
+      'export class FooInterceptor {\n' +
+      '  intercept(context, stream$) {\n' +
+      '    return stream$.pipe(map((data) => data));\n' +
+      '  }\n' +
+      '}\n'
+    );
+  });
 });

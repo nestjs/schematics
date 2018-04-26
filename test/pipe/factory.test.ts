@@ -97,4 +97,23 @@ describe('Pipe Factory', () => {
       '}\n'
     );
   });
+  it('should manage javascript file', () => {
+    const options: PipeOptions = {
+      name: 'foo',
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.pipe.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.pipe.js')).to.be.equal(
+      'import { Pipe } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Pipe()\n' +
+      'export class FooPipe {\n' +
+      '  async transform(value, metadata) {\n' +
+      '    return value;\n' +
+      '  }\n' +
+      '}\n'
+    );
+  });
 });

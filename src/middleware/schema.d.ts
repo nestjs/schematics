@@ -9,4 +9,8 @@ export interface MiddlewareOptions {
    * The path to create the middleware
    */
   path?: string | Path;
+  /**
+   * The Nest configuration language.
+   */
+  language?: string;
 }

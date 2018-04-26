@@ -85,6 +85,22 @@ describe('Service Factory', () => {
       'export class FooService {}\n'
     );
   });
+  it('should manage javascript file', () => {
+    const options: ServiceOptions = {
+      name: 'foo',
+      skipImport: true,
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.service.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.service.js')).to.be.equal(
+      'import { Injectable } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Injectable()\n' +
+      'export class FooService {}\n'
+    );
+  });
   it('should manage declaration in app module', () => {
     const app: ApplicationOptions = {
       name: '',

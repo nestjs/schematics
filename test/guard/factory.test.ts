@@ -122,4 +122,26 @@ describe('Guard Factory', () => {
       '}\n'
     );
   });
+  it('should manage javascript file', () => {
+    const options: GuardOptions = {
+      name: 'foo',
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('guard', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.guard.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.guard.js')).to.be.equal(
+      'import { Injectable } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Injectable()\n' +
+      'export class FooGuard {\n' +
+      '\n' +
+      '  constructor(private reflector) {}\n' +
+      '\n' +
+      '  canActivate(context) {\n' +
+      '    return true;\n' +
+      '  }\n' +
+      '}\n'
+    );
+  });
 });

@@ -54,4 +54,30 @@ describe('Application Factory', () => {
       '/awesome-project/webpack.config.js'
     ]);
   });
+  it('should manage javascript files', () => {
+    const options: ApplicationOptions = {
+      name: 'project',
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files).to.be.deep.equal([
+      '/project/.babelrc',
+      '/project/.gitignore',
+      '/project/.prettierrc',
+      '/project/README.md',
+      '/project/index.js',
+      '/project/jsconfig.json',
+      '/project/nodemon.json',
+      '/project/package-lock.json',
+      '/project/package.json',
+      '/project/src/app.controller.js',
+      '/project/src/app.controller.spec.js',
+      '/project/src/app.module.js',
+      '/project/src/app.service.js',
+      '/project/src/main.js',
+      '/project/test/app.e2e-spec.js',
+      '/project/test/jest-e2e.json'
+    ]);
+  });
 });
