@@ -4,7 +4,7 @@ import { DirEntry, Tree } from '@angular-devkit/schematics';
 export interface FindOptions {
   name?: string;
   path: Path;
-  kind?: 'module' | 'controller' | 'service';
+  kind?: string;
 }
 
 export class ModuleFinder {
@@ -19,7 +19,7 @@ export class ModuleFinder {
   private findIn(directory: DirEntry): Path {
     const moduleFilename: PathFragment = directory
       .subfiles
-      .find((filename) => filename.includes('.module.ts'));
+      .find((filename) => /\.module\.(t|j)s/.test(filename));
     return moduleFilename !== undefined ?
       join(directory.path, moduleFilename.valueOf())
       :
