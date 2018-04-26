@@ -9,4 +9,8 @@ export interface PipeOptions {
    * The path to create the pipe.
    */
   path?: string | Path;
+  /**
+   * The Nest configuration language.
+   */
+  language?: string;
 }
