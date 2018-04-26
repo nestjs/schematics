@@ -25,4 +25,8 @@ export interface ModuleOptions {
    * Nest element type name
    */
   type?: string;
+  /**
+   * The Nest configuration language.
+   */
+  language?: string;
 }
