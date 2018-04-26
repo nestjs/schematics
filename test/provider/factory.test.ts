@@ -70,6 +70,22 @@ describe('Provider Factory', () => {
       'export class BarFoo {}\n'
     );
   });
+  it('should manage javascript file', () => {
+    const options: ProviderOptions = {
+      name: 'foo',
+      skipImport: true,
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.js')).to.be.equal(
+      'import { Injectable } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Injectable()\n' +
+      'export class Foo {}\n'
+    );
+  });
   it('should manage declaration in app module', () => {
     const app: ApplicationOptions = {
       name: '',
