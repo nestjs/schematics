@@ -39,4 +39,15 @@ describe('Module Finder', () => {
     expect(finder.find(options))
       .to.equal(normalize('/src/foo/foo.module.ts'));
   });
+  it('should manage javascript module file', () => {
+    const tree = new EmptyTree();
+    tree.create('/src/app.module.js', 'app module content');
+    const finder = new ModuleFinder(tree);
+    const options: FindOptions = {
+      name: 'foo',
+      path: normalize('/src')
+    };
+    expect(finder.find(options))
+      .to.be.equal(normalize('/src/app.module.js'));
+  });
 });
