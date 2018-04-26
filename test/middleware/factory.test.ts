@@ -107,4 +107,25 @@ describe('Middleware Factory', () => {
       '}\n'
     );
   });
+  it('should manage javascript file', () => {
+    const options: MiddlewareOptions = {
+      name: 'foo',
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.middleware.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.middleware.js')).to.be.equal(
+      'import { Injectable } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Injectable()\n' +
+      'export class FooMiddleware {\n' +
+      '  resolve(context) {\n' +
+      '    return (req, res, next) => {\n' +
+      '      next();\n' +
+      '    };\n' +
+      '  }\n' +
+      '}\n'
+    );
+  });
 });
