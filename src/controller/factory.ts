@@ -19,7 +19,7 @@ import { ControllerOptions } from './schema';
 const DEFAULT_PATH_NAME = 'src';
 const DEFAULT_LANGUAGE = 'ts';
 
-const ELEMENT_METADATA = 'controllers'
+const ELEMENT_METADATA = 'controllers';
 const ELEMENT_TYPE = 'controller';
 
 export function main(options: ControllerOptions): Rule {
