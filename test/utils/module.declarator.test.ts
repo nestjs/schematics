@@ -22,9 +22,7 @@ describe('Module Declarator', () => {
       'import { BarModule } from \'./bar/bar.module\';\n' +
       '\n' +
       '@Module({\n' +
-      '  imports: [\n' +
-      '    BarModule\n' +
-      '  ]\n' +
+      '  imports: [BarModule]\n' +
       '})\n' +
       'export class FooModule {}\n'
     );
@@ -47,9 +45,7 @@ describe('Module Declarator', () => {
       'import { Foo } from \'./foo/foo\';\n' +
       '\n' +
       '@Module({\n' +
-      '  providers: [\n' +
-      '    Foo\n' +
-      '  ]\n' +
+      '  providers: [Foo]\n' +
       '})\n' +
       'export class FooModule {}\n'
     );
