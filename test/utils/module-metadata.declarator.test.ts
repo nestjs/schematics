@@ -24,9 +24,7 @@ describe('Module Metadata Declarator', () => {
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
-      '  imports: [\n' +
-      '    BarModule\n' +
-      '  ]\n' +
+      '  imports: [BarModule]\n' +
       '})\n' +
       'export class FooModule {}\n'
     );
@@ -137,16 +135,9 @@ describe('Module Metadata Declarator', () => {
       'import { PlayersModule } from \'./routes/players/players.module\';\n' +
       '\n' +
       '@Module({\n' +
-      '  imports: [\n' +
-      '    ConfigModule,\n' +
-      '    PlayersModule,\n' +
-      '    BarModule\n' +
-      '  ],\n' +
+      '  imports: [ConfigModule, PlayersModule, BarModule],\n' +
       '  controllers: [],\n' +
-      '  components: [\n' +
-      '    AuthService,\n' +
-      '    Jwt3Strategy\n' +
-      '  ]\n' +
+      '  components: [AuthService, Jwt3Strategy]\n' +
       '})\n' +
       'export class AppModule {\n' +
       '  public configure(consumer: MiddlewaresConsumer): void {\n' +
@@ -248,7 +239,7 @@ describe('Module Metadata Declarator', () => {
       '@Module({\n' +
       '  imports: [\n' +
       '    // FooModule.forRoot(),\n' +
-      '    /* FooModule.forChild() */\n' +
+      '    /* FooModule.forRoot(), */\n' +
       '    BarModule\n' +
       '  ]\n' +
       '})\n' +
