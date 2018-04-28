@@ -224,4 +224,26 @@ describe.only('Metadata Manager', () => {
       'export class FooModule {}\n'
     );
   });
+  it('should manage multi line with configuration', () => {
+    const metadata = 'imports';
+    const symbol = 'FooModule';
+    const manager = new MetadataManager(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n'+
+      '  imports: [\n    BarModule.forRoot({ arry: [Symbol] })\n  ],\n' +
+      '  controllers: [\n    FooController\n  ]\n' +
+      '})\n' +
+      'export class FooModule {}\n'
+    );
+    expect(manager.insert(metadata, symbol)).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n'+
+      '  imports: [\n    BarModule.forRoot({ arry: [Symbol] }),\n    FooModule\n  ],\n' +
+      '  controllers: [\n    FooController\n  ]\n' +
+      '})\n' +
+      'export class FooModule {}\n'
+    );
+  });
 });
