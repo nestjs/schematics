@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { MetadataManager } from '../../src/utils/metadata.manager';
 
-describe.only('Metadata Manager', () => {
+describe('Metadata Manager', () => {
   it('should insert the new metadata', () => {
     const manager = new MetadataManager(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -157,6 +157,7 @@ describe.only('Metadata Manager', () => {
       '\n' +
       '@Module({\n'+
       '  imports: [\n' +
+      '    BazModule\n' +
       '    // BarModule.forRoot()\n' +
       '  ],\n' +
       '  controllers: [\n' + 
@@ -170,8 +171,9 @@ describe.only('Metadata Manager', () => {
       '\n' +
       '@Module({\n'+
       '  imports: [\n' +
-      '    // BarModule.forRoot()\n' +
+      '    BazModule,\n' +
       '    FooModule\n' +
+      '    // BarModule.forRoot()\n' +
       '  ],\n' +
       '  controllers: [\n' + 
       '    FooController\n' + 
@@ -196,7 +198,7 @@ describe.only('Metadata Manager', () => {
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n'+
-      '  imports: [BarModule, FooModule],\n' +
+      '  imports: [BarModule, FooModule,],\n' +
       '  controllers: [FooController]\n' +
       '})\n' +
       'export class FooModule {}\n'
@@ -218,7 +220,7 @@ describe.only('Metadata Manager', () => {
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n'+
-      '  imports: [\n    BarModule,\n    FooModule\n  ],\n' +
+      '  imports: [\n    BarModule,\n    FooModule,\n  ],\n' +
       '  controllers: [\n    FooController\n  ]\n' +
       '})\n' +
       'export class FooModule {}\n'
@@ -242,6 +244,58 @@ describe.only('Metadata Manager', () => {
       '@Module({\n'+
       '  imports: [\n    BarModule.forRoot({ arry: [Symbol] }),\n    FooModule\n  ],\n' +
       '  controllers: [\n    FooController\n  ]\n' +
+      '})\n' +
+      'export class FooModule {}\n'
+    );
+  });
+  it('should manage existing empty metadata', () => {
+    const metadata = 'imports';
+    const symbol = 'FooModule';
+    const manager = new MetadataManager(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n'+
+      '  imports: [],\n' +
+      '  controllers: [FooController]\n' +
+      '})\n' +
+      'export class FooModule {}\n'
+    );
+    expect(manager.insert(metadata, symbol)).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n'+
+      '  imports: [FooModule],\n' +
+      '  controllers: [FooController]\n' +
+      '})\n' +
+      'export class FooModule {}\n'
+    );
+  });
+  it('should manage existing metadata with comment', () => {
+    const metadata = 'imports';
+    const symbol = 'FooModule';
+    const manager = new MetadataManager(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n'+
+      '  imports: [\n' +
+      '    // BarModule.forRoot()\n' +
+      '  ],\n' +
+      '  controllers: [\n' + 
+      '    FooController\n' + 
+      '  ]' +
+      '})\n' +
+      'export class FooModule {}\n'
+    );
+    expect(manager.insert(metadata, symbol)).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n'+
+      '  imports: [\n' +
+      '    // BarModule.forRoot()\n' +
+      '  FooModule],\n' +
+      '  controllers: [\n' + 
+      '    FooController\n' + 
+      '  ]' +
       '})\n' +
       'export class FooModule {}\n'
     );

@@ -1,97 +1,141 @@
-export class MetadataManager {
-  private emptyMetadataMatched: boolean;
-  private startModuleTokenMatched: boolean;
-  private endModuleTokenMatched: boolean;
-  private startMetadataTokenMatched: boolean;
-  private endMetadataTokenMatched: boolean;
-  private startConfigTokenMatched: boolean;
-  private endConfigTokenMatched: boolean;
-  private multiLineMetadataMatched: boolean;
-  
-  private inserted: boolean;
+import { SourceFile, Node, createSourceFile, ScriptTarget, Identifier, SyntaxKind, PropertyAccessExpression, Decorator, CallExpression, ObjectLiteralExpression, ObjectLiteralElement, PropertyAssignment, StringLiteral, ArrayLiteralExpression, NodeArray, Expression } from 'typescript';
 
-  constructor(private content: string) {
-    this.emptyMetadataMatched = false;
-    this.startModuleTokenMatched = false;
-    this.endModuleTokenMatched = false;
-    this.startMetadataTokenMatched = false;
-    this.endMetadataTokenMatched = false;
-    this.startConfigTokenMatched = false;
-    this.endConfigTokenMatched = false;
-    this.multiLineMetadataMatched = false;
-    this.inserted = false;
-  }
+export class MetadataManager {
+  constructor(private content: string) {}
 
   public insert(metadata: string, symbol: string): string {
-    const lines: string[] = this.content.split(/\n/);
-    return lines.reduce((content, line, lineIndex) => {
-      if (lineIndex === lines.length - 1) {
-        return content;
-      }
-
-      if (line.match(/@Module\(\{\}\)/)) {
-        this.emptyMetadataMatched = true;
-      } else if (line.match(/@Module\(\{/)) {
-        this.startModuleTokenMatched = true;
-      } else if (line.match(metadata)) {
-        if (line.match(/\[/)) {
-          this.startMetadataTokenMatched = true;
+    const source: SourceFile = createSourceFile('filename.ts', this.content, ScriptTarget.ES2017);
+    const decoratorNodes: Node[] = this.getDecoratorMetadata(source, '@Module');
+    let node: Node = decoratorNodes[0];
+    
+    const matchingProperties: ObjectLiteralElement[] = (node as ObjectLiteralExpression).properties
+      .filter(prop => prop.kind == SyntaxKind.PropertyAssignment)
+      .filter((prop: PropertyAssignment) => {
+        const name = prop.name;
+        switch (name.kind) {
+          case SyntaxKind.Identifier:
+            return (name as Identifier).getText(source) == metadata;
+          case SyntaxKind.StringLiteral:
+            return (name as StringLiteral).text == metadata;
         }
-        if (line.match(/\]/)) {
-          this.endMetadataTokenMatched = true;
-        } else {
-          this.multiLineMetadataMatched = true;
+        return false;
+      });
+
+    if (matchingProperties.length == 0) {
+      const expr = node as ObjectLiteralExpression;
+      if (expr.properties.length == 0) {
+        return this.insertMetadataToEmptyModuleDecorator(expr, metadata, symbol);
+      } else {
+        return this.insertNewMetadataToDecorator(expr, source, metadata, symbol);
+      }
+    } else {
+      return this.insertSymbolToMetadata(source, matchingProperties, symbol);
+    }
+  }
+
+  private getDecoratorMetadata(source: SourceFile, identifier: string): Node[] {
+    return this.getSourceNodes(source)
+      .filter((node) => 
+        node.kind == SyntaxKind.Decorator && (node as Decorator).expression.kind == SyntaxKind.CallExpression
+      )
+      .map((node) => 
+        (node as Decorator).expression as CallExpression
+      )
+      .filter((expr) => 
+        expr.arguments[0] && expr.arguments[0].kind == SyntaxKind.ObjectLiteralExpression
+      )
+      .map((expr) => 
+        expr.arguments[0] as ObjectLiteralExpression
+      );
+  }
+
+  private getSourceNodes(sourceFile: SourceFile): Node[] {
+    const nodes: Node[] = [sourceFile];
+    const result = [];
+    while (nodes.length > 0) {
+      const node = nodes.shift();
+      if (node) {
+        result.push(node);
+        if (node.getChildCount(sourceFile) >= 0) {
+          nodes.unshift(...node.getChildren());
         }
-      } else if (this.startModuleTokenMatched && line.match(/\}\)/)) {
-        this.endModuleTokenMatched = true;
-      } else if (this.startMetadataTokenMatched && line.match(/\]/)) {
-        this.endMetadataTokenMatched = true;
       }
+    }
+    return result;
+  }
 
-      if (!this.inserted) {
-        if (this.emptyMetadataMatched) {
-          this.inserted = true;
-          line = line.split(/\{/).join(`{\n  ${ metadata }: [${ symbol }]\n`);
-        } else if (this.endModuleTokenMatched && !this.startMetadataTokenMatched) {
-          this.inserted = true;
-          line = `  ${ metadata}: [${ symbol }]\n${ line }`;
-          return `${ content.slice(0, content.length - 1)},\n${ line }\n`;
-        } else if (this.startMetadataTokenMatched && this.endMetadataTokenMatched && !this.endModuleTokenMatched) {
-          const characters: string[] = line.split('');
-          line = characters.reduce((lineContent, character, characterIndex) => {
-            if (character.match(/\(/)) {
-              this.startConfigTokenMatched = true;
-            } else if (this.startConfigTokenMatched && character.match(/\)/)) {
-              this.endConfigTokenMatched = true;
-            }
-
-            if ((!this.startConfigTokenMatched || this.startConfigTokenMatched && this.endConfigTokenMatched) && character.match(/\]/)) {
-              if (this.multiLineMetadataMatched) {
-                return `${ lineContent }${ symbol }\n  ${ character }`;
-              } else {
-                const previousCharacter: string = characters[ characterIndex - 1];
-                if (previousCharacter.match(/,/)) {
-                  return `${ lineContent } ${ symbol }${ character }`;
-                } else {
-                  return `${ lineContent }, ${ symbol }${ character }`;
-                }
-              }
-            } else {
-              return `${ lineContent }${ character }`;
-            }
-          }, '');
-          this.inserted = true;
-          if (this.multiLineMetadataMatched) {
-            const previousLine: string = lines[ lineIndex - 1];
-            if (previousLine.match(/\//) || previousLine.match(/,/)) {
-              return `${ content }  ${ line }\n`;
-            } else {
-              return `${ content.slice(0, content.length - 1) },\n  ${ line }\n`;
-            }
-          }
-        } 
+  private insertMetadataToEmptyModuleDecorator(expr: ObjectLiteralExpression, metadata: string, symbol: string): string {
+    const position = expr.getEnd() - 1;
+    const toInsert = `  ${ metadata }: [${ symbol }]`;
+    return this.content.split('').reduce((content, char, index) => {
+      if (index === position) {
+        return `${ content }\n${ toInsert }\n${ char }`;
+      } else {
+        return `${ content }${ char }`;
       }
-      return `${ content }${ line }\n`;
+    }, '');
+  }
+
+  private insertNewMetadataToDecorator(expr: ObjectLiteralExpression, source: SourceFile, metadata: string, symbol: string): string {
+    const node = expr.properties[expr.properties.length - 1];
+    const position = node.getEnd();
+    // Get the indentation of the last element, if any.
+    const text = node.getFullText(source);
+    const matches = text.match(/^\r?\n\s*/);
+    let toInsert: string;
+    if (matches.length > 0) {
+      toInsert = `,${matches[0]}${metadata}: [${symbol}]`;
+    } else {
+      toInsert = `, ${metadata}: [${symbol}]`;
+    }
+    return this.content.split('').reduce((content, char, index) => {
+      if (index === position) {
+        return `${ content }${ toInsert }${ char }`;
+      } else {
+        return `${ content }${ char }`;
+      }
+    }, '');
+  }
+
+  private insertSymbolToMetadata(source: SourceFile, matchingProperties: ObjectLiteralElement[], symbol: string): string {
+    const assignment = matchingProperties[0] as PropertyAssignment;
+
+    let node: Node | NodeArray<Expression>;
+    const arrLiteral = assignment.initializer as ArrayLiteralExpression;
+    if (arrLiteral.elements.length == 0) {
+      node = arrLiteral;
+    } else {
+      node = arrLiteral.elements;
+    }
+
+    if (Array.isArray(node)) {
+      const nodeArray = node as {} as Array<Node>;
+      const symbolsArray = nodeArray.map((node) => node.getText(source));
+      if (symbolsArray.includes(symbol)) {
+        return this.content;
+      }
+      node = node[ node.length - 1 ];
+    }
+    
+    let toInsert: string;
+    let position = (node as Node).getEnd();
+    if ((node as Node).kind == SyntaxKind.ArrayLiteralExpression) {
+      position--;
+      toInsert = `${symbol}`;
+    } else {
+      const text = (node as Node).getFullText(source);
+      if (text.match(/^\r?\n/)) {
+        toInsert = `,${ text.match(/^\r?\n(\r?)\s+/)[0] }${ symbol }`;
+      } else {
+        toInsert = `, ${ symbol }`;
+      }
+    }
+    return this.content.split('').reduce((content, char, index) => {
+      if (index === position) {
+        return `${ content }${ toInsert }${ char }`;
+      } else {
+        return `${ content }${ char }`;
+      }
     }, '');
   }
 }
