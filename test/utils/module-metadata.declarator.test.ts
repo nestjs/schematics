@@ -87,8 +87,8 @@ describe('Module Metadata Declarator', () => {
       '@Module({\n' +
       '  imports: [\n' +
       '    BazModule,\n' +
-      '    BarModule\n' +
-      '  ]\n' +
+      '    BarModule,\n' +
+      '  ],\n' +
       '})\n' +
       'export class FooModule {}\n'
     );
@@ -135,7 +135,7 @@ describe('Module Metadata Declarator', () => {
       'import { PlayersModule } from \'./routes/players/players.module\';\n' +
       '\n' +
       '@Module({\n' +
-      '  imports: [ConfigModule, PlayersModule, BarModule],\n' +
+      '  imports: [ConfigModule, PlayersModule, BarModule,],\n' +
       '  controllers: [],\n' +
       '  components: [AuthService, Jwt3Strategy]\n' +
       '})\n' +
@@ -240,8 +240,7 @@ describe('Module Metadata Declarator', () => {
       '  imports: [\n' +
       '    // FooModule.forRoot(),\n' +
       '    /* FooModule.forRoot(), */\n' +
-      '    BarModule\n' +
-      '  ]\n' +
+      '  BarModule]\n' +
       '})\n' +
       'export class FooModule {}\n'
     );
