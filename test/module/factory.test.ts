@@ -118,15 +118,9 @@ describe('Module Factory', () => {
       'import { FooModule } from \'./foo/foo.module\';\n' +
       '\n' +
       '@Module({\n' +
-      '  imports: [\n' +
-      '    FooModule\n' +
-      '  ],\n' +
-      '  controllers: [\n' +
-      '    AppController\n' +
-      '  ],\n' +
-      '  providers: [\n' +
-      '    AppService\n' +
-      '  ]\n' +
+      '  imports: [FooModule],\n' +
+      '  controllers: [AppController],\n' +
+      '  providers: [ AppService ]\n' +
       '})\n' +
       'export class AppModule {}\n'
     );
@@ -151,9 +145,7 @@ describe('Module Factory', () => {
       'import { FooModule } from \'./foo/foo.module\';\n' +
       '\n' +
       '@Module({\n' +
-      '  imports: [\n' +
-      '    FooModule\n' +
-      '  ]\n' +
+      '  imports: [FooModule]\n' +
       '})\n' +
       'export class BarModule {}\n'
     );
