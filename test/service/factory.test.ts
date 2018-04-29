@@ -7,7 +7,7 @@ import { ApplicationOptions } from '../../src/application/schema';
 import { ModuleOptions } from '../../src/module/schema';
 import { ServiceOptions } from '../../src/service/schema';
 
-describe('Service Factory', () => {
+describe.only('Service Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
   it('should manage name only', () => {
     const options: ServiceOptions = {
@@ -120,13 +120,8 @@ describe('Service Factory', () => {
       '\n' +
       '@Module({\n' +
       '  imports: [],\n' +
-      '  controllers: [\n' +
-      '    AppController\n' +
-      '  ],\n' +
-      '  providers: [\n' +
-      '    AppService,\n' +
-      '    FooService\n' +
-      '  ]\n' +
+      '  controllers: [AppController],\n' +
+      '  providers: [ AppService, FooService ]\n' +
       '})\n' +
       'export class AppModule {}\n'
     );
@@ -151,9 +146,7 @@ describe('Service Factory', () => {
       'import { FooService } from \'./foo.service\';\n' +
       '\n' +
       '@Module({\n' +
-      '  providers: [\n' +
-      '    FooService\n' +
-      '  ]\n' +
+      '  providers: [FooService]\n' +
       '})\n' +
       'export class FooModule {}\n'
     );
