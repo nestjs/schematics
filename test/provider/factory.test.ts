@@ -105,13 +105,8 @@ describe('Provider Factory', () => {
       '\n' +
       '@Module({\n' +
       '  imports: [],\n' +
-      '  controllers: [\n' +
-      '    AppController\n' +
-      '  ],\n' +
-      '  providers: [\n' +
-      '    AppService,\n' +
-      '    Foo\n' +
-      '  ]\n' +
+      '  controllers: [AppController],\n' +
+      '  providers: [ AppService, Foo ]\n' +
       '})\n' +
       'export class AppModule {}\n'
     );
@@ -136,9 +131,7 @@ describe('Provider Factory', () => {
       'import { Foo } from \'./foo\';\n' +
       '\n' +
       '@Module({\n' +
-      '  providers: [\n' +
-      '    Foo\n' +
-      '  ]\n' +
+      '  providers: [Foo]\n' +
       '})\n' +
       'export class FooModule {}\n'
     );
