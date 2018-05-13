@@ -43,15 +43,23 @@
     },
     "gateway": {
       "factory": "./gateway/factory#main",
-      "description": "Crate a Nest gateway."
+      "description": "Create a Nest gateway."
     },
     "filter": {
       "factory": "./filter/factory#main",
-      "description": "Crate a Nest filter."
+      "description": "Create a Nest filter."
     },
     "decorator": {
       "factory": "./decorator/factory#main",
-      "description": "Crate a Nest decorator."
+      "description": "Create a Nest decorator."
+    },
+    "configuration": {
+      "factory": "./configuration/factory#main",
+      "description": "Create a NestCLI configuration file"
+    },
+    "provider": {
+      "factory": "./provider/factory#main",
+      "description": "Create a Nest provider."
     }
   }
 }

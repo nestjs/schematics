@@ -24,9 +24,7 @@ describe('Module Metadata Declarator', () => {
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
-      '  imports: [\n' +
-      '    BarModule\n' +
-      '  ]\n' +
+      '  imports: [BarModule]\n' +
       '})\n' +
       'export class FooModule {}\n'
     );
@@ -38,7 +36,7 @@ describe('Module Metadata Declarator', () => {
       '\n' +
       '@Module({\n' +
       '  imports: [\n' +
-      '    BazModule' +
+      '    BazModule\n' +
       '  ]\n' +
       '})\n' +
       'export class FooModule {}\n';
@@ -89,8 +87,8 @@ describe('Module Metadata Declarator', () => {
       '@Module({\n' +
       '  imports: [\n' +
       '    BazModule,\n' +
-      '    BarModule\n' +
-      '  ]\n' +
+      '    BarModule,\n' +
+      '  ],\n' +
       '})\n' +
       'export class FooModule {}\n'
     );
@@ -137,16 +135,9 @@ describe('Module Metadata Declarator', () => {
       'import { PlayersModule } from \'./routes/players/players.module\';\n' +
       '\n' +
       '@Module({\n' +
-      '  imports: [\n' +
-      '    ConfigModule,\n' +
-      '    PlayersModule,\n' +
-      '    BarModule\n' +
-      '  ],\n' +
+      '  imports: [ConfigModule, PlayersModule, BarModule,],\n' +
       '  controllers: [],\n' +
-      '  components: [\n' +
-      '    AuthService,\n' +
-      '    Jwt3Strategy\n' +
-      '  ]\n' +
+      '  components: [AuthService, Jwt3Strategy]\n' +
       '})\n' +
       'export class AppModule {\n' +
       '  public configure(consumer: MiddlewaresConsumer): void {\n' +
@@ -157,6 +148,101 @@ describe('Module Metadata Declarator', () => {
       '      .forRoutes({ path: \'*\', method: RequestMethod.GET });\n' +
       '  }\n' +
       '};\n'
+    );
+  });
+  it('should manage module with forRoot() or forChild() call', () => {
+    const content: string =
+      'import { Module } from \'@nestjs/common\';\n' +
+      'import { FooModule } from \'./foo/foo.module\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [\n' +
+      '    FooModule.forRoot()\n' +
+      '  ]\n' +
+      '})\n' +
+      'export class FooModule {}\n';
+    const options: DeclarationOptions = {
+      metadata: 'imports',
+      type: 'module',
+      name: 'bar',
+      path: normalize('/src/foo'),
+      module: normalize('/src/foo/foo.module.ts'),
+      symbol: 'BarModule'
+    };
+    expect(declarator.declare(content, options)).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      'import { FooModule } from \'./foo/foo.module\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [\n' +
+      '    FooModule.forRoot(),\n' +
+      '    BarModule\n' +
+      '  ]\n' +
+      '})\n' +
+      'export class FooModule {}\n'
+    );
+  });
+  it('should manage module with forRoot() or forChild() call with json configration inside', () => {
+    const content: string =
+      'import { Module } from \'@nestjs/common\';\n' +
+      'import { FooModule } from \'./foo/foo.module\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [\n' +
+      '    FooModule.forRoot({ key: value })\n' +
+      '  ]\n' +
+      '})\n' +
+      'export class FooModule {}\n';
+    const options: DeclarationOptions = {
+      metadata: 'imports',
+      type: 'module',
+      name: 'bar',
+      path: normalize('/src/foo'),
+      module: normalize('/src/foo/foo.module.ts'),
+      symbol: 'BarModule'
+    };
+    expect(declarator.declare(content, options)).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      'import { FooModule } from \'./foo/foo.module\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [\n' +
+      '    FooModule.forRoot({ key: value }),\n' +
+      '    BarModule\n' +
+      '  ]\n' +
+      '})\n' +
+      'export class FooModule {}\n'
+    );
+  });
+  it('should manage comments', () => {
+    const content: string =
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [\n' +
+      '    // FooModule.forRoot(),\n' +
+      '    /* FooModule.forRoot(), */\n' +
+      '  ]\n' +
+      '})\n' +
+      'export class FooModule {}\n';
+    const options: DeclarationOptions = {
+      metadata: 'imports',
+      type: 'module',
+      name: 'bar',
+      path: normalize('/src/foo'),
+      module: normalize('/src/foo/foo.module.ts'),
+      symbol: 'BarModule'
+    };
+    expect(declarator.declare(content, options)).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [\n' +
+      '    // FooModule.forRoot(),\n' +
+      '    /* FooModule.forRoot(), */\n' +
+      '  BarModule]\n' +
+      '})\n' +
+      'export class FooModule {}\n'
     );
   });
 });

@@ -1,18 +1,22 @@
 export interface ApplicationOptions {
   /**
-   * The NestJS application author.
+   * The Nest application author.
    */
   author?: string;
   /**
-   * The NestJS application description.
+   * The Nest application description.
    */
   description?: string;
   /**
-   * The NestJS application name.
+   * The Nest application name.
    */
   name: string;
   /**
-   * The NestJS application version.
+   * The Nest application version.
    */
   version?: string;
+  /**
+   * The Nest configuration language.
+   */
+  language?: string;
 }

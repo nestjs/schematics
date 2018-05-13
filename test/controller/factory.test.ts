@@ -17,6 +17,13 @@ describe('Controller Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.controller.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.controller.ts'))
+      .to.be.equal(
+      'import { Controller } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Controller()\n' +
+      'export class FooController {}\n'
+    );
   });
   it('should manage name as a path', () => {
     const options: ControllerOptions = {
@@ -26,6 +33,13 @@ describe('Controller Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.controller.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar/foo/foo.controller.ts'))
+      .to.be.equal(
+      'import { Controller } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Controller()\n' +
+      'export class FooController {}\n'
+    );
   });
   it('should manage name and path', () => {
     const options: ControllerOptions = {
@@ -36,6 +50,13 @@ describe('Controller Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.controller.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar/foo/foo.controller.ts'))
+      .to.be.equal(
+      'import { Controller } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Controller()\n' +
+      'export class FooController {}\n'
+    );
   });
   it('should manage name to dasherize', () => {
     const options: ControllerOptions = {
@@ -45,6 +66,13 @@ describe('Controller Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.controller.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo-bar/foo-bar.controller.ts'))
+      .to.be.equal(
+      'import { Controller } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Controller()\n' +
+      'export class FooBarController {}\n'
+    );
   });
   it('should manage path to dasherize', () => {
     const options: ControllerOptions = {
@@ -54,6 +82,30 @@ describe('Controller Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.controller.ts')).to.not.be.undefined;
+    expect(tree.readContent('/src/bar-baz/foo/foo.controller.ts'))
+      .to.be.equal(
+      'import { Controller } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Controller()\n' +
+      'export class FooController {}\n'
+    );
+  });
+  it('should manage javascript file', () => {
+    const options: ControllerOptions = {
+      name: 'foo',
+      language: 'js',
+      skipImport: true
+    };
+    const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.controller.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.controller.js'))
+      .to.be.equal(
+      'import { Controller } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Controller()\n' +
+      'export class FooController {}\n'
+    );
   });
   it('should manage declaration in app module', () => {
     const app: ApplicationOptions = {
@@ -67,17 +119,15 @@ describe('Controller Factory', () => {
     expect(tree.readContent(normalize('/src/app.module.ts'))).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
+      'import { AppService } from \'./app.service\';\n' +
       'import { FooController } from \'./foo/foo.controller\';\n' +
       '\n' +
       '@Module({\n' +
       '  imports: [],\n' +
-      '  controllers: [\n' +
-      '    AppController,\n' +
-      '    FooController\n' +
-      '  ],\n' +
-      '  components: []\n' +
+      '  controllers: [AppController, FooController],\n' +
+      '  providers: [ AppService ]\n' +
       '})\n' +
-      'export class ApplicationModule {}\n'
+      'export class AppModule {}\n'
     );
   });
   it('should manage declaration in foo module', () => {
@@ -98,9 +148,7 @@ describe('Controller Factory', () => {
       'import { FooController } from \'./foo.controller\';\n' +
       '\n' +
       '@Module({\n' +
-      '  controllers: [\n' +
-      '    FooController\n' +
-      '  ]\n' +
+      '  controllers: [FooController]\n' +
       '})\n' +
       'export class FooModule {}\n'
     );

@@ -9,4 +9,8 @@ export interface GuardOptions {
    * The path to create the guard.
    */
   path?: string | Path;
+  /**
+   * The Nest configuration language.
+   */
+  language?: string;
 }

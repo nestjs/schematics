@@ -84,6 +84,22 @@ describe('Module Factory', () => {
       'export class FooModule {}\n'
     );
   });
+  it('should manage javascript file', () => {
+    const options: ModuleOptions = {
+      name: 'foo',
+      skipImport: true,
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.module.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.module.js')).to.be.equal(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({})\n' +
+      'export class FooModule {}\n'
+    );
+  });
   it('should manage declaration in app module', () => {
     const app: ApplicationOptions = {
       name: '',
@@ -98,18 +114,15 @@ describe('Module Factory', () => {
     ).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
+      'import { AppService } from \'./app.service\';\n' +
       'import { FooModule } from \'./foo/foo.module\';\n' +
       '\n' +
       '@Module({\n' +
-      '  imports: [\n' +
-      '    FooModule\n' +
-      '  ],\n' +
-      '  controllers: [\n' +
-      '    AppController\n' +
-      '  ],\n' +
-      '  components: []\n' +
+      '  imports: [FooModule],\n' +
+      '  controllers: [AppController],\n' +
+      '  providers: [ AppService ]\n' +
       '})\n' +
-      'export class ApplicationModule {}\n'
+      'export class AppModule {}\n'
     );
   });
   it('should manage declaration in bar module', () => {
@@ -132,9 +145,7 @@ describe('Module Factory', () => {
       'import { FooModule } from \'./foo/foo.module\';\n' +
       '\n' +
       '@Module({\n' +
-      '  imports: [\n' +
-      '    FooModule\n' +
-      '  ]\n' +
+      '  imports: [FooModule]\n' +
       '})\n' +
       'export class BarModule {}\n'
     );

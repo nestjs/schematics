@@ -14,11 +14,11 @@ describe('Middleware Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.middleware.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/foo/foo.middleware.ts')).to.be.equal(
-      'import { Middleware, NestMiddleware, ExpressMiddleware } from \'@nestjs/common\';\n' +
+      'import { Injectable, NestMiddleware, FunctionMiddleware } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Middleware()\n' +
+      '@Injectable()\n' +
       'export class FooMiddleware implements NestMiddleware {\n' +
-      '  resolve(...args: any[]): ExpressMiddleware {\n' +
+      '  resolve(context: string): FunctionMiddleware {\n' +
       '    return (req, res, next) => {\n' +
       '      next();\n' +
       '    };\n' +
@@ -34,11 +34,11 @@ describe('Middleware Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.middleware.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/bar/foo/foo.middleware.ts')).to.be.equal(
-      'import { Middleware, NestMiddleware, ExpressMiddleware } from \'@nestjs/common\';\n' +
+      'import { Injectable, NestMiddleware, FunctionMiddleware } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Middleware()\n' +
+      '@Injectable()\n' +
       'export class FooMiddleware implements NestMiddleware {\n' +
-      '  resolve(...args: any[]): ExpressMiddleware {\n' +
+      '  resolve(context: string): FunctionMiddleware {\n' +
       '    return (req, res, next) => {\n' +
       '      next();\n' +
       '    };\n' +
@@ -55,11 +55,11 @@ describe('Middleware Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo/foo.middleware.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/baz/foo/foo.middleware.ts')).to.be.equal(
-      'import { Middleware, NestMiddleware, ExpressMiddleware } from \'@nestjs/common\';\n' +
+      'import { Injectable, NestMiddleware, FunctionMiddleware } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Middleware()\n' +
+      '@Injectable()\n' +
       'export class FooMiddleware implements NestMiddleware {\n' +
-      '  resolve(...args: any[]): ExpressMiddleware {\n' +
+      '  resolve(context: string): FunctionMiddleware {\n' +
       '    return (req, res, next) => {\n' +
       '      next();\n' +
       '    };\n' +
@@ -75,11 +75,11 @@ describe('Middleware Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.middleware.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/foo-bar/foo-bar.middleware.ts')).to.be.equal(
-      'import { Middleware, NestMiddleware, ExpressMiddleware } from \'@nestjs/common\';\n' +
+      'import { Injectable, NestMiddleware, FunctionMiddleware } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Middleware()\n' +
+      '@Injectable()\n' +
       'export class FooBarMiddleware implements NestMiddleware {\n' +
-      '  resolve(...args: any[]): ExpressMiddleware {\n' +
+      '  resolve(context: string): FunctionMiddleware {\n' +
       '    return (req, res, next) => {\n' +
       '      next();\n' +
       '    };\n' +
@@ -95,11 +95,32 @@ describe('Middleware Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.middleware.ts')).to.not.be.undefined;
     expect(tree.readContent('/src/bar-baz/foo/foo.middleware.ts')).to.be.equal(
-      'import { Middleware, NestMiddleware, ExpressMiddleware } from \'@nestjs/common\';\n' +
+      'import { Injectable, NestMiddleware, FunctionMiddleware } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Middleware()\n' +
+      '@Injectable()\n' +
       'export class FooMiddleware implements NestMiddleware {\n' +
-      '  resolve(...args: any[]): ExpressMiddleware {\n' +
+      '  resolve(context: string): FunctionMiddleware {\n' +
+      '    return (req, res, next) => {\n' +
+      '      next();\n' +
+      '    };\n' +
+      '  }\n' +
+      '}\n'
+    );
+  });
+  it('should manage javascript file', () => {
+    const options: MiddlewareOptions = {
+      name: 'foo',
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.middleware.js')).to.not.be.undefined;
+    expect(tree.readContent('/src/foo/foo.middleware.js')).to.be.equal(
+      'import { Injectable } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Injectable()\n' +
+      'export class FooMiddleware {\n' +
+      '  resolve(context) {\n' +
       '    return (req, res, next) => {\n' +
       '      next();\n' +
       '    };\n' +
