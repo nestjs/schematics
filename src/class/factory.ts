@@ -17,7 +17,7 @@ function transform(options: ClassOptions): ClassOptions {
     join(normalize(DEFAULT_PATH_NAME), target.path) : normalize(DEFAULT_PATH_NAME);
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
-  target.path = strings.dasherize(location.path);
+  target.path = join(strings.dasherize(location.path) as Path, target.name);
   target.language = target.language !== undefined ? target.language : DEFAULT_LANGUAGE;
   return target;
 }
@@ -29,7 +29,7 @@ function generate(options: ClassOptions): Source {
         ...strings,
         ...options
       }),
-      move(join(options.path as Path, options.name))
+      move(options.path)
     ]
   );
 }
