@@ -47,7 +47,7 @@ function generate(options: ServiceOptions) {
         ...strings,
         ...options
       }),
-      move(join(options.path as Path, options.name))
+      move(options.path)
     ]
   );
 }
