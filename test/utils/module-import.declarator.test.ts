@@ -14,7 +14,7 @@ describe('Module Import Declarator', () => {
       metadata: 'imports',
       type: 'module',
       name: 'bar',
-      path: normalize('/src/foo'),
+      path: normalize('/src/foo/bar'),
       module: normalize('/src/foo/foo.module.ts'),
       symbol: 'BarModule'
     };
@@ -43,7 +43,7 @@ describe('Module Import Declarator', () => {
     const declarator = new ModuleImportDeclarator();
     expect(declarator.declare(content, options)).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +
-      'import { Foo } from \'./foo/foo\';\n' +
+      'import { Foo } from \'./foo\';\n' +
       '\n' +
       '@Module({})\n' +
       'export class FooModule {}\n'
