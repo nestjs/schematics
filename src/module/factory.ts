@@ -35,7 +35,7 @@ function transform(source: ModuleOptions): ModuleOptions {
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
-  target.path = strings.dasherize(location.path);
+  target.path = join(strings.dasherize(location.path) as Path, target.name);
   target.language = target.language !== undefined ? target.language : 'ts';
   return target;
 }
@@ -47,7 +47,7 @@ function generate(options: ModuleOptions) {
         ...strings,
         ...options
       }),
-      move(join(options.path as Path, options.name))
+      move(options.path)
     ]
   );
 }

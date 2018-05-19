@@ -7,7 +7,7 @@ import { ApplicationOptions } from '../../src/application/schema';
 import { ModuleOptions } from '../../src/module/schema';
 import { ProviderOptions } from '../../src/provider/schema';
 
-describe.only('Provider Factory', () => {
+describe('Provider Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
   it('should manage name only', () => {
     const options: ProviderOptions = {
