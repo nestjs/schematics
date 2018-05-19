@@ -1,4 +1,4 @@
 import { Controller } from '@nestjs/common';
 
-@Controller()
+@Controller('<%= dasherize(name) %>')
 export class <%= classify(name) %>Controller {}
