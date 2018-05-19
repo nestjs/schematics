@@ -46,7 +46,7 @@ function generate(options: ProviderOptions) {
         ...strings,
         ...options
       }),
-      move(join(options.path as Path, options.name))
+      move(options.path)
     ]
   );
 }
