@@ -14,7 +14,7 @@ describe('Module Declarator', () => {
       metadata: 'imports',
       type: 'module',
       name: 'bar',
-      path: normalize('/src/foo'),
+      path: normalize('/src/foo/bar'),
       module: normalize('/src/foo/foo.module.ts')
     };
     expect(declarator.declare(content, options)).to.be.equal(
@@ -38,7 +38,7 @@ describe('Module Declarator', () => {
       metadata: 'providers',
       name: 'foo',
       path: normalize('/src/foo'),
-      module: normalize('/src/foo/foo.ts')
+      module: normalize('/src/foo.ts')
     };
     expect(declarator.declare(content, options)).to.be.equal(
       'import { Module } from \'@nestjs/common\';\n' +

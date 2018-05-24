@@ -21,7 +21,7 @@ describe('Controller Factory', () => {
       .to.be.equal(
       'import { Controller } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Controller()\n' +
+      '@Controller(\'foo\')\n' +
       'export class FooController {}\n'
     );
   });
@@ -37,7 +37,7 @@ describe('Controller Factory', () => {
       .to.be.equal(
       'import { Controller } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Controller()\n' +
+      '@Controller(\'foo\')\n' +
       'export class FooController {}\n'
     );
   });
@@ -54,7 +54,7 @@ describe('Controller Factory', () => {
       .to.be.equal(
       'import { Controller } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Controller()\n' +
+      '@Controller(\'foo\')\n' +
       'export class FooController {}\n'
     );
   });
@@ -70,7 +70,7 @@ describe('Controller Factory', () => {
       .to.be.equal(
       'import { Controller } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Controller()\n' +
+      '@Controller(\'foo-bar\')\n' +
       'export class FooBarController {}\n'
     );
   });
@@ -86,7 +86,7 @@ describe('Controller Factory', () => {
       .to.be.equal(
       'import { Controller } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Controller()\n' +
+      '@Controller(\'foo\')\n' +
       'export class FooController {}\n'
     );
   });
@@ -103,7 +103,7 @@ describe('Controller Factory', () => {
       .to.be.equal(
       'import { Controller } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Controller()\n' +
+      '@Controller(\'foo\')\n' +
       'export class FooController {}\n'
     );
   });
