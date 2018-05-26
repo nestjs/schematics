@@ -1,4 +1,4 @@
-import { PipeTransform, Pipe, ArgumentMetadata } from '@nestjs/common';
+import { ArgumentMetadata, Pipe, PipeTransform } from '@nestjs/common';
 
 @Pipe()
 export class <%= classify(name) %>Pipe implements PipeTransform<any> {
