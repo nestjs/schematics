@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs/Observable';
 @WebSocketGateway()
 export class <%= classify(name) %>Gateway {
   @SubscribeMessage('message')
-  onEvent(client: any, payload): Observable<WsResponse<any>> {
+  onEvent(client: any, payload: any): Observable<WsResponse<any>> {
     return of({});
   }
 }
