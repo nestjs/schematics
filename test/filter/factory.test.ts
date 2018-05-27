@@ -14,16 +14,15 @@ describe('Filter Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.filter.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.filter.ts')).toEqual(
-      'import { Catch, WsExceptionFilter } from \'@nestjs/common\';\n' +
-      'import { WsException } from \'@nestjs/websockets\';\n' +
+      'import { ArgumentsHost, Catch, ExceptionFilter } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Catch(WsException)\n' +
-      'export class FooFilter implements WsExceptionFilter {\n' +
-      '  catch(exception: WsException, client) {}\n' +
+      '@Catch()\n' +
+      'export class FooFilter implements ExceptionFilter {\n' +
+      '  catch(exception, host: ArgumentsHost) {}\n' +
       '}\n'
     );
   });
-  it('should manage name as a path', () => {
+  it('should manage name has a path', () => {
     const options: FilterOptions = {
       name: 'bar/foo'
     };
@@ -31,12 +30,11 @@ describe('Filter Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.filter.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo/foo.filter.ts')).toEqual(
-      'import { Catch, WsExceptionFilter } from \'@nestjs/common\';\n' +
-      'import { WsException } from \'@nestjs/websockets\';\n' +
+      'import { ArgumentsHost, Catch, ExceptionFilter } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Catch(WsException)\n' +
-      'export class FooFilter implements WsExceptionFilter {\n' +
-      '  catch(exception: WsException, client) {}\n' +
+      '@Catch()\n' +
+      'export class FooFilter implements ExceptionFilter {\n' +
+      '  catch(exception, host: ArgumentsHost) {}\n' +
       '}\n'
     );
   });
@@ -49,12 +47,11 @@ describe('Filter Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo/foo.filter.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/baz/foo/foo.filter.ts')).toEqual(
-      'import { Catch, WsExceptionFilter } from \'@nestjs/common\';\n' +
-      'import { WsException } from \'@nestjs/websockets\';\n' +
+      'import { ArgumentsHost, Catch, ExceptionFilter } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Catch(WsException)\n' +
-      'export class FooFilter implements WsExceptionFilter {\n' +
-      '  catch(exception: WsException, client) {}\n' +
+      '@Catch()\n' +
+      'export class FooFilter implements ExceptionFilter {\n' +
+      '  catch(exception, host: ArgumentsHost) {}\n' +
       '}\n'
     );
   });
@@ -66,12 +63,11 @@ describe('Filter Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.filter.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo-bar/foo-bar.filter.ts')).toEqual(
-      'import { Catch, WsExceptionFilter } from \'@nestjs/common\';\n' +
-      'import { WsException } from \'@nestjs/websockets\';\n' +
+      'import { ArgumentsHost, Catch, ExceptionFilter } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Catch(WsException)\n' +
-      'export class FooBarFilter implements WsExceptionFilter {\n' +
-      '  catch(exception: WsException, client) {}\n' +
+      '@Catch()\n' +
+      'export class FooBarFilter implements ExceptionFilter {\n' +
+      '  catch(exception, host: ArgumentsHost) {}\n' +
       '}\n'
     );
   });
@@ -83,12 +79,11 @@ describe('Filter Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.filter.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar-baz/foo/foo.filter.ts')).toEqual(
-      'import { Catch, WsExceptionFilter } from \'@nestjs/common\';\n' +
-      'import { WsException } from \'@nestjs/websockets\';\n' +
+      'import { ArgumentsHost, Catch, ExceptionFilter } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Catch(WsException)\n' +
-      'export class FooFilter implements WsExceptionFilter {\n' +
-      '  catch(exception: WsException, client) {}\n' +
+      '@Catch()\n' +
+      'export class FooFilter implements ExceptionFilter {\n' +
+      '  catch(exception, host: ArgumentsHost) {}\n' +
       '}\n'
     );
   });
@@ -101,12 +96,11 @@ describe('Filter Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.filter.js')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.filter.js')).toEqual(
-      'import { Catch } from \'@nestjs/common\';\n' +
-      'import { WsException } from \'@nestjs/websockets\';\n' +
+      'import { Catch, ExceptionFilter } from \'@nestjs/common\';\n' +
       '\n' +
-      '@Catch(WsException)\n' +
-      'export class FooFilter {\n' +
-      '  catch(exception, client) {}\n' +
+      '@Catch()\n' +
+      'export class FooFilter implements ExceptionFilter {\n' +
+      '  catch(exception, host) {}\n' +
       '}\n'
     );
   });
