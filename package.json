@@ -10,7 +10,7 @@
     "build": "tsc --project tsconfig.json",
     "lint:src": "tslint --project tsconfig.json",
     "lint:test": "tslint --project test/tsconfig.json",
-    "test": "nyc mocha test/**/*.ts --require ts-node/register"
+    "test": "jest --config test/jest-config.json"
   },
   "repository": {
     "type": "git",
@@ -32,8 +32,10 @@
     "@types/mocha": "^2.2.48",
     "@types/node": "^9.4.0",
     "chai": "^4.1.2",
+    "jest": "^23.0.0",
     "mocha": "^5.0.0",
     "nyc": "^11.4.1",
+    "ts-jest": "^22.4.6",
     "ts-lint": "^4.5.1",
     "ts-node": "^4.1.0"
   },

@@ -5,7 +5,7 @@ import { DeclarationOptions } from '../../src/utils/module.declarator';
 
 describe('Module Metadata Declarator', () => {
   let declarator: ModuleMetadataDeclarator;
-  before(() => declarator = new ModuleMetadataDeclarator());
+  beforeAll(() => declarator = new ModuleMetadataDeclarator());
   it('should manage empty metadata', () => {
     const content: string =
       'import { Module } from \'@nestjs/common\';\n' +

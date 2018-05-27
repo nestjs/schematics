@@ -3,7 +3,7 @@ import { Location, NameParser, ParseOptions } from '../../src/utils/name.parser'
 
 describe('Name Parser', () => {
   let parser: NameParser;
-  before(() => parser = new NameParser());
+  beforeAll(() => parser = new NameParser());
   it('should handle no path', () => {
     const options: ParseOptions = {
       name: 'foo'
