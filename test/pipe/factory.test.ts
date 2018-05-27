@@ -13,10 +13,10 @@ describe('Pipe Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.pipe.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.pipe.ts')).toEqual(
-      'import { PipeTransform, Pipe, ArgumentMetadata } from \'@nestjs/common\';\n' +
+      'import { ArgumentMetadata, Pipe, PipeTransform } from \'@nestjs/common\';\n' +
       '\n' +
       '@Pipe()\n' +
-      'export class FooPipe implements PipeTransform<any> {\n' +
+      'export class FooPipe implements PipeTransform {\n' +
       '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
       '    return value;\n' +
       '  }\n' +
@@ -31,10 +31,10 @@ describe('Pipe Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.pipe.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo/foo.pipe.ts')).toEqual(
-      'import { PipeTransform, Pipe, ArgumentMetadata } from \'@nestjs/common\';\n' +
+      'import { ArgumentMetadata, Pipe, PipeTransform } from \'@nestjs/common\';\n' +
       '\n' +
       '@Pipe()\n' +
-      'export class FooPipe implements PipeTransform<any> {\n' +
+      'export class FooPipe implements PipeTransform {\n' +
       '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
       '    return value;\n' +
       '  }\n' +
@@ -50,10 +50,10 @@ describe('Pipe Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo/foo.pipe.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/baz/foo/foo.pipe.ts')).toEqual(
-      'import { PipeTransform, Pipe, ArgumentMetadata } from \'@nestjs/common\';\n' +
+      'import { ArgumentMetadata, Pipe, PipeTransform } from \'@nestjs/common\';\n' +
       '\n' +
       '@Pipe()\n' +
-      'export class FooPipe implements PipeTransform<any> {\n' +
+      'export class FooPipe implements PipeTransform {\n' +
       '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
       '    return value;\n' +
       '  }\n' +
@@ -68,10 +68,10 @@ describe('Pipe Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.pipe.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo-bar/foo-bar.pipe.ts')).toEqual(
-      'import { PipeTransform, Pipe, ArgumentMetadata } from \'@nestjs/common\';\n' +
+      'import { ArgumentMetadata, Pipe, PipeTransform } from \'@nestjs/common\';\n' +
       '\n' +
       '@Pipe()\n' +
-      'export class FooBarPipe implements PipeTransform<any> {\n' +
+      'export class FooBarPipe implements PipeTransform {\n' +
       '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
       '    return value;\n' +
       '  }\n' +
@@ -86,10 +86,10 @@ describe('Pipe Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.pipe.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar-baz/foo/foo.pipe.ts')).toEqual(
-      'import { PipeTransform, Pipe, ArgumentMetadata } from \'@nestjs/common\';\n' +
+      'import { ArgumentMetadata, Pipe, PipeTransform } from \'@nestjs/common\';\n' +
       '\n' +
       '@Pipe()\n' +
-      'export class FooPipe implements PipeTransform<any> {\n' +
+      'export class FooPipe implements PipeTransform {\n' +
       '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
       '    return value;\n' +
       '  }\n' +
