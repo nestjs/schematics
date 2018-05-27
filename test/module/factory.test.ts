@@ -1,7 +1,6 @@
 import { normalize } from '@angular-devkit/core';
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { expect } from 'chai';
 import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
 import { ModuleOptions } from '../../src/module/schema';
@@ -15,8 +14,8 @@ describe('Module Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.module.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo/foo.module.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.module.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo/foo.module.ts')).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({})\n' +
@@ -30,8 +29,8 @@ describe('Module Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo/foo.module.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar/foo/foo.module.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.module.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar/foo/foo.module.ts')).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({})\n' +
@@ -46,8 +45,8 @@ describe('Module Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo/foo.module.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar/foo/foo.module.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.module.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar/foo/foo.module.ts')).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({})\n' +
@@ -61,8 +60,8 @@ describe('Module Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.module.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo-bar/foo-bar.module.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.module.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo-bar/foo-bar.module.ts')).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({})\n' +
@@ -76,8 +75,8 @@ describe('Module Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.module.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar-baz/foo/foo.module.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.module.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar-baz/foo/foo.module.ts')).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({})\n' +
@@ -92,8 +91,8 @@ describe('Module Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('module', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.module.js')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo/foo.module.js')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.module.js')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo/foo.module.js')).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({})\n' +
@@ -111,7 +110,7 @@ describe('Module Factory', () => {
     tree = runner.runSchematic('module', options, tree);
     expect(
       tree.readContent(normalize('/src/app.module.ts'))
-    ).to.be.equal(
+    ).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
       'import { AppService } from \'./app.service\';\n' +
@@ -140,7 +139,7 @@ describe('Module Factory', () => {
     tree = runner.runSchematic('module', options, tree);
     expect(
       tree.readContent(normalize('/src/bar/bar.module.ts'))
-    ).to.be.equal(
+    ).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { FooModule } from \'./foo/foo.module\';\n' +
       '\n' +

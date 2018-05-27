@@ -1,6 +1,5 @@
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { expect } from 'chai';
 import * as path from 'path';
 import { ClassOptions } from '../../src/class/schema';
 
@@ -12,8 +11,8 @@ describe('Class Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('class', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo/foo.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo/foo.ts')).toEqual(
       'export class Foo {}\n'
     );
   });
@@ -23,8 +22,8 @@ describe('Class Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('class', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo/foo.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar/foo/foo.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar/foo/foo.ts')).toEqual(
       'export class Foo {}\n'
     );
   });
@@ -35,8 +34,8 @@ describe('Class Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('class', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/baz/foo/foo.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/baz/foo/foo.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/baz/foo/foo.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/baz/foo/foo.ts')).toEqual(
       'export class Foo {}\n'
     );
   });
@@ -46,8 +45,8 @@ describe('Class Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('class', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo-bar/foo-bar.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo-bar/foo-bar.ts')).toEqual(
       'export class FooBar {}\n'
     );
   });
@@ -57,8 +56,8 @@ describe('Class Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('class', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar-baz/foo/foo.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar-baz/foo/foo.ts')).toEqual(
       'export class Foo {}\n'
     );
   });
@@ -69,8 +68,8 @@ describe('Class Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('class', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.js')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo/foo.js')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.js')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo/foo.js')).toEqual(
       'export class Foo {}\n'
     );
   });

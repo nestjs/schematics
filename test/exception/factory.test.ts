@@ -1,6 +1,5 @@
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { expect } from 'chai';
 import * as path from 'path';
 import { ExceptionOptions } from '../../src/exception/schema';
 
@@ -12,8 +11,8 @@ describe('Exception Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.exception.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo/foo.exception.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.exception.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo/foo.exception.ts')).toEqual(
       'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
       '\n' +
       'export class FooException extends HttpException {\n' +
@@ -29,8 +28,8 @@ describe('Exception Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo/foo.exception.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar/foo/foo.exception.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.exception.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar/foo/foo.exception.ts')).toEqual(
       'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
       '\n' +
       'export class FooException extends HttpException {\n' +
@@ -47,8 +46,8 @@ describe('Exception Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/baz/foo/foo.exception.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/baz/foo/foo.exception.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/baz/foo/foo.exception.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/baz/foo/foo.exception.ts')).toEqual(
       'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
       '\n' +
       'export class FooException extends HttpException {\n' +
@@ -64,8 +63,8 @@ describe('Exception Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.exception.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo-bar/foo-bar.exception.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.exception.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo-bar/foo-bar.exception.ts')).toEqual(
       'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
       '\n' +
       'export class FooBarException extends HttpException {\n' +
@@ -81,8 +80,8 @@ describe('Exception Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.exception.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar-baz/foo/foo.exception.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.exception.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar-baz/foo/foo.exception.ts')).toEqual(
       'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
       '\n' +
       'export class FooException extends HttpException {\n' +
@@ -99,8 +98,8 @@ describe('Exception Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.exception.js')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo/foo.exception.js')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.exception.js')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo/foo.exception.js')).toEqual(
       'import { HttpException, HttpStatus } from \'@nestjs/common\';\n' +
       '\n' +
       'export class FooException extends HttpException {\n' +

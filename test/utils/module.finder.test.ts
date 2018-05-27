@@ -1,6 +1,5 @@
 import { normalize } from '@angular-devkit/core';
 import { EmptyTree } from '@angular-devkit/schematics';
-import { expect } from 'chai';
 import { FindOptions, ModuleFinder } from '../../src/utils/module.finder';
 
 describe('Module Finder', () => {
@@ -13,7 +12,7 @@ describe('Module Finder', () => {
       path: normalize('/src')
     };
     expect(finder.find(options))
-      .to.be.equal(normalize('/src/app.module.ts'));
+      .toEqual(normalize('/src/app.module.ts'));
   });
   it('should return the generated name module path', () => {
     const tree = new EmptyTree();
@@ -22,10 +21,22 @@ describe('Module Finder', () => {
     const finder = new ModuleFinder(tree);
     const options: FindOptions = {
       name: 'foo',
+      path: normalize('/src')
+    };
+    expect(finder.find(options))
+      .toEqual(normalize('/src/foo/foo.module.ts'));
+  });
+  it('should return the intermediate module path', () => {
+    const tree = new EmptyTree();
+    tree.create('/src/app.module.ts', 'app module content');
+    tree.create('/src/foo/foo.module.ts', 'foo module content');
+    const finder = new ModuleFinder(tree);
+    const options: FindOptions = {
+      name: 'name',
       path: normalize('/src/foo')
     };
     expect(finder.find(options))
-      .to.equal(normalize('/src/foo/foo.module.ts'));
+      .toEqual(normalize('/src/foo/foo.module.ts'));
   });
   it('should manage javascript module file', () => {
     const tree = new EmptyTree();
@@ -36,6 +47,6 @@ describe('Module Finder', () => {
       path: normalize('/src')
     };
     expect(finder.find(options))
-      .to.be.equal(normalize('/src/app.module.js'));
+      .toEqual(normalize('/src/app.module.js'));
   });
 });

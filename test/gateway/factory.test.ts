@@ -1,6 +1,5 @@
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { expect } from 'chai';
 import * as path from 'path';
 import { GatewayOptions } from '../../src/gateway/schema';
 
@@ -12,8 +11,8 @@ describe('Gateway Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.gateway.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo/foo.gateway.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.gateway.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo/foo.gateway.ts')).toEqual(
       'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
       'import \'rxjs/add/observable/from\';\n' +
       'import { Observable } from \'rxjs/Observable\';\n' +
@@ -35,8 +34,8 @@ describe('Gateway Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo/foo.gateway.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar/foo/foo.gateway.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.gateway.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar/foo/foo.gateway.ts')).toEqual(
       'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
       'import \'rxjs/add/observable/from\';\n' +
       'import { Observable } from \'rxjs/Observable\';\n' +
@@ -59,8 +58,8 @@ describe('Gateway Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/baz/foo/foo.gateway.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/baz/foo/foo.gateway.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/baz/foo/foo.gateway.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/baz/foo/foo.gateway.ts')).toEqual(
       'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
       'import \'rxjs/add/observable/from\';\n' +
       'import { Observable } from \'rxjs/Observable\';\n' +
@@ -82,8 +81,8 @@ describe('Gateway Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.gateway.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo-bar/foo-bar.gateway.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.gateway.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo-bar/foo-bar.gateway.ts')).toEqual(
       'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
       'import \'rxjs/add/observable/from\';\n' +
       'import { Observable } from \'rxjs/Observable\';\n' +
@@ -105,8 +104,8 @@ describe('Gateway Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.gateway.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar-baz/foo/foo.gateway.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.gateway.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar-baz/foo/foo.gateway.ts')).toEqual(
       'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
       'import \'rxjs/add/observable/from\';\n' +
       'import { Observable } from \'rxjs/Observable\';\n' +
@@ -129,8 +128,8 @@ describe('Gateway Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.gateway.js')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo/foo.gateway.js')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.gateway.js')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo/foo.gateway.js')).toEqual(
       'import { SubscribeMessage, WebSocketGateway, WebSocketServer, } from \'@nestjs/websockets\';\n' +
       'import \'rxjs/add/observable/from\';\n' +
       'import { Observable } from \'rxjs/Observable\';\n' +

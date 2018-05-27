@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { Location, NameParser, ParseOptions } from '../../src/utils/name.parser';
 
 describe('Name Parser', () => {
@@ -9,8 +8,8 @@ describe('Name Parser', () => {
       name: 'foo'
     };
     const location: Location = parser.parse(options);
-    expect(location.name).to.be.equal('foo');
-    expect(location.path).to.be.equal('/');
+    expect(location.name).toEqual('foo');
+    expect(location.path).toEqual('/');
   });
   it('should handle just the name', () => {
     const options: ParseOptions = {
@@ -18,8 +17,8 @@ describe('Name Parser', () => {
       path: 'baz'
     };
     const location: Location = parser.parse(options);
-    expect(location.name).to.be.equal('foo');
-    expect(location.path).to.be.equal('/baz');
+    expect(location.name).toEqual('foo');
+    expect(location.path).toEqual('/baz');
   });
   it('should handle name has a path (sub-dir)', () => {
     const options: ParseOptions = {
@@ -27,8 +26,8 @@ describe('Name Parser', () => {
       path: 'baz'
     };
     const location: Location = parser.parse(options);
-    expect(location.name).to.be.equal('foo');
-    expect(location.path).to.be.equal('/baz/bar');
+    expect(location.name).toEqual('foo');
+    expect(location.path).toEqual('/baz/bar');
   });
 
   it('should handle name has a higher path', () => {
@@ -37,8 +36,8 @@ describe('Name Parser', () => {
       path: 'bar/baz'
     };
     const location: Location = parser.parse(options);
-    expect(location.name).to.be.equal('foo');
-    expect(location.path).to.be.equal('/bar');
+    expect(location.name).toEqual('foo');
+    expect(location.path).toEqual('/bar');
   });
 
   it('should handle name has a higher path above root', () => {
@@ -46,6 +45,6 @@ describe('Name Parser', () => {
       name: '../../../foo',
       path: 'baz'
     };
-    expect(() => parser.parse(options)).to.throw();
+    expect(() => parser.parse(options)).toThrow();
   });
 });

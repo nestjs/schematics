@@ -1,5 +1,4 @@
 import { normalize } from '@angular-devkit/core';
-import { expect } from 'chai';
 import { ModuleMetadataDeclarator } from '../../src/utils/module-metadata.declarator';
 import { DeclarationOptions } from '../../src/utils/module.declarator';
 
@@ -20,7 +19,7 @@ describe('Module Metadata Declarator', () => {
       module: normalize('/src/foo/foo.module.ts'),
       symbol: 'BarModule'
     };
-    expect(declarator.declare(content, options)).to.be.equal(
+    expect(declarator.declare(content, options)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
@@ -48,7 +47,7 @@ describe('Module Metadata Declarator', () => {
       module: normalize('/src/foo/foo.module.ts'),
       symbol: 'BarModule'
     };
-    expect(declarator.declare(content, options)).to.be.equal(
+    expect(declarator.declare(content, options)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { BazModule } from \'./baz/baz.module\';\n' +
       '\n' +
@@ -80,7 +79,7 @@ describe('Module Metadata Declarator', () => {
       module: normalize('/src/foo/foo.module.ts'),
       symbol: 'BarModule'
     };
-    expect(declarator.declare(content, options)).to.be.equal(
+    expect(declarator.declare(content, options)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { BazModule } from \'./baz/baz.module\';\n' +
       '\n' +
@@ -125,7 +124,7 @@ describe('Module Metadata Declarator', () => {
       module: normalize('/src/foo/foo.module.ts'),
       symbol: 'BarModule'
     };
-    expect(declarator.declare(content, options)).to.be.equal(
+    expect(declarator.declare(content, options)).toEqual(
       'import { HelmetMiddleware } from \'@nest-middlewares/helmet\';\n' +
       'import { MiddlewaresConsumer, Module, RequestMethod } from \'@nestjs/common\';\n' +
       'import { ConfigModule } from \'./common/config/config.module\';\n' +
@@ -169,7 +168,7 @@ describe('Module Metadata Declarator', () => {
       module: normalize('/src/foo/foo.module.ts'),
       symbol: 'BarModule'
     };
-    expect(declarator.declare(content, options)).to.be.equal(
+    expect(declarator.declare(content, options)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { FooModule } from \'./foo/foo.module\';\n' +
       '\n' +
@@ -201,7 +200,7 @@ describe('Module Metadata Declarator', () => {
       module: normalize('/src/foo/foo.module.ts'),
       symbol: 'BarModule'
     };
-    expect(declarator.declare(content, options)).to.be.equal(
+    expect(declarator.declare(content, options)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { FooModule } from \'./foo/foo.module\';\n' +
       '\n' +
@@ -233,7 +232,7 @@ describe('Module Metadata Declarator', () => {
       module: normalize('/src/foo/foo.module.ts'),
       symbol: 'BarModule'
     };
-    expect(declarator.declare(content, options)).to.be.equal(
+    expect(declarator.declare(content, options)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
