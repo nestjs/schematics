@@ -11,8 +11,15 @@ jobs:
       script:
         - make build-docker-artifact
 
+    - stage: build_branch
+      if: NOT tag IS present AND type IN (push) AND NOT branch =~ ^sprint-*
+      env:
+        - ARTIFACT_ID=$TRAVIS_COMMIT
+      script:
+        - make build-docker-artifact && make publish-docker-artifact
+
     - stage: continuous_integration
-      if: NOT tag IS present AND type IN (push)
+      if: NOT tag IS present AND type IN (push) AND branch =~ ^sprint-*
       env:
         - ARTIFACT_ID=$TRAVIS_COMMIT
       script:
