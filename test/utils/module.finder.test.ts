@@ -22,18 +22,6 @@ describe('Module Finder', () => {
     const finder = new ModuleFinder(tree);
     const options: FindOptions = {
       name: 'foo',
-      path: normalize('/src')
-    };
-    expect(finder.find(options))
-      .to.equal(normalize('/src/foo/foo.module.ts'));
-  });
-  it('should return the intermediate module path', () => {
-    const tree = new EmptyTree();
-    tree.create('/src/app.module.ts', 'app module content');
-    tree.create('/src/foo/foo.module.ts', 'foo module content');
-    const finder = new ModuleFinder(tree);
-    const options: FindOptions = {
-      name: 'name',
       path: normalize('/src/foo')
     };
     expect(finder.find(options))

@@ -101,7 +101,7 @@ describe('Service Factory', () => {
       'export class FooService {}\n'
     );
   });
-  it.skip('should manage declaration in app module', () => {
+  it('should manage declaration in app module', () => {
     const app: ApplicationOptions = {
       name: '',
     };
@@ -126,7 +126,7 @@ describe('Service Factory', () => {
       'export class AppModule {}\n'
     );
   });
-  it.skip('should manage declaration in foo module', () => {
+  it('should manage declaration in foo module', () => {
     const app: ApplicationOptions = {
       name: '',
     };
