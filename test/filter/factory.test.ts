@@ -96,10 +96,10 @@ describe('Filter Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.filter.js')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.filter.js')).toEqual(
-      'import { Catch, ExceptionFilter } from \'@nestjs/common\';\n' +
+      'import { Catch } from \'@nestjs/common\';\n' +
       '\n' +
       '@Catch()\n' +
-      'export class FooFilter implements ExceptionFilter {\n' +
+      'export class FooFilter {\n' +
       '  catch(exception, host) {}\n' +
       '}\n'
     );
