@@ -1,7 +1,6 @@
 import { normalize } from '@angular-devkit/core';
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { expect } from 'chai';
 import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
 import { ModuleOptions } from '../../src/module/schema';
@@ -16,8 +15,8 @@ describe('Provider Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo.ts')).toEqual(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
       '@Injectable()\n' +
@@ -31,8 +30,8 @@ describe('Provider Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar/foo.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar/foo.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar/foo.ts')).toEqual(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
       '@Injectable()\n' +
@@ -47,8 +46,8 @@ describe('Provider Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar/foo.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar/foo.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar/foo.ts')).toEqual(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
       '@Injectable()\n' +
@@ -62,8 +61,8 @@ describe('Provider Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar-foo.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar-foo.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar-foo.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar-foo.ts')).toEqual(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
       '@Injectable()\n' +
@@ -78,8 +77,8 @@ describe('Provider Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo.js')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo.js')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo.js')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo.js')).toEqual(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
       '@Injectable()\n' +
@@ -97,7 +96,7 @@ describe('Provider Factory', () => {
     tree = runner.runSchematic('provider', options, tree);
     expect(
       tree.readContent(normalize('/src/app.module.ts'))
-    ).to.be.equal(
+    ).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
       'import { AppService } from \'./app.service\';\n' +
@@ -127,7 +126,7 @@ describe('Provider Factory', () => {
     tree = runner.runSchematic('provider', options, tree);
     expect(
       tree.readContent(normalize('/src/foo/foo.module.ts'))
-    ).to.be.equal(
+    ).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { Foo } from \'./foo\';\n' +
       '\n' +

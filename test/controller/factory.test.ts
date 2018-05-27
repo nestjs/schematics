@@ -1,7 +1,6 @@
 import { normalize } from '@angular-devkit/core';
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { expect } from 'chai';
 import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
 import { ControllerOptions } from '../../src/controller/schema';
@@ -16,9 +15,9 @@ describe('Controller Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.controller.ts')).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo/foo.controller.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.controller.ts'))
-      .to.be.equal(
+      .toEqual(
       'import { Controller } from \'@nestjs/common\';\n' +
       '\n' +
       '@Controller(\'foo\')\n' +
@@ -32,9 +31,9 @@ describe('Controller Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo/foo.controller.ts')).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.controller.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo/foo.controller.ts'))
-      .to.be.equal(
+      .toEqual(
       'import { Controller } from \'@nestjs/common\';\n' +
       '\n' +
       '@Controller(\'foo\')\n' +
@@ -49,9 +48,9 @@ describe('Controller Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo/foo.controller.ts')).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.controller.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo/foo.controller.ts'))
-      .to.be.equal(
+      .toEqual(
       'import { Controller } from \'@nestjs/common\';\n' +
       '\n' +
       '@Controller(\'foo\')\n' +
@@ -65,9 +64,9 @@ describe('Controller Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.controller.ts')).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.controller.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo-bar/foo-bar.controller.ts'))
-      .to.be.equal(
+      .toEqual(
       'import { Controller } from \'@nestjs/common\';\n' +
       '\n' +
       '@Controller(\'foo-bar\')\n' +
@@ -81,9 +80,9 @@ describe('Controller Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.controller.ts')).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.controller.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar-baz/foo/foo.controller.ts'))
-      .to.be.equal(
+      .toEqual(
       'import { Controller } from \'@nestjs/common\';\n' +
       '\n' +
       '@Controller(\'foo\')\n' +
@@ -98,9 +97,9 @@ describe('Controller Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.controller.js')).to.not.be.undefined;
+    expect(files.find((filename) => filename === '/src/foo/foo.controller.js')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.controller.js'))
-      .to.be.equal(
+      .toEqual(
       'import { Controller } from \'@nestjs/common\';\n' +
       '\n' +
       '@Controller(\'foo\')\n' +
@@ -116,7 +115,7 @@ describe('Controller Factory', () => {
       name: 'foo'
     };
     tree = runner.runSchematic('controller', options, tree);
-    expect(tree.readContent(normalize('/src/app.module.ts'))).to.be.equal(
+    expect(tree.readContent(normalize('/src/app.module.ts'))).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { AppController } from \'./app.controller\';\n' +
       'import { AppService } from \'./app.service\';\n' +
@@ -143,7 +142,7 @@ describe('Controller Factory', () => {
       name: 'foo'
     };
     tree = runner.runSchematic('controller', options, tree);
-    expect(tree.readContent(normalize('/src/foo/foo.module.ts'))).to.be.equal(
+    expect(tree.readContent(normalize('/src/foo/foo.module.ts'))).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { FooController } from \'./foo.controller\';\n' +
       '\n' +

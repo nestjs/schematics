@@ -1,6 +1,5 @@
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { expect } from 'chai';
 import * as path from 'path';
 import { DecoratorOptions } from '../../src/decorator/schema';
 
@@ -12,8 +11,8 @@ describe('Decorator Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('decorator', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.decorator.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo/foo.decorator.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.decorator.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo/foo.decorator.ts')).toEqual(
       'import { ReflectMetadata } from \'@nestjs/common\';\n' +
       '\n' +
       'export const Foo = (...args: string[]) => ReflectMetadata(\'foo\', args);\n'
@@ -25,8 +24,8 @@ describe('Decorator Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('decorator', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo/foo.decorator.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar/foo/foo.decorator.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.decorator.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar/foo/foo.decorator.ts')).toEqual(
       'import { ReflectMetadata } from \'@nestjs/common\';\n' +
       '\n' +
       'export const Foo = (...args: string[]) => ReflectMetadata(\'foo\', args);\n'
@@ -39,8 +38,8 @@ describe('Decorator Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('decorator', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/baz/foo/foo.decorator.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/baz/foo/foo.decorator.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/baz/foo/foo.decorator.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/baz/foo/foo.decorator.ts')).toEqual(
       'import { ReflectMetadata } from \'@nestjs/common\';\n' +
       '\n' +
       'export const Foo = (...args: string[]) => ReflectMetadata(\'foo\', args);\n'
@@ -52,8 +51,8 @@ describe('Decorator Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('decorator', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.decorator.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo-bar/foo-bar.decorator.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.decorator.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo-bar/foo-bar.decorator.ts')).toEqual(
       'import { ReflectMetadata } from \'@nestjs/common\';\n' +
       '\n' +
       'export const FooBar = (...args: string[]) => ReflectMetadata(\'foo-bar\', args);\n'
@@ -65,8 +64,8 @@ describe('Decorator Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('decorator', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.decorator.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar-baz/foo/foo.decorator.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.decorator.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar-baz/foo/foo.decorator.ts')).toEqual(
       'import { ReflectMetadata } from \'@nestjs/common\';\n' +
       '\n' +
       'export const Foo = (...args: string[]) => ReflectMetadata(\'foo\', args);\n'
@@ -79,8 +78,8 @@ describe('Decorator Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('decorator', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.decorator.js')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo/foo.decorator.js')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.decorator.js')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo/foo.decorator.js')).toEqual(
       'import { ReflectMetadata } from \'@nestjs/common\';\n' +
       '\n' +
       'export const Foo = (...args: string[]) => ReflectMetadata(\'foo\', args);\n'

@@ -1,6 +1,6 @@
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { expect } from 'chai';
+
 import * as path from 'path';
 import { FilterOptions } from '../../src/filter/schema';
 
@@ -12,8 +12,8 @@ describe('Filter Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('filter', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.filter.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo/foo.filter.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.filter.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo/foo.filter.ts')).toEqual(
       'import { Catch, WsExceptionFilter } from \'@nestjs/common\';\n' +
       'import { WsException } from \'@nestjs/websockets\';\n' +
       '\n' +
@@ -29,8 +29,8 @@ describe('Filter Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('filter', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo/foo.filter.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar/foo/foo.filter.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar/foo/foo.filter.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar/foo/foo.filter.ts')).toEqual(
       'import { Catch, WsExceptionFilter } from \'@nestjs/common\';\n' +
       'import { WsException } from \'@nestjs/websockets\';\n' +
       '\n' +
@@ -47,8 +47,8 @@ describe('Filter Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('filter', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/baz/foo/foo.filter.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/baz/foo/foo.filter.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/baz/foo/foo.filter.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/baz/foo/foo.filter.ts')).toEqual(
       'import { Catch, WsExceptionFilter } from \'@nestjs/common\';\n' +
       'import { WsException } from \'@nestjs/websockets\';\n' +
       '\n' +
@@ -64,8 +64,8 @@ describe('Filter Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('filter', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.filter.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo-bar/foo-bar.filter.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.filter.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo-bar/foo-bar.filter.ts')).toEqual(
       'import { Catch, WsExceptionFilter } from \'@nestjs/common\';\n' +
       'import { WsException } from \'@nestjs/websockets\';\n' +
       '\n' +
@@ -81,8 +81,8 @@ describe('Filter Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('filter', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.filter.ts')).to.not.be.undefined;
-    expect(tree.readContent('/src/bar-baz/foo/foo.filter.ts')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.filter.ts')).not.toBeUndefined();
+    expect(tree.readContent('/src/bar-baz/foo/foo.filter.ts')).toEqual(
       'import { Catch, WsExceptionFilter } from \'@nestjs/common\';\n' +
       'import { WsException } from \'@nestjs/websockets\';\n' +
       '\n' +
@@ -99,8 +99,8 @@ describe('Filter Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('filter', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.filter.js')).to.not.be.undefined;
-    expect(tree.readContent('/src/foo/foo.filter.js')).to.be.equal(
+    expect(files.find((filename) => filename === '/src/foo/foo.filter.js')).not.toBeUndefined();
+    expect(tree.readContent('/src/foo/foo.filter.js')).toEqual(
       'import { Catch } from \'@nestjs/common\';\n' +
       'import { WsException } from \'@nestjs/websockets\';\n' +
       '\n' +

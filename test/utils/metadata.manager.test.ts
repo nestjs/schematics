@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { MetadataManager } from '../../src/utils/metadata.manager';
 
 describe('Metadata Manager', () => {
@@ -11,7 +10,7 @@ describe('Metadata Manager', () => {
     );
     const metadata = 'imports';
     const symbol = 'FooModule';
-    expect(manager.insert(metadata, symbol)).to.be.equal(
+    expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
@@ -31,7 +30,7 @@ describe('Metadata Manager', () => {
     );
     const metadata = 'imports';
     const symbol = 'FooModule';
-    expect(manager.insert(metadata, symbol)).to.be.equal(
+    expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
@@ -52,7 +51,7 @@ describe('Metadata Manager', () => {
     );
     const metadata = 'imports';
     const symbol = 'FooModule';
-    expect(manager.insert(metadata, symbol)).to.be.equal(
+    expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
@@ -73,7 +72,7 @@ describe('Metadata Manager', () => {
       '})\n' +
       'export class FooModule {}\n'
     );
-    expect(manager.insert(metadata, symbol)).to.be.equal(
+    expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
@@ -95,7 +94,7 @@ describe('Metadata Manager', () => {
       '})\n' +
       'export class FooModule {}\n'
     );
-    expect(manager.insert(metadata, symbol)).to.be.equal(
+    expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
@@ -117,7 +116,7 @@ describe('Metadata Manager', () => {
       '})\n' +
       'export class FooModule {}\n'
     );
-    expect(manager.insert(metadata, symbol)).to.be.equal(
+    expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
@@ -139,7 +138,7 @@ describe('Metadata Manager', () => {
       '})\n' +
       'export class FooModule {}\n'
     );
-    expect(manager.insert(metadata, symbol)).to.be.equal(
+    expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
@@ -166,7 +165,7 @@ describe('Metadata Manager', () => {
       '})\n' +
       'export class FooModule {}\n'
     );
-    expect(manager.insert(metadata, symbol)).to.be.equal(
+    expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
@@ -194,7 +193,7 @@ describe('Metadata Manager', () => {
       '})\n' +
       'export class FooModule {}\n'
     );
-    expect(manager.insert(metadata, symbol)).to.be.equal(
+    expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
@@ -216,7 +215,7 @@ describe('Metadata Manager', () => {
       '})\n' +
       'export class FooModule {}\n'
     );
-    expect(manager.insert(metadata, symbol)).to.be.equal(
+    expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
@@ -238,7 +237,7 @@ describe('Metadata Manager', () => {
       '})\n' +
       'export class FooModule {}\n'
     );
-    expect(manager.insert(metadata, symbol)).to.be.equal(
+    expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
@@ -260,7 +259,7 @@ describe('Metadata Manager', () => {
       '})\n' +
       'export class FooModule {}\n'
     );
-    expect(manager.insert(metadata, symbol)).to.be.equal(
+    expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +
@@ -286,7 +285,7 @@ describe('Metadata Manager', () => {
       '})\n' +
       'export class FooModule {}\n'
     );
-    expect(manager.insert(metadata, symbol)).to.be.equal(
+    expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({\n' +

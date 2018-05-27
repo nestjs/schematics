@@ -1,6 +1,5 @@
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { expect } from 'chai';
 import * as path from 'path';
 import { ApplicationOptions } from '../../src/application/schema';
 
@@ -12,7 +11,7 @@ describe('Application Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files).to.be.deep.equal([
+    expect(files).toEqual([
       '/project/.prettierrc',
       '/project/README.md',
       '/project/nodemon.json',
@@ -36,7 +35,7 @@ describe('Application Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files).to.be.deep.equal([
+    expect(files).toEqual([
       '/awesome-project/.prettierrc',
       '/awesome-project/README.md',
       '/awesome-project/nodemon.json',
@@ -61,7 +60,7 @@ describe('Application Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files).to.be.deep.equal([
+    expect(files).toEqual([
       '/project/.babelrc',
       '/project/.gitignore',
       '/project/.prettierrc',
