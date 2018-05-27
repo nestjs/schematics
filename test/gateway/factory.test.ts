@@ -13,17 +13,14 @@ describe('Gateway Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.gateway.ts')).toEqual(
-      'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
-      'import \'rxjs/add/observable/from\';\n' +
-      'import { Observable } from \'rxjs/Observable\';\n' +
+      'import { SubscribeMessage, WebSocketGateway, WsResponse } from \'@nestjs/websockets\';\n' +
+      'import { Observable, of } from \'rxjs/Observable\';\n' +
       '\n' +
       '@WebSocketGateway()\n' +
       'export class FooGateway {\n' +
-      '  @WebSocketServer() server;\n' +
-      '\n' +
-      '  @SubscribeMessage()\n' +
-      '  onEvent(): Observable<WsResponse<any>> {\n' +
-      '    return Observable.from({});\n' +
+      '  @SubscribeMessage(\'message\')\n' +
+      '  onEvent(client: any, payload: any): Observable<WsResponse<any>> {\n' +
+      '    return of({});\n' +
       '  }\n' +
       '}\n'
     );
@@ -36,17 +33,14 @@ describe('Gateway Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo/foo.gateway.ts')).toEqual(
-      'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
-      'import \'rxjs/add/observable/from\';\n' +
-      'import { Observable } from \'rxjs/Observable\';\n' +
+      'import { SubscribeMessage, WebSocketGateway, WsResponse } from \'@nestjs/websockets\';\n' +
+      'import { Observable, of } from \'rxjs/Observable\';\n' +
       '\n' +
       '@WebSocketGateway()\n' +
       'export class FooGateway {\n' +
-      '  @WebSocketServer() server;\n' +
-      '\n' +
-      '  @SubscribeMessage()\n' +
-      '  onEvent(): Observable<WsResponse<any>> {\n' +
-      '    return Observable.from({});\n' +
+      '  @SubscribeMessage(\'message\')\n' +
+      '  onEvent(client: any, payload: any): Observable<WsResponse<any>> {\n' +
+      '    return of({});\n' +
       '  }\n' +
       '}\n'
     );
@@ -60,17 +54,14 @@ describe('Gateway Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo/foo.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/baz/foo/foo.gateway.ts')).toEqual(
-      'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
-      'import \'rxjs/add/observable/from\';\n' +
-      'import { Observable } from \'rxjs/Observable\';\n' +
+      'import { SubscribeMessage, WebSocketGateway, WsResponse } from \'@nestjs/websockets\';\n' +
+      'import { Observable, of } from \'rxjs/Observable\';\n' +
       '\n' +
       '@WebSocketGateway()\n' +
       'export class FooGateway {\n' +
-      '  @WebSocketServer() server;\n' +
-      '\n' +
-      '  @SubscribeMessage()\n' +
-      '  onEvent(): Observable<WsResponse<any>> {\n' +
-      '    return Observable.from({});\n' +
+      '  @SubscribeMessage(\'message\')\n' +
+      '  onEvent(client: any, payload: any): Observable<WsResponse<any>> {\n' +
+      '    return of({});\n' +
       '  }\n' +
       '}\n'
     );
@@ -83,17 +74,14 @@ describe('Gateway Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo-bar/foo-bar.gateway.ts')).toEqual(
-      'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
-      'import \'rxjs/add/observable/from\';\n' +
-      'import { Observable } from \'rxjs/Observable\';\n' +
+      'import { SubscribeMessage, WebSocketGateway, WsResponse } from \'@nestjs/websockets\';\n' +
+      'import { Observable, of } from \'rxjs/Observable\';\n' +
       '\n' +
       '@WebSocketGateway()\n' +
       'export class FooBarGateway {\n' +
-      '  @WebSocketServer() server;\n' +
-      '\n' +
-      '  @SubscribeMessage()\n' +
-      '  onEvent(): Observable<WsResponse<any>> {\n' +
-      '    return Observable.from({});\n' +
+      '  @SubscribeMessage(\'message\')\n' +
+      '  onEvent(client: any, payload: any): Observable<WsResponse<any>> {\n' +
+      '    return of({});\n' +
       '  }\n' +
       '}\n'
     );
@@ -106,17 +94,14 @@ describe('Gateway Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar-baz/foo/foo.gateway.ts')).toEqual(
-      'import { SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from \'@nestjs/websockets\';\n' +
-      'import \'rxjs/add/observable/from\';\n' +
-      'import { Observable } from \'rxjs/Observable\';\n' +
+      'import { SubscribeMessage, WebSocketGateway, WsResponse } from \'@nestjs/websockets\';\n' +
+      'import { Observable, of } from \'rxjs/Observable\';\n' +
       '\n' +
       '@WebSocketGateway()\n' +
       'export class FooGateway {\n' +
-      '  @WebSocketServer() server;\n' +
-      '\n' +
-      '  @SubscribeMessage()\n' +
-      '  onEvent(): Observable<WsResponse<any>> {\n' +
-      '    return Observable.from({});\n' +
+      '  @SubscribeMessage(\'message\')\n' +
+      '  onEvent(client: any, payload: any): Observable<WsResponse<any>> {\n' +
+      '    return of({});\n' +
       '  }\n' +
       '}\n'
     );
@@ -130,17 +115,14 @@ describe('Gateway Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.gateway.js')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.gateway.js')).toEqual(
-      'import { SubscribeMessage, WebSocketGateway, WebSocketServer, } from \'@nestjs/websockets\';\n' +
-      'import \'rxjs/add/observable/from\';\n' +
-      'import { Observable } from \'rxjs/Observable\';\n' +
+      'import { SubscribeMessage, WebSocketGateway } from \'@nestjs/websockets\';\n' +
+      'import { of } from \'rxjs\';\n' +
       '\n' +
       '@WebSocketGateway()\n' +
       'export class FooGateway {\n' +
-      '  @WebSocketServer() server;\n' +
-      '\n' +
-      '  @SubscribeMessage()\n' +
-      '  onEvent() {\n' +
-      '    return Observable.from({});\n' +
+      '  @SubscribeMessage(\'message\')\n' +
+      '  onEvent(client, payload) {\n' +
+      '    return of({});\n' +
       '  }\n' +
       '}\n'
     );
