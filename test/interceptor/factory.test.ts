@@ -13,14 +13,14 @@ describe('Interceptor Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.interceptor.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.interceptor.ts')).toEqual(
-      'import { Injectable, NestInterceptor, ExecutionContext } from \'@nestjs/common\';\n' +
-      'import { Observable } from \'rxjs/Observable\';\n' +
+      'import { ExecutionContext, Injectable, NestInterceptor } from \'@nestjs/common\';\n' +
+      'import { Observable } from \'rxjs\';\n' +
       'import { map } from \'rxjs/operators\';\n' +
       '\n' +
       '@Injectable()\n' +
       'export class FooInterceptor implements NestInterceptor {\n' +
-      '  intercept(context: ExecutionContext, stream$: Observable<any>): Observable<any> {\n' +
-      '    return stream$.pipe(map((data) => data));\n' +
+      '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
+      '    return call$.pipe(map((data) => ({ data })));\n' +
       '  }\n' +
       '}\n'
     );
@@ -33,14 +33,14 @@ describe('Interceptor Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.interceptor.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo/foo.interceptor.ts')).toEqual(
-      'import { Injectable, NestInterceptor, ExecutionContext } from \'@nestjs/common\';\n' +
-      'import { Observable } from \'rxjs/Observable\';\n' +
+      'import { ExecutionContext, Injectable, NestInterceptor } from \'@nestjs/common\';\n' +
+      'import { Observable } from \'rxjs\';\n' +
       'import { map } from \'rxjs/operators\';\n' +
       '\n' +
       '@Injectable()\n' +
       'export class FooInterceptor implements NestInterceptor {\n' +
-      '  intercept(context: ExecutionContext, stream$: Observable<any>): Observable<any> {\n' +
-      '    return stream$.pipe(map((data) => data));\n' +
+      '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
+      '    return call$.pipe(map((data) => ({ data })));\n' +
       '  }\n' +
       '}\n'
     );
@@ -54,14 +54,14 @@ describe('Interceptor Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo/foo.interceptor.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/baz/foo/foo.interceptor.ts')).toEqual(
-      'import { Injectable, NestInterceptor, ExecutionContext } from \'@nestjs/common\';\n' +
-      'import { Observable } from \'rxjs/Observable\';\n' +
+      'import { ExecutionContext, Injectable, NestInterceptor } from \'@nestjs/common\';\n' +
+      'import { Observable } from \'rxjs\';\n' +
       'import { map } from \'rxjs/operators\';\n' +
       '\n' +
       '@Injectable()\n' +
       'export class FooInterceptor implements NestInterceptor {\n' +
-      '  intercept(context: ExecutionContext, stream$: Observable<any>): Observable<any> {\n' +
-      '    return stream$.pipe(map((data) => data));\n' +
+      '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
+      '    return call$.pipe(map((data) => ({ data })));\n' +
       '  }\n' +
       '}\n'
     );
@@ -74,14 +74,14 @@ describe('Interceptor Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.interceptor.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo-bar/foo-bar.interceptor.ts')).toEqual(
-      'import { Injectable, NestInterceptor, ExecutionContext } from \'@nestjs/common\';\n' +
-      'import { Observable } from \'rxjs/Observable\';\n' +
+      'import { ExecutionContext, Injectable, NestInterceptor } from \'@nestjs/common\';\n' +
+      'import { Observable } from \'rxjs\';\n' +
       'import { map } from \'rxjs/operators\';\n' +
       '\n' +
       '@Injectable()\n' +
       'export class FooBarInterceptor implements NestInterceptor {\n' +
-      '  intercept(context: ExecutionContext, stream$: Observable<any>): Observable<any> {\n' +
-      '    return stream$.pipe(map((data) => data));\n' +
+      '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
+      '    return call$.pipe(map((data) => ({ data })));\n' +
       '  }\n' +
       '}\n'
     );
@@ -94,14 +94,14 @@ describe('Interceptor Factory', () => {
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.interceptor.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar-baz/foo/foo.interceptor.ts')).toEqual(
-      'import { Injectable, NestInterceptor, ExecutionContext } from \'@nestjs/common\';\n' +
-      'import { Observable } from \'rxjs/Observable\';\n' +
+      'import { ExecutionContext, Injectable, NestInterceptor } from \'@nestjs/common\';\n' +
+      'import { Observable } from \'rxjs\';\n' +
       'import { map } from \'rxjs/operators\';\n' +
       '\n' +
       '@Injectable()\n' +
       'export class FooInterceptor implements NestInterceptor {\n' +
-      '  intercept(context: ExecutionContext, stream$: Observable<any>): Observable<any> {\n' +
-      '    return stream$.pipe(map((data) => data));\n' +
+      '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
+      '    return call$.pipe(map((data) => ({ data })));\n' +
       '  }\n' +
       '}\n'
     );
@@ -120,8 +120,8 @@ describe('Interceptor Factory', () => {
       '\n' +
       '@Injectable()\n' +
       'export class FooInterceptor {\n' +
-      '  intercept(context, stream$) {\n' +
-      '    return stream$.pipe(map((data) => data));\n' +
+      '  intercept(context, call$) {\n' +
+      '    return call$.pipe(map((data) => ({ data })));\n' +
       '  }\n' +
       '}\n'
     );
