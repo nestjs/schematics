@@ -14,7 +14,7 @@ describe('Gateway Factory', () => {
     expect(files.find((filename) => filename === '/src/foo/foo.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.gateway.ts')).toEqual(
       'import { SubscribeMessage, WebSocketGateway, WsResponse } from \'@nestjs/websockets\';\n' +
-      'import { Observable, of } from \'rxjs/Observable\';\n' +
+      'import { Observable, of } from \'rxjs\';\n' +
       '\n' +
       '@WebSocketGateway()\n' +
       'export class FooGateway {\n' +
@@ -34,7 +34,7 @@ describe('Gateway Factory', () => {
     expect(files.find((filename) => filename === '/src/bar/foo/foo.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo/foo.gateway.ts')).toEqual(
       'import { SubscribeMessage, WebSocketGateway, WsResponse } from \'@nestjs/websockets\';\n' +
-      'import { Observable, of } from \'rxjs/Observable\';\n' +
+      'import { Observable, of } from \'rxjs\';\n' +
       '\n' +
       '@WebSocketGateway()\n' +
       'export class FooGateway {\n' +
@@ -55,7 +55,7 @@ describe('Gateway Factory', () => {
     expect(files.find((filename) => filename === '/src/baz/foo/foo.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/baz/foo/foo.gateway.ts')).toEqual(
       'import { SubscribeMessage, WebSocketGateway, WsResponse } from \'@nestjs/websockets\';\n' +
-      'import { Observable, of } from \'rxjs/Observable\';\n' +
+      'import { Observable, of } from \'rxjs\';\n' +
       '\n' +
       '@WebSocketGateway()\n' +
       'export class FooGateway {\n' +
@@ -75,7 +75,7 @@ describe('Gateway Factory', () => {
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo-bar/foo-bar.gateway.ts')).toEqual(
       'import { SubscribeMessage, WebSocketGateway, WsResponse } from \'@nestjs/websockets\';\n' +
-      'import { Observable, of } from \'rxjs/Observable\';\n' +
+      'import { Observable, of } from \'rxjs\';\n' +
       '\n' +
       '@WebSocketGateway()\n' +
       'export class FooBarGateway {\n' +
@@ -95,7 +95,7 @@ describe('Gateway Factory', () => {
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar-baz/foo/foo.gateway.ts')).toEqual(
       'import { SubscribeMessage, WebSocketGateway, WsResponse } from \'@nestjs/websockets\';\n' +
-      'import { Observable, of } from \'rxjs/Observable\';\n' +
+      'import { Observable, of } from \'rxjs\';\n' +
       '\n' +
       '@WebSocketGateway()\n' +
       'export class FooGateway {\n' +
