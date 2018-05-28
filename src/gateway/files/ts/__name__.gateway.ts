@@ -1,5 +1,5 @@
 import { SubscribeMessage, WebSocketGateway, WsResponse } from '@nestjs/websockets';
-import { Observable, of } from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 
 @WebSocketGateway()
 export class <%= classify(name) %>Gateway {
