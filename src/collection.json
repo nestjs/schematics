@@ -10,8 +10,8 @@
       "description": "Create a new class."
     },
     "configuration": {
-      "factory": "./configuration/factory#main",
-      "description": "Create a NestCLI configuration file"
+      "factory": "./lib/factories/configuration.factory#main",
+      "description": "Create a NestCLI configuration file."
     },
     "controller": {
       "factory": "./controller/factory#main",
