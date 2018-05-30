@@ -1,6 +1,6 @@
-import { strings } from '@angular-devkit/core';
+import { join, Path, strings  } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, Source, template, url } from '@angular-devkit/schematics';
-import { ConfigurationOptions } from './schema';
+import { ConfigurationOptions } from './configuration.schema';
 
 export function main(options: ConfigurationOptions): Rule {
   return mergeWith(generate(transform(options)));
@@ -15,7 +15,7 @@ function transform(options: ConfigurationOptions): ConfigurationOptions {
 
 function generate(options: ConfigurationOptions): Source {
   return apply(
-    url('./files'),
+    url(join('../../templates' as Path, options.language, 'configuration')),
     [
       template({
         ...strings,
