@@ -2,8 +2,8 @@
   "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "application": {
-      "factory": "./application/factory#main",
-      "description": "Create a Nest application"
+      "factory": "./lib/factories/application.factory#main",
+      "description": "Create a Nest application."
     },
     "module": {
       "factory": "./module/factory#main",
