@@ -58,7 +58,7 @@
       "description": "Create a Nest provider."
     },
     "service": {
-      "factory": "./service/service.factory#main",
+      "factory": "./lib/factories/service.factory#main",
       "description": "Create a Nest service."
     }
   }

@@ -11,9 +11,9 @@ import {
   Tree,
   url
 } from '@angular-devkit/schematics';
-import { DeclarationOptions, ModuleDeclarator } from '../utils/module.declarator';
-import { ModuleFinder } from '../utils/module.finder';
-import { Location, NameParser } from '../utils/name.parser';
+import { DeclarationOptions, ModuleDeclarator } from '../../utils/module.declarator';
+import { ModuleFinder } from '../../utils/module.finder';
+import { Location, NameParser } from '../../utils/name.parser';
 import { ServiceOptions } from './service.schema';
 
 export function main(options: ServiceOptions): Rule {
@@ -42,7 +42,7 @@ function transform(source: ServiceOptions): ServiceOptions {
 
 function generate(options: ServiceOptions) {
   return apply(
-    url(join('files' as Path, options.language)), [
+    url(join('../../templates' as Path, options.language, 'service')), [
       template({
         ...strings,
         ...options
