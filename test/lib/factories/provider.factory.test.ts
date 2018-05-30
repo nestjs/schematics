@@ -16,6 +16,7 @@ describe('Provider Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo.ts')).not.toBeUndefined();
+    expect(files.find((filename) => filename === '/src/foo.spec.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo.ts')).toEqual(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
