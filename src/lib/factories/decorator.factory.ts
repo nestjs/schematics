@@ -1,7 +1,7 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, Source, template, url } from '@angular-devkit/schematics';
-import { Location, NameParser } from '../utils/name.parser';
-import { DecoratorOptions } from './schema';
+import { Location, NameParser } from '../../utils/name.parser';
+import { DecoratorOptions } from './decorator.schema';
 
 export function main(options: DecoratorOptions): Rule {
   options = transform(options);
@@ -20,7 +20,7 @@ function transform(options: DecoratorOptions): DecoratorOptions {
 
 function generate(options: DecoratorOptions): Source {
   return apply(
-    url(join('files' as Path, options.language)), [
+    url(join('../../templates' as Path, options.language, 'decorator')), [
       template({
         ...strings,
         ...options
