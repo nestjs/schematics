@@ -38,7 +38,7 @@
       "description": "Create a Nest guard."
     },
     "interceptor": {
-      "factory": "./interceptor/factory#main",
+      "factory": "./lib/factories/interceptor.factory#main",
       "description": "Create a Nest interceptor."
     },
     "middleware": {

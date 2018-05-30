@@ -1,7 +1,7 @@
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { InterceptorOptions } from '../../src/interceptor/schema';
+import { InterceptorOptions } from '../../../src/lib/factories/interceptor.schema';
 
 describe('Interceptor Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
