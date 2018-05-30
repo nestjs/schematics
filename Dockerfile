@@ -34,7 +34,7 @@ RUN npm install -g @angular-devkit/schematics-cli
 WORKDIR /nestjs/schematics
 COPY --from=prod-dependencies /nestjs/schematics .
 COPY --from=builder /nestjs/schematics/dist .
-COPY src/**/files/ .
+COPY src/templates/ templates/
 COPY src/collection.json collection.json
 COPY LICENSE LICENSE
 COPY README.md README.md
