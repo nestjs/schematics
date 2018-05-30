@@ -1,7 +1,7 @@
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { GatewayOptions } from '../../src/gateway/schema';
+import { GatewayOptions } from '../../../src/gateway/schema';
 
 describe('Gateway Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));

@@ -30,7 +30,7 @@
       "description": "Create a Nest filter."
     },
     "gateway": {
-      "factory": "./gateway/factory#main",
+      "factory": "./lib/factories/gateway.factory#main",
       "description": "Create a Nest gateway."
     },
     "guard": {
