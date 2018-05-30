@@ -1,5 +1,4 @@
 import { normalize } from '@angular-devkit/core';
-import { expect } from 'chai';
 import { ModuleImportDeclarator } from '../../src/utils/module-import.declarator';
 import { DeclarationOptions } from '../../src/utils/module.declarator';
 
@@ -19,7 +18,7 @@ describe('Module Import Declarator', () => {
       symbol: 'BarModule'
     };
     const declarator = new ModuleImportDeclarator();
-    expect(declarator.declare(content, options)).to.be.equal(
+    expect(declarator.declare(content, options)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { BarModule } from \'./bar/bar.module\';\n' +
       '\n' +
@@ -41,7 +40,7 @@ describe('Module Import Declarator', () => {
       symbol: 'Foo'
     };
     const declarator = new ModuleImportDeclarator();
-    expect(declarator.declare(content, options)).to.be.equal(
+    expect(declarator.declare(content, options)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
       'import { Foo } from \'./foo\';\n' +
       '\n' +

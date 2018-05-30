@@ -2,64 +2,64 @@
   "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "application": {
-      "factory": "./application/factory#main",
-      "description": "Create a Nest application"
+      "factory": "./lib/factories/application.factory#main",
+      "description": "Create a Nest application."
     },
-    "module": {
-      "factory": "./module/factory#main",
-      "description": "Create a Nest module."
+    "class": {
+      "factory": "./lib/factories/class.factory#main",
+      "description": "Create a new class."
+    },
+    "configuration": {
+      "factory": "./lib/factories/configuration.factory#main",
+      "description": "Create a NestCLI configuration file."
     },
     "controller": {
-      "factory": "./controller/factory#main",
+      "factory": "./lib/factories/controller.factory#main",
       "description": "Create a Nest controller."
     },
-    "service": {
-      "factory": "./service/factory#main",
-      "description": "Create a Nest service."
-    },
-    "middleware": {
-      "factory": "./middleware/factory#main",
-      "description": "Create a Nest middleware."
+    "decorator": {
+      "factory": "./lib/factories/decorator.factory#main",
+      "description": "Create a Nest decorator."
     },
     "exception": {
-      "factory": "./exception/factory#main",
+      "factory": "./lib/factories/exception.factory#main",
       "description": "Create a Nest exception."
     },
-    "pipe": {
-      "factory": "./pipe/factory#main",
-      "description": "Create a Nest pipe."
+    "filter": {
+      "factory": "./lib/factories/filter.factory#main",
+      "description": "Create a Nest filter."
+    },
+    "gateway": {
+      "factory": "./lib/factories/gateway.factory#main",
+      "description": "Create a Nest gateway."
     },
     "guard": {
-      "factory": "./guard/factory#main",
+      "factory": "./lib/factories/guard.factory#main",
       "description": "Create a Nest guard."
     },
     "interceptor": {
-      "factory": "./interceptor/factory#main",
+      "factory": "./lib/factories/interceptor.factory#main",
       "description": "Create a Nest interceptor."
     },
-    "class": {
-      "factory": "./class/factory#main",
-      "description": "Create a new class."
+    "middleware": {
+      "factory": "./lib/factories/middleware.factory#main",
+      "description": "Create a Nest middleware."
     },
-    "gateway": {
-      "factory": "./gateway/factory#main",
-      "description": "Create a Nest gateway."
+    "module": {
+      "factory": "./lib/factories/module.factory#main",
+      "description": "Create a Nest module."
     },
-    "filter": {
-      "factory": "./filter/factory#main",
-      "description": "Create a Nest filter."
-    },
-    "decorator": {
-      "factory": "./decorator/factory#main",
-      "description": "Create a Nest decorator."
-    },
-    "configuration": {
-      "factory": "./configuration/factory#main",
-      "description": "Create a NestCLI configuration file"
+    "pipe": {
+      "factory": "./lib/factories/pipe.factory#main",
+      "description": "Create a Nest pipe."
     },
     "provider": {
-      "factory": "./provider/factory#main",
+      "factory": "./lib/factories/provider.factory#main",
       "description": "Create a Nest provider."
+    },
+    "service": {
+      "factory": "./lib/factories/service.factory#main",
+      "description": "Create a Nest service."
     }
   }
 }

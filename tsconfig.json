@@ -4,14 +4,16 @@
     "target": "es2017",
     "typeRoots": [
       "node_modules/@types"
-    ]
+    ],
+    "outDir": "dist"
   },
   "include": [
-    "src"
+    "src/utils",
+    "src/lib"
   ],
   "exclude": [
     "node_modules",
     "test",
-    "src/**/files/"
+    "src/templates"
   ]
 }
