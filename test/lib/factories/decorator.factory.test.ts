@@ -1,7 +1,7 @@
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { DecoratorOptions } from '../../../src/decorator/schema';
+import { DecoratorOptions } from '../../../src/lib/factories/decorator.schema';
 
 describe('Decorator Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
@@ -82,7 +82,7 @@ describe('Decorator Factory', () => {
     expect(tree.readContent('/src/foo/foo.decorator.js')).toEqual(
       'import { ReflectMetadata } from \'@nestjs/common\';\n' +
       '\n' +
-      'export const Foo = (...args: string[]) => ReflectMetadata(\'foo\', args);\n'
+      'export const Foo = (...args) => ReflectMetadata(\'foo\', args);\n'
     );
   });
 });

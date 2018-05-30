@@ -22,7 +22,7 @@
       "description": "Create a Nest decorator."
     },
     "exception": {
-      "factory": "./exception/factory#main",
+      "factory": "./lib/factories/exception.factory#main",
       "description": "Create a Nest exception."
     },
     "filter": {
