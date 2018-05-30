@@ -11,10 +11,10 @@ import {
   Tree,
   url
 } from '@angular-devkit/schematics';
-import { DeclarationOptions, ModuleDeclarator } from '../utils/module.declarator';
-import { ModuleFinder } from '../utils/module.finder';
-import { Location, NameParser } from '../utils/name.parser';
-import { ControllerOptions } from './schema';
+import { DeclarationOptions, ModuleDeclarator } from '../../utils/module.declarator';
+import { ModuleFinder } from '../../utils/module.finder';
+import { Location, NameParser } from '../../utils/name.parser';
+import { ControllerOptions } from './controller.schema';
 
 const DEFAULT_PATH_NAME = 'src';
 const DEFAULT_LANGUAGE = 'ts';
@@ -49,7 +49,7 @@ function transform(source: ControllerOptions): ControllerOptions {
 
 function generate(options: ControllerOptions) {
   return apply(
-    url(join('files' as Path, options.language)), [
+    url(join('../../templates' as Path, options.language, 'controller')), [
       template({
         ...strings,
         ...options

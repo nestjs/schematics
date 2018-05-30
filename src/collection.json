@@ -14,7 +14,7 @@
       "description": "Create a NestCLI configuration file."
     },
     "controller": {
-      "factory": "./controller/factory#main",
+      "factory": "./lib/factories/controller.factory#main",
       "description": "Create a Nest controller."
     },
     "decorator": {

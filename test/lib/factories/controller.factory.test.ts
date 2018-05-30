@@ -2,9 +2,9 @@ import { normalize } from '@angular-devkit/core';
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { ApplicationOptions } from '../../src/application/schema';
-import { ControllerOptions } from '../../src/controller/schema';
-import { ModuleOptions } from '../../src/module/schema';
+import { ApplicationOptions } from '../../../src/lib/factories/application.schema';
+import { ControllerOptions } from '../../../src/lib/factories/controller.schema';
+import { ModuleOptions } from '../../../src/module/schema';
 
 describe('Controller Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
