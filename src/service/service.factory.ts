@@ -14,7 +14,7 @@ import {
 import { DeclarationOptions, ModuleDeclarator } from '../utils/module.declarator';
 import { ModuleFinder } from '../utils/module.finder';
 import { Location, NameParser } from '../utils/name.parser';
-import { ServiceOptions } from './schema';
+import { ServiceOptions } from './service.schema';
 
 export function main(options: ServiceOptions): Rule {
   options = transform(options);

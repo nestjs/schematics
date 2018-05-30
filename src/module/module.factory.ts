@@ -14,7 +14,7 @@ import {
 import { DeclarationOptions, ModuleDeclarator } from '../utils/module.declarator';
 import { ModuleFinder } from '../utils/module.finder';
 import { Location, NameParser } from '../utils/name.parser';
-import { ModuleOptions } from './schema';
+import { ModuleOptions } from './module.schema';
 
 export function main(options: ModuleOptions): Rule {
   options = transform(options);
