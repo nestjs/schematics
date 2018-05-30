@@ -1,7 +1,7 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, Source, template, url } from '@angular-devkit/schematics';
 import { Location, NameParser } from '../utils/name.parser';
-import { PipeOptions } from './schema';
+import { PipeOptions } from './pipe.schema';
 
 export function main(options: PipeOptions): Rule {
   options = transform(options);

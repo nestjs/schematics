@@ -42,23 +42,23 @@
       "description": "Create a Nest interceptor."
     },
     "middleware": {
-      "factory": "./middleware/factory#main",
+      "factory": "./middleware/middleware.factory#main",
       "description": "Create a Nest middleware."
     },
     "module": {
-      "factory": "./module/factory#main",
+      "factory": "./module/module.factory#main",
       "description": "Create a Nest module."
     },
     "pipe": {
-      "factory": "./pipe/factory#main",
+      "factory": "./pipe/pipe.factory#main",
       "description": "Create a Nest pipe."
     },
     "provider": {
-      "factory": "./provider/factory#main",
+      "factory": "./provider/provider.factory#main",
       "description": "Create a Nest provider."
     },
     "service": {
-      "factory": "./service/factory#main",
+      "factory": "./service/service.factory#main",
       "description": "Create a Nest service."
     }
   }
