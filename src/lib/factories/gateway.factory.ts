@@ -1,15 +1,15 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, Source, template, url } from '@angular-devkit/schematics';
-import { Location, NameParser } from '../utils/name.parser';
-import { FilterOptions } from './schema';
+import { Location, NameParser } from '../../utils/name.parser';
+import { GatewayOptions } from './gateway.schema';
 
-export function main(options: FilterOptions): Rule {
+export function main(options: GatewayOptions): Rule {
   options = transform(options);
   return mergeWith(generate(options));
 }
 
-function transform(options: FilterOptions): FilterOptions {
-  const target: FilterOptions = Object.assign({}, options);
+function transform(options: GatewayOptions): GatewayOptions {
+  const target: GatewayOptions = Object.assign({}, options);
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
@@ -18,9 +18,9 @@ function transform(options: FilterOptions): FilterOptions {
   return target;
 }
 
-function generate(options: FilterOptions): Source {
+function generate(options: GatewayOptions): Source {
   return apply(
-    url(join('files' as Path, options.language)), [
+    url(join('../../templates' as Path, options.language, 'gateway')), [
       template({
         ...strings,
         ...options
