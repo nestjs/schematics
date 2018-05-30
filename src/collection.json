@@ -54,7 +54,7 @@
       "description": "Create a Nest pipe."
     },
     "provider": {
-      "factory": "./provider/provider.factory#main",
+      "factory": "./lib/factories/provider.factory#main",
       "description": "Create a Nest provider."
     },
     "service": {

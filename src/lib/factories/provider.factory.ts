@@ -11,9 +11,9 @@ import {
   Tree,
   url
 } from '@angular-devkit/schematics';
-import { DeclarationOptions, ModuleDeclarator } from '../utils/module.declarator';
-import { ModuleFinder } from '../utils/module.finder';
-import { Location, NameParser } from '../utils/name.parser';
+import { DeclarationOptions, ModuleDeclarator } from '../../utils/module.declarator';
+import { ModuleFinder } from '../../utils/module.finder';
+import { Location, NameParser } from '../../utils/name.parser';
 import { ProviderOptions } from './provider.schema';
 
 export function main(options: ProviderOptions): Rule {
@@ -41,7 +41,7 @@ function transform(options: ProviderOptions): ProviderOptions {
 
 function generate(options: ProviderOptions) {
   return apply(
-    url(join('files' as Path, options.language)), [
+    url(join('../../templates' as Path, options.language, 'provider')), [
       template({
         ...strings,
         ...options
