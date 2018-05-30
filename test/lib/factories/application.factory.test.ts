@@ -12,6 +12,7 @@ describe('Application Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(files).toEqual([
+      '/project/.gitignore',
       '/project/.prettierrc',
       '/project/README.md',
       '/project/nodemon.json',
@@ -36,6 +37,7 @@ describe('Application Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
     const files: string[] = tree.files;
     expect(files).toEqual([
+      '/awesome-project/.gitignore',
       '/awesome-project/.prettierrc',
       '/awesome-project/README.md',
       '/awesome-project/nodemon.json',
