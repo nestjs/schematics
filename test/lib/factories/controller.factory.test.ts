@@ -152,4 +152,13 @@ describe('Controller Factory', () => {
       'export class FooModule {}\n'
     );
   });
+  it('should generate spec file', () => {
+    const options: ControllerOptions = {
+      name: 'foo',
+      skipImport: true
+    };
+    const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
+    const files: string[] = tree.files;
+    expect(files.find((filename) => filename === '/src/foo/foo.controller.spec.ts')).not.toBeUndefined();
+  });
 });
