@@ -1,7 +1,7 @@
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { ExceptionOptions } from '../../src/exception/schema';
+import { ExceptionOptions } from '../../../src/lib/factories/exception.schema';
 
 describe('Exception Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
