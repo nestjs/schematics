@@ -29,7 +29,7 @@ publish-npm-release: prepublish
 			npm publish \
 		"
 prepublish:
-	@docker pull $$IMAGE_NAME:$$ARTIFACT_ID
+	@docker pull nestjs/schematics:$$ARTIFACT_ID
 	@CONTAINER_ID=$$(docker create -t -w /workspace node:carbon-alpine /bin/sh -c "node scripts/check-version.js $$RELEASE_VERSION") && \
 	docker cp scripts/ $$CONTAINER_ID:/workspace && \
 	docker cp package.json $$CONTAINER_ID:/workspace/package.json && \
