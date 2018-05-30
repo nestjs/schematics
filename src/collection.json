@@ -42,7 +42,7 @@
       "description": "Create a Nest interceptor."
     },
     "middleware": {
-      "factory": "./middleware/middleware.factory#main",
+      "factory": "./lib/factories/middleware.factory#main",
       "description": "Create a Nest middleware."
     },
     "module": {
