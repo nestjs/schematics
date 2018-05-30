@@ -1,6 +1,6 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, Source, template, url } from '@angular-devkit/schematics';
-import { Location, NameParser } from '../utils/name.parser';
+import { Location, NameParser } from '../../utils/name.parser';
 import { MiddlewareOptions } from './middleware.schema';
 
 export function main(options: MiddlewareOptions): Rule {
@@ -20,7 +20,7 @@ function transform(options: MiddlewareOptions): MiddlewareOptions {
 
 function generate(options: MiddlewareOptions): Source {
   return apply(
-    url(join('files' as Path, options.language)), [
+    url(join('../../templates' as Path, options.language, 'middleware')), [
       template({
         ...strings,
         ...options
