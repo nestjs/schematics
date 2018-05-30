@@ -1,7 +1,7 @@
 import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { PipeOptions } from '../../src/pipe/pipe.schema';
+import { PipeOptions } from '../../../src/lib/factories/pipe.schema';
 
 describe('Pipe Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));

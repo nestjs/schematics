@@ -1,6 +1,6 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, Source, template, url } from '@angular-devkit/schematics';
-import { Location, NameParser } from '../utils/name.parser';
+import { Location, NameParser } from '../../utils/name.parser';
 import { PipeOptions } from './pipe.schema';
 
 export function main(options: PipeOptions): Rule {
@@ -20,7 +20,7 @@ function transform(options: PipeOptions): PipeOptions {
 
 function generate(options: PipeOptions): Source {
   return apply(
-    url(join('files' as Path, options.language)), [
+    url(join('../../templates' as Path, options.language, 'pipe')), [
       template({
         ...strings,
         ...options

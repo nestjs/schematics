@@ -50,7 +50,7 @@
       "description": "Create a Nest module."
     },
     "pipe": {
-      "factory": "./pipe/pipe.factory#main",
+      "factory": "./lib/factories/pipe.factory#main",
       "description": "Create a Nest pipe."
     },
     "provider": {
