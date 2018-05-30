@@ -3,7 +3,7 @@ if (RELEASE_VERSION === undefined) {
   console.log('missing RELEASE_VERSION input');
   process.exit(1);
 }
-const APP_VERSION = `v${ require('../package.json').version }`;
+const APP_VERSION = `${ require('../package.json').version }`;
 if (APP_VERSION === RELEASE_VERSION) {
   process.exit(0);
 } else {
