@@ -3,7 +3,7 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { ApplicationOptions } from '../../src/lib/factories/application.schema';
-import { ModuleOptions } from '../../src/module/module.schema';
+import { ModuleOptions } from '../../src/lib/factories/module.schema';
 import { ServiceOptions } from '../../src/service/service.schema';
 
 describe('Service Factory', () => {

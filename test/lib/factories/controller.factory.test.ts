@@ -4,7 +4,7 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import * as path from 'path';
 import { ApplicationOptions } from '../../../src/lib/factories/application.schema';
 import { ControllerOptions } from '../../../src/lib/factories/controller.schema';
-import { ModuleOptions } from '../../../src/module/schema';
+import { ModuleOptions } from '../../../src/lib/factories/module.schema';
 
 describe('Controller Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
