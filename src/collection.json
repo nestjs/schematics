@@ -18,7 +18,7 @@
       "description": "Create a Nest controller."
     },
     "decorator": {
-      "factory": "./decorator/factory#main",
+      "factory": "./lib/factories/decorator.factory#main",
       "description": "Create a Nest decorator."
     },
     "exception": {
