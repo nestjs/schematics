@@ -3,8 +3,8 @@ import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { ApplicationOptions } from '../../src/lib/factories/application.schema';
-import { ModuleOptions } from '../../src/module/schema';
-import { ProviderOptions } from '../../src/provider/schema';
+import { ModuleOptions } from '../../src/module/module.schema';
+import { ProviderOptions } from '../../src/provider/provider.schema';
 
 describe('Provider Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
