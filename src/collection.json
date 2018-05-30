@@ -9,29 +9,29 @@
       "factory": "./lib/factories/class.factory#main",
       "description": "Create a new class."
     },
-    "module": {
-      "factory": "./module/factory#main",
-      "description": "Create a Nest module."
+    "configuration": {
+      "factory": "./configuration/factory#main",
+      "description": "Create a NestCLI configuration file"
     },
     "controller": {
       "factory": "./controller/factory#main",
       "description": "Create a Nest controller."
     },
-    "service": {
-      "factory": "./service/factory#main",
-      "description": "Create a Nest service."
-    },
-    "middleware": {
-      "factory": "./middleware/factory#main",
-      "description": "Create a Nest middleware."
+    "decorator": {
+      "factory": "./decorator/factory#main",
+      "description": "Create a Nest decorator."
     },
     "exception": {
       "factory": "./exception/factory#main",
       "description": "Create a Nest exception."
     },
-    "pipe": {
-      "factory": "./pipe/factory#main",
-      "description": "Create a Nest pipe."
+    "filter": {
+      "factory": "./filter/factory#main",
+      "description": "Create a Nest filter."
+    },
+    "gateway": {
+      "factory": "./gateway/factory#main",
+      "description": "Create a Nest gateway."
     },
     "guard": {
       "factory": "./guard/factory#main",
@@ -41,25 +41,25 @@
       "factory": "./interceptor/factory#main",
       "description": "Create a Nest interceptor."
     },
-    "gateway": {
-      "factory": "./gateway/factory#main",
-      "description": "Create a Nest gateway."
+    "middleware": {
+      "factory": "./middleware/factory#main",
+      "description": "Create a Nest middleware."
     },
-    "filter": {
-      "factory": "./filter/factory#main",
-      "description": "Create a Nest filter."
+    "module": {
+      "factory": "./module/factory#main",
+      "description": "Create a Nest module."
     },
-    "decorator": {
-      "factory": "./decorator/factory#main",
-      "description": "Create a Nest decorator."
-    },
-    "configuration": {
-      "factory": "./configuration/factory#main",
-      "description": "Create a NestCLI configuration file"
+    "pipe": {
+      "factory": "./pipe/factory#main",
+      "description": "Create a Nest pipe."
     },
     "provider": {
       "factory": "./provider/factory#main",
       "description": "Create a Nest provider."
+    },
+    "service": {
+      "factory": "./service/factory#main",
+      "description": "Create a Nest service."
     }
   }
 }
