@@ -11,9 +11,9 @@ import {
   Tree,
   url
 } from '@angular-devkit/schematics';
-import { DeclarationOptions, ModuleDeclarator } from '../utils/module.declarator';
-import { ModuleFinder } from '../utils/module.finder';
-import { Location, NameParser } from '../utils/name.parser';
+import { DeclarationOptions, ModuleDeclarator } from '../../utils/module.declarator';
+import { ModuleFinder } from '../../utils/module.finder';
+import { Location, NameParser } from '../../utils/name.parser';
 import { ModuleOptions } from './module.schema';
 
 export function main(options: ModuleOptions): Rule {
@@ -42,7 +42,7 @@ function transform(source: ModuleOptions): ModuleOptions {
 
 function generate(options: ModuleOptions) {
   return apply(
-    url(join('files' as Path, options.language)), [
+    url(join('../../templates' as Path, options.language, 'module')), [
       template({
         ...strings,
         ...options

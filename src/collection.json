@@ -46,7 +46,7 @@
       "description": "Create a Nest middleware."
     },
     "module": {
-      "factory": "./module/module.factory#main",
+      "factory": "./lib/factories/module.factory#main",
       "description": "Create a Nest module."
     },
     "pipe": {
