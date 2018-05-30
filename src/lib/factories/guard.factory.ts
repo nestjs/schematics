@@ -1,7 +1,7 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, Source, template, url } from '@angular-devkit/schematics';
-import { Location, NameParser } from '../utils/name.parser';
-import { GuardOptions } from './schema';
+import { Location, NameParser } from '../../utils/name.parser';
+import { GuardOptions } from './guard.schema';
 
 export function main(options: GuardOptions): Rule {
   options = transform(options);
@@ -20,7 +20,7 @@ function transform(options: GuardOptions): GuardOptions {
 
 function generate(options: GuardOptions): Source {
   return apply(
-    url(join('files' as Path, options.language)), [
+    url(join('../../templates' as Path, options.language, 'guard')), [
       template({
         ...strings,
         ...options

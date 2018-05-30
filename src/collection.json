@@ -34,7 +34,7 @@
       "description": "Create a Nest gateway."
     },
     "guard": {
-      "factory": "./guard/factory#main",
+      "factory": "./lib/factories/guard.factory#main",
       "description": "Create a Nest guard."
     },
     "interceptor": {
