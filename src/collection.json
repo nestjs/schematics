@@ -5,6 +5,10 @@
       "factory": "./lib/factories/application.factory#main",
       "description": "Create a Nest application."
     },
+    "class": {
+      "factory": "./lib/factories/class.factory#main",
+      "description": "Create a new class."
+    },
     "module": {
       "factory": "./module/factory#main",
       "description": "Create a Nest module."
@@ -36,10 +40,6 @@
     "interceptor": {
       "factory": "./interceptor/factory#main",
       "description": "Create a Nest interceptor."
-    },
-    "class": {
-      "factory": "./class/factory#main",
-      "description": "Create a new class."
     },
     "gateway": {
       "factory": "./gateway/factory#main",

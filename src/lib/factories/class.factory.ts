@@ -1,7 +1,7 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
 import { apply, mergeWith, move, Rule, Source, template, url } from '@angular-devkit/schematics';
-import { Location, NameParser } from '../utils/name.parser';
-import { ClassOptions } from './schema';
+import { Location, NameParser } from '../../utils/name.parser';
+import { ClassOptions } from './class.schema';
 
 const DEFAULT_PATH_NAME = 'src';
 const DEFAULT_LANGUAGE = 'ts';
@@ -24,7 +24,7 @@ function transform(options: ClassOptions): ClassOptions {
 
 function generate(options: ClassOptions): Source {
   return apply(
-    url(join('files' as Path, options.language)), [
+    url(join('../../templates' as Path, options.language, 'class')), [
       template({
         ...strings,
         ...options
