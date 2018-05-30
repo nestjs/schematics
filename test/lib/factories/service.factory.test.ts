@@ -15,7 +15,8 @@ describe('Service Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo.service.ts')).not.toBeUndefined();
+    expect(files.find((filename) => filename === '/src/foo.service.ts')).toBeDefined();
+    expect(files.find((filename) => filename === '/src/foo.service.spec.ts')).toBeDefined();
     expect(tree.readContent('/src/foo.service.ts')).toEqual(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
@@ -30,7 +31,8 @@ describe('Service Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo.service.ts')).not.toBeUndefined();
+    expect(files.find((filename) => filename === '/src/bar/foo.service.ts')).toBeDefined();
+    expect(files.find((filename) => filename === '/src/bar/foo.service.spec.ts')).toBeDefined();
     expect(tree.readContent('/src/bar/foo.service.ts')).toEqual(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
@@ -46,7 +48,8 @@ describe('Service Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo.service.ts')).not.toBeUndefined();
+    expect(files.find((filename) => filename === '/src/bar/foo.service.ts')).toBeDefined();
+    expect(files.find((filename) => filename === '/src/bar/foo.service.spec.ts')).toBeDefined();
     expect(tree.readContent('/src/bar/foo.service.ts')).toEqual(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
@@ -61,7 +64,7 @@ describe('Service Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo-bar.service.ts')).not.toBeUndefined();
+    expect(files.find((filename) => filename === '/src/foo-bar.service.ts')).toBeDefined();
     expect(tree.readContent('/src/foo-bar.service.ts')).toEqual(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
@@ -76,7 +79,8 @@ describe('Service Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar-baz/foo.service.ts')).not.toBeUndefined();
+    expect(files.find((filename) => filename === '/src/bar-baz/foo.service.ts')).toBeDefined();
+    expect(files.find((filename) => filename === '/src/bar-baz/foo.service.spec.ts')).toBeDefined();
     expect(tree.readContent('/src/bar-baz/foo.service.ts')).toEqual(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
@@ -92,7 +96,8 @@ describe('Service Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('service', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo.service.js')).not.toBeUndefined();
+    expect(files.find((filename) => filename === '/src/foo.service.js')).toBeDefined();
+    expect(files.find((filename) => filename === '/src/foo.service.spec.js')).toBeDefined();
     expect(tree.readContent('/src/foo.service.js')).toEqual(
       'import { Injectable } from \'@nestjs/common\';\n' +
       '\n' +
