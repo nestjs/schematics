@@ -70,7 +70,6 @@ describe('Application Factory', () => {
       '/project/index.js',
       '/project/jsconfig.json',
       '/project/nodemon.json',
-      '/project/package-lock.json',
       '/project/package.json',
       '/project/src/app.controller.js',
       '/project/src/app.controller.spec.js',

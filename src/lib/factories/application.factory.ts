@@ -20,6 +20,8 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   target.name = strings.dasherize(target.name);
   target.version = !!target.version ? target.version : DEFAULT_VERSION;
   target.packageManager = !!target.packageManager ? target.packageManager : 'npm';
+  target.dependencies = !!target.dependencies ? target.dependencies : '';
+  target.devDependencies = !!target.devDependencies ? target.devDependencies : '';
   return target;
 }
 
