@@ -27,7 +27,7 @@ RUN npm test -s
 FROM node:carbon-alpine as builder
 WORKDIR /nestjs/schematics
 COPY --from=tester /nestjs/schematics .
-RUN npm run -s build && ls
+RUN npm run -s build
 
 FROM node:carbon-alpine
 RUN npm install -g @angular-devkit/schematics-cli
