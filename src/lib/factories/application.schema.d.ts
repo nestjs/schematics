@@ -19,4 +19,16 @@ export interface ApplicationOptions {
    * The Nest configuration language.
    */
   language?: string;
+  /**
+   * The used package manager.
+   */
+  packageManager?: 'npm' | 'yarn';
+  /**
+   * The Nest included production dependencies (comma separated values).
+   */
+  dependencies?: string;
+  /**
+   * The Nest included development dependencies (comma separated values).
+   */
+  devDependencies?: string;
 }
