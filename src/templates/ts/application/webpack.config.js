@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+const SpawnPlugin = require('webpack-spawn-plugin');
 
 module.exports = {
   entry: ['webpack/hot/poll?1000', './src/main.hmr.ts'],
@@ -26,6 +27,7 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+    new SpawnPlugin('node', ['dist/server'], { persistent: true })
   ],
   output: {
     path: path.join(__dirname, 'dist'),
