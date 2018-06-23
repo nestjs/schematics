@@ -1,7 +1,7 @@
 .idea/
 
 .git/
-.gitignore
+/.gitignore
 
 .dockerignore
 Dockerfile
