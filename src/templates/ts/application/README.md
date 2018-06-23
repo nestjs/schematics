@@ -16,8 +16,11 @@ $ <%= packageManager %> install
 # development
 $ <%= packageManager %> run start
 
-# watch mode
+# watch mode (with [nodemon](https://nodemon.io/))
 $ <%= packageManager %> run start:dev
+
+# watch mode (with Webpack and Hot Reload enabled)
+$ <%= packageManager %> run start:hmr
 
 # production mode
 <%= packageManager %> run start:prod
