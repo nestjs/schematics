@@ -5,7 +5,7 @@ import { InterceptorOptions } from '../../../src/lib/factories/interceptor.schem
 
 describe('Interceptor Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
-  
+
   it('should manage name only', () => {
     const options: InterceptorOptions = {
       name: 'foo'
@@ -47,7 +47,7 @@ describe('Interceptor Factory', () => {
       '}\n'
     );
   });
-  
+
   it('should manage name and path', () => {
     const options: InterceptorOptions = {
       name: 'foo',
@@ -90,7 +90,7 @@ describe('Interceptor Factory', () => {
       '}\n'
     );
   });
-  
+
   it('should manage path to dasherize', () => {
     const options: InterceptorOptions = {
       name: 'barBaz/foo'
