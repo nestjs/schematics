@@ -5,14 +5,15 @@ import { InterceptorOptions } from '../../../src/lib/factories/interceptor.schem
 
 describe('Interceptor Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
+  
   it('should manage name only', () => {
     const options: InterceptorOptions = {
       name: 'foo'
     };
     const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.interceptor.ts')).not.toBeUndefined();
-    expect(tree.readContent('/src/foo/foo.interceptor.ts')).toEqual(
+    expect(files.find((filename) => filename === '/src/foo.interceptor.ts')).toBeDefined();
+    expect(tree.readContent('/src/foo.interceptor.ts')).toEqual(
       'import { ExecutionContext, Injectable, NestInterceptor } from \'@nestjs/common\';\n' +
       'import { Observable } from \'rxjs\';\n' +
       'import { map } from \'rxjs/operators\';\n' +
@@ -25,14 +26,15 @@ describe('Interceptor Factory', () => {
       '}\n'
     );
   });
+
   it('should manage name as a path', () => {
     const options: InterceptorOptions = {
       name: 'bar/foo'
     };
     const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar/foo/foo.interceptor.ts')).not.toBeUndefined();
-    expect(tree.readContent('/src/bar/foo/foo.interceptor.ts')).toEqual(
+    expect(files.find((filename) => filename === '/src/bar/foo.interceptor.ts')).toBeDefined();
+    expect(tree.readContent('/src/bar/foo.interceptor.ts')).toEqual(
       'import { ExecutionContext, Injectable, NestInterceptor } from \'@nestjs/common\';\n' +
       'import { Observable } from \'rxjs\';\n' +
       'import { map } from \'rxjs/operators\';\n' +
@@ -45,6 +47,7 @@ describe('Interceptor Factory', () => {
       '}\n'
     );
   });
+  
   it('should manage name and path', () => {
     const options: InterceptorOptions = {
       name: 'foo',
@@ -52,8 +55,8 @@ describe('Interceptor Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/baz/foo/foo.interceptor.ts')).not.toBeUndefined();
-    expect(tree.readContent('/src/baz/foo/foo.interceptor.ts')).toEqual(
+    expect(files.find((filename) => filename === '/src/baz/foo.interceptor.ts')).toBeDefined();
+    expect(tree.readContent('/src/baz/foo.interceptor.ts')).toEqual(
       'import { ExecutionContext, Injectable, NestInterceptor } from \'@nestjs/common\';\n' +
       'import { Observable } from \'rxjs\';\n' +
       'import { map } from \'rxjs/operators\';\n' +
@@ -66,14 +69,15 @@ describe('Interceptor Factory', () => {
       '}\n'
     );
   });
+
   it('should manage name to dasherize', () => {
     const options: InterceptorOptions = {
       name: 'fooBar'
     };
     const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.interceptor.ts')).not.toBeUndefined();
-    expect(tree.readContent('/src/foo-bar/foo-bar.interceptor.ts')).toEqual(
+    expect(files.find((filename) => filename === '/src/foo-bar.interceptor.ts')).toBeDefined();
+    expect(tree.readContent('/src/foo-bar.interceptor.ts')).toEqual(
       'import { ExecutionContext, Injectable, NestInterceptor } from \'@nestjs/common\';\n' +
       'import { Observable } from \'rxjs\';\n' +
       'import { map } from \'rxjs/operators\';\n' +
@@ -86,14 +90,15 @@ describe('Interceptor Factory', () => {
       '}\n'
     );
   });
+  
   it('should manage path to dasherize', () => {
     const options: InterceptorOptions = {
       name: 'barBaz/foo'
     };
     const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.interceptor.ts')).not.toBeUndefined();
-    expect(tree.readContent('/src/bar-baz/foo/foo.interceptor.ts')).toEqual(
+    expect(files.find((filename) => filename === '/src/bar-baz/foo.interceptor.ts')).toBeDefined();
+    expect(tree.readContent('/src/bar-baz/foo.interceptor.ts')).toEqual(
       'import { ExecutionContext, Injectable, NestInterceptor } from \'@nestjs/common\';\n' +
       'import { Observable } from \'rxjs\';\n' +
       'import { map } from \'rxjs/operators\';\n' +
@@ -106,6 +111,7 @@ describe('Interceptor Factory', () => {
       '}\n'
     );
   });
+
   it('should manage javascript file', () => {
     const options: InterceptorOptions = {
       name: 'foo',
@@ -113,8 +119,8 @@ describe('Interceptor Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/src/foo/foo.interceptor.js')).not.toBeUndefined();
-    expect(tree.readContent('/src/foo/foo.interceptor.js')).toEqual(
+    expect(files.find((filename) => filename === '/src/foo.interceptor.js')).toBeDefined();
+    expect(tree.readContent('/src/foo.interceptor.js')).toEqual(
       'import { Injectable } from \'@nestjs/common\';\n' +
       'import { map } from \'rxjs/operators\';\n' +
       '\n' +
