@@ -13,7 +13,7 @@ function transform(options: FilterOptions): FilterOptions {
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
-  target.path = join(strings.dasherize(location.path) as Path, target.name);
+  target.path = strings.dasherize(location.path);
   target.language = target.language !== undefined ? target.language : 'ts';
   return target;
 }
