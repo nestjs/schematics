@@ -10,7 +10,8 @@
     "build": "tsc --project tsconfig.json",
     "lint:src": "tslint --project tsconfig.json",
     "lint:test": "tslint --project test/tsconfig.json",
-    "test": "jest --no-cache --config test/jest-config.json"
+    "test": "jest --no-cache --config test/jest-config.json --maxWorkers=1",
+    "test:dev": "npm run -s test -- --watchAll"
   },
   "repository": {
     "type": "git",
