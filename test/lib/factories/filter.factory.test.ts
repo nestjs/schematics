@@ -6,7 +6,7 @@ import { FilterOptions } from '../../../src/lib/factories/filter.schema';
 
 describe('Filter Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
-  
+
   it('should manage name only', () => {
     const options: FilterOptions = {
       name: 'foo'
@@ -23,7 +23,7 @@ describe('Filter Factory', () => {
       '}\n'
     );
   });
-  
+
   it('should manage name has a path', () => {
     const options: FilterOptions = {
       name: 'bar/foo'
@@ -40,7 +40,7 @@ describe('Filter Factory', () => {
       '}\n'
     );
   });
-  
+
   it('should manage name and path', () => {
     const options: FilterOptions = {
       name: 'foo',
@@ -58,7 +58,7 @@ describe('Filter Factory', () => {
       '}\n'
     );
   });
-  
+
   it('should manage name to dasherize', () => {
     const options: FilterOptions = {
       name: 'fooBar'
@@ -75,7 +75,7 @@ describe('Filter Factory', () => {
       '}\n'
     );
   });
-  
+
   it('should manage path to dasherize', () => {
     const options: FilterOptions = {
       name: 'barBaz/foo'
@@ -92,7 +92,7 @@ describe('Filter Factory', () => {
       '}\n'
     );
   });
-  
+
   it('should manage javascript file', () => {
     const options: FilterOptions = {
       name: 'foo',
