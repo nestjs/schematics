@@ -15,7 +15,9 @@ describe('Application Factory', () => {
       '/project/.gitignore',
       '/project/.prettierrc',
       '/project/README.md',
+      '/project/nodemon-debug.json',
       '/project/nodemon.json',
+      '/project/package-lock.json',
       '/project/package.json',
       '/project/src/app.controller.spec.ts',
       '/project/src/app.controller.ts',
@@ -26,8 +28,10 @@ describe('Application Factory', () => {
       '/project/test/app.e2e-spec.ts',
       '/project/test/jest-e2e.json',
       '/project/tsconfig.json',
+      '/project/tsconfig.spec.json',
       '/project/tslint.json',
-      '/project/webpack.config.js'
+      '/project/webpack.config.js',
+      '/project/yarn.lock',
     ]);
   });
   it('should manage name to dasherize', () => {
@@ -40,7 +44,9 @@ describe('Application Factory', () => {
       '/awesome-project/.gitignore',
       '/awesome-project/.prettierrc',
       '/awesome-project/README.md',
+      '/awesome-project/nodemon-debug.json',
       '/awesome-project/nodemon.json',
+      '/awesome-project/package-lock.json',
       '/awesome-project/package.json',
       '/awesome-project/src/app.controller.spec.ts',
       '/awesome-project/src/app.controller.ts',
@@ -51,8 +57,10 @@ describe('Application Factory', () => {
       '/awesome-project/test/app.e2e-spec.ts',
       '/awesome-project/test/jest-e2e.json',
       '/awesome-project/tsconfig.json',
+      '/awesome-project/tsconfig.spec.json',
       '/awesome-project/tslint.json',
-      '/awesome-project/webpack.config.js'
+      '/awesome-project/webpack.config.js',
+      '/awesome-project/yarn.lock',
     ]);
   });
   it('should manage javascript files', () => {
