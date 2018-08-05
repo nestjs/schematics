@@ -5,7 +5,7 @@ import { GuardOptions } from '../../../src/lib/factories/guard.schema';
 
 describe('Guard Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
-  
+
   it('should manage name only', () => {
     const options: GuardOptions = {
       name: 'foo'
@@ -27,7 +27,7 @@ describe('Guard Factory', () => {
       '}\n'
     );
   });
-  
+
   it('should manage name has a path', () => {
     const options: GuardOptions = {
       name: 'bar/foo'
@@ -49,7 +49,7 @@ describe('Guard Factory', () => {
       '}\n'
     );
   });
-  
+
   it('should manage name and path', () => {
     const options: GuardOptions = {
       name: 'foo',
@@ -72,7 +72,7 @@ describe('Guard Factory', () => {
       '}\n'
     );
   });
-  
+
   it('should manage name to dasherize', () => {
     const options: GuardOptions = {
       name: 'fooBar'
@@ -94,7 +94,7 @@ describe('Guard Factory', () => {
       '}\n'
     );
   });
-  
+
   it('should manage path to dasherize', () => {
     const options: GuardOptions = {
       name: 'barBaz/foo'
@@ -116,7 +116,7 @@ describe('Guard Factory', () => {
       '}\n'
     );
   });
-  
+
   it('should manage javascript file', () => {
     const options: GuardOptions = {
       name: 'foo',
