@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/schematics",
-  "version": "5.7.0",
+  "version": "5.7.1",
   "description": "Nestjs schematics project for @nestjs/cli",
   "main": "index.js",
   "publishConfig": {
@@ -32,7 +32,7 @@
     "@types/jest": "^22.2.3",
     "@types/node": "^9.4.0",
     "jest": "^23.0.0",
-    "nyc": "^11.4.1",
+    "nyc": "^13.0.1",
     "ts-jest": "^22.4.6",
     "ts-lint": "^4.5.1",
     "ts-node": "^4.1.0"
