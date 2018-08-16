@@ -17,7 +17,6 @@ describe('Application Factory', () => {
       '/project/README.md',
       '/project/nodemon-debug.json',
       '/project/nodemon.json',
-      '/project/package-lock.json',
       '/project/package.json',
       '/project/src/app.controller.spec.ts',
       '/project/src/app.controller.ts',
@@ -31,7 +30,6 @@ describe('Application Factory', () => {
       '/project/tsconfig.spec.json',
       '/project/tslint.json',
       '/project/webpack.config.js',
-      '/project/yarn.lock',
     ]);
   });
   it('should manage name to dasherize', () => {
@@ -46,7 +44,6 @@ describe('Application Factory', () => {
       '/awesome-project/README.md',
       '/awesome-project/nodemon-debug.json',
       '/awesome-project/nodemon.json',
-      '/awesome-project/package-lock.json',
       '/awesome-project/package.json',
       '/awesome-project/src/app.controller.spec.ts',
       '/awesome-project/src/app.controller.ts',
@@ -60,7 +57,6 @@ describe('Application Factory', () => {
       '/awesome-project/tsconfig.spec.json',
       '/awesome-project/tslint.json',
       '/awesome-project/webpack.config.js',
-      '/awesome-project/yarn.lock',
     ]);
   });
   it('should manage javascript files', () => {
