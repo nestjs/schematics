@@ -1,8 +1,5 @@
 import { VirtualTree } from '@angular-devkit/schematics';
-import {
-  SchematicTestRunner,
-  UnitTestTree,
-} from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { ConfigurationOptions } from '../../../src/lib/factories/configuration.schema';
 
