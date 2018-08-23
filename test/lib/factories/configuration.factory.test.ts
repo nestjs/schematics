@@ -11,8 +11,8 @@ describe('Configuration Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('configuration', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/project/.nest-cli.json')).not.toBeUndefined();
-    expect(tree.readContent('/project/.nest-cli.json')).toEqual(JSON.stringify({
+    expect(files.find((filename) => filename === '/project/.nestcli.json')).toBeDefined();
+    expect(tree.readContent('/project/.nestcli.json')).toEqual(JSON.stringify({
       language: 'ts',
       collection: '@nestjs/schematics'
     }, null, 2));
@@ -37,8 +37,8 @@ describe('Configuration Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('configuration', options, new VirtualTree());
     const files: string[] = tree.files;
-    expect(files.find((filename) => filename === '/project/.nest-cli.json')).not.toBeUndefined();
-    expect(tree.readContent('/project/.nest-cli.json')).toEqual(JSON.stringify({
+    expect(files.find((filename) => filename === '/project/.nestcli.json')).not.toBeUndefined();
+    expect(tree.readContent('/project/.nestcli.json')).toEqual(JSON.stringify({
       language: 'ts',
       collection: 'foo'
     }, null, 2));

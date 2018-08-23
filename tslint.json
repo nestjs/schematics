@@ -1,26 +1,13 @@
 {
+  "defaultSeverity": "error",
   "extends": [
-    "tslint:recommended"
+      "tslint:recommended"
   ],
   "jsRules": {},
   "rules": {
-    "interface-name": [
-      "never-prefix"
-    ],
-    "quotemark": false,
-    "no-empty": false,
-    "no-empty-interface": false,
-    "max-classes-per-file": [
-      false
-    ],
-    "variable-name": false,
-    "no-unused-variable": [
-      true
-    ],
-    "trailing-comma": false,
-    "object-literal-sort-keys": false,
-    "member-ordering": false,
-    "member-access": []
+      "quotemark": [ true, "single" ],
+      "interface-name": false,
+      "variable-name": [ true, "ban-keywords", "check-format", "allow-leading-underscore" ]
   },
   "rulesDirectory": []
 }
