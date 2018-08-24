@@ -25,7 +25,7 @@ export class ModuleDeclarator {
   }
 
   private computeSymbol(options: DeclarationOptions): DeclarationOptions {
-    let target: DeclarationOptions = Object.assign({}, options);
+    const target: DeclarationOptions = Object.assign({}, options);
     if (options.type !== undefined) {
       target.symbol = classify(options.name).concat(capitalize(options.type));
     } else {

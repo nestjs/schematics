@@ -14,9 +14,6 @@
         false
       ],
       "variable-name": false,
-      "no-unused-variable": [
-        true
-      ],
       "trailing-comma": false,
       "object-literal-sort-keys": false,
       "member-ordering": false,

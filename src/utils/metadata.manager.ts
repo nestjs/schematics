@@ -22,7 +22,7 @@ export class MetadataManager {
   public insert(metadata: string, symbol: string): string {
     const source: SourceFile = createSourceFile('filename.ts', this.content, ScriptTarget.ES2017);
     const decoratorNodes: Node[] = this.getDecoratorMetadata(source, '@Module');
-    let node: Node = decoratorNodes[0];
+    const node: Node = decoratorNodes[0];
     const matchingProperties: ObjectLiteralElement[] = (node as ObjectLiteralExpression).properties
       .filter((prop) => prop.kind === SyntaxKind.PropertyAssignment)
       .filter((prop: PropertyAssignment) => {
