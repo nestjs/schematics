@@ -60,7 +60,7 @@ function addDeclarationToModule(options: ProviderOptions): Rule {
       name: options.name,
       path: options.path as Path
     });
-    let content = tree.read(options.module).toString();
+    const content = tree.read(options.module).toString();
     const declarator: ModuleDeclarator = new ModuleDeclarator();
     tree.overwrite(options.module, declarator.declare(content, options as DeclarationOptions));
     return tree;

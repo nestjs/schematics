@@ -29,7 +29,7 @@ export function main(options: ServiceOptions): Rule {
 }
 
 function transform(source: ServiceOptions): ServiceOptions {
-  let target: ServiceOptions = Object.assign({}, source);
+  const target: ServiceOptions = Object.assign({}, source);
   target.metadata = 'providers';
   target.type = 'service';
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
@@ -61,7 +61,7 @@ function addDeclarationToModule(options: ServiceOptions): Rule {
       name: options.name,
       path: options.path as Path
     });
-    let content = tree.read(options.module).toString();
+    const content = tree.read(options.module).toString();
     const declarator: ModuleDeclarator = new ModuleDeclarator();
     tree.overwrite(options.module, declarator.declare(content, options as DeclarationOptions));
     return tree;
