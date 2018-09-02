@@ -35,7 +35,7 @@ export function main(options: ControllerOptions): Rule {
 }
 
 function transform(source: ControllerOptions): ControllerOptions {
-  let target: ControllerOptions = Object.assign({}, source);
+  const target: ControllerOptions = Object.assign({}, source);
   target.metadata = ELEMENT_METADATA;
   target.type = ELEMENT_TYPE;
   target.path = target.path !== undefined ?
@@ -68,7 +68,7 @@ function addDeclarationToModule(options: ControllerOptions): Rule {
       name: options.name,
       path: options.path as Path
     });
-    let content = tree.read(options.module).toString();
+    const content = tree.read(options.module).toString();
     const declarator: ModuleDeclarator = new ModuleDeclarator();
     tree.overwrite(options.module, declarator.declare(content, options as DeclarationOptions));
     return tree;

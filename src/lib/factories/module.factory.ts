@@ -29,7 +29,7 @@ export function main(options: ModuleOptions): Rule {
 }
 
 function transform(source: ModuleOptions): ModuleOptions {
-  let target: ModuleOptions = Object.assign({}, source);
+  const target: ModuleOptions = Object.assign({}, source);
   target.metadata = 'imports';
   target.type = 'module';
   target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
@@ -61,7 +61,7 @@ function addDeclarationToModule(options: ModuleOptions): Rule {
       name: options.name,
       path: options.path as Path
     });
-    let content = tree.read(options.module).toString();
+    const content = tree.read(options.module).toString();
     const declarator: ModuleDeclarator = new ModuleDeclarator();
     tree.overwrite(options.module, declarator.declare(content, options as DeclarationOptions));
     return tree;

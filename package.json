@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/schematics",
-  "version": "5.6.0",
+  "version": "5.6.1",
   "description": "Nestjs schematics project for @nestjs/cli",
   "main": "index.js",
   "publishConfig": {
@@ -10,7 +10,8 @@
     "build": "tsc --project tsconfig.json",
     "lint:src": "tslint --project tsconfig.json",
     "lint:test": "tslint --project test/tsconfig.json",
-    "test": "jest --no-cache --config test/jest-config.json"
+    "test": "jest --no-cache --config test/jest-config.json --maxWorkers=1",
+    "test:dev": "npm run -s test -- --watchAll"
   },
   "repository": {
     "type": "git",
@@ -25,16 +26,15 @@
   "dependencies": {
     "@angular-devkit/core": "^0.4.8",
     "@angular-devkit/schematics": "^0.4.8",
-    "typescript": "^2.8.3"
+    "typescript": "^2.9.2"
   },
   "devDependencies": {
     "@types/jest": "^22.2.3",
-    "@types/node": "^9.4.0",
-    "jest": "^23.0.0",
-    "nyc": "^11.4.1",
+    "@types/node": "^9.6.29",
+    "jest": "^23.5.0",
+    "nyc": "^13.0.1",
     "ts-jest": "^22.4.6",
-    "ts-lint": "^4.5.1",
-    "ts-node": "^4.1.0"
+    "tslint": "^5.11.0"
   },
   "schematics": "./collection.json",
   "nyc": {
