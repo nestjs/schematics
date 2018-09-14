@@ -1,5 +1,4 @@
 import { normalize } from '@angular-devkit/core';
-import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { ApplicationOptions } from '../../../src/lib/factories/application.schema';
@@ -13,7 +12,7 @@ describe('Provider Factory', () => {
       name: 'foo',
       skipImport: true
     };
-    const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('provider', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo.ts')).toBeDefined();
     expect(files.find((filename) => filename === '/src/foo.spec.ts')).toBeDefined();
@@ -29,7 +28,7 @@ describe('Provider Factory', () => {
       name: 'bar/foo',
       skipImport: true
     };
-    const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('provider', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo.ts')).toBeDefined();
     expect(files.find((filename) => filename === '/src/bar/foo.spec.ts')).toBeDefined();
@@ -46,7 +45,7 @@ describe('Provider Factory', () => {
       path: 'bar',
       skipImport: true
     };
-    const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('provider', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo.ts')).toBeDefined();
     expect(files.find((filename) => filename === '/src/bar/foo.spec.ts')).toBeDefined();
@@ -62,7 +61,7 @@ describe('Provider Factory', () => {
       name: 'bar-foo',
       skipImport: true
     };
-    const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('provider', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-foo.ts')).toBeDefined();
     expect(files.find((filename) => filename === '/src/bar-foo.spec.ts')).toBeDefined();
@@ -79,7 +78,7 @@ describe('Provider Factory', () => {
       skipImport: true,
       language: 'js'
     };
-    const tree: UnitTestTree = runner.runSchematic('provider', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('provider', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo.js')).toBeDefined();
     expect(files.find((filename) => filename === '/src/foo.spec.js')).toBeDefined();
@@ -94,7 +93,7 @@ describe('Provider Factory', () => {
     const app: ApplicationOptions = {
       name: '',
     };
-    let tree: UnitTestTree = runner.runSchematic('application', app, new VirtualTree());
+    let tree: UnitTestTree = runner.runSchematic('application', app);
     const options: ProviderOptions = {
       name: 'foo'
     };
@@ -119,7 +118,7 @@ describe('Provider Factory', () => {
     const app: ApplicationOptions = {
       name: '',
     };
-    let tree: UnitTestTree = runner.runSchematic('application', app, new VirtualTree());
+    let tree: UnitTestTree = runner.runSchematic('application', app);
     const module: ModuleOptions = {
       name: 'foo'
     };

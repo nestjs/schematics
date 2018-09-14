@@ -1,4 +1,3 @@
-import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { ApplicationOptions } from '../../../src/lib/factories/application.schema';
@@ -9,7 +8,7 @@ describe('Application Factory', () => {
     const options: ApplicationOptions = {
       name: 'project'
     };
-    const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('application', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/project/.gitignore',
@@ -18,6 +17,10 @@ describe('Application Factory', () => {
       '/project/nodemon-debug.json',
       '/project/nodemon.json',
       '/project/package.json',
+      '/project/tsconfig.json',
+      '/project/tsconfig.spec.json',
+      '/project/tslint.json',
+      '/project/webpack.config.js',
       '/project/src/app.controller.spec.ts',
       '/project/src/app.controller.ts',
       '/project/src/app.module.ts',
@@ -26,17 +29,13 @@ describe('Application Factory', () => {
       '/project/src/main.ts',
       '/project/test/app.e2e-spec.ts',
       '/project/test/jest-e2e.json',
-      '/project/tsconfig.json',
-      '/project/tsconfig.spec.json',
-      '/project/tslint.json',
-      '/project/webpack.config.js',
     ]);
   });
   it('should manage name to dasherize', () => {
     const options: ApplicationOptions = {
       name: 'awesomeProject'
     };
-    const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('application', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/awesome-project/.gitignore',
@@ -45,6 +44,10 @@ describe('Application Factory', () => {
       '/awesome-project/nodemon-debug.json',
       '/awesome-project/nodemon.json',
       '/awesome-project/package.json',
+      '/awesome-project/tsconfig.json',
+      '/awesome-project/tsconfig.spec.json',
+      '/awesome-project/tslint.json',
+      '/awesome-project/webpack.config.js',
       '/awesome-project/src/app.controller.spec.ts',
       '/awesome-project/src/app.controller.ts',
       '/awesome-project/src/app.module.ts',
@@ -53,10 +56,6 @@ describe('Application Factory', () => {
       '/awesome-project/src/main.ts',
       '/awesome-project/test/app.e2e-spec.ts',
       '/awesome-project/test/jest-e2e.json',
-      '/awesome-project/tsconfig.json',
-      '/awesome-project/tsconfig.spec.json',
-      '/awesome-project/tslint.json',
-      '/awesome-project/webpack.config.js',
     ]);
   });
   it('should manage javascript files', () => {
@@ -64,7 +63,7 @@ describe('Application Factory', () => {
       name: 'project',
       language: 'js'
     };
-    const tree: UnitTestTree = runner.runSchematic('application', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('application', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/project/.babelrc',

@@ -1,4 +1,3 @@
-import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { InterceptorOptions } from '../../../src/lib/factories/interceptor.schema';
@@ -10,7 +9,7 @@ describe('Interceptor Factory', () => {
     const options: InterceptorOptions = {
       name: 'foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('interceptor', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo.interceptor.ts')).toBeDefined();
     expect(tree.readContent('/src/foo.interceptor.ts')).toEqual(
@@ -31,7 +30,7 @@ describe('Interceptor Factory', () => {
     const options: InterceptorOptions = {
       name: 'bar/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('interceptor', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo.interceptor.ts')).toBeDefined();
     expect(tree.readContent('/src/bar/foo.interceptor.ts')).toEqual(
@@ -53,7 +52,7 @@ describe('Interceptor Factory', () => {
       name: 'foo',
       path: 'baz'
     };
-    const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('interceptor', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo.interceptor.ts')).toBeDefined();
     expect(tree.readContent('/src/baz/foo.interceptor.ts')).toEqual(
@@ -74,7 +73,7 @@ describe('Interceptor Factory', () => {
     const options: InterceptorOptions = {
       name: 'fooBar'
     };
-    const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('interceptor', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar.interceptor.ts')).toBeDefined();
     expect(tree.readContent('/src/foo-bar.interceptor.ts')).toEqual(
@@ -95,7 +94,7 @@ describe('Interceptor Factory', () => {
     const options: InterceptorOptions = {
       name: 'barBaz/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('interceptor', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo.interceptor.ts')).toBeDefined();
     expect(tree.readContent('/src/bar-baz/foo.interceptor.ts')).toEqual(
@@ -117,7 +116,7 @@ describe('Interceptor Factory', () => {
       name: 'foo',
       language: 'js'
     };
-    const tree: UnitTestTree = runner.runSchematic('interceptor', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('interceptor', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo.interceptor.js')).toBeDefined();
     expect(tree.readContent('/src/foo.interceptor.js')).toEqual(

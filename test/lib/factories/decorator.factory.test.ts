@@ -1,4 +1,3 @@
-import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { DecoratorOptions } from '../../../src/lib/factories/decorator.schema';
@@ -9,7 +8,7 @@ describe('Decorator Factory', () => {
     const options: DecoratorOptions = {
       name: 'foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('decorator', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('decorator', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.decorator.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.decorator.ts')).toEqual(
@@ -22,7 +21,7 @@ describe('Decorator Factory', () => {
     const options: DecoratorOptions = {
       name: 'bar/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('decorator', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('decorator', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.decorator.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo/foo.decorator.ts')).toEqual(
@@ -36,7 +35,7 @@ describe('Decorator Factory', () => {
       name: 'foo',
       path: 'baz'
     };
-    const tree: UnitTestTree = runner.runSchematic('decorator', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('decorator', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo/foo.decorator.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/baz/foo/foo.decorator.ts')).toEqual(
@@ -49,7 +48,7 @@ describe('Decorator Factory', () => {
     const options: DecoratorOptions = {
       name: 'fooBar'
     };
-    const tree: UnitTestTree = runner.runSchematic('decorator', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('decorator', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.decorator.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo-bar/foo-bar.decorator.ts')).toEqual(
@@ -62,7 +61,7 @@ describe('Decorator Factory', () => {
     const options: DecoratorOptions = {
       name: 'barBaz/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('decorator', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('decorator', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.decorator.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar-baz/foo/foo.decorator.ts')).toEqual(
@@ -76,7 +75,7 @@ describe('Decorator Factory', () => {
       name: 'foo',
       language: 'js'
     };
-    const tree: UnitTestTree = runner.runSchematic('decorator', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('decorator', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.decorator.js')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.decorator.js')).toEqual(

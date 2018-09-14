@@ -1,4 +1,3 @@
-import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { PipeOptions } from '../../../src/lib/factories/pipe.schema';
@@ -9,7 +8,7 @@ describe('Pipe Factory', () => {
     const options: PipeOptions = {
       name: 'foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('pipe', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.pipe.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.pipe.ts')).toEqual(
@@ -27,7 +26,7 @@ describe('Pipe Factory', () => {
     const options: PipeOptions = {
       name: 'bar/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('pipe', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.pipe.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo/foo.pipe.ts')).toEqual(
@@ -46,7 +45,7 @@ describe('Pipe Factory', () => {
       name: 'foo',
       path: 'baz'
     };
-    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('pipe', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo/foo.pipe.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/baz/foo/foo.pipe.ts')).toEqual(
@@ -64,7 +63,7 @@ describe('Pipe Factory', () => {
     const options: PipeOptions = {
       name: 'fooBar'
     };
-    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('pipe', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.pipe.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo-bar/foo-bar.pipe.ts')).toEqual(
@@ -82,7 +81,7 @@ describe('Pipe Factory', () => {
     const options: PipeOptions = {
       name: 'barBaz/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('pipe', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.pipe.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar-baz/foo/foo.pipe.ts')).toEqual(
@@ -101,7 +100,7 @@ describe('Pipe Factory', () => {
       name: 'foo',
       language: 'js'
     };
-    const tree: UnitTestTree = runner.runSchematic('pipe', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('pipe', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.pipe.js')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.pipe.js')).toEqual(
