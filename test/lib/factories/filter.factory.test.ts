@@ -2,7 +2,6 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import * as path from 'path';
 import { FilterOptions } from '../../../src/lib/factories/filter.schema';
 
-
 describe('Filter Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner('.', path.join(process.cwd(), 'src/collection.json'));
 
