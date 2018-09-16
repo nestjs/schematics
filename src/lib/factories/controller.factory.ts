@@ -1,6 +1,20 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
-import { apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicContext, template, Tree, url } from '@angular-devkit/schematics';
-import { DeclarationOptions, ModuleDeclarator } from '../../utils/module.declarator';
+import {
+  apply,
+  branchAndMerge,
+  chain,
+  mergeWith,
+  move,
+  Rule,
+  SchematicContext,
+  template,
+  Tree,
+  url,
+} from '@angular-devkit/schematics';
+import {
+  DeclarationOptions,
+  ModuleDeclarator,
+} from '../../utils/module.declarator';
 import { ModuleFinder } from '../../utils/module.finder';
 import { Location, NameParser } from '../../utils/name.parser';
 import { ControllerOptions } from './controller.schema';
@@ -15,10 +29,7 @@ export function main(options: ControllerOptions): Rule {
   options = transform(options);
   return (tree: Tree, context: SchematicContext) => {
     return branchAndMerge(
-      chain([
-        addDeclarationToModule(options),
-        mergeWith(generate(options))
-      ])
+      chain([addDeclarationToModule(options), mergeWith(generate(options))]),
     )(tree, context);
   };
 }
@@ -27,24 +38,28 @@ function transform(source: ControllerOptions): ControllerOptions {
   const target: ControllerOptions = Object.assign({}, source);
   target.metadata = ELEMENT_METADATA;
   target.type = ELEMENT_TYPE;
-  target.path = target.path !== undefined ?
-    join(normalize(DEFAULT_PATH_NAME), target.path) : normalize(DEFAULT_PATH_NAME);
+  target.path =
+    target.path !== undefined
+      ? join(normalize(DEFAULT_PATH_NAME), target.path)
+      : normalize(DEFAULT_PATH_NAME);
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
   target.path = join(strings.dasherize(location.path) as Path, target.name);
-  target.language = target.language !== undefined ? target.language : DEFAULT_LANGUAGE;
+  target.language =
+    target.language !== undefined ? target.language : DEFAULT_LANGUAGE;
   return target;
 }
 
 function generate(options: ControllerOptions) {
   return apply(
-    url(join('../../templates' as Path, options.language, 'controller')), [
+    url(join('../../templates' as Path, options.language, 'controller')),
+    [
       template({
         ...strings,
-        ...options
+        ...options,
       }),
-      move(options.path)
-    ]
+      move(options.path),
+    ],
   );
 }
 
@@ -55,14 +70,17 @@ function addDeclarationToModule(options: ControllerOptions): Rule {
     }
     options.module = new ModuleFinder(tree).find({
       name: options.name,
-      path: options.path as Path
+      path: options.path as Path,
     });
     if (!options.module) {
       return tree;
     }
     const content = tree.read(options.module).toString();
     const declarator: ModuleDeclarator = new ModuleDeclarator();
-    tree.overwrite(options.module, declarator.declare(content, options as DeclarationOptions));
+    tree.overwrite(
+      options.module,
+      declarator.declare(content, options as DeclarationOptions),
+    );
     return tree;
   };
 }
