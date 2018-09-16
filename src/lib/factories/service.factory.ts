@@ -1,16 +1,5 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
-import {
-  apply,
-  branchAndMerge,
-  chain,
-  mergeWith,
-  move,
-  Rule,
-  SchematicContext,
-  template,
-  Tree,
-  url
-} from '@angular-devkit/schematics';
+import { apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicContext, template, Tree, url } from '@angular-devkit/schematics';
 import { DeclarationOptions, ModuleDeclarator } from '../../utils/module.declarator';
 import { ModuleFinder } from '../../utils/module.finder';
 import { Location, NameParser } from '../../utils/name.parser';
@@ -61,6 +50,9 @@ function addDeclarationToModule(options: ServiceOptions): Rule {
       name: options.name,
       path: options.path as Path
     });
+    if (!options.module) {
+      return tree;
+    }
     const content = tree.read(options.module).toString();
     const declarator: ModuleDeclarator = new ModuleDeclarator();
     tree.overwrite(options.module, declarator.declare(content, options as DeclarationOptions));

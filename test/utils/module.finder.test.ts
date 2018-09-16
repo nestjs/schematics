@@ -37,4 +37,15 @@ describe('Module Finder', () => {
     expect(finder.find(options))
       .toEqual(normalize('/src/app.module.js'));
   });
+
+  it('should return null when directory does not exist', () => {
+    const tree = new EmptyTree();
+
+    const finder = new ModuleFinder(tree);
+    const options: FindOptions = {
+      name: 'foo',
+      path: normalize('/src')
+    };
+    expect(finder.find(options)).toEqual(null);
+  });
 });
