@@ -1,5 +1,4 @@
 import { normalize } from '@angular-devkit/core';
-import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { ApplicationOptions } from '../../../src/lib/factories/application.schema';
@@ -11,10 +10,11 @@ describe('Controller Factory', () => {
   it('should manage name only', () => {
     const options: ControllerOptions = {
       name: 'foo',
-      skipImport: true
+      skipImport: true,
     };
-    const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('controller', options);
     const files: string[] = tree.files;
+
     expect(files.find((filename) => filename === '/src/foo/foo.controller.ts')).toBeDefined();
     expect(files.find((filename) => filename === '/src/foo/foo.controller.spec.ts')).toBeDefined();
     expect(tree.readContent('/src/foo/foo.controller.ts'))
@@ -30,7 +30,7 @@ describe('Controller Factory', () => {
       name: 'bar/foo',
       skipImport: true
     };
-    const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('controller', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.controller.ts')).toBeDefined();
     expect(files.find((filename) => filename === '/src/bar/foo/foo.controller.spec.ts')).toBeDefined();
@@ -48,7 +48,7 @@ describe('Controller Factory', () => {
       path: 'bar',
       skipImport: true
     };
-    const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('controller', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.controller.ts')).toBeDefined();
     expect(files.find((filename) => filename === '/src/bar/foo/foo.controller.spec.ts')).toBeDefined();
@@ -65,7 +65,7 @@ describe('Controller Factory', () => {
       name: 'fooBar',
       skipImport: true
     };
-    const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('controller', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.controller.ts')).toBeDefined();
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.controller.spec.ts')).toBeDefined();
@@ -82,7 +82,7 @@ describe('Controller Factory', () => {
       name: 'barBaz/foo',
       skipImport: true
     };
-    const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('controller', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.controller.ts')).toBeDefined();
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.controller.spec.ts')).toBeDefined();
@@ -100,7 +100,7 @@ describe('Controller Factory', () => {
       language: 'js',
       skipImport: true
     };
-    const tree: UnitTestTree = runner.runSchematic('controller', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('controller', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.controller.js')).toBeDefined();
     expect(files.find((filename) => filename === '/src/foo/foo.controller.spec.js')).toBeDefined();
@@ -116,7 +116,7 @@ describe('Controller Factory', () => {
     const app: ApplicationOptions = {
       name: '',
     };
-    let tree: UnitTestTree = runner.runSchematic('application', app, new VirtualTree());
+    let tree: UnitTestTree = runner.runSchematic('application', app);
     const options: ControllerOptions = {
       name: 'foo'
     };
@@ -139,7 +139,7 @@ describe('Controller Factory', () => {
     const app: ApplicationOptions = {
       name: '',
     };
-    let tree: UnitTestTree = runner.runSchematic('application', app, new VirtualTree());
+    let tree: UnitTestTree = runner.runSchematic('application', app);
     const module: ModuleOptions = {
       name: 'foo'
     };

@@ -1,6 +1,4 @@
-import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-
 import * as path from 'path';
 import { FilterOptions } from '../../../src/lib/factories/filter.schema';
 
@@ -11,7 +9,7 @@ describe('Filter Factory', () => {
     const options: FilterOptions = {
       name: 'foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('filter', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('filter', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo.filter.ts')).toBeDefined();
     expect(tree.readContent('/src/foo.filter.ts')).toEqual(
@@ -28,7 +26,7 @@ describe('Filter Factory', () => {
     const options: FilterOptions = {
       name: 'bar/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('filter', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('filter', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo.filter.ts')).toBeDefined();
     expect(tree.readContent('/src/bar/foo.filter.ts')).toEqual(
@@ -46,7 +44,7 @@ describe('Filter Factory', () => {
       name: 'foo',
       path: 'baz'
     };
-    const tree: UnitTestTree = runner.runSchematic('filter', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('filter', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo.filter.ts')).toBeDefined();
     expect(tree.readContent('/src/baz/foo.filter.ts')).toEqual(
@@ -63,7 +61,7 @@ describe('Filter Factory', () => {
     const options: FilterOptions = {
       name: 'fooBar'
     };
-    const tree: UnitTestTree = runner.runSchematic('filter', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('filter', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar.filter.ts')).toBeDefined();
     expect(tree.readContent('/src/foo-bar.filter.ts')).toEqual(
@@ -80,7 +78,7 @@ describe('Filter Factory', () => {
     const options: FilterOptions = {
       name: 'barBaz/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('filter', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('filter', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo.filter.ts')).toBeDefined();
     expect(tree.readContent('/src/bar-baz/foo.filter.ts')).toEqual(
@@ -98,7 +96,7 @@ describe('Filter Factory', () => {
       name: 'foo',
       language: 'js'
     };
-    const tree: UnitTestTree = runner.runSchematic('filter', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('filter', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo.filter.js')).toBeDefined();
     expect(tree.readContent('/src/foo.filter.js')).toEqual(

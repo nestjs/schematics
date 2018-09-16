@@ -1,4 +1,3 @@
-import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { GatewayOptions } from '../../../src/lib/factories/gateway.schema';
@@ -9,7 +8,7 @@ describe('Gateway Factory', () => {
     const options: GatewayOptions = {
       name: 'foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('gateway', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.gateway.ts')).toEqual(
@@ -29,7 +28,7 @@ describe('Gateway Factory', () => {
     const options: GatewayOptions = {
       name: 'bar/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('gateway', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo/foo.gateway.ts')).toEqual(
@@ -50,7 +49,7 @@ describe('Gateway Factory', () => {
       name: 'foo',
       path: 'baz'
     };
-    const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('gateway', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo/foo.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/baz/foo/foo.gateway.ts')).toEqual(
@@ -70,7 +69,7 @@ describe('Gateway Factory', () => {
     const options: GatewayOptions = {
       name: 'fooBar'
     };
-    const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('gateway', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo-bar/foo-bar.gateway.ts')).toEqual(
@@ -90,7 +89,7 @@ describe('Gateway Factory', () => {
     const options: GatewayOptions = {
       name: 'barBaz/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('gateway', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.gateway.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar-baz/foo/foo.gateway.ts')).toEqual(
@@ -111,7 +110,7 @@ describe('Gateway Factory', () => {
       name: 'foo',
       language: 'js'
     };
-    const tree: UnitTestTree = runner.runSchematic('gateway', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('gateway', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.gateway.js')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.gateway.js')).toEqual(

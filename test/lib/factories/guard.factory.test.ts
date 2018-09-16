@@ -1,4 +1,3 @@
-import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { GuardOptions } from '../../../src/lib/factories/guard.schema';
@@ -10,7 +9,7 @@ describe('Guard Factory', () => {
     const options: GuardOptions = {
       name: 'foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('guard', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('guard', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo.guard.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo.guard.ts')).toEqual(
@@ -32,7 +31,7 @@ describe('Guard Factory', () => {
     const options: GuardOptions = {
       name: 'bar/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('guard', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('guard', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo.guard.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo.guard.ts')).toEqual(
@@ -55,7 +54,7 @@ describe('Guard Factory', () => {
       name: 'foo',
       path: 'baz'
     };
-    const tree: UnitTestTree = runner.runSchematic('guard', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('guard', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo.guard.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/baz/foo.guard.ts')).toEqual(
@@ -77,7 +76,7 @@ describe('Guard Factory', () => {
     const options: GuardOptions = {
       name: 'fooBar'
     };
-    const tree: UnitTestTree = runner.runSchematic('guard', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('guard', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar.guard.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo-bar.guard.ts')).toEqual(
@@ -99,7 +98,7 @@ describe('Guard Factory', () => {
     const options: GuardOptions = {
       name: 'barBaz/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('guard', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('guard', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo.guard.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar-baz/foo.guard.ts')).toEqual(
@@ -122,7 +121,7 @@ describe('Guard Factory', () => {
       name: 'foo',
       language: 'js'
     };
-    const tree: UnitTestTree = runner.runSchematic('guard', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('guard', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo.guard.js')).not.toBeUndefined();
     expect(tree.readContent('/src/foo.guard.js')).toEqual(

@@ -1,4 +1,3 @@
-import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { MiddlewareOptions } from '../../../src/lib/factories/middleware.schema';
@@ -9,7 +8,7 @@ describe('Middleware Factory', () => {
     const options: MiddlewareOptions = {
       name: 'foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.middleware.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.middleware.ts')).toEqual(
@@ -29,7 +28,7 @@ describe('Middleware Factory', () => {
     const options: MiddlewareOptions = {
       name: 'bar/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.middleware.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo/foo.middleware.ts')).toEqual(
@@ -50,7 +49,7 @@ describe('Middleware Factory', () => {
       name: 'foo',
       path: 'baz'
     };
-    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo/foo.middleware.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/baz/foo/foo.middleware.ts')).toEqual(
@@ -70,7 +69,7 @@ describe('Middleware Factory', () => {
     const options: MiddlewareOptions = {
       name: 'fooBar'
     };
-    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.middleware.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo-bar/foo-bar.middleware.ts')).toEqual(
@@ -90,7 +89,7 @@ describe('Middleware Factory', () => {
     const options: MiddlewareOptions = {
       name: 'barBaz/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.middleware.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar-baz/foo/foo.middleware.ts')).toEqual(
@@ -111,7 +110,7 @@ describe('Middleware Factory', () => {
       name: 'foo',
       language: 'js'
     };
-    const tree: UnitTestTree = runner.runSchematic('middleware', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.middleware.js')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.middleware.js')).toEqual(

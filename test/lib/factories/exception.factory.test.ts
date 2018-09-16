@@ -1,4 +1,3 @@
-import { VirtualTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { ExceptionOptions } from '../../../src/lib/factories/exception.schema';
@@ -9,7 +8,7 @@ describe('Exception Factory', () => {
     const options: ExceptionOptions = {
       name: 'foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('exception', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.exception.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.exception.ts')).toEqual(
@@ -26,7 +25,7 @@ describe('Exception Factory', () => {
     const options: ExceptionOptions = {
       name: 'bar/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('exception', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar/foo/foo.exception.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo/foo.exception.ts')).toEqual(
@@ -44,7 +43,7 @@ describe('Exception Factory', () => {
       name: 'foo',
       path: 'baz'
     };
-    const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('exception', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/baz/foo/foo.exception.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/baz/foo/foo.exception.ts')).toEqual(
@@ -61,7 +60,7 @@ describe('Exception Factory', () => {
     const options: ExceptionOptions = {
       name: 'fooBar'
     };
-    const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('exception', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo-bar/foo-bar.exception.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/foo-bar/foo-bar.exception.ts')).toEqual(
@@ -78,7 +77,7 @@ describe('Exception Factory', () => {
     const options: ExceptionOptions = {
       name: 'barBaz/foo'
     };
-    const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('exception', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/bar-baz/foo/foo.exception.ts')).not.toBeUndefined();
     expect(tree.readContent('/src/bar-baz/foo/foo.exception.ts')).toEqual(
@@ -96,7 +95,7 @@ describe('Exception Factory', () => {
       name: 'foo',
       language: 'js'
     };
-    const tree: UnitTestTree = runner.runSchematic('exception', options, new VirtualTree());
+    const tree: UnitTestTree = runner.runSchematic('exception', options);
     const files: string[] = tree.files;
     expect(files.find((filename) => filename === '/src/foo/foo.exception.js')).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.exception.js')).toEqual(
