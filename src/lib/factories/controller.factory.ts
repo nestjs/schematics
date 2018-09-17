@@ -17,10 +17,8 @@ import {
 } from '../../utils/module.declarator';
 import { ModuleFinder } from '../../utils/module.finder';
 import { Location, NameParser } from '../../utils/name.parser';
+import { DEFAULT_LANGUAGE, DEFAULT_PATH_NAME } from '../defaults';
 import { ControllerOptions } from './controller.schema';
-
-const DEFAULT_PATH_NAME = 'src';
-const DEFAULT_LANGUAGE = 'ts';
 
 const ELEMENT_METADATA = 'controllers';
 const ELEMENT_TYPE = 'controller';
