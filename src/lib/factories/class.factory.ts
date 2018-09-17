@@ -19,11 +19,13 @@ export function main(options: ClassOptions): Rule {
 
 function transform(options: ClassOptions): ClassOptions {
   const target: ClassOptions = Object.assign({}, options);
+  const defaultSourceRoot =
+    options.sourceRoot !== undefined ? options.sourceRoot : DEFAULT_PATH_NAME;
 
   target.path =
     target.path !== undefined
-      ? join(normalize(DEFAULT_PATH_NAME), target.path)
-      : normalize(DEFAULT_PATH_NAME);
+      ? join(normalize(defaultSourceRoot), target.path)
+      : normalize(defaultSourceRoot);
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
   target.path = join(strings.dasherize(location.path) as Path, target.name);

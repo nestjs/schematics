@@ -17,6 +17,7 @@ import {
 } from '../../utils/module.declarator';
 import { ModuleFinder } from '../../utils/module.finder';
 import { Location, NameParser } from '../../utils/name.parser';
+import { DEFAULT_PATH_NAME } from '../defaults';
 import { ModuleOptions } from './module.schema';
 
 export function main(options: ModuleOptions): Rule {
@@ -32,10 +33,14 @@ function transform(source: ModuleOptions): ModuleOptions {
   const target: ModuleOptions = Object.assign({}, source);
   target.metadata = 'imports';
   target.type = 'module';
+
+  const defaultSourceRoot =
+    source.sourceRoot !== undefined ? source.sourceRoot : DEFAULT_PATH_NAME;
   target.path =
     target.path !== undefined
-      ? join(normalize('src'), target.path)
-      : normalize('src');
+      ? join(normalize(defaultSourceRoot), target.path)
+      : normalize(defaultSourceRoot);
+
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
   target.path = join(strings.dasherize(location.path) as Path, target.name);

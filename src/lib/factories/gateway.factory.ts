@@ -1,6 +1,15 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
-import { apply, mergeWith, move, Rule, Source, template, url } from '@angular-devkit/schematics';
+import {
+  apply,
+  mergeWith,
+  move,
+  Rule,
+  Source,
+  template,
+  url,
+} from '@angular-devkit/schematics';
 import { Location, NameParser } from '../../utils/name.parser';
+import { DEFAULT_PATH_NAME } from '../defaults';
 import { GatewayOptions } from './gateway.schema';
 
 export function main(options: GatewayOptions): Rule {
@@ -10,7 +19,13 @@ export function main(options: GatewayOptions): Rule {
 
 function transform(options: GatewayOptions): GatewayOptions {
   const target: GatewayOptions = Object.assign({}, options);
-  target.path = target.path !== undefined ? join(normalize('src'), target.path) : normalize('src');
+  const defaultSourceRoot =
+    options.sourceRoot !== undefined ? options.sourceRoot : DEFAULT_PATH_NAME;
+  target.path =
+    target.path !== undefined
+      ? join(normalize(defaultSourceRoot), target.path)
+      : normalize(defaultSourceRoot);
+
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
   target.path = join(strings.dasherize(location.path) as Path, target.name);
@@ -20,12 +35,13 @@ function transform(options: GatewayOptions): GatewayOptions {
 
 function generate(options: GatewayOptions): Source {
   return apply(
-    url(join('../../templates' as Path, options.language, 'gateway')), [
+    url(join('../../templates' as Path, options.language, 'gateway')),
+    [
       template({
         ...strings,
-        ...options
+        ...options,
       }),
-      move(options.path)
-    ]
+      move(options.path),
+    ],
   );
 }

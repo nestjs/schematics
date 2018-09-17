@@ -1,4 +1,0 @@
-{
-  "language": "<%= language %>",
-  "collection": "<%= collection %>"
-}

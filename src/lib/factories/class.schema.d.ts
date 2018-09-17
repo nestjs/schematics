@@ -13,4 +13,8 @@ export interface ClassOptions {
    * The Nest configuration language.
    */
   language?: string;
+  /**
+   * The source root path
+   */
+  sourceRoot?: string;
 }

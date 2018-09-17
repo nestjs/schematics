@@ -29,4 +29,8 @@ export interface ProviderOptions {
    * The Nest configuration language.
    */
   language?: string;
+  /**
+   * The source root path
+   */
+  sourceRoot?: string;
 }
