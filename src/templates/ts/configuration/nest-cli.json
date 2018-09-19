@@ -1,0 +1,5 @@
+{
+  "language": "<%= language %>",
+  "collection": "<%= collection %>",
+  "sourceRoot": "src"
+}

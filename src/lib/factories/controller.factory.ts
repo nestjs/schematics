@@ -17,10 +17,8 @@ import {
 } from '../../utils/module.declarator';
 import { ModuleFinder } from '../../utils/module.finder';
 import { Location, NameParser } from '../../utils/name.parser';
+import { DEFAULT_LANGUAGE, DEFAULT_PATH_NAME } from '../defaults';
 import { ControllerOptions } from './controller.schema';
-
-const DEFAULT_PATH_NAME = 'src';
-const DEFAULT_LANGUAGE = 'ts';
 
 const ELEMENT_METADATA = 'controllers';
 const ELEMENT_TYPE = 'controller';
@@ -36,12 +34,16 @@ export function main(options: ControllerOptions): Rule {
 
 function transform(source: ControllerOptions): ControllerOptions {
   const target: ControllerOptions = Object.assign({}, source);
+  const defaultSourceRoot =
+    source.sourceRoot !== undefined ? source.sourceRoot : DEFAULT_PATH_NAME;
+
   target.metadata = ELEMENT_METADATA;
   target.type = ELEMENT_TYPE;
   target.path =
     target.path !== undefined
-      ? join(normalize(DEFAULT_PATH_NAME), target.path)
-      : normalize(DEFAULT_PATH_NAME);
+      ? join(normalize(defaultSourceRoot), target.path)
+      : normalize(defaultSourceRoot);
+
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
   target.path = join(strings.dasherize(location.path) as Path, target.name);

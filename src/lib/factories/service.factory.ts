@@ -17,6 +17,7 @@ import {
 } from '../../utils/module.declarator';
 import { ModuleFinder } from '../../utils/module.finder';
 import { Location, NameParser } from '../../utils/name.parser';
+import { DEFAULT_PATH_NAME } from '../defaults';
 import { ServiceOptions } from './service.schema';
 
 export function main(options: ServiceOptions): Rule {
@@ -32,10 +33,14 @@ function transform(source: ServiceOptions): ServiceOptions {
   const target: ServiceOptions = Object.assign({}, source);
   target.metadata = 'providers';
   target.type = 'service';
+
+  const defaultSourceRoot =
+    source.sourceRoot !== undefined ? source.sourceRoot : DEFAULT_PATH_NAME;
   target.path =
     target.path !== undefined
-      ? join(normalize('src'), target.path)
-      : normalize('src');
+      ? join(normalize(defaultSourceRoot), target.path)
+      : normalize(defaultSourceRoot);
+
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
   target.path = strings.dasherize(location.path);

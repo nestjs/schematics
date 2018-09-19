@@ -17,6 +17,7 @@ import {
 } from '../../utils/module.declarator';
 import { ModuleFinder } from '../../utils/module.finder';
 import { Location, NameParser } from '../../utils/name.parser';
+import { DEFAULT_PATH_NAME } from '../defaults';
 import { ProviderOptions } from './provider.schema';
 
 export function main(options: ProviderOptions): Rule {
@@ -31,10 +32,14 @@ export function main(options: ProviderOptions): Rule {
 function transform(options: ProviderOptions): ProviderOptions {
   const target: ProviderOptions = Object.assign({}, options);
   target.metadata = 'providers';
+
+  const defaultSourceRoot =
+    options.sourceRoot !== undefined ? options.sourceRoot : DEFAULT_PATH_NAME;
   target.path =
     target.path !== undefined
-      ? join(normalize('src'), target.path)
-      : normalize('src');
+      ? join(normalize(defaultSourceRoot), target.path)
+      : normalize(defaultSourceRoot);
+
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
   target.path = strings.dasherize(location.path);
