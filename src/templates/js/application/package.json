@@ -4,7 +4,7 @@
   "description": "Nest Babel starter repository",
   "license": "MIT",
   "scripts": {
-    "format": "prettier --write \"**/*.js\"",
+    "format": "prettier --write \"{src,test}/**/*.js\"",
     "start": "babel-node index.js",
     "start:dev": "nodemon",
     "test": "jest",
