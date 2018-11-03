@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "SchematicsNestFilter",
+  "title": "Nest Filter Options Schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the filter.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    },
+    "path": {
+      "type": "string",
+      "format": "path",
+      "description": "The path to create the filter."
+    },
+    "language": {
+      "type": "string",
+      "description": "Nest filter language (ts/js)."
+    },
+    "sourceRoot": {
+      "type": "string",
+      "description": "Nest decorator source root directory."
+    }
+  },
+  "required": ["name"]
+}

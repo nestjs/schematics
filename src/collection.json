@@ -2,64 +2,78 @@
   "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "application": {
-      "factory": "./lib/factories/application.factory#main",
-      "description": "Create a Nest application."
+      "factory": "./lib/application/application.factory#main",
+      "description": "Create a Nest application.",
+      "schema": "./lib/application/schema.json"
     },
     "class": {
-      "factory": "./lib/factories/class.factory#main",
-      "description": "Create a new class."
-    },
-    "configuration": {
-      "factory": "./lib/factories/configuration.factory#main",
-      "description": "Create a NestCLI configuration file."
+      "factory": "./lib/class/class.factory#main",
+      "description": "Create a new class.",
+      "schema": "./lib/class/schema.json"
     },
     "controller": {
-      "factory": "./lib/factories/controller.factory#main",
-      "description": "Create a Nest controller."
+      "factory": "./lib/controller/controller.factory#main",
+      "description": "Create a Nest controller.",
+      "schema": "./lib/controller/schema.json"
     },
     "decorator": {
-      "factory": "./lib/factories/decorator.factory#main",
-      "description": "Create a Nest decorator."
-    },
-    "exception": {
-      "factory": "./lib/factories/exception.factory#main",
-      "description": "Create a Nest exception."
+      "factory": "./lib/decorator/decorator.factory#main",
+      "description": "Create a Nest decorator.",
+      "schema": "./lib/decorator/schema.json"
     },
     "filter": {
-      "factory": "./lib/factories/filter.factory#main",
-      "description": "Create a Nest filter."
+      "factory": "./lib/filter/filter.factory#main",
+      "description": "Create a Nest filter.",
+      "schema": "./lib/filter/schema.json"
     },
     "gateway": {
-      "factory": "./lib/factories/gateway.factory#main",
-      "description": "Create a Nest gateway."
+      "factory": "./lib/gateway/gateway.factory#main",
+      "description": "Create a Nest gateway.",
+      "schema": "./lib/gateway/schema.json"
     },
     "guard": {
-      "factory": "./lib/factories/guard.factory#main",
-      "description": "Create a Nest guard."
+      "factory": "./lib/guard/guard.factory#main",
+      "description": "Create a Nest guard.",
+      "schema": "./lib/guard/schema.json"
     },
     "interceptor": {
-      "factory": "./lib/factories/interceptor.factory#main",
-      "description": "Create a Nest interceptor."
+      "factory": "./lib/interceptor/interceptor.factory#main",
+      "description": "Create a Nest interceptor.",
+      "schema": "./lib/interceptor/schema.json"
     },
     "middleware": {
-      "factory": "./lib/factories/middleware.factory#main",
-      "description": "Create a Nest middleware."
+      "factory": "./lib/middleware/middleware.factory#main",
+      "description": "Create a Nest middleware.",
+      "schema": "./lib/middleware/schema.json"
     },
     "module": {
-      "factory": "./lib/factories/module.factory#main",
-      "description": "Create a Nest module."
+      "factory": "./lib/module/module.factory#main",
+      "description": "Create a Nest module.",
+      "schema": "./lib/module/schema.json"
     },
     "pipe": {
-      "factory": "./lib/factories/pipe.factory#main",
-      "description": "Create a Nest pipe."
+      "factory": "./lib/pipe/pipe.factory#main",
+      "description": "Create a Nest pipe.",
+      "schema": "./lib/pipe/schema.json"
     },
     "provider": {
-      "factory": "./lib/factories/provider.factory#main",
-      "description": "Create a Nest provider."
+      "factory": "./lib/provider/provider.factory#main",
+      "description": "Create a Nest provider.",
+      "schema": "./lib/provider/schema.json"
     },
     "service": {
-      "factory": "./lib/factories/service.factory#main",
-      "description": "Create a Nest service."
+      "factory": "./lib/service/service.factory#main",
+      "description": "Create a Nest service.",
+      "schema": "./lib/service/schema.json"
+    },
+    "configuration": {
+      "factory": "./lib/configuration/configuration.factory#main",
+      "description": "Create a Nest CLI configuration."
+    },
+    "library": {
+      "factory": "./lib/library/library.factory#main",
+      "description": "Create a Nest library (mono-repo).",
+      "schema": "./lib/library/schema.json"
     }
   }
 }

@@ -7,17 +7,21 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.json",
+    "move": "gulp move",
+    "build": "rm -rf dist && tsc --project tsconfig.json && npm run move",
     "lint:src": "tslint --project tsconfig.json",
     "lint:test": "tslint --project test/tsconfig.json",
-    "test": "jest --no-cache --config test/jest-config.json --maxWorkers=1",
+    "test": "jest --no-cache --config test/jest-config.json",
     "test:dev": "npm run -s test -- --watchAll"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nestjs/schematics.git"
   },
-  "author": "ThomRick",
+  "contributors": [
+    "ThomRick",
+    "Kamil Mysliwiec"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/nestjs/schematics/issues"
@@ -31,6 +35,7 @@
   "devDependencies": {
     "@types/jest": "^22.2.3",
     "@types/node": "^9.6.29",
+    "gulp": "^3.9.1",
     "jest": "^23.5.0",
     "nyc": "^13.0.1",
     "ts-jest": "^22.4.6",
