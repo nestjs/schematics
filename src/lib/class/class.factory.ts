@@ -49,7 +49,9 @@ function transform(options: ClassOptions): ClassOptions {
 
 function generate(options: ClassOptions): Source {
   return apply(url(join('./files' as Path, options.language)), [
-    options.spec ? noop() : filter(path => !path.endsWith('.spec.ts')),
+    options.spec === 'true'
+      ? noop()
+      : filter(path => !path.endsWith('.spec.ts')),
     template({
       ...strings,
       ...options,

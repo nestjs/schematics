@@ -1,15 +1,15 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
 import {
   apply,
+  filter,
   mergeWith,
   move,
+  noop,
   Rule,
   SchematicsException,
   Source,
   template,
   url,
-  noop,
-  filter,
 } from '@angular-devkit/schematics';
 import { Location, NameParser } from '../../utils/name.parser';
 import { DEFAULT_PATH_NAME } from '../defaults';
@@ -45,7 +45,9 @@ function transform(options: DecoratorOptions): DecoratorOptions {
 
 function generate(options: DecoratorOptions): Source {
   return apply(url(join('./files' as Path, options.language)), [
-    options.spec ? noop() : filter(path => !path.endsWith('.spec.ts')),
+    options.spec === 'true'
+      ? noop()
+      : filter(path => !path.endsWith('.spec.ts')),
     template({
       ...strings,
       ...options,

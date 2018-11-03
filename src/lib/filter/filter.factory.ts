@@ -1,15 +1,15 @@
 import { join, normalize, Path, strings } from '@angular-devkit/core';
 import {
   apply,
+  filter,
   mergeWith,
   move,
+  noop,
   Rule,
   SchematicsException,
   Source,
   template,
   url,
-  filter,
-  noop,
 } from '@angular-devkit/schematics';
 import { Location, NameParser } from '../../utils/name.parser';
 import { DEFAULT_PATH_NAME } from '../defaults';
@@ -45,7 +45,9 @@ function transform(options: FilterOptions): FilterOptions {
 
 function generate(options: FilterOptions): Source {
   return apply(url(join('./files' as Path, options.language)), [
-    options.spec ? noop() : filter(path => !path.endsWith('.spec.ts')),
+    options.spec === 'true'
+      ? noop()
+      : filter(path => !path.endsWith('.spec.ts')),
     template({
       ...strings,
       ...options,

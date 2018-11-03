@@ -20,7 +20,7 @@ export interface MiddlewareOptions {
   /**
    * Specifies if a spec file is generated.
    */
-  spec?: boolean;
+  spec?: 'true' | 'false';
   /**
    * Flag to indicate if a directory is created.
    */

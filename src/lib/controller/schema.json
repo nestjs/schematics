@@ -26,7 +26,6 @@
       "description": "Nest controller source root directory."
     },
     "skipImport": {
-      "type": "boolean",
       "description": "Flag to skip the module import.",
       "default": false
     },
@@ -35,12 +34,10 @@
       "description": "Allows specification of the declaring module."
     },
     "flat": {
-      "type": "boolean",
       "default": false,
       "description": "Flag to indicate if a directory is created."
     },
     "spec": {
-      "type": "boolean",
       "default": true,
       "description": "Specifies if a spec file is generated."
     }

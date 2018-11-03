@@ -3,17 +3,18 @@ import {
   apply,
   branchAndMerge,
   chain,
+  filter,
   mergeWith,
   move,
+  noop,
   Rule,
   SchematicContext,
   SchematicsException,
   template,
   Tree,
   url,
-  noop,
-  filter,
 } from '@angular-devkit/schematics';
+import { isNullOrUndefined } from 'util';
 import {
   DeclarationOptions,
   ModuleDeclarator,
@@ -22,7 +23,6 @@ import { ModuleFinder } from '../../utils/module.finder';
 import { Location, NameParser } from '../../utils/name.parser';
 import { DEFAULT_PATH_NAME } from '../defaults';
 import { ServiceOptions } from './service.schema';
-import { isNullOrUndefined } from 'util';
 
 export function main(options: ServiceOptions): Rule {
   options = transform(options);
@@ -62,7 +62,9 @@ function transform(source: ServiceOptions): ServiceOptions {
 
 function generate(options: ServiceOptions) {
   return apply(url(join('./files' as Path, options.language)), [
-    options.spec ? noop() : filter(path => !path.endsWith('.spec.ts')),
+    options.spec === 'true'
+      ? noop()
+      : filter(path => !path.endsWith('.spec.ts')),
     template({
       ...strings,
       ...options,

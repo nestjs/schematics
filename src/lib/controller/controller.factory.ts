@@ -60,7 +60,9 @@ function transform(source: ControllerOptions): ControllerOptions {
 
 function generate(options: ControllerOptions) {
   return apply(url(join('./files' as Path, options.language)), [
-    options.spec ? noop() : filter(path => !path.endsWith('.spec.ts')),
+    options.spec === 'true'
+      ? noop()
+      : filter(path => !path.endsWith('.spec.ts')),
     template({
       ...strings,
       ...options,
