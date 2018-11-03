@@ -1,8 +1,8 @@
-import { ArgumentMetadata, Pipe, PipeTransform } from '@nestjs/common';
+import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 
-@Pipe()
+@Injectable()
 export class <%= classify(name) %>Pipe implements PipeTransform {
-  async transform(value: any, metadata: ArgumentMetadata) {
+  transform(value: any, metadata: ArgumentMetadata) {
     return value;
   }
 }

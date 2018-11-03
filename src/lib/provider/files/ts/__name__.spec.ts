@@ -3,6 +3,7 @@ import { <%= classify(name) %> } from './<%= name %>';
 
 describe('<%= classify(name) %>', () => {
   let provider: <%= classify(name) %>;
+  
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [<%= classify(name) %>],

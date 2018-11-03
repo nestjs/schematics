@@ -18,6 +18,7 @@ describe('Controller Factory', () => {
       name: 'foo',
       skipImport: true,
       spec: false,
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('controller', options);
     const files: string[] = tree.files;

@@ -17,6 +17,7 @@ describe('Service Factory', () => {
     const options: ServiceOptions = {
       name: 'foo',
       skipImport: true,
+      flat: true,
     };
     const tree: UnitTestTree = runner.runSchematic('service', options);
     const files: string[] = tree.files;
@@ -37,6 +38,7 @@ describe('Service Factory', () => {
     const options: ServiceOptions = {
       name: 'bar/foo',
       skipImport: true,
+      flat: true,
     };
     const tree: UnitTestTree = runner.runSchematic('service', options);
     const files: string[] = tree.files;
@@ -58,6 +60,7 @@ describe('Service Factory', () => {
       name: 'foo',
       path: 'bar',
       skipImport: true,
+      flat: true,
     };
     const tree: UnitTestTree = runner.runSchematic('service', options);
     const files: string[] = tree.files;
@@ -78,6 +81,7 @@ describe('Service Factory', () => {
     const options: ServiceOptions = {
       name: 'fooBar',
       skipImport: true,
+      flat: true,
     };
     const tree: UnitTestTree = runner.runSchematic('service', options);
     const files: string[] = tree.files;
@@ -95,6 +99,7 @@ describe('Service Factory', () => {
     const options: ServiceOptions = {
       name: 'barBaz/foo',
       skipImport: true,
+      flat: true,
     };
     const tree: UnitTestTree = runner.runSchematic('service', options);
     const files: string[] = tree.files;
@@ -116,6 +121,7 @@ describe('Service Factory', () => {
       name: 'foo',
       skipImport: true,
       language: 'js',
+      flat: true,
     };
     const tree: UnitTestTree = runner.runSchematic('service', options);
     const files: string[] = tree.files;
@@ -139,6 +145,7 @@ describe('Service Factory', () => {
     let tree: UnitTestTree = runner.runSchematic('application', app);
     const options: ServiceOptions = {
       name: 'foo',
+      flat: true,
     };
     tree = runner.runSchematic('service', options, tree);
     expect(tree.readContent(normalize('/src/app.module.ts'))).toEqual(
@@ -167,6 +174,7 @@ describe('Service Factory', () => {
     const options: ServiceOptions = {
       name: 'foo',
       path: 'foo',
+      flat: true,
     };
     tree = runner.runSchematic('service', options, tree);
     expect(tree.readContent(normalize('/src/foo/foo.module.ts'))).toEqual(

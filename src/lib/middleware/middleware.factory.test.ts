@@ -13,6 +13,7 @@ describe('Middleware Factory', () => {
   it('should manage name only', () => {
     const options: MiddlewareOptions = {
       name: 'foo',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
@@ -25,9 +26,7 @@ describe('Middleware Factory', () => {
         '@Injectable()\n' +
         'export class FooMiddleware implements NestMiddleware {\n' +
         '  resolve(...args: any[]): MiddlewareFunction {\n' +
-        '    return (req, res, next) => {\n' +
-        '      next();\n' +
-        '    };\n' +
+        '    return (req, res, next) => next();\n' +
         '  }\n' +
         '}\n',
     );
@@ -35,6 +34,7 @@ describe('Middleware Factory', () => {
   it('should manage name as a path', () => {
     const options: MiddlewareOptions = {
       name: 'bar/foo',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
@@ -47,9 +47,7 @@ describe('Middleware Factory', () => {
         '@Injectable()\n' +
         'export class FooMiddleware implements NestMiddleware {\n' +
         '  resolve(...args: any[]): MiddlewareFunction {\n' +
-        '    return (req, res, next) => {\n' +
-        '      next();\n' +
-        '    };\n' +
+        '    return (req, res, next) => next();\n' +
         '  }\n' +
         '}\n',
     );
@@ -58,6 +56,7 @@ describe('Middleware Factory', () => {
     const options: MiddlewareOptions = {
       name: 'foo',
       path: 'baz',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
@@ -70,9 +69,7 @@ describe('Middleware Factory', () => {
         '@Injectable()\n' +
         'export class FooMiddleware implements NestMiddleware {\n' +
         '  resolve(...args: any[]): MiddlewareFunction {\n' +
-        '    return (req, res, next) => {\n' +
-        '      next();\n' +
-        '    };\n' +
+        '    return (req, res, next) => next();\n' +
         '  }\n' +
         '}\n',
     );
@@ -80,6 +77,7 @@ describe('Middleware Factory', () => {
   it('should manage name to dasherize', () => {
     const options: MiddlewareOptions = {
       name: 'fooBar',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
@@ -92,9 +90,7 @@ describe('Middleware Factory', () => {
         '@Injectable()\n' +
         'export class FooBarMiddleware implements NestMiddleware {\n' +
         '  resolve(...args: any[]): MiddlewareFunction {\n' +
-        '    return (req, res, next) => {\n' +
-        '      next();\n' +
-        '    };\n' +
+        '    return (req, res, next) => next();\n' +
         '  }\n' +
         '}\n',
     );
@@ -102,6 +98,7 @@ describe('Middleware Factory', () => {
   it('should manage path to dasherize', () => {
     const options: MiddlewareOptions = {
       name: 'barBaz/foo',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
@@ -114,9 +111,7 @@ describe('Middleware Factory', () => {
         '@Injectable()\n' +
         'export class FooMiddleware implements NestMiddleware {\n' +
         '  resolve(...args: any[]): MiddlewareFunction {\n' +
-        '    return (req, res, next) => {\n' +
-        '      next();\n' +
-        '    };\n' +
+        '    return (req, res, next) => next();\n' +
         '  }\n' +
         '}\n',
     );
@@ -125,6 +120,7 @@ describe('Middleware Factory', () => {
     const options: MiddlewareOptions = {
       name: 'foo',
       language: 'js',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
@@ -137,9 +133,7 @@ describe('Middleware Factory', () => {
         '@Injectable()\n' +
         'export class FooMiddleware {\n' +
         '  resolve(...args) {\n' +
-        '    return (req, res, next) => {\n' +
-        '      next();\n' +
-        '    };\n' +
+        '    return (req, res, next) => next();\n' +
         '  }\n' +
         '}\n',
     );

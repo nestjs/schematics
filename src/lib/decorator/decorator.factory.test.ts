@@ -13,11 +13,16 @@ describe('Decorator Factory', () => {
   it('should manage name only', () => {
     const options: DecoratorOptions = {
       name: 'foo',
+      spec: true,
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('decorator', options);
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/src/foo/foo.decorator.ts'),
+    ).not.toBeUndefined();
+    expect(
+      files.find(filename => filename === '/src/foo/foo.decorator.spec.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.decorator.ts')).toEqual(
       "import { ReflectMetadata } from '@nestjs/common';\n" +
@@ -28,6 +33,7 @@ describe('Decorator Factory', () => {
   it('should manage name as a path', () => {
     const options: DecoratorOptions = {
       name: 'bar/foo',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('decorator', options);
     const files: string[] = tree.files;
@@ -44,6 +50,7 @@ describe('Decorator Factory', () => {
     const options: DecoratorOptions = {
       name: 'foo',
       path: 'baz',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('decorator', options);
     const files: string[] = tree.files;
@@ -59,6 +66,7 @@ describe('Decorator Factory', () => {
   it('should manage name to dasherize', () => {
     const options: DecoratorOptions = {
       name: 'fooBar',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('decorator', options);
     const files: string[] = tree.files;
@@ -74,6 +82,7 @@ describe('Decorator Factory', () => {
   it('should manage path to dasherize', () => {
     const options: DecoratorOptions = {
       name: 'barBaz/foo',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('decorator', options);
     const files: string[] = tree.files;
@@ -90,6 +99,7 @@ describe('Decorator Factory', () => {
     const options: DecoratorOptions = {
       name: 'foo',
       language: 'js',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('decorator', options);
     const files: string[] = tree.files;

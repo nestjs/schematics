@@ -48,6 +48,7 @@ function transform(source: ControllerOptions): ControllerOptions {
 
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
+  target.path = strings.dasherize(location.path);
   target.language =
     target.language !== undefined ? target.language : DEFAULT_LANGUAGE;
 
@@ -58,17 +59,13 @@ function transform(source: ControllerOptions): ControllerOptions {
 }
 
 function generate(options: ControllerOptions) {
-  const movePath = options.flat
-    ? options.path
-    : join(options.path as Path, options.name);
-
   return apply(url(join('./files' as Path, options.language)), [
     options.spec ? noop() : filter(path => !path.endsWith('.spec.ts')),
     template({
       ...strings,
       ...options,
     }),
-    move(movePath),
+    move(options.path),
   ]);
 }
 

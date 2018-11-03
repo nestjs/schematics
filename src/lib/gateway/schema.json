@@ -24,6 +24,16 @@
     "sourceRoot": {
       "type": "string",
       "description": "Nest decorator source root directory."
+    },
+    "flat": {
+      "type": "boolean",
+      "default": true,
+      "description": "Flag to indicate if a directory is created."
+    },
+    "spec": {
+      "type": "boolean",
+      "default": true,
+      "description": "Specifies if a spec file is generated."
     }
   },
   "required": ["name"]

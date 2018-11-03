@@ -13,6 +13,7 @@ describe('Pipe Factory', () => {
   it('should manage name only', () => {
     const options: PipeOptions = {
       name: 'foo',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('pipe', options);
     const files: string[] = tree.files;
@@ -20,11 +21,11 @@ describe('Pipe Factory', () => {
       files.find(filename => filename === '/src/foo/foo.pipe.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.pipe.ts')).toEqual(
-      "import { ArgumentMetadata, Pipe, PipeTransform } from '@nestjs/common';\n" +
+      "import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';\n" +
         '\n' +
-        '@Pipe()\n' +
+        '@Injectable()\n' +
         'export class FooPipe implements PipeTransform {\n' +
-        '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
+        '  transform(value: any, metadata: ArgumentMetadata) {\n' +
         '    return value;\n' +
         '  }\n' +
         '}\n',
@@ -33,6 +34,7 @@ describe('Pipe Factory', () => {
   it('should manage name as a path', () => {
     const options: PipeOptions = {
       name: 'bar/foo',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('pipe', options);
     const files: string[] = tree.files;
@@ -40,11 +42,11 @@ describe('Pipe Factory', () => {
       files.find(filename => filename === '/src/bar/foo/foo.pipe.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/src/bar/foo/foo.pipe.ts')).toEqual(
-      "import { ArgumentMetadata, Pipe, PipeTransform } from '@nestjs/common';\n" +
+      "import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';\n" +
         '\n' +
-        '@Pipe()\n' +
+        '@Injectable()\n' +
         'export class FooPipe implements PipeTransform {\n' +
-        '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
+        '  transform(value: any, metadata: ArgumentMetadata) {\n' +
         '    return value;\n' +
         '  }\n' +
         '}\n',
@@ -54,6 +56,7 @@ describe('Pipe Factory', () => {
     const options: PipeOptions = {
       name: 'foo',
       path: 'baz',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('pipe', options);
     const files: string[] = tree.files;
@@ -61,11 +64,11 @@ describe('Pipe Factory', () => {
       files.find(filename => filename === '/src/baz/foo/foo.pipe.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/src/baz/foo/foo.pipe.ts')).toEqual(
-      "import { ArgumentMetadata, Pipe, PipeTransform } from '@nestjs/common';\n" +
+      "import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';\n" +
         '\n' +
-        '@Pipe()\n' +
+        '@Injectable()\n' +
         'export class FooPipe implements PipeTransform {\n' +
-        '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
+        '  transform(value: any, metadata: ArgumentMetadata) {\n' +
         '    return value;\n' +
         '  }\n' +
         '}\n',
@@ -74,6 +77,7 @@ describe('Pipe Factory', () => {
   it('should manage name to dasherize', () => {
     const options: PipeOptions = {
       name: 'fooBar',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('pipe', options);
     const files: string[] = tree.files;
@@ -81,11 +85,11 @@ describe('Pipe Factory', () => {
       files.find(filename => filename === '/src/foo-bar/foo-bar.pipe.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/src/foo-bar/foo-bar.pipe.ts')).toEqual(
-      "import { ArgumentMetadata, Pipe, PipeTransform } from '@nestjs/common';\n" +
+      "import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';\n" +
         '\n' +
-        '@Pipe()\n' +
+        '@Injectable()\n' +
         'export class FooBarPipe implements PipeTransform {\n' +
-        '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
+        '  transform(value: any, metadata: ArgumentMetadata) {\n' +
         '    return value;\n' +
         '  }\n' +
         '}\n',
@@ -94,6 +98,7 @@ describe('Pipe Factory', () => {
   it('should manage path to dasherize', () => {
     const options: PipeOptions = {
       name: 'barBaz/foo',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('pipe', options);
     const files: string[] = tree.files;
@@ -101,11 +106,11 @@ describe('Pipe Factory', () => {
       files.find(filename => filename === '/src/bar-baz/foo/foo.pipe.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/src/bar-baz/foo/foo.pipe.ts')).toEqual(
-      "import { ArgumentMetadata, Pipe, PipeTransform } from '@nestjs/common';\n" +
+      "import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';\n" +
         '\n' +
-        '@Pipe()\n' +
+        '@Injectable()\n' +
         'export class FooPipe implements PipeTransform {\n' +
-        '  async transform(value: any, metadata: ArgumentMetadata) {\n' +
+        '  transform(value: any, metadata: ArgumentMetadata) {\n' +
         '    return value;\n' +
         '  }\n' +
         '}\n',
@@ -115,6 +120,7 @@ describe('Pipe Factory', () => {
     const options: PipeOptions = {
       name: 'foo',
       language: 'js',
+      flat: false,
     };
     const tree: UnitTestTree = runner.runSchematic('pipe', options);
     const files: string[] = tree.files;
@@ -122,11 +128,11 @@ describe('Pipe Factory', () => {
       files.find(filename => filename === '/src/foo/foo.pipe.js'),
     ).not.toBeUndefined();
     expect(tree.readContent('/src/foo/foo.pipe.js')).toEqual(
-      "import { Pipe } from '@nestjs/common';\n" +
+      "import { Injectable } from '@nestjs/common';\n" +
         '\n' +
-        '@Pipe()\n' +
+        '@Injectable()\n' +
         'export class FooPipe {\n' +
-        '  async transform(value, metadata) {\n' +
+        '  transform(value, metadata) {\n' +
         '    return value;\n' +
         '  }\n' +
         '}\n',

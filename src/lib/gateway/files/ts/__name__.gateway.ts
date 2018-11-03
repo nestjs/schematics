@@ -1,10 +1,9 @@
-import { SubscribeMessage, WebSocketGateway, WsResponse } from '@nestjs/websockets';
-import { Observable, of } from 'rxjs';
+import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 
 @WebSocketGateway()
 export class <%= classify(name) %>Gateway {
   @SubscribeMessage('message')
-  onEvent(client: any, payload: any): Observable<WsResponse<any>> {
-    return of({});
+  handleMessage(client: any, payload: any): string {
+    return 'Hello world!';
   }
 }

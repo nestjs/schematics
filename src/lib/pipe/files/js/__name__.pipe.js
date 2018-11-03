@@ -1,8 +1,8 @@
-import { Pipe } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
-@Pipe()
+@Injectable()
 export class <%= classify(name) %>Pipe {
-  async transform(value, metadata) {
+  transform(value, metadata) {
     return value;
   }
 }

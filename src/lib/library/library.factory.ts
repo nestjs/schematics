@@ -7,6 +7,8 @@ import {
 } from '@angular-devkit/core';
 import {
   apply,
+  branchAndMerge,
+  chain,
   mergeWith,
   move,
   Rule,
@@ -31,7 +33,11 @@ interface TsConfigPartialType {
 
 export function main(options: LibraryOptions): Rule {
   options = transform(options);
-  return mergeWith(generate(options));
+  return chain([
+    updateTsConfig(options.name, options.path),
+    addLibraryToCliOptions(options.path, options.name),
+    branchAndMerge(mergeWith(generate(options))),
+  ]);
 }
 
 function transform(options: LibraryOptions): LibraryOptions {
@@ -68,12 +74,12 @@ function updateJsonFile<T>(
   return host;
 }
 
-function updateTsConfig(packageName: string, distRoot: string) {
+function updateTsConfig(packageName: string, root: string) {
   return (host: Tree) => {
     if (!host.exists('tsconfig.json')) {
       return host;
     }
-
+    const distRoot = join(root as Path, packageName, 'src');
     return updateJsonFile(
       host,
       'tsconfig.json',
@@ -89,7 +95,6 @@ function updateTsConfig(packageName: string, distRoot: string) {
         }
         tsconfig.compilerOptions.paths[packageName].push(distRoot);
 
-        // deep import & secondary entrypoint support
         const deepPackagePath = packageName + '/*';
         if (!tsconfig.compilerOptions.paths[deepPackagePath]) {
           tsconfig.compilerOptions.paths[deepPackagePath] = [];
@@ -137,8 +142,6 @@ function generate(options: LibraryOptions): Source {
       ...strings,
       ...options,
     }),
-    updateTsConfig(options.name, path),
-    addLibraryToCliOptions(path, options.name),
     move(path),
   ]);
 }

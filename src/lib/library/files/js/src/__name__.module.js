@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { <%= classify(name) %>Service } from './__name__.service';
+import { <%= classify(name) %>Service } from './<%= name %>.service';
 
 @Module({
   providers: [<%= classify(name) %>Service],

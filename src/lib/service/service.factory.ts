@@ -11,6 +11,8 @@ import {
   template,
   Tree,
   url,
+  noop,
+  filter,
 } from '@angular-devkit/schematics';
 import {
   DeclarationOptions,
@@ -51,11 +53,16 @@ function transform(source: ServiceOptions): ServiceOptions {
   target.name = strings.dasherize(location.name);
   target.path = strings.dasherize(location.path);
   target.language = target.language !== undefined ? target.language : 'ts';
+
+  target.path = target.flat
+    ? target.path
+    : join(target.path as Path, target.name);
   return target;
 }
 
 function generate(options: ServiceOptions) {
   return apply(url(join('./files' as Path, options.language)), [
+    options.spec ? noop() : filter(path => !path.endsWith('.spec.ts')),
     template({
       ...strings,
       ...options,

@@ -3,6 +3,7 @@ import { <%= classify(name) %>Controller } from './<%= name %>.controller';
 
 describe('<%= classify(name) %> Controller', () => {
   let module: TestingModule;
+  
   beforeAll(async () => {
     module = await Test.createTestingModule({
       controllers: [<%= classify(name) %>Controller],
