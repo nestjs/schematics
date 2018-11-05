@@ -39,6 +39,7 @@ COPY src/collection.json collection.json
 COPY LICENSE LICENSE
 COPY README.md README.md
 
+RUN ls
 RUN npm link
 WORKDIR /workspace
 VOLUME [ "/workspace" ]
