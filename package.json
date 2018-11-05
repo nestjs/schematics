@@ -1,7 +1,7 @@
 {
   "name": "@nestjs/schematics",
-  "version": "5.8.0-next",
-  "description": "Nestjs schematics project for @nestjs/cli",
+  "version": "6.0.0",
+  "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "main": "index.js",
   "publishConfig": {
     "access": "public"
