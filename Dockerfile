@@ -2,12 +2,14 @@ FROM node:carbon-alpine as dev-dependencies
 WORKDIR /nestjs/schematics
 COPY package.json package.json
 COPY package-lock.json package-lock.json
+COPY .npmignore .npmignore
 RUN npm install
 
 FROM node:carbon-alpine as prod-dependencies
 WORKDIR /nestjs/schematics
 COPY package.json package.json
 COPY package-lock.json package-lock.json
+COPY .npmignore .npmignore
 RUN npm install --production
 
 FROM node:carbon-alpine as linter
@@ -38,6 +40,7 @@ COPY --from=builder /nestjs/schematics/dist .
 COPY src/collection.json collection.json
 COPY LICENSE LICENSE
 COPY README.md README.md
+COPY .npmignore .npmignore
 COPY src .
 
 RUN ls
