@@ -21,10 +21,8 @@ tsconfig.json
 tslint.json
 
 # source
-**/*.ts
-*.ts
+**/*.test.ts
 
 # definitions
-!**/files/**.ts
 !**/*.d.ts
 !*.d.ts
