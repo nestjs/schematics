@@ -60,9 +60,7 @@ function transform(options: ProviderOptions): ProviderOptions {
 
 function generate(options: ProviderOptions) {
   return apply(url(join('./files' as Path, options.language)), [
-    options.spec === 'true'
-      ? noop()
-      : filter(path => !path.endsWith('.spec.ts')),
+    options.spec ? noop() : filter(path => !path.endsWith('.spec.ts')),
     template({
       ...strings,
       ...options,
