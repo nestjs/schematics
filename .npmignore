@@ -19,3 +19,11 @@ src/
 test/
 tsconfig.json
 tslint.json
+
+# source
+**/*.ts
+*.ts
+
+# definitions
+!**/*.d.ts
+!*.d.ts

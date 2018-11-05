@@ -7,8 +7,7 @@
     "access": "public"
   },
   "scripts": {
-    "move": "gulp move",
-    "build": "rm -rf dist && tsc --project tsconfig.json && npm run move",
+    "build": "rm -rf dist && tsc --project tsconfig.json",
     "lint:src": "tslint --project tsconfig.json",
     "lint:test": "tslint --project test/tsconfig.json",
     "test": "jest --no-cache --config test/jest-config.json",
