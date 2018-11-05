@@ -51,6 +51,6 @@ Learn more in the [official documentation](https://docs.nestjs.com/).
 
 ## Stay in touch
 
-* CLI Author - [Thomas Ricart](https://github.com/ThomRick)
+* CLI Author - [Thomas Ricart](https://github.com/ThomRick) and [Kamil Mysliwiec](https://github.com/kamilmysliwiec)
 * Website - [https://nestjs.com](https://nestjs.com/)
 * Twitter - [@nestframework](https://twitter.com/nestframework)

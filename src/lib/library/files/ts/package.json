@@ -1,0 +1,8 @@
+{
+  "name": "<%= name %>",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@nestjs/common": "^5.4.0",
+    "@nestjs/core": "^5.4.0"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "SchematicsNestModule",
+  "title": "Nest Module Options Schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the module.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    },
+    "path": {
+      "type": "string",
+      "format": "path",
+      "description": "The path to create the module."
+    },
+    "module": {
+      "type": "string",
+      "format": "path",
+      "description": "The path to import the module."
+    },
+    "language": {
+      "type": "string",
+      "description": "Nest module language (ts/js)."
+    },
+    "sourceRoot": {
+      "type": "string",
+      "description": "Nest module source root directory."
+    },
+    "skipImport": {
+      "description": "Flag to skip the module import.",
+      "default": false
+    }
+  },
+  "required": ["name"]
+}
