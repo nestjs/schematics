@@ -38,6 +38,7 @@ COPY --from=builder /nestjs/schematics/dist .
 COPY src/collection.json collection.json
 COPY LICENSE LICENSE
 COPY README.md README.md
+COPY src .
 
 RUN ls
 RUN npm link
