@@ -18,10 +18,6 @@ export interface DecoratorOptions {
    */
   sourceRoot?: string;
   /**
-   * Specifies if a spec file is generated.
-   */
-  spec?: 'true' | 'false';
-  /**
    * Flag to indicate if a directory is created.
    */
   flat?: boolean;

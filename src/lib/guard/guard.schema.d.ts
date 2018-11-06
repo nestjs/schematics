@@ -20,7 +20,7 @@ export interface GuardOptions {
   /**
    * Specifies if a spec file is generated.
    */
-  spec?: 'true' | 'false';
+  spec?: boolean;
   /**
    * Flag to indicate if a directory is created.
    */
