@@ -17,12 +17,10 @@ Makefile
 node_modules/
 src/
 test/
-tsconfig.json
-tslint.json
 
-# source
+# tests
 **/*.test.ts
 
-# definitions
+# add definitions
 !**/*.d.ts
 !*.d.ts
