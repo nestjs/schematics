@@ -110,8 +110,8 @@ function addLibraryToCliOptions(
   projectName: string,
 ): Rule {
   const project = {
-    root: projectRoot,
-    sourceRoot: `${projectRoot}/src`,
+    root: join(projectRoot as Path, projectName),
+    sourceRoot: join(projectRoot as Path, projectName, 'src'),
   };
   return (host: Tree) => {
     const nestCliFileExists = host.exists('nest-cli.json');
