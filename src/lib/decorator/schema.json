@@ -28,10 +28,6 @@
     "flat": {
       "default": true,
       "description": "Flag to indicate if a directory is created."
-    },
-    "spec": {
-      "default": false,
-      "description": "Specifies if a spec file is generated."
     }
   },
   "required": ["name"]

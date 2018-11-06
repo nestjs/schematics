@@ -5,11 +5,9 @@
 
 .dockerignore
 Dockerfile
-
 Makefile
 
 .npmrc
-
 .nyc_output/
 coverage/
 
