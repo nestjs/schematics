@@ -1,8 +1,5 @@
 .idea/
-
 .git/
-.gitignore
-
 .dockerignore
 Dockerfile
 Makefile
