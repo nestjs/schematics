@@ -1,7 +1,7 @@
 .idea/
 .DS_Store
 
-.git/
+.git
 .dockerignore
 Dockerfile
 
@@ -12,7 +12,6 @@ Dockerfile
 coverage/
 Makefile
 node_modules/
-src/h
 test/
 
 # tests
@@ -21,3 +20,5 @@ test/
 # add definitions
 !**/*.d.ts
 !*.d.ts
+!.gitignore
+!**/.gitignore
