@@ -2,8 +2,6 @@
 .DS_Store
 
 .git/
-/.gitignore
-
 .dockerignore
 Dockerfile
 
@@ -23,6 +21,3 @@ test/
 # add definitions
 !**/*.d.ts
 !*.d.ts
-
-# gitignore in templates
-!**/.gitignore
