@@ -20,5 +20,3 @@ test/
 # add definitions
 !**/*.d.ts
 !*.d.ts
-!.gitignore
-!**/.gitignore
