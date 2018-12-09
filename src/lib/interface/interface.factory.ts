@@ -2,10 +2,8 @@ import { join, Path, strings } from '@angular-devkit/core';
 import {
   apply,
   chain,
-  filter,
   mergeWith,
   move,
-  noop,
   Rule,
   SchematicContext,
   SchematicsException,
@@ -15,22 +13,21 @@ import {
 } from '@angular-devkit/schematics';
 import { Location, NameParser } from '../../utils/name.parser';
 import { mergeSourceRoot } from '../../utils/source-root.helpers';
-import { MiddlewareOptions } from './middleware.schema';
+import { InterfaceOptions } from './interface.schema';
 
-export function main(options: MiddlewareOptions): Rule {
+export function main(options: InterfaceOptions): Rule {
   options = transform(options);
   return chain([mergeSourceRoot(options), mergeWith(generate(options))]);
 }
 
-function transform(options: MiddlewareOptions): MiddlewareOptions {
-  const target: MiddlewareOptions = Object.assign({}, options);
+function transform(options: InterfaceOptions): InterfaceOptions {
+  const target: InterfaceOptions = Object.assign({}, options);
   if (!target.name) {
     throw new SchematicsException('Option (name) is required.');
   }
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
   target.path = strings.dasherize(location.path);
-  target.language = target.language !== undefined ? target.language : 'ts';
 
   target.path = target.flat
     ? target.path
@@ -38,10 +35,9 @@ function transform(options: MiddlewareOptions): MiddlewareOptions {
   return target;
 }
 
-function generate(options: MiddlewareOptions): Source {
+function generate(options: InterfaceOptions): Source {
   return (context: SchematicContext) =>
-    apply(url(join('./files' as Path, options.language)), [
-      options.spec ? noop() : filter(path => !path.endsWith('.spec.ts')),
+    apply(url('./files'), [
       template({
         ...strings,
         ...options,

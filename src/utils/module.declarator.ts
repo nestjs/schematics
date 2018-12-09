@@ -15,7 +15,8 @@ export interface DeclarationOptions {
 export class ModuleDeclarator {
   constructor(
     private imports: ModuleImportDeclarator = new ModuleImportDeclarator(),
-    private metadata: ModuleMetadataDeclarator = new ModuleMetadataDeclarator()) {}
+    private metadata: ModuleMetadataDeclarator = new ModuleMetadataDeclarator(),
+  ) {}
 
   public declare(content: string, options: DeclarationOptions): string {
     options = this.computeSymbol(options);
@@ -25,7 +26,7 @@ export class ModuleDeclarator {
   }
 
   private computeSymbol(options: DeclarationOptions): DeclarationOptions {
-    const target: DeclarationOptions = Object.assign({}, options);
+    const target = Object.assign({}, options);
     if (options.type !== undefined) {
       target.symbol = classify(options.name).concat(capitalize(options.type));
     } else {

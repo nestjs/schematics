@@ -120,7 +120,6 @@ function addLibraryToCliOptions(
     if (!nestCliFileExists && !nestFileExists) {
       return host;
     }
-
     return updateJsonFile(
       host,
       nestCliFileExists ? 'nest-cli.json' : 'nest.json',

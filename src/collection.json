@@ -41,6 +41,11 @@
       "description": "Create a Nest interceptor.",
       "schema": "./lib/interceptor/schema.json"
     },
+    "interface": {
+      "factory": "./lib/interface/interface.factory#main",
+      "description": "Create a Nest interface.",
+      "schema": "./lib/interface/schema.json"
+    },
     "middleware": {
       "factory": "./lib/middleware/middleware.factory#main",
       "description": "Create a Nest middleware.",

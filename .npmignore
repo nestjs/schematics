@@ -1,4 +1,5 @@
 .idea/
+.DS_Store
 
 .git/
 /.gitignore
@@ -11,11 +12,9 @@ Dockerfile
 
 .nyc_output/
 coverage/
-
 Makefile
-
 node_modules/
-src/
+src/h
 test/
 
 # tests
@@ -24,3 +23,6 @@ test/
 # add definitions
 !**/*.d.ts
 !*.d.ts
+
+# gitignore in templates
+!**/.gitignore

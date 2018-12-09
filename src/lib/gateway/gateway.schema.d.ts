@@ -25,4 +25,12 @@ export interface GatewayOptions {
    * Flag to indicate if a directory is created.
    */
   flat?: boolean;
+  /**
+   * Metadata name affected by declaration insertion.
+   */
+  metadata?: string;
+  /**
+   * Nest element type name
+   */
+  type?: string;
 }

@@ -17,15 +17,15 @@ describe('Library Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('library', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
-      '/projects/project/.gitignore',
-      '/projects/project/package.json',
-      '/projects/project/tsconfig.json',
-      '/projects/project/tsconfig.spec.json',
-      '/projects/project/tslint.json',
-      '/projects/project/src/index.ts',
-      '/projects/project/src/project.module.ts',
-      '/projects/project/src/project.service.spec.ts',
-      '/projects/project/src/project.service.ts',
+      '/libs/project/.gitignore',
+      '/libs/project/package.json',
+      '/libs/project/tsconfig.json',
+      '/libs/project/tsconfig.spec.json',
+      '/libs/project/tslint.json',
+      '/libs/project/src/index.ts',
+      '/libs/project/src/project.module.ts',
+      '/libs/project/src/project.service.spec.ts',
+      '/libs/project/src/project.service.ts',
     ]);
   });
   it('should manage name to dasherize', () => {
@@ -35,15 +35,15 @@ describe('Library Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('library', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
-      '/projects/awesome-project/.gitignore',
-      '/projects/awesome-project/package.json',
-      '/projects/awesome-project/tsconfig.json',
-      '/projects/awesome-project/tsconfig.spec.json',
-      '/projects/awesome-project/tslint.json',
-      '/projects/awesome-project/src/index.ts',
-      '/projects/awesome-project/src/awesome-project.module.ts',
-      '/projects/awesome-project/src/awesome-project.service.spec.ts',
-      '/projects/awesome-project/src/awesome-project.service.ts',
+      '/libs/awesome-project/.gitignore',
+      '/libs/awesome-project/package.json',
+      '/libs/awesome-project/tsconfig.json',
+      '/libs/awesome-project/tsconfig.spec.json',
+      '/libs/awesome-project/tslint.json',
+      '/libs/awesome-project/src/index.ts',
+      '/libs/awesome-project/src/awesome-project.module.ts',
+      '/libs/awesome-project/src/awesome-project.service.spec.ts',
+      '/libs/awesome-project/src/awesome-project.service.ts',
     ]);
   });
   it('should manage javascript files', () => {
@@ -54,14 +54,14 @@ describe('Library Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('library', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
-      '/projects/project/.babelrc',
-      '/projects/project/.gitignore',
-      '/projects/project/jsconfig.json',
-      '/projects/project/package.json',
-       '/projects/project/src/index.js',
-      '/projects/project/src/project.module.js',
-      '/projects/project/src/project.service.js',
-      '/projects/project/src/project.service.spec.js',
+      '/libs/project/.babelrc',
+      '/libs/project/.gitignore',
+      '/libs/project/jsconfig.json',
+      '/libs/project/package.json',
+      '/libs/project/src/index.js',
+      '/libs/project/src/project.module.js',
+      '/libs/project/src/project.service.js',
+      '/libs/project/src/project.service.spec.js',
     ]);
   });
 });

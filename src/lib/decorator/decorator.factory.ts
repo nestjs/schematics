@@ -1,21 +1,23 @@
-import { join, normalize, Path, strings } from '@angular-devkit/core';
+import { join, Path, strings } from '@angular-devkit/core';
 import {
   apply,
+  chain,
   mergeWith,
   move,
   Rule,
+  SchematicContext,
   SchematicsException,
   Source,
   template,
   url,
 } from '@angular-devkit/schematics';
 import { Location, NameParser } from '../../utils/name.parser';
-import { DEFAULT_PATH_NAME } from '../defaults';
+import { mergeSourceRoot } from '../../utils/source-root.helpers';
 import { DecoratorOptions } from './decorator.schema';
 
 export function main(options: DecoratorOptions): Rule {
   options = transform(options);
-  return mergeWith(generate(options));
+  return chain([mergeSourceRoot(options), mergeWith(generate(options))]);
 }
 
 function transform(options: DecoratorOptions): DecoratorOptions {
@@ -23,13 +25,6 @@ function transform(options: DecoratorOptions): DecoratorOptions {
   if (!target.name) {
     throw new SchematicsException('Option (name) is required.');
   }
-  const defaultSourceRoot =
-    options.sourceRoot !== undefined ? options.sourceRoot : DEFAULT_PATH_NAME;
-  target.path =
-    target.path !== undefined
-      ? join(normalize(defaultSourceRoot), target.path)
-      : normalize(defaultSourceRoot);
-
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
   target.path = strings.dasherize(location.path);
@@ -42,11 +37,12 @@ function transform(options: DecoratorOptions): DecoratorOptions {
 }
 
 function generate(options: DecoratorOptions): Source {
-  return apply(url(join('./files' as Path, options.language)), [
-    template({
-      ...strings,
-      ...options,
-    }),
-    move(options.path),
-  ]);
+  return (context: SchematicContext) =>
+    apply(url(join('./files' as Path, options.language)), [
+      template({
+        ...strings,
+        ...options,
+      }),
+      move(options.path),
+    ])(context);
 }

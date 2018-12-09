@@ -18,9 +18,9 @@ describe('Middleware Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/foo/foo.middleware.ts'),
+      files.find(filename => filename === '/foo/foo.middleware.ts'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/src/foo/foo.middleware.ts')).toEqual(
+    expect(tree.readContent('/foo/foo.middleware.ts')).toEqual(
       "import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';\n" +
         '\n' +
         '@Injectable()\n' +
@@ -39,9 +39,9 @@ describe('Middleware Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/bar/foo/foo.middleware.ts'),
+      files.find(filename => filename === '/bar/foo/foo.middleware.ts'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/src/bar/foo/foo.middleware.ts')).toEqual(
+    expect(tree.readContent('/bar/foo/foo.middleware.ts')).toEqual(
       "import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';\n" +
         '\n' +
         '@Injectable()\n' +
@@ -61,9 +61,9 @@ describe('Middleware Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/baz/foo/foo.middleware.ts'),
+      files.find(filename => filename === '/baz/foo/foo.middleware.ts'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/src/baz/foo/foo.middleware.ts')).toEqual(
+    expect(tree.readContent('/baz/foo/foo.middleware.ts')).toEqual(
       "import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';\n" +
         '\n' +
         '@Injectable()\n' +
@@ -82,9 +82,9 @@ describe('Middleware Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/foo-bar/foo-bar.middleware.ts'),
+      files.find(filename => filename === '/foo-bar/foo-bar.middleware.ts'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/src/foo-bar/foo-bar.middleware.ts')).toEqual(
+    expect(tree.readContent('/foo-bar/foo-bar.middleware.ts')).toEqual(
       "import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';\n" +
         '\n' +
         '@Injectable()\n' +
@@ -103,9 +103,9 @@ describe('Middleware Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/bar-baz/foo/foo.middleware.ts'),
+      files.find(filename => filename === '/bar-baz/foo/foo.middleware.ts'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/src/bar-baz/foo/foo.middleware.ts')).toEqual(
+    expect(tree.readContent('/bar-baz/foo/foo.middleware.ts')).toEqual(
       "import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';\n" +
         '\n' +
         '@Injectable()\n' +
@@ -125,9 +125,9 @@ describe('Middleware Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('middleware', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/foo/foo.middleware.js'),
+      files.find(filename => filename === '/foo/foo.middleware.js'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/src/foo/foo.middleware.js')).toEqual(
+    expect(tree.readContent('/foo/foo.middleware.js')).toEqual(
       "import { Injectable } from '@nestjs/common';\n" +
         '\n' +
         '@Injectable()\n' +

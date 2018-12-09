@@ -1,4 +1,4 @@
-import { join, normalize, Path, strings } from '@angular-devkit/core';
+import { join, Path, strings } from '@angular-devkit/core';
 import {
   apply,
   branchAndMerge,
@@ -19,7 +19,8 @@ import {
 } from '../../utils/module.declarator';
 import { ModuleFinder } from '../../utils/module.finder';
 import { Location, NameParser } from '../../utils/name.parser';
-import { DEFAULT_LANGUAGE, DEFAULT_PATH_NAME } from '../defaults';
+import { mergeSourceRoot } from '../../utils/source-root.helpers';
+import { DEFAULT_LANGUAGE } from '../defaults';
 import { ControllerOptions } from './controller.schema';
 
 const ELEMENT_METADATA = 'controllers';
@@ -29,22 +30,19 @@ export function main(options: ControllerOptions): Rule {
   options = transform(options);
   return (tree: Tree, context: SchematicContext) => {
     return branchAndMerge(
-      chain([addDeclarationToModule(options), mergeWith(generate(options))]),
+      chain([
+        mergeSourceRoot(options),
+        mergeWith(generate(options)),
+        addDeclarationToModule(options),
+      ]),
     )(tree, context);
   };
 }
 
 function transform(source: ControllerOptions): ControllerOptions {
   const target: ControllerOptions = Object.assign({}, source);
-  const defaultSourceRoot =
-    source.sourceRoot !== undefined ? source.sourceRoot : DEFAULT_PATH_NAME;
-
   target.metadata = ELEMENT_METADATA;
   target.type = ELEMENT_TYPE;
-  target.path =
-    target.path !== undefined
-      ? join(normalize(defaultSourceRoot), target.path)
-      : normalize(defaultSourceRoot);
 
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
@@ -59,14 +57,15 @@ function transform(source: ControllerOptions): ControllerOptions {
 }
 
 function generate(options: ControllerOptions) {
-  return apply(url(join('./files' as Path, options.language)), [
-    options.spec ? noop() : filter(path => !path.endsWith('.spec.ts')),
-    template({
-      ...strings,
-      ...options,
-    }),
-    move(options.path),
-  ]);
+  return (context: SchematicContext) =>
+    apply(url(join('./files' as Path, options.language)), [
+      options.spec ? noop() : filter(path => !path.endsWith('.spec.ts')),
+      template({
+        ...strings,
+        ...options,
+      }),
+      move(options.path),
+    ])(context);
 }
 
 function addDeclarationToModule(options: ControllerOptions): Rule {

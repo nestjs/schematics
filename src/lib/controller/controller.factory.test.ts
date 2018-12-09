@@ -24,12 +24,12 @@ describe('Controller Factory', () => {
     const files: string[] = tree.files;
 
     expect(
-      files.find(filename => filename === '/src/foo/foo.controller.ts'),
+      files.find(filename => filename === '/foo/foo.controller.ts'),
     ).toBeDefined();
     expect(
-      files.find(filename => filename === '/src/foo/foo.controller.spec.ts'),
+      files.find(filename => filename === '/foo/foo.controller.spec.ts'),
     ).not.toBeDefined();
-    expect(tree.readContent('/src/foo/foo.controller.ts')).toEqual(
+    expect(tree.readContent('/foo/foo.controller.ts')).toEqual(
       "import { Controller } from '@nestjs/common';\n" +
         '\n' +
         "@Controller('foo')\n" +
@@ -44,14 +44,12 @@ describe('Controller Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/bar/foo/foo.controller.ts'),
+      files.find(filename => filename === '/bar/foo/foo.controller.ts'),
     ).toBeDefined();
     expect(
-      files.find(
-        filename => filename === '/src/bar/foo/foo.controller.spec.ts',
-      ),
+      files.find(filename => filename === '/bar/foo/foo.controller.spec.ts'),
     ).toBeDefined();
-    expect(tree.readContent('/src/bar/foo/foo.controller.ts')).toEqual(
+    expect(tree.readContent('/bar/foo/foo.controller.ts')).toEqual(
       "import { Controller } from '@nestjs/common';\n" +
         '\n' +
         "@Controller('foo')\n" +
@@ -67,14 +65,12 @@ describe('Controller Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/bar/foo/foo.controller.ts'),
+      files.find(filename => filename === '/bar/foo/foo.controller.ts'),
     ).toBeDefined();
     expect(
-      files.find(
-        filename => filename === '/src/bar/foo/foo.controller.spec.ts',
-      ),
+      files.find(filename => filename === '/bar/foo/foo.controller.spec.ts'),
     ).toBeDefined();
-    expect(tree.readContent('/src/bar/foo/foo.controller.ts')).toEqual(
+    expect(tree.readContent('/bar/foo/foo.controller.ts')).toEqual(
       "import { Controller } from '@nestjs/common';\n" +
         '\n' +
         "@Controller('foo')\n" +
@@ -89,14 +85,14 @@ describe('Controller Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/foo-bar/foo-bar.controller.ts'),
+      files.find(filename => filename === '/foo-bar/foo-bar.controller.ts'),
     ).toBeDefined();
     expect(
       files.find(
-        filename => filename === '/src/foo-bar/foo-bar.controller.spec.ts',
+        filename => filename === '/foo-bar/foo-bar.controller.spec.ts',
       ),
     ).toBeDefined();
-    expect(tree.readContent('/src/foo-bar/foo-bar.controller.ts')).toEqual(
+    expect(tree.readContent('/foo-bar/foo-bar.controller.ts')).toEqual(
       "import { Controller } from '@nestjs/common';\n" +
         '\n' +
         "@Controller('foo-bar')\n" +
@@ -111,14 +107,14 @@ describe('Controller Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/bar-baz/foo/foo.controller.ts'),
+      files.find(filename => filename === '/bar-baz/foo/foo.controller.ts'),
     ).toBeDefined();
     expect(
       files.find(
-        filename => filename === '/src/bar-baz/foo/foo.controller.spec.ts',
+        filename => filename === '/bar-baz/foo/foo.controller.spec.ts',
       ),
     ).toBeDefined();
-    expect(tree.readContent('/src/bar-baz/foo/foo.controller.ts')).toEqual(
+    expect(tree.readContent('/bar-baz/foo/foo.controller.ts')).toEqual(
       "import { Controller } from '@nestjs/common';\n" +
         '\n' +
         "@Controller('foo')\n" +
@@ -134,12 +130,12 @@ describe('Controller Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('controller', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/foo/foo.controller.js'),
+      files.find(filename => filename === '/foo/foo.controller.js'),
     ).toBeDefined();
     expect(
-      files.find(filename => filename === '/src/foo/foo.controller.spec.js'),
+      files.find(filename => filename === '/foo/foo.controller.spec.js'),
     ).toBeDefined();
-    expect(tree.readContent('/src/foo/foo.controller.js')).toEqual(
+    expect(tree.readContent('/foo/foo.controller.js')).toEqual(
       "import { Controller } from '@nestjs/common';\n" +
         '\n' +
         "@Controller('foo')\n" +

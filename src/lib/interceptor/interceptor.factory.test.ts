@@ -18,9 +18,9 @@ describe('Interceptor Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('interceptor', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/foo.interceptor.ts'),
+      files.find(filename => filename === '/foo.interceptor.ts'),
     ).toBeDefined();
-    expect(tree.readContent('/src/foo.interceptor.ts')).toEqual(
+    expect(tree.readContent('/foo.interceptor.ts')).toEqual(
       "import { ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
         "import { Observable } from 'rxjs';\n" +
         "import { map } from 'rxjs/operators';\n" +
@@ -41,9 +41,9 @@ describe('Interceptor Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('interceptor', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/bar/foo.interceptor.ts'),
+      files.find(filename => filename === '/bar/foo.interceptor.ts'),
     ).toBeDefined();
-    expect(tree.readContent('/src/bar/foo.interceptor.ts')).toEqual(
+    expect(tree.readContent('/bar/foo.interceptor.ts')).toEqual(
       "import { ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
         "import { Observable } from 'rxjs';\n" +
         "import { map } from 'rxjs/operators';\n" +
@@ -65,9 +65,9 @@ describe('Interceptor Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('interceptor', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/baz/foo.interceptor.ts'),
+      files.find(filename => filename === '/baz/foo.interceptor.ts'),
     ).toBeDefined();
-    expect(tree.readContent('/src/baz/foo.interceptor.ts')).toEqual(
+    expect(tree.readContent('/baz/foo.interceptor.ts')).toEqual(
       "import { ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
         "import { Observable } from 'rxjs';\n" +
         "import { map } from 'rxjs/operators';\n" +
@@ -88,9 +88,9 @@ describe('Interceptor Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('interceptor', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/foo-bar.interceptor.ts'),
+      files.find(filename => filename === '/foo-bar.interceptor.ts'),
     ).toBeDefined();
-    expect(tree.readContent('/src/foo-bar.interceptor.ts')).toEqual(
+    expect(tree.readContent('/foo-bar.interceptor.ts')).toEqual(
       "import { ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
         "import { Observable } from 'rxjs';\n" +
         "import { map } from 'rxjs/operators';\n" +
@@ -111,9 +111,9 @@ describe('Interceptor Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('interceptor', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/bar-baz/foo.interceptor.ts'),
+      files.find(filename => filename === '/bar-baz/foo.interceptor.ts'),
     ).toBeDefined();
-    expect(tree.readContent('/src/bar-baz/foo.interceptor.ts')).toEqual(
+    expect(tree.readContent('/bar-baz/foo.interceptor.ts')).toEqual(
       "import { ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
         "import { Observable } from 'rxjs';\n" +
         "import { map } from 'rxjs/operators';\n" +
@@ -135,9 +135,9 @@ describe('Interceptor Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('interceptor', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/foo.interceptor.js'),
+      files.find(filename => filename === '/foo.interceptor.js'),
     ).toBeDefined();
-    expect(tree.readContent('/src/foo.interceptor.js')).toEqual(
+    expect(tree.readContent('/foo.interceptor.js')).toEqual(
       "import { Injectable } from '@nestjs/common';\n" +
         "import { map } from 'rxjs/operators';\n" +
         '\n' +

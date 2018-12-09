@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/schematics",
-  "version": "5.9.7",
+  "version": "5.10.0",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "main": "index.js",
   "publishConfig": {
@@ -27,9 +27,8 @@
   },
   "homepage": "https://github.com/nestjs/schematics#readme",
   "dependencies": {
-    "@angular-devkit/core": "^0.8.1",
-    "@angular-devkit/schematics": "^0.8.1",
-    "typescript": "^2.9.2"
+    "@angular-devkit/core": "7.1.2",
+    "@angular-devkit/schematics": "7.1.2"
   },
   "devDependencies": {
     "@types/jest": "^22.2.3",
@@ -38,7 +37,8 @@
     "jest": "^23.5.0",
     "nyc": "^13.0.1",
     "ts-jest": "^22.4.6",
-    "tslint": "^5.11.0"
+    "tslint": "^5.11.0",
+    "typescript": "^3.2.2"
   },
   "schematics": "./collection.json",
   "nyc": {

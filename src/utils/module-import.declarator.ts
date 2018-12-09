@@ -14,25 +14,27 @@ export class ModuleImportDeclarator {
   }
 
   private findImports(content: string): string[] {
-    return content.split('\n')
-      .filter((line) => line.match(/import {/));
+    return content.split('\n').filter(line => line.match(/import {/));
   }
 
   private findOtherLines(content: string, importLines: string[]) {
-    return content.split('\n')
-      .filter((line) => importLines.indexOf(line) < 0);
+    return content.split('\n').filter(line => importLines.indexOf(line) < 0);
   }
 
   private buildLineToInsert(options: DeclarationOptions): string {
-    return `import { ${ options.symbol } } from '${ this.computeRelativePath(options) }';\n`;
+    return `import { ${options.symbol} } from '${this.computeRelativePath(
+      options,
+    )}';\n`;
   }
 
   private computeRelativePath(options: DeclarationOptions): string {
     let importModulePath: Path;
     if (options.type !== undefined) {
-      importModulePath = normalize(`/${ options.path }/${ options.name }.${ options.type }`);
+      importModulePath = normalize(
+        `/${options.path}/${options.name}.${options.type}`,
+      );
     } else {
-      importModulePath = normalize(`/${ options.path }/${ options.name }`);
+      importModulePath = normalize(`/${options.path}/${options.name}`);
     }
     return this.solver.relative(options.module, importModulePath);
   }

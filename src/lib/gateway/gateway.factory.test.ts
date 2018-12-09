@@ -18,16 +18,16 @@ describe('Gateway Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('gateway', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/foo/foo.gateway.ts'),
+      files.find(filename => filename === '/foo/foo.gateway.ts'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/src/foo/foo.gateway.ts')).toEqual(
+    expect(tree.readContent('/foo/foo.gateway.ts')).toEqual(
       "import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';\n" +
         '\n' +
         '@WebSocketGateway()\n' +
         'export class FooGateway {\n' +
         "  @SubscribeMessage('message')\n" +
         '  handleMessage(client: any, payload: any): string {\n' +
-        '    return \'Hello world!\';\n' +
+        "    return 'Hello world!';\n" +
         '  }\n' +
         '}\n',
     );
@@ -40,16 +40,16 @@ describe('Gateway Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('gateway', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/bar/foo/foo.gateway.ts'),
+      files.find(filename => filename === '/bar/foo/foo.gateway.ts'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/src/bar/foo/foo.gateway.ts')).toEqual(
+    expect(tree.readContent('/bar/foo/foo.gateway.ts')).toEqual(
       "import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';\n" +
         '\n' +
         '@WebSocketGateway()\n' +
         'export class FooGateway {\n' +
         "  @SubscribeMessage('message')\n" +
         '  handleMessage(client: any, payload: any): string {\n' +
-        '    return \'Hello world!\';\n' +
+        "    return 'Hello world!';\n" +
         '  }\n' +
         '}\n',
     );
@@ -63,16 +63,16 @@ describe('Gateway Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('gateway', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/baz/foo/foo.gateway.ts'),
+      files.find(filename => filename === '/baz/foo/foo.gateway.ts'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/src/baz/foo/foo.gateway.ts')).toEqual(
+    expect(tree.readContent('/baz/foo/foo.gateway.ts')).toEqual(
       "import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';\n" +
         '\n' +
         '@WebSocketGateway()\n' +
         'export class FooGateway {\n' +
         "  @SubscribeMessage('message')\n" +
         '  handleMessage(client: any, payload: any): string {\n' +
-        '    return \'Hello world!\';\n' +
+        "    return 'Hello world!';\n" +
         '  }\n' +
         '}\n',
     );
@@ -85,16 +85,16 @@ describe('Gateway Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('gateway', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/foo-bar/foo-bar.gateway.ts'),
+      files.find(filename => filename === '/foo-bar/foo-bar.gateway.ts'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/src/foo-bar/foo-bar.gateway.ts')).toEqual(
+    expect(tree.readContent('/foo-bar/foo-bar.gateway.ts')).toEqual(
       "import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';\n" +
         '\n' +
         '@WebSocketGateway()\n' +
         'export class FooBarGateway {\n' +
         "  @SubscribeMessage('message')\n" +
         '  handleMessage(client: any, payload: any): string {\n' +
-        '    return \'Hello world!\';\n' +
+        "    return 'Hello world!';\n" +
         '  }\n' +
         '}\n',
     );
@@ -107,16 +107,16 @@ describe('Gateway Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('gateway', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/bar-baz/foo/foo.gateway.ts'),
+      files.find(filename => filename === '/bar-baz/foo/foo.gateway.ts'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/src/bar-baz/foo/foo.gateway.ts')).toEqual(
+    expect(tree.readContent('/bar-baz/foo/foo.gateway.ts')).toEqual(
       "import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';\n" +
         '\n' +
         '@WebSocketGateway()\n' +
         'export class FooGateway {\n' +
         "  @SubscribeMessage('message')\n" +
         '  handleMessage(client: any, payload: any): string {\n' +
-        '    return \'Hello world!\';\n' +
+        "    return 'Hello world!';\n" +
         '  }\n' +
         '}\n',
     );
@@ -130,16 +130,16 @@ describe('Gateway Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('gateway', options);
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/src/foo/foo.gateway.js'),
+      files.find(filename => filename === '/foo/foo.gateway.js'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/src/foo/foo.gateway.js')).toEqual(
+    expect(tree.readContent('/foo/foo.gateway.js')).toEqual(
       "import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';\n" +
         '\n' +
         '@WebSocketGateway()\n' +
         'export class FooGateway {\n' +
         "  @SubscribeMessage('message')\n" +
         '  handleMessage(client, payload) {\n' +
-        '    return \'Hello world!\';\n' +
+        "    return 'Hello world!';\n" +
         '  }\n' +
         '}\n',
     );
