@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "SchematicsNestMiddleware",
-  "title": "Nest Middleware Options Schema",
+  "id": "SchematicsNestResolver",
+  "title": "Nest Resolver Options Schema",
   "type": "object",
   "properties": {
     "name": {
       "type": "string",
-      "description": "The name of the middleware.",
+      "description": "The name of the resolver.",
       "$default": {
         "$source": "argv",
         "index": 0
@@ -15,18 +15,18 @@
     "path": {
       "type": "string",
       "format": "path",
-      "description": "The path to create the middleware."
+      "description": "The path to create the resolver."
     },
     "language": {
       "type": "string",
-      "description": "Nest middleware language (ts/js)."
+      "description": "Nest resolver language (ts/js)."
     },
     "sourceRoot": {
       "type": "string",
-      "description": "Nest middleware source root directory."
+      "description": "Nest resolver source root directory."
     },
     "flat": {
-      "default": true,
+      "default": false,
       "description": "Flag to indicate if a directory is created."
     },
     "spec": {

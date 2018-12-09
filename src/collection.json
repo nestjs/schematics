@@ -71,6 +71,11 @@
       "description": "Create a Nest service.",
       "schema": "./lib/service/schema.json"
     },
+    "resolver": {
+      "factory": "./lib/resolver/resolver.factory#main",
+      "description": "Create a Nest resolver.",
+      "schema": "./lib/resolver/schema.json"
+    },
     "configuration": {
       "factory": "./lib/configuration/configuration.factory#main",
       "description": "Create a Nest CLI configuration."

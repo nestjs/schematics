@@ -23,7 +23,7 @@
     },
     "sourceRoot": {
       "type": "string",
-      "description": "Nest decorator source root directory."
+      "description": "Nest interceptor source root directory."
     },
     "flat": {
       "default": true,
