@@ -43,10 +43,6 @@ $ <%= packageManager %> run start
 # watch mode
 $ <%= packageManager %> run start:dev
 
-# incremental rebuild (webpack)
-$ <%= packageManager %> run webpack
-$ <%= packageManager %> run start:hmr
-
 # production mode
 $ <%= packageManager %> run start:prod
 ```
