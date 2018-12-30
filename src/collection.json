@@ -89,6 +89,11 @@
       "factory": "./lib/library/library.factory#main",
       "description": "Create a Nest library (mono-repo).",
       "schema": "./lib/library/schema.json"
+    },
+    "graphql-schemes": {
+      "factory": "./lib/graphql-schemes/graphql-schemes.factory#main",
+      "description": "Nest GraphQL Scheme Options Schema",
+      "schema": "./lib/graphql-schemes/schema.json"
     }
   }
 }

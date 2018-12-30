@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "SchematicsNestGraphQLScheme",
+  "title": "Nest GraphQL Scheme Options Schema",
+  "type": "object",
+  "properties": {
+    "sourceRoot": {
+      "type": "string",
+      "description": "Nest source root directory."
+    },
+  },
+  "required": []
+}
