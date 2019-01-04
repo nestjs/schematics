@@ -13,9 +13,30 @@ type GhraphQLItemDeclarationNode =
   | UnionDeclaration
   | ts.EnumDeclaration;
 
-interface GraphQLSchemeItem {
+export interface GraphQLSchemeItem {
   name: string;
   scheme: string;
+}
+
+export class CompilerError extends Error {
+  constructor(
+    public message: string,
+    public line: number,
+    public column: number
+  ) {
+    super(message);
+  }
+}
+
+interface GhraphQLTranspileResult {
+  types: GraphQLSchemeItem[];
+  errors: CompilerError[];
+}
+
+export class NodeError extends Error {
+  constructor(public message: string, public node: ts.Node) {
+    super(message);
+  }
 }
 
 function isTypeDeclaration(
@@ -125,7 +146,7 @@ function getPropertyType(
     case ts.SyntaxKind.TypeReference:
       const identifier = (type as ts.TypeReferenceNode).typeName;
       if (!ts.isIdentifier(identifier)) {
-        throw new Error("Property name should be only identifier");
+        throw new NodeError("Property name should be only identifier", type);
       }
       const isArray = identifier.text === "Array";
       propertyType = isArray
@@ -138,6 +159,11 @@ function getPropertyType(
         scalarCandidatesContainer.add(identifier.text);
       }
       break;
+    default:
+      throw new NodeError(
+        "Type should be only primitives like number, string or boolean, or reference on existing type",
+        type
+      );
   }
   return `${propertyType}${isStrict ? "!" : ""}`;
 }
@@ -158,7 +184,10 @@ function getDefaultValue(initializer: ts.Expression): string {
   if (ts.isIdentifier(initializer)) {
     return initializer.text;
   }
-  throw new Error("Can't use expression as default value for GraphQL Scheme");
+  throw new NodeError(
+    "Can't use expression as default value for GraphQL Scheme",
+    initializer
+  );
 }
 
 function getPropertyFrom(
@@ -170,10 +199,13 @@ function getPropertyFrom(
 ): string {
   const { name } = property;
   if (ts.isComputedPropertyName(name)) {
-    throw new Error("Can't work with computed property inside GraphQL Scheme");
+    throw new NodeError(
+      "Can't work with computed property inside GraphQL Scheme",
+      name
+    );
   }
   if (ts.isObjectBindingPattern(name) || ts.isArrayBindingPattern(name)) {
-    throw new Error("Can't work with any binding pattern");
+    throw new NodeError("Can't work with any binding pattern", name);
   }
   const type = getPropertyType(
     property.type,
@@ -191,11 +223,17 @@ function getMethodFrom(
   method: ts.MethodDeclaration | ts.MethodSignature,
   scalarCandidatesContainer: Set<string>
 ): string {
-  if (!method.type || method.parameters.find(p => !p.type)) {
-    throw new Error("Methods should be full typed");
-  }
   if (ts.isComputedPropertyName(method.name)) {
-    throw new Error("Can't work with computed property inside GraphQL Scheme");
+    throw new NodeError(
+      "Can't work with computed property inside GraphQL Scheme",
+      method.name
+    );
+  }
+  if (!method.type || method.parameters.find(p => !p.type)) {
+    throw new NodeError(
+      "Method should not have untyped arguments or return",
+      method
+    );
   }
   return `${method.name.text}(${method.parameters.reduce(
     (res, param, index) =>
@@ -212,10 +250,9 @@ function getTypeFields(
 ): ts.NodeArray<ts.TypeElement | ts.ClassElement> {
   if (declaration.kind === ts.SyntaxKind.TypeAliasDeclaration) {
     if (declaration.type.kind !== ts.SyntaxKind.TypeLiteral) {
-      throw new Error(
-        `${getDeclarationName(
-          declaration
-        )} type declaration should be used only with object type literal!`
+      throw new NodeError(
+        "Type declaration should be used only with object type literal",
+        declaration
       );
     }
     return (declaration.type as ts.TypeLiteralNode).members;
@@ -229,8 +266,9 @@ function createEnumFrom(enumDeclaration: ts.EnumDeclaration): string {
     enumDeclaration
   )} {${enumDeclaration.members.reduce((res, member) => {
     if (ts.isComputedPropertyName(member.name)) {
-      throw new Error(
-        "Can't work with computed property inside GraphQL Scheme"
+      throw new NodeError(
+        "Can't work with computed property inside GraphQL Scheme",
+        member.name
       );
     }
     return `${res}\n  ${member.name.text}`;
@@ -317,7 +355,7 @@ function createMutationFrom(
 export function createScalarsFrom(scalars: Set<string>): string {
   let scheme = "";
   scalars.forEach(scalarName => {
-    scheme = `${scheme}${scheme ? "\n\n" : ""}$scalar ${scalarName}`;
+    scheme = `${scheme}${scheme ? "\n\n" : ""}scalar ${scalarName}`;
   });
   return scheme;
 }
@@ -405,25 +443,38 @@ function transpileToScheme(
 export function transpileToGQL(
   sourceFile: ts.SourceFile,
   scalarCandidatesContainer: Set<string>
-): GraphQLSchemeItem[] {
+): GhraphQLTranspileResult {
   const Mutation = sourceFile.statements.find(
     statement =>
       isTypeDeclaration(statement) && statement.name.text === "Mutation"
   );
-  const inputIdentifiers =
-    Mutation === null
-      ? new Set()
-      : getIdentifiersOfPotentialInputs(Mutation as TypeDeclarationNode);
+  const inputIdentifiers = Mutation
+    ? getIdentifiersOfPotentialInputs(Mutation as TypeDeclarationNode)
+    : new Set();
+  const errors = [];
   const types = sourceFile.statements.reduce((res, statement) => {
-    const scheme = transpileToScheme(
-      statement,
-      inputIdentifiers,
-      scalarCandidatesContainer
-    );
-    if (!scheme) {
-      return res;
+    try {
+      const scheme = transpileToScheme(
+        statement,
+        inputIdentifiers,
+        scalarCandidatesContainer
+      );
+      if (!scheme) {
+        return res;
+      }
+      return res.concat([scheme]);
+    } catch (e) {
+      if (!(e instanceof NodeError)) {
+        throw e;
+      }
+      const { line, character } = sourceFile.getLineAndCharacterOfPosition(
+        e.node.getStart(sourceFile)
+      );
+      errors.push(new CompilerError(e.message, line + 1, character + 1));
     }
-    return res.concat([scheme]);
   }, []);
-  return types;
+  return {
+    types,
+    errors
+  };
 }
