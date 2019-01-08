@@ -5,7 +5,7 @@ import { AppModule } from '../src/app.module';
 describe('AppController (e2e)', () => {
   let app;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -14,7 +14,7 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/GET /', () => {
+  it('/ (GET)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
