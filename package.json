@@ -27,12 +27,12 @@
   },
   "homepage": "https://github.com/nestjs/schematics#readme",
   "dependencies": {
-    "@angular-devkit/core": "7.1.2",
-    "@angular-devkit/schematics": "7.1.2"
+    "@angular-devkit/core": "7.2.1",
+    "@angular-devkit/schematics": "7.2.1"
   },
   "devDependencies": {
-    "@types/jest": "^22.2.3",
-    "@types/node": "^9.6.29",
+    "@types/jest": "^23.3.12",
+    "@types/node": "^10.12.18",
     "gulp": "^3.9.1",
     "jest": "^23.5.0",
     "nyc": "^13.0.1",
