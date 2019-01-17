@@ -28,7 +28,8 @@
   "homepage": "https://github.com/nestjs/schematics#readme",
   "dependencies": {
     "@angular-devkit/core": "7.2.1",
-    "@angular-devkit/schematics": "7.2.1"
+    "@angular-devkit/schematics": "7.2.1",
+    "typescript": "^3.2.2"
   },
   "devDependencies": {
     "@types/jest": "^23.3.12",
