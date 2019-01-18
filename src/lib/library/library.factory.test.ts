@@ -13,6 +13,7 @@ describe('Library Factory', () => {
   it('should manage name only', () => {
     const options: LibraryOptions = {
       name: 'project',
+      prefix: 'app',
     };
     const tree: UnitTestTree = runner.runSchematic('library', options);
     const files: string[] = tree.files;
@@ -30,6 +31,7 @@ describe('Library Factory', () => {
   it('should manage name to dasherize', () => {
     const options: LibraryOptions = {
       name: 'awesomeProject',
+      prefix: 'app',
     };
     const tree: UnitTestTree = runner.runSchematic('library', options);
     const files: string[] = tree.files;
@@ -48,6 +50,7 @@ describe('Library Factory', () => {
     const options: LibraryOptions = {
       name: 'project',
       language: 'js',
+      prefix: 'app',
     };
     const tree: UnitTestTree = runner.runSchematic('library', options);
     const files: string[] = tree.files;
