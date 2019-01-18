@@ -1,5 +1,5 @@
-import 'babel-polyfill';
 import { NestFactory } from '@nestjs/core';
+import 'babel-polyfill';
 import { AppModule } from './app.module';
 
 async function bootstrap() {

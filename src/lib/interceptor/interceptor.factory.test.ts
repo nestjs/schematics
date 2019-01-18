@@ -28,7 +28,7 @@ describe('Interceptor Factory', () => {
         '@Injectable()\n' +
         'export class FooInterceptor implements NestInterceptor {\n' +
         '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
-        '    return call$.pipe(map((data) => ({ data })));\n' +
+        '    return call$.pipe(map(data => ({ data })));\n' +
         '  }\n' +
         '}\n',
     );
@@ -51,7 +51,7 @@ describe('Interceptor Factory', () => {
         '@Injectable()\n' +
         'export class FooInterceptor implements NestInterceptor {\n' +
         '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
-        '    return call$.pipe(map((data) => ({ data })));\n' +
+        '    return call$.pipe(map(data => ({ data })));\n' +
         '  }\n' +
         '}\n',
     );
@@ -75,7 +75,7 @@ describe('Interceptor Factory', () => {
         '@Injectable()\n' +
         'export class FooInterceptor implements NestInterceptor {\n' +
         '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
-        '    return call$.pipe(map((data) => ({ data })));\n' +
+        '    return call$.pipe(map(data => ({ data })));\n' +
         '  }\n' +
         '}\n',
     );
@@ -98,7 +98,7 @@ describe('Interceptor Factory', () => {
         '@Injectable()\n' +
         'export class FooBarInterceptor implements NestInterceptor {\n' +
         '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
-        '    return call$.pipe(map((data) => ({ data })));\n' +
+        '    return call$.pipe(map(data => ({ data })));\n' +
         '  }\n' +
         '}\n',
     );
@@ -121,7 +121,7 @@ describe('Interceptor Factory', () => {
         '@Injectable()\n' +
         'export class FooInterceptor implements NestInterceptor {\n' +
         '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
-        '    return call$.pipe(map((data) => ({ data })));\n' +
+        '    return call$.pipe(map(data => ({ data })));\n' +
         '  }\n' +
         '}\n',
     );
@@ -144,7 +144,7 @@ describe('Interceptor Factory', () => {
         '@Injectable()\n' +
         'export class FooInterceptor {\n' +
         '  intercept(context, call$) {\n' +
-        '    return call$.pipe(map((data) => ({ data })));\n' +
+        '    return call$.pipe(map(data => ({ data })));\n' +
         '  }\n' +
         '}\n',
     );
