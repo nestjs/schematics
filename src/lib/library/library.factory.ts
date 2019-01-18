@@ -87,6 +87,9 @@ function updateTsConfig(packageName: string, root: string) {
         if (!tsconfig.compilerOptions) {
           tsconfig.compilerOptions = {} as any;
         }
+        if (!tsconfig.compilerOptions.baseUrl) {
+          tsconfig.compilerOptions.baseUrl = './';
+        }
         if (!tsconfig.compilerOptions.paths) {
           tsconfig.compilerOptions.paths = {};
         }
