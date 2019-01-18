@@ -34,7 +34,7 @@ interface TsConfigPartialType {
 export function main(options: LibraryOptions): Rule {
   options = transform(options);
   return chain([
-    updateTsConfig(options.name, options.path),
+    updateTsConfig(options.name, options.prefix, options.path),
     addLibraryToCliOptions(options.path, options.name),
     branchAndMerge(mergeWith(generate(options))),
   ]);
@@ -55,6 +55,7 @@ function transform(options: LibraryOptions): LibraryOptions {
       ? join(normalize(defaultSourceRoot), target.path)
       : normalize(defaultSourceRoot);
 
+  target.prefix = target.prefix || '@app';
   return target;
 }
 
@@ -74,12 +75,20 @@ function updateJsonFile<T>(
   return host;
 }
 
-function updateTsConfig(packageName: string, root: string) {
+function updateTsConfig(
+  packageName: string,
+  packagePrefix: string,
+  root: string,
+) {
   return (host: Tree) => {
     if (!host.exists('tsconfig.json')) {
       return host;
     }
     const distRoot = join(root as Path, packageName, 'src');
+    const packageKey = packagePrefix
+      ? packagePrefix + '/' + packageName
+      : packageName;
+
     return updateJsonFile(
       host,
       'tsconfig.json',
@@ -93,12 +102,12 @@ function updateTsConfig(packageName: string, root: string) {
         if (!tsconfig.compilerOptions.paths) {
           tsconfig.compilerOptions.paths = {};
         }
-        if (!tsconfig.compilerOptions.paths[packageName]) {
-          tsconfig.compilerOptions.paths[packageName] = [];
+        if (!tsconfig.compilerOptions.paths[packageKey]) {
+          tsconfig.compilerOptions.paths[packageKey] = [];
         }
-        tsconfig.compilerOptions.paths[packageName].push(distRoot);
+        tsconfig.compilerOptions.paths[packageKey].push(distRoot);
 
-        const deepPackagePath = packageName + '/*';
+        const deepPackagePath = packageKey + '/*';
         if (!tsconfig.compilerOptions.paths[deepPackagePath]) {
           tsconfig.compilerOptions.paths[deepPackagePath] = [];
         }

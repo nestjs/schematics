@@ -19,7 +19,7 @@ describe('Library Factory', () => {
     expect(files).toEqual([
       '/libs/project/.gitignore',
       '/libs/project/package.json',
-      '/libs/project/tsconfig.json',
+      '/libs/project/tsconfig.lib.json',
       '/libs/project/tslint.json',
       '/libs/project/src/index.ts',
       '/libs/project/src/project.module.ts',
@@ -36,7 +36,7 @@ describe('Library Factory', () => {
     expect(files).toEqual([
       '/libs/awesome-project/.gitignore',
       '/libs/awesome-project/package.json',
-      '/libs/awesome-project/tsconfig.json',
+      '/libs/awesome-project/tsconfig.lib.json',
       '/libs/awesome-project/tslint.json',
       '/libs/awesome-project/src/index.ts',
       '/libs/awesome-project/src/awesome-project.module.ts',

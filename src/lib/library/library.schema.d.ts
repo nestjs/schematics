@@ -1,10 +1,14 @@
-import { Path } from "@angular-devkit/core";
+import { Path } from '@angular-devkit/core';
 
 export interface LibraryOptions {
   /**
    * Nest library name.
    */
   name: string;
+  /**
+   * Prefix (scope)
+   */
+  prefix?: string;
   /**
    * Application language.
    */
