@@ -3,7 +3,9 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 export class <%= classify(name) %>Interceptor {
-  intercept(context, call$) {
-    return call$.pipe(map(data => ({ data })));
+  intercept(context, next) {
+    return next
+      .handle()
+      .pipe(map(data => ({ data })));
   }
 }
