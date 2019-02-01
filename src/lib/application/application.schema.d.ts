@@ -1,5 +1,9 @@
 export interface ApplicationOptions {
   /**
+   * The Nest application name.
+   */
+  name: string;
+  /**
    * The Nest application author.
    */
   author?: string;
@@ -7,10 +11,6 @@ export interface ApplicationOptions {
    * The Nest application description.
    */
   description?: string;
-  /**
-   * The Nest application name.
-   */
-  name: string;
   /**
    * The Nest application version.
    */

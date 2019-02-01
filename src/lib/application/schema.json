@@ -10,19 +10,23 @@
       "$default": {
         "$source": "argv",
         "index": 0
-      }
+      },
+      "x-prompt": "What name would you like to use for the new project?"
     },
     "author": {
       "type": "string",
-      "description": "Nest application author."
+      "description": "Nest application author.",
+      "default": ""
     },
     "description": {
       "type": "string",
-      "description": "Nest application description."
+      "description": "Nest application description.",
+      "default": ""
     },
     "version": {
       "type": "string",
-      "description": "Nest application version."
+      "description": "Nest application version.",
+      "default": "0.0.1"
     },
     "language": {
       "type": "string",
