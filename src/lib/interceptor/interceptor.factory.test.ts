@@ -21,14 +21,13 @@ describe('Interceptor Factory', () => {
       files.find(filename => filename === '/foo.interceptor.ts'),
     ).toBeDefined();
     expect(tree.readContent('/foo.interceptor.ts')).toEqual(
-      "import { ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
+      "import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
         "import { Observable } from 'rxjs';\n" +
-        "import { map } from 'rxjs/operators';\n" +
         '\n' +
         '@Injectable()\n' +
         'export class FooInterceptor implements NestInterceptor {\n' +
-        '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
-        '    return call$.pipe(map(data => ({ data })));\n' +
+        '  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {\n' +
+        '    return next.handle();\n' +
         '  }\n' +
         '}\n',
     );
@@ -44,14 +43,13 @@ describe('Interceptor Factory', () => {
       files.find(filename => filename === '/bar/foo.interceptor.ts'),
     ).toBeDefined();
     expect(tree.readContent('/bar/foo.interceptor.ts')).toEqual(
-      "import { ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
+      "import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
         "import { Observable } from 'rxjs';\n" +
-        "import { map } from 'rxjs/operators';\n" +
         '\n' +
         '@Injectable()\n' +
         'export class FooInterceptor implements NestInterceptor {\n' +
-        '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
-        '    return call$.pipe(map(data => ({ data })));\n' +
+        '  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {\n' +
+        '    return next.handle();\n' +
         '  }\n' +
         '}\n',
     );
@@ -68,14 +66,13 @@ describe('Interceptor Factory', () => {
       files.find(filename => filename === '/baz/foo.interceptor.ts'),
     ).toBeDefined();
     expect(tree.readContent('/baz/foo.interceptor.ts')).toEqual(
-      "import { ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
+      "import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
         "import { Observable } from 'rxjs';\n" +
-        "import { map } from 'rxjs/operators';\n" +
         '\n' +
         '@Injectable()\n' +
         'export class FooInterceptor implements NestInterceptor {\n' +
-        '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
-        '    return call$.pipe(map(data => ({ data })));\n' +
+        '  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {\n' +
+        '    return next.handle();\n' +
         '  }\n' +
         '}\n',
     );
@@ -91,14 +88,13 @@ describe('Interceptor Factory', () => {
       files.find(filename => filename === '/foo-bar.interceptor.ts'),
     ).toBeDefined();
     expect(tree.readContent('/foo-bar.interceptor.ts')).toEqual(
-      "import { ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
+      "import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
         "import { Observable } from 'rxjs';\n" +
-        "import { map } from 'rxjs/operators';\n" +
         '\n' +
         '@Injectable()\n' +
         'export class FooBarInterceptor implements NestInterceptor {\n' +
-        '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
-        '    return call$.pipe(map(data => ({ data })));\n' +
+        '  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {\n' +
+        '    return next.handle();\n' +
         '  }\n' +
         '}\n',
     );
@@ -114,14 +110,13 @@ describe('Interceptor Factory', () => {
       files.find(filename => filename === '/bar-baz/foo.interceptor.ts'),
     ).toBeDefined();
     expect(tree.readContent('/bar-baz/foo.interceptor.ts')).toEqual(
-      "import { ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
+      "import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';\n" +
         "import { Observable } from 'rxjs';\n" +
-        "import { map } from 'rxjs/operators';\n" +
         '\n' +
         '@Injectable()\n' +
         'export class FooInterceptor implements NestInterceptor {\n' +
-        '  intercept(context: ExecutionContext, call$: Observable<any>): Observable<any> {\n' +
-        '    return call$.pipe(map(data => ({ data })));\n' +
+        '  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {\n' +
+        '    return next.handle();\n' +
         '  }\n' +
         '}\n',
     );
@@ -139,12 +134,11 @@ describe('Interceptor Factory', () => {
     ).toBeDefined();
     expect(tree.readContent('/foo.interceptor.js')).toEqual(
       "import { Injectable } from '@nestjs/common';\n" +
-        "import { map } from 'rxjs/operators';\n" +
         '\n' +
         '@Injectable()\n' +
         'export class FooInterceptor {\n' +
-        '  intercept(context, call$) {\n' +
-        '    return call$.pipe(map(data => ({ data })));\n' +
+        '  intercept(context, next) {\n' +
+        '    return next.handle();\n' +
         '  }\n' +
         '}\n',
     );

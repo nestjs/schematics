@@ -1,7 +1,4 @@
-import {
-  SchematicTestRunner,
-  UnitTestTree,
-} from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { MiddlewareOptions } from './middleware.schema';
 
@@ -21,12 +18,12 @@ describe('Middleware Factory', () => {
       files.find(filename => filename === '/foo/foo.middleware.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo/foo.middleware.ts')).toEqual(
-      "import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';\n" +
+      "import { Injectable, NestMiddleware } from '@nestjs/common';\n" +
         '\n' +
         '@Injectable()\n' +
         'export class FooMiddleware implements NestMiddleware {\n' +
-        '  resolve(...args: any[]): MiddlewareFunction {\n' +
-        '    return (req, res, next) => next();\n' +
+        '  use(req: any, res: any, next: () => void) {\n' +
+        '    next();\n' +
         '  }\n' +
         '}\n',
     );
@@ -42,12 +39,12 @@ describe('Middleware Factory', () => {
       files.find(filename => filename === '/bar/foo/foo.middleware.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar/foo/foo.middleware.ts')).toEqual(
-      "import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';\n" +
+      "import { Injectable, NestMiddleware } from '@nestjs/common';\n" +
         '\n' +
         '@Injectable()\n' +
         'export class FooMiddleware implements NestMiddleware {\n' +
-        '  resolve(...args: any[]): MiddlewareFunction {\n' +
-        '    return (req, res, next) => next();\n' +
+        '  use(req: any, res: any, next: () => void) {\n' +
+        '    next();\n' +
         '  }\n' +
         '}\n',
     );
@@ -64,12 +61,12 @@ describe('Middleware Factory', () => {
       files.find(filename => filename === '/baz/foo/foo.middleware.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/baz/foo/foo.middleware.ts')).toEqual(
-      "import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';\n" +
+      "import { Injectable, NestMiddleware } from '@nestjs/common';\n" +
         '\n' +
         '@Injectable()\n' +
         'export class FooMiddleware implements NestMiddleware {\n' +
-        '  resolve(...args: any[]): MiddlewareFunction {\n' +
-        '    return (req, res, next) => next();\n' +
+        '  use(req: any, res: any, next: () => void) {\n' +
+        '    next();\n' +
         '  }\n' +
         '}\n',
     );
@@ -85,12 +82,12 @@ describe('Middleware Factory', () => {
       files.find(filename => filename === '/foo-bar/foo-bar.middleware.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo-bar/foo-bar.middleware.ts')).toEqual(
-      "import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';\n" +
+      "import { Injectable, NestMiddleware } from '@nestjs/common';\n" +
         '\n' +
         '@Injectable()\n' +
         'export class FooBarMiddleware implements NestMiddleware {\n' +
-        '  resolve(...args: any[]): MiddlewareFunction {\n' +
-        '    return (req, res, next) => next();\n' +
+        '  use(req: any, res: any, next: () => void) {\n' +
+        '    next();\n' +
         '  }\n' +
         '}\n',
     );
@@ -106,12 +103,12 @@ describe('Middleware Factory', () => {
       files.find(filename => filename === '/bar-baz/foo/foo.middleware.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar-baz/foo/foo.middleware.ts')).toEqual(
-      "import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';\n" +
+      "import { Injectable, NestMiddleware } from '@nestjs/common';\n" +
         '\n' +
         '@Injectable()\n' +
         'export class FooMiddleware implements NestMiddleware {\n' +
-        '  resolve(...args: any[]): MiddlewareFunction {\n' +
-        '    return (req, res, next) => next();\n' +
+        '  use(req: any, res: any, next: () => void) {\n' +
+        '    next();\n' +
         '  }\n' +
         '}\n',
     );
@@ -132,8 +129,8 @@ describe('Middleware Factory', () => {
         '\n' +
         '@Injectable()\n' +
         'export class FooMiddleware {\n' +
-        '  resolve(...args) {\n' +
-        '    return (req, res, next) => next();\n' +
+        '  use(req, res, next) {\n' +
+        '    next();\n' +
         '  }\n' +
         '}\n',
     );
