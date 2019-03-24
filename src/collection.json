@@ -7,9 +7,9 @@
       "schema": "./lib/application/schema.json"
     },
     "angular-app": {
-      "factory": "./lib/clent-app/angular/angular.factory#main",
+      "factory": "./lib/client-app/angular/angular.factory#main",
       "description": "Create a new Angular application.",
-      "schema": "./lib/clent-app/angular/schema.json"
+      "schema": "./lib/client-app/angular/schema.json"
     },
     "class": {
       "factory": "./lib/class/class.factory#main",
