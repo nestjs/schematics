@@ -6,6 +6,11 @@
       "description": "Create a Nest application.",
       "schema": "./lib/application/schema.json"
     },
+    "angular": {
+      "factory": "./lib/clent-app/angular/angular.factory#main",
+      "description": "Create a new Angular application.",
+      "schema": "./lib/clent-app/angular/schema.json"
+    },
     "class": {
       "factory": "./lib/class/class.factory#main",
       "description": "Create a new class.",

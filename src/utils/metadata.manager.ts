@@ -15,11 +15,16 @@ import {
   StringLiteral,
   SyntaxKind,
 } from 'typescript';
+import { DeclarationOptions } from './module.declarator';
 
 export class MetadataManager {
   constructor(private content: string) {}
 
-  public insert(metadata: string, symbol: string): string {
+  public insert(
+    metadata: string,
+    symbol: string,
+    staticOptions?: DeclarationOptions['staticOptions'],
+  ): string {
     const source: SourceFile = createSourceFile(
       'filename.ts',
       this.content,
@@ -40,15 +45,22 @@ export class MetadataManager {
             return false;
         }
       });
+
+    symbol = this.mergeSymbolAndExpr(symbol, staticOptions);
+    const addBlankLinesIfDynamic = () => {
+      symbol = staticOptions ? this.addBlankLines(symbol) : symbol;
+    };
     if (matchingProperties.length === 0) {
       const expr = node as ObjectLiteralExpression;
       if (expr.properties.length === 0) {
+        addBlankLinesIfDynamic();
         return this.insertMetadataToEmptyModuleDecorator(
           expr,
           metadata,
           symbol,
         );
       } else {
+        addBlankLinesIfDynamic();
         return this.insertNewMetadataToDecorator(
           expr,
           source,
@@ -57,7 +69,12 @@ export class MetadataManager {
         );
       }
     } else {
-      return this.insertSymbolToMetadata(source, matchingProperties, symbol);
+      return this.insertSymbolToMetadata(
+        source,
+        matchingProperties,
+        symbol,
+        staticOptions,
+      );
     }
   }
 
@@ -137,6 +154,7 @@ export class MetadataManager {
     source: SourceFile,
     matchingProperties: ObjectLiteralElement[],
     symbol: string,
+    staticOptions?: DeclarationOptions['staticOptions'],
   ): string {
     const assignment = matchingProperties[0] as PropertyAssignment;
     let node: Node | NodeArray<Expression>;
@@ -158,9 +176,10 @@ export class MetadataManager {
     }
     let toInsert: string;
     let position = (node as Node).getEnd();
+
     if ((node as Node).kind === SyntaxKind.ArrayLiteralExpression) {
       position--;
-      toInsert = `${symbol}`;
+      toInsert = staticOptions ? this.addBlankLines(symbol) : `${symbol}`;
     } else {
       const text = (node as Node).getFullText(source);
       if (text.match(/^\r?\n/)) {
@@ -176,5 +195,25 @@ export class MetadataManager {
         return `${content}${char}`;
       }
     }, '');
+  }
+
+  private mergeSymbolAndExpr(
+    symbol: string,
+    staticOptions?: DeclarationOptions['staticOptions'],
+  ): string {
+    if (!staticOptions) {
+      return symbol;
+    }
+    const spacing = 6;
+    let options = JSON.stringify(staticOptions.value, null, spacing);
+    options = options.replace(/\"([^(\")"]+)\":/g, '$1:');
+    options = options.replace(/\"/g, `'`);
+    options = options.slice(0, options.length - 1) + '    }';
+    symbol += `.${staticOptions.name}(${options})`;
+    return symbol;
+  }
+
+  private addBlankLines(expr: string): string {
+    return `\n    ${expr}\n  `;
   }
 }
