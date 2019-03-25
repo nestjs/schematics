@@ -13,8 +13,4 @@ export abstract class AbstractLoader {
   public getIndexFilePath(clientPath: string): string {
     return join(clientPath, 'index.html');
   }
-
-  public getClientDirPath(options: AngularModuleOptions): string {
-    return join(process.cwd(), '..', options.rootPath);
-  }
 }

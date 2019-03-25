@@ -14,10 +14,12 @@ export class ExpressLoader extends AbstractLoader {
     const express = loadPackage('express', 'AngularModule', () =>
       require('express'),
     );
-    const clientPath = this.getClientDirPath(options);
+    const clientPath = options.rootPath;
     const indexFilePath = this.getIndexFilePath(clientPath);
 
     app.use(express.static(clientPath, options.serveStaticOptions));
-    app.get(options.renderPath, (req, res) => res.sendFile(indexFilePath));
+    app.get(options.renderPath, (req: any, res: any) =>
+      res.sendFile(indexFilePath),
+    );
   }
 }

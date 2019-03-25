@@ -17,7 +17,7 @@ export class FastifyLoader extends AbstractLoader {
     );
     const { setHeaders, redirect, ...send } =
       options.serveStaticOptions || ({} as any);
-    const clientPath = this.getClientDirPath(options);
+    const clientPath = options.rootPath;
     const indexFilePath = this.getIndexFilePath(clientPath);
 
     app.register(fastifyStatic, {
@@ -26,7 +26,7 @@ export class FastifyLoader extends AbstractLoader {
       redirect,
       send,
     });
-    app.get(options.renderPath, (req, res) => {
+    app.get(options.renderPath, (req: any, res: any) => {
       const stream = fs.createReadStream(indexFilePath);
       res.type('text/html').send(stream);
     });

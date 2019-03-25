@@ -71,7 +71,7 @@ function createAngularApplication(options: AngularOptions): Rule {
   }
   return externalSchematic('@schematics/angular', 'ng-new', {
     name: options.directory,
-    version: '7.0.0',
+    version: '^7.0.0',
   });
 }
 
