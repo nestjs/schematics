@@ -88,14 +88,15 @@ function addDeclarationToModule(options: AngularOptions): Rule {
     const declarator: ModuleDeclarator = new ModuleDeclarator();
 
     const rootPath = `${options.directory}/dist/${options.directory}`;
+    const staticOptions = {
+      name: 'forRoot',
+      value: {
+        rootPath,
+      },
+    };
     const declarationOptions = ({
       ...options,
-      staticOptions: {
-        name: 'forRoot',
-        value: {
-          rootPath,
-        },
-      },
+      staticOptions,
     } as unknown) as DeclarationOptions;
     tree.overwrite(
       options.module,

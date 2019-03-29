@@ -4,6 +4,12 @@
   "title": "Nest Module Options Schema",
   "type": "object",
   "properties": {
+    "initApp": {
+      "type": "boolean",
+      "description": "Flag to skip the angular application generation.",
+      "default": false,
+      "x-prompt": "Would you like to initialize Angular application?"
+    },
     "name": {
       "type": "string",
       "description": "The name of the application.",
@@ -11,13 +17,7 @@
         "$source": "argv",
         "index": 0
       },
-      "x-prompt": "What name would you like to use for Angular application?"
-    },
-    "initApp": {
-      "type": "boolean",
-      "description": "Flag to skip the angular application generation.",
-      "default": false,
-      "x-prompt": "Would you like to initialize Angular application?"
+      "x-prompt": "What name would you like to (or do you) use for Angular application?"
     }
   },
   "required": ["name"]
