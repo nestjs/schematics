@@ -136,7 +136,7 @@ export class MetadataManager {
     const text = node.getFullText(source);
     const matches = text.match(/^\r?\n\s*/);
     let toInsert: string;
-    if (matches.length > 0) {
+    if (matches) {
       toInsert = `,${matches[0]}${metadata}: [${symbol}]`;
     } else {
       toInsert = `, ${metadata}: [${symbol}]`;
