@@ -31,4 +31,9 @@ export interface ApplicationOptions {
    * The Nest included development dependencies (comma separated values).
    */
   devDependencies?: string;
+
+  /**
+   * The number of workers application (false if cluster disabled)
+   */
+  cluster?: number|false;
 }
