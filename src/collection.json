@@ -94,6 +94,11 @@
       "factory": "./lib/express-web-application/express-web-application.factory#main",
       "description": "Create a Express Nest application.",
       "schema": "./lib/express-web-application/schema.json"
+    },
+    "fastify-web-application": {
+      "factory": "./lib/fastify-web-application/fastify-web-application.factory#main",
+      "description": "Create a Fastify Nest application.",
+      "schema": "./lib/fastify-web-application/schema.json"
     }
   }
 }
