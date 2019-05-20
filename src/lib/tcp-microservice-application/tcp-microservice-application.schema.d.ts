@@ -1,4 +1,4 @@
-export interface FastifyWebApplicationOptions {
+export interface TCPMicroserviceApplicationOptions {
   /**
    * The Nest application name.
    */

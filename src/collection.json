@@ -99,6 +99,11 @@
       "factory": "./lib/fastify-web-application/fastify-web-application.factory#main",
       "description": "Create a Fastify Nest application.",
       "schema": "./lib/fastify-web-application/schema.json"
+    },
+    "tcp-microservice-application": {
+      "factory": "./lib/tcp-microservice-application/tcp-microservice-application.factory#main",
+      "description": "Create a TCP Microservice Nest application.",
+      "schema": "./lib/tcp-microservice-application/schema.json"
     }
   }
 }

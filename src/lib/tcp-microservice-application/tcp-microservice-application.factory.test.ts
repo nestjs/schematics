@@ -1,16 +1,16 @@
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { FastifyWebApplicationOptions } from './fastify-web-application.schema';
+import { TCPMicroserviceApplicationOptions } from './tcp-microservice-application.schema';
 
-const SCHEMATICS_NAME: string = 'fastify-web-application';
+const SCHEMATICS_NAME: string = 'tcp-microservice-application';
 
-describe('Fastify Web Application Factory', () => {
+describe('TCP Microservice Application Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
   it('should manage name only', () => {
-    const options: FastifyWebApplicationOptions = {
+    const options: TCPMicroserviceApplicationOptions = {
       name: 'project',
     };
     const tree: UnitTestTree = runner.runSchematic(SCHEMATICS_NAME, options);
@@ -26,18 +26,16 @@ describe('Fastify Web Application Factory', () => {
       '/project/tsconfig.build.json',
       '/project/tsconfig.json',
       '/project/tslint.json',
-      '/project/src/app.controller.spec.ts',
-      '/project/src/app.controller.ts',
       '/project/src/app.module.ts',
-      '/project/src/app.service.spec.ts',
-      '/project/src/app.service.ts',
       '/project/src/main.ts',
+      '/project/src/math.controller.spec.ts',
+      '/project/src/math.controller.ts',
       '/project/test/app.e2e-spec.ts',
       '/project/test/jest-e2e.json',
     ]);
   });
   it('should manage name to dasherize', () => {
-    const options: FastifyWebApplicationOptions = {
+    const options: TCPMicroserviceApplicationOptions = {
       name: 'awesomeProject',
     };
     const tree: UnitTestTree = runner.runSchematic(SCHEMATICS_NAME, options);
@@ -53,18 +51,16 @@ describe('Fastify Web Application Factory', () => {
       '/awesome-project/tsconfig.build.json',
       '/awesome-project/tsconfig.json',
       '/awesome-project/tslint.json',
-      '/awesome-project/src/app.controller.spec.ts',
-      '/awesome-project/src/app.controller.ts',
       '/awesome-project/src/app.module.ts',
-      '/awesome-project/src/app.service.spec.ts',
-      '/awesome-project/src/app.service.ts',
       '/awesome-project/src/main.ts',
+      '/awesome-project/src/math.controller.spec.ts',
+      '/awesome-project/src/math.controller.ts',
       '/awesome-project/test/app.e2e-spec.ts',
       '/awesome-project/test/jest-e2e.json',
     ]);
   });
   it('should manage javascript files', () => {
-    const options: FastifyWebApplicationOptions = {
+    const options: TCPMicroserviceApplicationOptions = {
       name: 'project',
       language: 'js',
     };
@@ -80,12 +76,10 @@ describe('Fastify Web Application Factory', () => {
       '/project/nest-cli.json',
       '/project/nodemon.json',
       '/project/package.json',
-      '/project/src/app.controller.js',
-      '/project/src/app.controller.spec.js',
       '/project/src/app.module.js',
-      '/project/src/app.service.js',
-      '/project/src/app.service.spec.js',
       '/project/src/main.js',
+      '/project/src/math.controller.js',
+      '/project/src/math.controller.spec.js',
       '/project/test/app.e2e-spec.js',
       '/project/test/jest-e2e.json',
     ]);

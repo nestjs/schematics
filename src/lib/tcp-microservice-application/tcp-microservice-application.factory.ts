@@ -14,15 +14,15 @@ import {
   DEFAULT_LANGUAGE,
   DEFAULT_VERSION,
 } from '../defaults';
-import { FastifyWebApplicationOptions } from './fastify-web-application.schema';
+import { TCPMicroserviceApplicationOptions } from './tcp-microservice-application.schema';
 
-export function main(options: FastifyWebApplicationOptions): Rule {
+export function main(options: TCPMicroserviceApplicationOptions): Rule {
   options = transform(options);
   return mergeWith(generate(options));
 }
 
-function transform(options: FastifyWebApplicationOptions): FastifyWebApplicationOptions {
-  const target: FastifyWebApplicationOptions = Object.assign({}, options);
+function transform(options: TCPMicroserviceApplicationOptions): TCPMicroserviceApplicationOptions {
+  const target: TCPMicroserviceApplicationOptions = Object.assign({}, options);
 
   target.author = !!target.author ? target.author : DEFAULT_AUTHOR;
   target.description = !!target.description
@@ -42,7 +42,7 @@ function transform(options: FastifyWebApplicationOptions): FastifyWebApplication
   return target;
 }
 
-function generate(options: FastifyWebApplicationOptions): Source {
+function generate(options: TCPMicroserviceApplicationOptions): Source {
   return apply(url(join('./files' as Path, options.language)), [
     template({
       ...strings,
