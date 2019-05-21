@@ -104,6 +104,11 @@
       "factory": "./lib/tcp-microservice-application/tcp-microservice-application.factory#main",
       "description": "Create a TCP Microservice Nest application.",
       "schema": "./lib/tcp-microservice-application/schema.json"
+    },
+    "redis-microservice-application": {
+      "factory": "./lib/redis-microservice-application/redis-microservice-application.factory#main",
+      "description": "Create a Redis Microservice Nest application.",
+      "schema": "./lib/redis-microservice-application/schema.json"
     }
   }
 }
