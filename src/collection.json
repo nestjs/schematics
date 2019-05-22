@@ -114,6 +114,11 @@
       "factory": "./lib/context-application/context-application.factory#main",
       "description": "Create a Nest Context Application.",
       "schema": "./lib/context-application/schema.json"
+    },
+    "mqtt-microservice-application": {
+      "factory": "./lib/mqtt-microservice-application/mqtt-microservice-application.factory#main",
+      "description": "Create a Nest MQTT Microservice Application.",
+      "schema": "./lib/mqtt-microservice-application/schema.json"
     }
   }
 }
