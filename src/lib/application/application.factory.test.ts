@@ -32,6 +32,7 @@ describe('Application Factory', () => {
       '/project/test/app.e2e-spec.ts',
       '/project/test/jest-e2e.json',
     ]);
+    expect(tree.get('/project/src/main.ts').content.toString()).not.toContain('cluster');
   });
   it('should manage name to dasherize', () => {
     const options: ApplicationOptions = {
@@ -84,5 +85,23 @@ describe('Application Factory', () => {
       '/project/test/app.e2e-spec.js',
       '/project/test/jest-e2e.json',
     ]);
+    expect(tree.get('/project/src/main.js').content.toString()).not.toContain('cluster');
+  });
+  it('should manage clusters', () => {
+    const options: ApplicationOptions = {
+      name: 'awesomeProject',
+      cluster: 2
+    };
+    const tree: UnitTestTree = runner.runSchematic('application', options);
+    expect(tree.get('/awesome-project/src/main.ts').content.toString()).toContain('cluster');
+  });
+  it('should manage clusters javascript', () => {
+    const options: ApplicationOptions = {
+      name: 'awesomeProject',
+      cluster: 2,
+      language: 'js'
+    };
+    const tree: UnitTestTree = runner.runSchematic('application', options);
+    expect(tree.get('/awesome-project/src/main.js').content.toString()).toContain('cluster');
   });
 });

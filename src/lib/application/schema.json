@@ -43,6 +43,11 @@
     "devDependencies": {
       "type": "string",
       "description": "Nest application development dependencies."
+    },
+    "cluster": {
+      "type": "number",
+      "description": "The number of workers application (false if cluster disabled)",
+      "default": false
     }
   },
   "required": ["name"]
