@@ -92,23 +92,28 @@
     },
     "express-web-application": {
       "factory": "./lib/express-web-application/express-web-application.factory#main",
-      "description": "Create a Express Nest application.",
+      "description": "Create a Nest Express Web Application.",
       "schema": "./lib/express-web-application/schema.json"
     },
     "fastify-web-application": {
       "factory": "./lib/fastify-web-application/fastify-web-application.factory#main",
-      "description": "Create a Fastify Nest application.",
+      "description": "Create a Nest Fastify Web Application.",
       "schema": "./lib/fastify-web-application/schema.json"
     },
     "tcp-microservice-application": {
       "factory": "./lib/tcp-microservice-application/tcp-microservice-application.factory#main",
-      "description": "Create a TCP Microservice Nest application.",
+      "description": "Create a Nest TCP Microservice Application.",
       "schema": "./lib/tcp-microservice-application/schema.json"
     },
     "redis-microservice-application": {
       "factory": "./lib/redis-microservice-application/redis-microservice-application.factory#main",
-      "description": "Create a Redis Microservice Nest application.",
+      "description": "Create a Nest Redis Microservice Application.",
       "schema": "./lib/redis-microservice-application/schema.json"
+    },
+    "context-application": {
+      "factory": "./lib/context-application/context-application.factory#main",
+      "description": "Create a Nest Context Application.",
+      "schema": "./lib/context-application/schema.json"
     }
   }
 }
