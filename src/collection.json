@@ -119,6 +119,11 @@
       "factory": "./lib/mqtt-microservice-application/mqtt-microservice-application.factory#main",
       "description": "Create a Nest MQTT Microservice Application.",
       "schema": "./lib/mqtt-microservice-application/schema.json"
+    },
+    "grpc-microservice-application": {
+      "factory": "./lib/grpc-microservice-application/grpc-microservice-application.factory#main",
+      "description": "Create a Nest Grpc Microservice Application.",
+      "schema": "./lib/grpc-microservice-application/schema.json"
     }
   }
 }
