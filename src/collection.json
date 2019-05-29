@@ -124,6 +124,11 @@
       "factory": "./lib/grpc-microservice-application/grpc-microservice-application.factory#main",
       "description": "Create a Nest Grpc Microservice Application.",
       "schema": "./lib/grpc-microservice-application/schema.json"
+    },
+    "nats-microservice-application": {
+      "factory": "./lib/nats-microservice-application/nats-microservice-application.factory#main",
+      "description": "Create a Nest NATS Microservice Application.",
+      "schema": "./lib/nats-microservice-application/schema.json"
     }
   }
 }
