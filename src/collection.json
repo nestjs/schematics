@@ -129,6 +129,11 @@
       "factory": "./lib/nats-microservice-application/nats-microservice-application.factory#main",
       "description": "Create a Nest NATS Microservice Application.",
       "schema": "./lib/nats-microservice-application/schema.json"
+    },
+    "amqp-microservice-application": {
+      "factory": "./lib/amqp-microservice-application/amqp-microservice-application.factory#main",
+      "description": "Create a Nest AMQP Microservice Application.",
+      "schema": "./lib/amqp-microservice-application/schema.json"
     }
   }
 }
