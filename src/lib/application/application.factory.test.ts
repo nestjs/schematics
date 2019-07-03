@@ -41,7 +41,7 @@ describe('Application Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('application', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
-      '/project/.editorconfig',
+      '/awesome-project/.editorconfig',
       '/awesome-project/.gitignore',
       '/awesome-project/.prettierrc',
       '/awesome-project/README.md',
