@@ -1,4 +1,7 @@
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import {
+  SchematicTestRunner,
+  UnitTestTree,
+} from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { ApplicationOptions } from './application.schema';
 
@@ -18,8 +21,6 @@ describe('Application Factory', () => {
       '/project/.prettierrc',
       '/project/README.md',
       '/project/nest-cli.json',
-      '/project/nodemon-debug.json',
-      '/project/nodemon.json',
       '/project/package.json',
       '/project/tsconfig.build.json',
       '/project/tsconfig.json',
@@ -44,8 +45,6 @@ describe('Application Factory', () => {
       '/awesome-project/.prettierrc',
       '/awesome-project/README.md',
       '/awesome-project/nest-cli.json',
-      '/awesome-project/nodemon-debug.json',
-      '/awesome-project/nodemon.json',
       '/awesome-project/package.json',
       '/awesome-project/tsconfig.build.json',
       '/awesome-project/tsconfig.json',
