@@ -2,17 +2,16 @@
   "extends": ["tslint:recommended"],
   "jsRules": {},
   "rules": {
-    "interface-name": ["never-prefix"],
+    "interface-name": false,
     "quotemark": false,
     "no-empty": false,
     "no-empty-interface": false,
-    "max-classes-per-file": [false],
+    "max-classes-per-file": false,
     "arrow-parens": false,
     "variable-name": false,
-    "trailing-comma": false,
     "object-literal-sort-keys": false,
     "member-ordering": false,
-    "member-access": []
+    "member-access": false
   },
   "rulesDirectory": []
 }

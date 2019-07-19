@@ -30,11 +30,13 @@
     },
     "language": {
       "type": "string",
-      "description": "Nest application language."
+      "description": "Nest application language.",
+      "default": "ts"
     },
     "packageManager": {
       "type": "string",
-      "description": "Nest application package manager."
+      "description": "Nest application package manager.",
+      "default": "npm"
     },
     "dependencies": {
       "type": "string",

@@ -9,7 +9,7 @@ describe('Application Web Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
-  it('should manage name only', () => {
+  it('should manage typescript files', () => {
     const options: ApplicationWebOptions = {
       name: 'project',
     };
@@ -35,32 +35,7 @@ describe('Application Web Factory', () => {
       '/project/test/jest-e2e.json',
     ]);
   });
-  it('should manage name to dasherize', () => {
-    const options: ApplicationWebOptions = {
-      name: 'awesomeProject',
-    };
-    const tree: UnitTestTree = runner.runSchematic(SCHEMATICS_NAME, options);
-    const files: string[] = tree.files;
-    expect(files).toEqual([
-      '/awesome-project/.gitignore',
-      '/awesome-project/.prettierrc',
-      '/awesome-project/README.md',
-      '/awesome-project/nest-cli.json',
-      '/awesome-project/nodemon-debug.json',
-      '/awesome-project/nodemon.json',
-      '/awesome-project/package.json',
-      '/awesome-project/tsconfig.build.json',
-      '/awesome-project/tsconfig.json',
-      '/awesome-project/tslint.json',
-      '/awesome-project/src/app.controller.spec.ts',
-      '/awesome-project/src/app.controller.ts',
-      '/awesome-project/src/app.module.ts',
-      '/awesome-project/src/app.service.ts',
-      '/awesome-project/src/main.ts',
-      '/awesome-project/test/app.e2e-spec.ts',
-      '/awesome-project/test/jest-e2e.json',
-    ]);
-  });
+
   it('should manage javascript files', () => {
     const options: ApplicationWebOptions = {
       name: 'project',

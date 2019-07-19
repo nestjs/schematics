@@ -1,53 +1,8 @@
-import { join, Path, strings } from '@angular-devkit/core';
-import {
-  apply,
-  mergeWith,
-  move,
-  Rule,
-  Source,
-  template,
-  url,
-} from '@angular-devkit/schematics';
-import {
-  DEFAULT_AUTHOR,
-  DEFAULT_DESCRIPTION,
-  DEFAULT_LANGUAGE,
-  DEFAULT_VERSION,
-} from '../defaults';
+import { Rule } from '@angular-devkit/schematics';
+import { ApplicationWebGenerator } from './applicatin-web.generator';
+import { ApplicationWebOptionsParser } from './application-web.options-parser';
 import { ApplicationWebOptions } from './application-web.schema';
 
 export function main(options: ApplicationWebOptions): Rule {
-  options = transform(options);
-  return mergeWith(generate(options));
-}
-
-function transform(options: ApplicationWebOptions): ApplicationWebOptions {
-  const target: ApplicationWebOptions = Object.assign({}, options);
-
-  target.author = !!target.author ? target.author : DEFAULT_AUTHOR;
-  target.description = !!target.description
-    ? target.description
-    : DEFAULT_DESCRIPTION;
-  target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
-  target.name = strings.dasherize(target.name);
-  target.version = !!target.version ? target.version : DEFAULT_VERSION;
-
-  target.packageManager = !!target.packageManager
-    ? target.packageManager
-    : 'npm';
-  target.dependencies = !!target.dependencies ? target.dependencies : '';
-  target.devDependencies = !!target.devDependencies
-    ? target.devDependencies
-    : '';
-  return target;
-}
-
-function generate(options: ApplicationWebOptions): Source {
-  return apply(url(join('./files' as Path, options.language)), [
-    template({
-      ...strings,
-      ...options,
-    }),
-    move(options.name),
-  ]);
+  return new ApplicationWebGenerator(ApplicationWebOptionsParser.parse(options)).generate();
 }
