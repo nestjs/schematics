@@ -1,4 +1,4 @@
-export interface ExpressWebApplicationOptions {
+export interface ApplicationWebOptions {
   /**
    * The Nest application name.
    */

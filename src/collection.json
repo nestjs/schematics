@@ -90,10 +90,10 @@
       "description": "Create a Nest library (mono-repo).",
       "schema": "./lib/library/schema.json"
     },
-    "express-web-application": {
-      "factory": "./lib/express-web-application/express-web-application.factory#main",
-      "description": "Create a Nest Express Web Application.",
-      "schema": "./lib/express-web-application/schema.json"
+    "application-web": {
+      "factory": "./lib/application-web/application-web.factory#main",
+      "description": "Create a Nest Web Application.",
+      "schema": "./lib/application-web/schema.json"
     },
     "tcp-microservice-application": {
       "factory": "./lib/tcp-microservice-application/tcp-microservice-application.factory#main",

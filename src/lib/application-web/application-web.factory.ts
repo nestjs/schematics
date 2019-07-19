@@ -14,15 +14,15 @@ import {
   DEFAULT_LANGUAGE,
   DEFAULT_VERSION,
 } from '../defaults';
-import { ExpressWebApplicationOptions } from './express-web-application.schema';
+import { ApplicationWebOptions } from './application-web.schema';
 
-export function main(options: ExpressWebApplicationOptions): Rule {
+export function main(options: ApplicationWebOptions): Rule {
   options = transform(options);
   return mergeWith(generate(options));
 }
 
-function transform(options: ExpressWebApplicationOptions): ExpressWebApplicationOptions {
-  const target: ExpressWebApplicationOptions = Object.assign({}, options);
+function transform(options: ApplicationWebOptions): ApplicationWebOptions {
+  const target: ApplicationWebOptions = Object.assign({}, options);
 
   target.author = !!target.author ? target.author : DEFAULT_AUTHOR;
   target.description = !!target.description
@@ -42,7 +42,7 @@ function transform(options: ExpressWebApplicationOptions): ExpressWebApplication
   return target;
 }
 
-function generate(options: ExpressWebApplicationOptions): Source {
+function generate(options: ApplicationWebOptions): Source {
   return apply(url(join('./files' as Path, options.language)), [
     template({
       ...strings,

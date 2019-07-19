@@ -1,16 +1,16 @@
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { ExpressWebApplicationOptions } from './express-web-application.schema';
+import { ApplicationWebOptions } from './application-web.schema';
 
-const SCHEMATICS_NAME: string = 'express-web-application';
+const SCHEMATICS_NAME: string = 'application-web';
 
-describe('Express Web Application Factory', () => {
+describe('Application Web Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
   it('should manage name only', () => {
-    const options: ExpressWebApplicationOptions = {
+    const options: ApplicationWebOptions = {
       name: 'project',
     };
     const tree: UnitTestTree = runner.runSchematic(SCHEMATICS_NAME, options);
@@ -36,7 +36,7 @@ describe('Express Web Application Factory', () => {
     ]);
   });
   it('should manage name to dasherize', () => {
-    const options: ExpressWebApplicationOptions = {
+    const options: ApplicationWebOptions = {
       name: 'awesomeProject',
     };
     const tree: UnitTestTree = runner.runSchematic(SCHEMATICS_NAME, options);
@@ -62,7 +62,7 @@ describe('Express Web Application Factory', () => {
     ]);
   });
   it('should manage javascript files', () => {
-    const options: ExpressWebApplicationOptions = {
+    const options: ApplicationWebOptions = {
       name: 'project',
       language: 'js',
     };
