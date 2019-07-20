@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "SchematicsNestProject",
+  "title": "Nest Project Options Schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the project.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What name would you like to use for the new project ?"
+    },
+    "author": {
+      "type": "string",
+      "description": "Nest project author.",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "description": "Nest project description.",
+      "default": ""
+    },
+    "version": {
+      "type": "string",
+      "description": "Nest project version.",
+      "default": "0.0.1"
+    },
+    "language": {
+      "type": "string",
+      "description": "Nest project language.",
+      "default": "ts"
+    },
+    "packageManager": {
+      "type": "string",
+      "description": "Nest package manager to use.",
+      "default": "npm"
+    }
+  },
+  "required": ["name"]
+}

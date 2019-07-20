@@ -90,6 +90,11 @@
       "description": "Create a Nest library (mono-repo).",
       "schema": "./lib/library/schema.json"
     },
+    "project": {
+      "factory": "./lib/project/factory#main",
+      "description": "Create a Nest project.",
+      "schema": "./lib/project/schema.json"
+    },
     "application-web": {
       "factory": "./lib/application-web/factory#main",
       "description": "Create a Nest Web Application.",
