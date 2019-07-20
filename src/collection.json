@@ -105,10 +105,10 @@
       "description": "Create a Nest Context Application.",
       "schema": "./lib/applications/context/schema.json"
     },
-    "tcp-microservice-application": {
-      "factory": "./lib/tcp-microservice-application/tcp-microservice-application.factory#main",
-      "description": "Create a Nest TCP Microservice Application.",
-      "schema": "./lib/tcp-microservice-application/schema.json"
+    "microservice-application": {
+      "factory": "./lib/applications/microservice/factory#main",
+      "description": "Create a Nest Microservice Application.",
+      "schema": "./lib/applications/microservice/schema.json"
     }
   }
 }
