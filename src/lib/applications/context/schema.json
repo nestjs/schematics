@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "SchematicsNestApplication",
-  "title": "Nest Application Options Schema",
+  "id": "SchematicsNestContextApplication",
+  "title": "Nest Context Application Options Schema",
   "type": "object",
   "properties": {
     "name": {
@@ -11,7 +11,7 @@
         "$source": "argv",
         "index": 0
       },
-      "x-prompt": "What name would you like to use for the new project?"
+      "x-prompt": "What name would you like to use for the new project ?"
     },
     "author": {
       "type": "string",
@@ -30,19 +30,13 @@
     },
     "language": {
       "type": "string",
-      "description": "Nest application language."
+      "description": "Nest application language.",
+      "default": "ts"
     },
     "packageManager": {
       "type": "string",
-      "description": "Nest application package manager."
-    },
-    "dependencies": {
-      "type": "string",
-      "description": "Nest application dependencies."
-    },
-    "devDependencies": {
-      "type": "string",
-      "description": "Nest application development dependencies."
+      "description": "Nest application package manager.",
+      "default": "npm"
     }
   },
   "required": ["name"]
