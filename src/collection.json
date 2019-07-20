@@ -91,7 +91,7 @@
       "schema": "./lib/library/schema.json"
     },
     "application-web": {
-      "factory": "./lib/application-web/application-web.factory#main",
+      "factory": "./lib/application-web/factory#main",
       "description": "Create a Nest Web Application.",
       "schema": "./lib/application-web/schema.json"
     },
