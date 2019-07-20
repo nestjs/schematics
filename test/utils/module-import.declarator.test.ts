@@ -15,7 +15,7 @@ describe('Module Import Declarator', () => {
       name: 'bar',
       path: normalize('/src/foo/bar'),
       module: normalize('/src/foo/foo.module.ts'),
-      symbol: 'BarModule'
+      symbol: 'BarModule',
     };
     const declarator = new ModuleImportDeclarator();
     expect(declarator.declare(content, options)).toEqual(
@@ -23,7 +23,7 @@ describe('Module Import Declarator', () => {
       'import { BarModule } from \'./bar/bar.module\';\n' +
       '\n' +
       '@Module({})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should manage no type', () => {
@@ -37,7 +37,7 @@ describe('Module Import Declarator', () => {
       name: 'foo',
       path: normalize('/src/foo'),
       module: normalize('/src/foo/foo.ts'),
-      symbol: 'Foo'
+      symbol: 'Foo',
     };
     const declarator = new ModuleImportDeclarator();
     expect(declarator.declare(content, options)).toEqual(
@@ -45,7 +45,7 @@ describe('Module Import Declarator', () => {
       'import { Foo } from \'./foo\';\n' +
       '\n' +
       '@Module({})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
 });

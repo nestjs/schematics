@@ -9,7 +9,7 @@ describe('Module Finder', () => {
     const finder = new ModuleFinder(tree);
     const options: FindOptions = {
       name: 'foo',
-      path: normalize('/src')
+      path: normalize('/src'),
     };
     expect(finder.find(options))
       .toEqual(normalize('/src/app.module.ts'));
@@ -21,7 +21,7 @@ describe('Module Finder', () => {
     const finder = new ModuleFinder(tree);
     const options: FindOptions = {
       name: 'name',
-      path: normalize('/src/foo')
+      path: normalize('/src/foo'),
     };
     expect(finder.find(options))
       .toEqual(normalize('/src/foo/foo.module.ts'));
@@ -32,7 +32,7 @@ describe('Module Finder', () => {
     const finder = new ModuleFinder(tree);
     const options: FindOptions = {
       name: 'foo',
-      path: normalize('/src')
+      path: normalize('/src'),
     };
     expect(finder.find(options))
       .toEqual(normalize('/src/app.module.js'));
@@ -44,7 +44,7 @@ describe('Module Finder', () => {
     const finder = new ModuleFinder(tree);
     const options: FindOptions = {
       name: 'foo',
-      path: normalize('/src')
+      path: normalize('/src'),
     };
     expect(finder.find(options)).toEqual(null);
   });

@@ -5,7 +5,7 @@ describe('Name Parser', () => {
   beforeAll(() => parser = new NameParser());
   it('should handle no path', () => {
     const options: ParseOptions = {
-      name: 'foo'
+      name: 'foo',
     };
     const location: Location = parser.parse(options);
     expect(location.name).toEqual('foo');
@@ -14,7 +14,7 @@ describe('Name Parser', () => {
   it('should handle just the name', () => {
     const options: ParseOptions = {
       name: 'foo',
-      path: 'baz'
+      path: 'baz',
     };
     const location: Location = parser.parse(options);
     expect(location.name).toEqual('foo');
@@ -23,7 +23,7 @@ describe('Name Parser', () => {
   it('should handle name has a path (sub-dir)', () => {
     const options: ParseOptions = {
       name: 'bar/foo',
-      path: 'baz'
+      path: 'baz',
     };
     const location: Location = parser.parse(options);
     expect(location.name).toEqual('foo');
@@ -33,7 +33,7 @@ describe('Name Parser', () => {
   it('should handle name has a higher path', () => {
     const options: ParseOptions = {
       name: '../foo',
-      path: 'bar/baz'
+      path: 'bar/baz',
     };
     const location: Location = parser.parse(options);
     expect(location.name).toEqual('foo');
@@ -43,7 +43,7 @@ describe('Name Parser', () => {
   it('should handle name has a higher path above root', () => {
     const options: ParseOptions = {
       name: '../../../foo',
-      path: 'baz'
+      path: 'baz',
     };
     expect(() => parser.parse(options)).toThrow();
   });

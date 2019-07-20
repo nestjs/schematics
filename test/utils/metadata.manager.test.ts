@@ -6,7 +6,7 @@ describe('Metadata Manager', () => {
       'import { Module } from \'@nestjs/common\';\n' +
       '\n' +
       '@Module({})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
     const metadata = 'imports';
     const symbol = 'FooModule';
@@ -16,7 +16,7 @@ describe('Metadata Manager', () => {
       '@Module({\n' +
       '  imports: [FooModule]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should insert the new metadata when existing metadata', () => {
@@ -26,7 +26,7 @@ describe('Metadata Manager', () => {
       '@Module({\n' +
       '  controllers: [FooController]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
     const metadata = 'imports';
     const symbol = 'FooModule';
@@ -37,7 +37,7 @@ describe('Metadata Manager', () => {
       '  controllers: [FooController],\n' +
       '  imports: [FooModule]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should insert the symbol to the metadata', () => {
@@ -47,7 +47,7 @@ describe('Metadata Manager', () => {
       '@Module({\n' +
       '  imports: [BarModule]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
     const metadata = 'imports';
     const symbol = 'FooModule';
@@ -57,7 +57,7 @@ describe('Metadata Manager', () => {
       '@Module({\n' +
       '  imports: [BarModule, FooModule]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should insert the symbol to right metadata', () => {
@@ -70,7 +70,7 @@ describe('Metadata Manager', () => {
       '  imports: [BarModule],\n' +
       '  controllers: [FooController]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
     expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -79,7 +79,7 @@ describe('Metadata Manager', () => {
       '  imports: [BarModule, FooModule],\n' +
       '  controllers: [FooController]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should manage forRoot()', () => {
@@ -92,7 +92,7 @@ describe('Metadata Manager', () => {
       '  imports: [BarModule.forRoot()],\n' +
       '  controllers: [FooController]' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
     expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -101,7 +101,7 @@ describe('Metadata Manager', () => {
       '  imports: [BarModule.forRoot(), FooModule],\n' +
       '  controllers: [FooController]' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should manage forRoot() with data containing array', () => {
@@ -114,7 +114,7 @@ describe('Metadata Manager', () => {
       '  imports: [BarModule.forRoot({ arry: [Symbol] })],\n' +
       '  controllers: [FooController]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
     expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -123,7 +123,7 @@ describe('Metadata Manager', () => {
       '  imports: [BarModule.forRoot({ arry: [Symbol] }), FooModule],\n' +
       '  controllers: [FooController]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should multi line formatted metadata', () => {
@@ -136,7 +136,7 @@ describe('Metadata Manager', () => {
       '  imports: [\n    BarModule\n  ],\n' +
       '  controllers: [\n    FooController\n  ]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
     expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -145,7 +145,7 @@ describe('Metadata Manager', () => {
       '  imports: [\n    BarModule,\n    FooModule\n  ],\n' +
       '  controllers: [\n    FooController\n  ]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should manage comments', () => {
@@ -163,7 +163,7 @@ describe('Metadata Manager', () => {
       '    FooController\n' +
       '  ]' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
     expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -178,7 +178,7 @@ describe('Metadata Manager', () => {
       '    FooController\n' +
       '  ]' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should manage trailing comma', () => {
@@ -191,7 +191,7 @@ describe('Metadata Manager', () => {
       '  imports: [BarModule,],\n' +
       '  controllers: [FooController]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
     expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -200,7 +200,7 @@ describe('Metadata Manager', () => {
       '  imports: [BarModule, FooModule,],\n' +
       '  controllers: [FooController]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should manage multi line trailing comma', () => {
@@ -213,7 +213,7 @@ describe('Metadata Manager', () => {
       '  imports: [\n    BarModule,\n  ],\n' +
       '  controllers: [\n    FooController\n  ]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
     expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -222,7 +222,7 @@ describe('Metadata Manager', () => {
       '  imports: [\n    BarModule,\n    FooModule,\n  ],\n' +
       '  controllers: [\n    FooController\n  ]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should manage multi line with configuration', () => {
@@ -235,7 +235,7 @@ describe('Metadata Manager', () => {
       '  imports: [\n    BarModule.forRoot({ arry: [Symbol] })\n  ],\n' +
       '  controllers: [\n    FooController\n  ]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
     expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -244,7 +244,7 @@ describe('Metadata Manager', () => {
       '  imports: [\n    BarModule.forRoot({ arry: [Symbol] }),\n    FooModule\n  ],\n' +
       '  controllers: [\n    FooController\n  ]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should manage existing empty metadata', () => {
@@ -257,7 +257,7 @@ describe('Metadata Manager', () => {
       '  imports: [],\n' +
       '  controllers: [FooController]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
     expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -266,7 +266,7 @@ describe('Metadata Manager', () => {
       '  imports: [FooModule],\n' +
       '  controllers: [FooController]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should manage existing metadata with comment', () => {
@@ -283,7 +283,7 @@ describe('Metadata Manager', () => {
       '    FooController\n' +
       '  ]' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
     expect(manager.insert(metadata, symbol)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -296,7 +296,7 @@ describe('Metadata Manager', () => {
       '    FooController\n' +
       '  ]' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
 });

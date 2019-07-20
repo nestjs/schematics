@@ -14,7 +14,7 @@ describe('Module Declarator', () => {
       type: 'module',
       name: 'bar',
       path: normalize('/src/foo/bar'),
-      module: normalize('/src/foo/foo.module.ts')
+      module: normalize('/src/foo/foo.module.ts'),
     };
     expect(declarator.declare(content, options)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -23,7 +23,7 @@ describe('Module Declarator', () => {
       '@Module({\n' +
       '  imports: [BarModule]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
   it('should manage no type', () => {
@@ -37,7 +37,7 @@ describe('Module Declarator', () => {
       metadata: 'providers',
       name: 'foo',
       path: normalize('/src/foo'),
-      module: normalize('/src/foo.ts')
+      module: normalize('/src/foo.ts'),
     };
     expect(declarator.declare(content, options)).toEqual(
       'import { Module } from \'@nestjs/common\';\n' +
@@ -46,7 +46,7 @@ describe('Module Declarator', () => {
       '@Module({\n' +
       '  providers: [Foo]\n' +
       '})\n' +
-      'export class FooModule {}\n'
+      'export class FooModule {}\n',
     );
   });
 });
