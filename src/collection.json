@@ -95,10 +95,10 @@
       "description": "Create a Nest project.",
       "schema": "./lib/project/schema.json"
     },
-    "application-web": {
-      "factory": "./lib/application-web/factory#main",
+    "web-application": {
+      "factory": "./lib/applications/web/factory#main",
       "description": "Create a Nest Web Application.",
-      "schema": "./lib/application-web/schema.json"
+      "schema": "./lib/applications/web/schema.json"
     },
     "tcp-microservice-application": {
       "factory": "./lib/tcp-microservice-application/tcp-microservice-application.factory#main",

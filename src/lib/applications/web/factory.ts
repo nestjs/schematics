@@ -8,28 +8,28 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import { ProjectOptions } from './options';
+import { WebApplicationOptions } from './options';
 
-export function main(options: ProjectOptions): Rule {
+export function main(options: WebApplicationOptions): Rule {
   return create(parse(options));
 }
 
-export function parse(options: ProjectOptions): ProjectOptions {
+export function parse(options: WebApplicationOptions): WebApplicationOptions {
   return {
     ...options,
     name: strings.dasherize(options.name),
   };
 }
 
-function create(options: ProjectOptions): Rule {
+function create(options: WebApplicationOptions): Rule {
   return mergeWith(apply(createSource(options), createRules(options)));
 }
 
-function createSource(options: ProjectOptions): Source {
+function createSource(options: WebApplicationOptions): Source {
   return url(join('./files' as Path, options.language));
 }
 
-function createRules(options: ProjectOptions): Rule[] {
+function createRules(options: WebApplicationOptions): Rule[] {
   return [
     template({
       ...strings,

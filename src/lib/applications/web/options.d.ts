@@ -1,4 +1,4 @@
-export interface ApplicationWebOptions {
+export interface WebApplicationOptions {
   /**
    * The Nest application name.
    */
@@ -23,12 +23,4 @@ export interface ApplicationWebOptions {
    * The used package manager.
    */
   packageManager?: 'npm' | 'yarn';
-  /**
-   * The Nest included production dependencies (comma separated values).
-   */
-  dependencies?: string;
-  /**
-   * The Nest included development dependencies (comma separated values).
-   */
-  devDependencies?: string;
 }
