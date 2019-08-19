@@ -97,4 +97,16 @@ describe('Class Factory', () => {
     ).not.toBeUndefined();
     expect(tree.readContent('/foo/foo.js')).toEqual('export class Foo {}\n');
   });
+  it('should remove . from name', () => {
+    const options: ClassOptions = {
+      name: 'foo.entity',
+      spec: true,
+      flat: true,
+    };
+    const tree: UnitTestTree = runner.runSchematic('class', options);
+    const files: string[] = tree.files;
+
+    expect(files.find(filename => filename === '/foo-entity.ts')).not.toBeUndefined();
+    expect(tree.readContent('/foo-entity.ts')).toEqual('export class FooEntity {}\n');
+  });
 });

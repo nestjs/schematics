@@ -28,6 +28,9 @@ function transform(options: ClassOptions): ClassOptions {
   if (!target.name) {
     throw new SchematicsException('Option (name) is required.');
   }
+  if (target.name.includes('.')) {
+    target.name = strings.classify(target.name).replace('.', '');
+  }
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
   target.language =
