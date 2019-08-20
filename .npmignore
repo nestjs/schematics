@@ -17,6 +17,11 @@ test/
 # tests
 **/*.test.ts
 
+# source
+**/*.ts
+*.ts
+!**/files/**/*.ts
+
 # add definitions
 !**/*.d.ts
 !*.d.ts
