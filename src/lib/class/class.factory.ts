@@ -29,9 +29,12 @@ function transform(options: ClassOptions): ClassOptions {
     throw new SchematicsException('Option (name) is required.');
   }
   if (target.name.includes('.')) {
-    target.name = strings.classify(target.name).replace('.', '');
+    target.className = strings.classify(target.name).replace('.', '');
+  } else {
+    target.className = target.name;
   }
   const location: Location = new NameParser().parse(target);
+
   target.name = strings.dasherize(location.name);
   target.language =
     target.language !== undefined ? target.language : DEFAULT_LANGUAGE;
