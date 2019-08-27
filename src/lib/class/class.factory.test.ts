@@ -30,6 +30,7 @@ describe('Class Factory', () => {
     };
     const tree: UnitTestTree = runner.runSchematic('class', options);
     const files: string[] = tree.files;
+
     expect(
       files.find(filename => filename === '/bar/foo/foo.ts'),
     ).not.toBeUndefined();
