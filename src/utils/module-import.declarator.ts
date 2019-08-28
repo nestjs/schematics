@@ -6,25 +6,28 @@ export class ModuleImportDeclarator {
   constructor(private solver: PathSolver = new PathSolver()) {}
 
   public declare(content: string, options: DeclarationOptions): string {
-    const toInsert: string = this.buildLineToInsert(options);
-    const importLines: string[] = this.findImports(content);
-    const otherLines: string[] = this.findOtherLines(content, importLines);
-    importLines.push(toInsert);
-    return importLines.join('\n').concat(otherLines.join('\n'));
+    const toInsert = this.buildLineToInsert(options);
+    const contentLines = content.split('\n');
+    const finalImportIndex = this.findImportsEndpoint(contentLines);
+    contentLines.splice(finalImportIndex + 1, 0, toInsert);
+    return contentLines.join('\n');
   }
 
-  private findImports(content: string): string[] {
-    return content.split('\n').filter(line => line.match(/import {/));
-  }
+  private findImportsEndpoint(contentLines: string[]): number {
+    const reverseContents = Array.from(contentLines).reverse();
+    const reverseImports = reverseContents.filter(line => line.match(/\} from ('|")/));
 
-  private findOtherLines(content: string, importLines: string[]) {
-    return content.split('\n').filter(line => importLines.indexOf(line) < 0);
+    if (reverseImports.length > 0) {
+      return contentLines.indexOf(reverseImports[0]);
+    } else {
+      return 0;
+    }
   }
 
   private buildLineToInsert(options: DeclarationOptions): string {
     return `import { ${options.symbol} } from '${this.computeRelativePath(
       options,
-    )}';\n`;
+    )}';`;
   }
 
   private computeRelativePath(options: DeclarationOptions): string {
