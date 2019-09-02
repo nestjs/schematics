@@ -14,14 +14,14 @@ export class ModuleImportDeclarator {
   }
 
   private findImportsEndpoint(contentLines: string[]): number {
-    const reverseContents = Array.from(contentLines).reverse();
-    const reverseImports = reverseContents.filter(line => line.match(/\} from ('|")/));
-
-    if (reverseImports.length > 0) {
-      return contentLines.indexOf(reverseImports[0]);
-    } else {
+    const reversedContent = Array.from(contentLines).reverse();
+    const reverseImports = reversedContent.filter(line =>
+      line.match(/\} from ('|")/),
+    );
+    if (reverseImports.length <= 0) {
       return 0;
     }
+    return contentLines.indexOf(reverseImports[0]);
   }
 
   private buildLineToInsert(options: DeclarationOptions): string {
