@@ -38,7 +38,8 @@
       "js",
       "json"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
+    "roots":["<rootDir>/src/","<rootDir>/libs/" ],
     "testRegex": ".spec.js$",
     "coverageDirectory": "../coverage"
   }
