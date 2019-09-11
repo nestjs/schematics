@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@types/jest": "23.3.14",
-    "@types/node": "10.14.17",
+    "@types/node": "10.14.18",
     "gulp": "4.0.1",
     "jest": "24.9.0",
     "nyc": "14.1.1",
