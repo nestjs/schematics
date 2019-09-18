@@ -23,7 +23,7 @@ export class ModuleFinder {
       return null;
     }
     const moduleFilename: PathFragment = directory.subfiles.find(filename =>
-      /\.module\.(t|j)s/.test(filename),
+      /\.module\.(t|j)s$/.test(filename),
     );
     return moduleFilename !== undefined
       ? join(directory.path, moduleFilename.valueOf())

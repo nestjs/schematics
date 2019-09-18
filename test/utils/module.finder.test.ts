@@ -9,10 +9,9 @@ describe('Module Finder', () => {
     const finder = new ModuleFinder(tree);
     const options: FindOptions = {
       name: 'foo',
-      path: normalize('/src')
+      path: normalize('/src'),
     };
-    expect(finder.find(options))
-      .toEqual(normalize('/src/app.module.ts'));
+    expect(finder.find(options)).toEqual(normalize('/src/app.module.ts'));
   });
   it('should return the intermediate module path', () => {
     const tree = new EmptyTree();
@@ -21,10 +20,9 @@ describe('Module Finder', () => {
     const finder = new ModuleFinder(tree);
     const options: FindOptions = {
       name: 'name',
-      path: normalize('/src/foo')
+      path: normalize('/src/foo'),
     };
-    expect(finder.find(options))
-      .toEqual(normalize('/src/foo/foo.module.ts'));
+    expect(finder.find(options)).toEqual(normalize('/src/foo/foo.module.ts'));
   });
   it('should manage javascript module file', () => {
     const tree = new EmptyTree();
@@ -32,10 +30,9 @@ describe('Module Finder', () => {
     const finder = new ModuleFinder(tree);
     const options: FindOptions = {
       name: 'foo',
-      path: normalize('/src')
+      path: normalize('/src'),
     };
-    expect(finder.find(options))
-      .toEqual(normalize('/src/app.module.js'));
+    expect(finder.find(options)).toEqual(normalize('/src/app.module.js'));
   });
 
   it('should return null when directory does not exist', () => {
@@ -44,7 +41,18 @@ describe('Module Finder', () => {
     const finder = new ModuleFinder(tree);
     const options: FindOptions = {
       name: 'foo',
-      path: normalize('/src')
+      path: normalize('/src'),
+    };
+    expect(finder.find(options)).toEqual(null);
+  });
+
+  it('should ignore vim swap files', () => {
+    const tree = new EmptyTree();
+    tree.create('/src/foo/foo.module.ts.swp', 'foo module content');
+    const finder = new ModuleFinder(tree);
+    const options: FindOptions = {
+      name: 'name',
+      path: normalize('/src/foo'),
     };
     expect(finder.find(options)).toEqual(null);
   });
