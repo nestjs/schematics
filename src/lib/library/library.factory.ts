@@ -161,11 +161,12 @@ function addLibraryToCliOptions(
     sourceRoot: join(projectRoot as Path, projectName, 'src'),
   };
   return (host: Tree) => {
-    const nestCliFileExists = host.exists('nest-cli.json');
     const nestFileExists = host.exists('nest.json');
 
+    let nestCliFileExists = host.exists('nest-cli.json');
     if (!nestCliFileExists && !nestFileExists) {
-      return host;
+      host.create('nest-cli.json', '{}');
+      nestCliFileExists = true;
     }
     return updateJsonFile(
       host,
