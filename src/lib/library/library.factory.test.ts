@@ -18,6 +18,7 @@ describe('Library Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('library', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
+      '/nest-cli.json',
       '/libs/project/tsconfig.lib.json',
       '/libs/project/tslint.json',
       '/libs/project/src/index.ts',
@@ -34,6 +35,7 @@ describe('Library Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('library', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
+      '/nest-cli.json',
       '/libs/awesome-project/tsconfig.lib.json',
       '/libs/awesome-project/tslint.json',
       '/libs/awesome-project/src/index.ts',
@@ -51,6 +53,7 @@ describe('Library Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('library', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
+      '/nest-cli.json',
       '/libs/project/.babelrc',
       '/libs/project/jsconfig.json',
       '/libs/project/src/index.js',

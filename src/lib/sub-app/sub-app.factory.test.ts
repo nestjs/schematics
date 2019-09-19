@@ -17,6 +17,7 @@ describe('SubApp Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('sub-app', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
+      '/nest-cli.json',
       '/apps/main/tsconfig.app.json',
       '/apps/main/tslint.json',
       '/apps/project/tsconfig.app.json',
@@ -37,6 +38,7 @@ describe('SubApp Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('sub-app', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
+      '/nest-cli.json',
       '/apps/main/tsconfig.app.json',
       '/apps/main/tslint.json',
       '/apps/awesome-project/tsconfig.app.json',
@@ -58,6 +60,7 @@ describe('SubApp Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('sub-app', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
+      '/nest-cli.json',
       '/apps/main/.babelrc',
       '/apps/main/index.js',
       '/apps/main/jsconfig.json',

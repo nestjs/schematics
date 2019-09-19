@@ -11,6 +11,7 @@ import {
   chain,
   mergeWith,
   move,
+  noop,
   Rule,
   SchematicsException,
   Source,
@@ -50,9 +51,20 @@ export function main(options: SubAppOptions): Rule {
   return chain([
     updateTsConfig(),
     updatePackageJson(options, defaultAppName),
-    addSubAppToCliOptions(options.path, options.name, defaultAppName),
-    branchAndMerge(mergeWith(generateWorkspace(options, defaultAppName))),
-    moveDefaultAppToApps(options.path, defaultAppName, options.sourceRoot),
+    (tree, context) =>
+      isMonorepo(tree)
+        ? noop()(tree, context)
+        : chain([
+            branchAndMerge(
+              mergeWith(generateWorkspace(options, defaultAppName)),
+            ),
+            moveDefaultAppToApps(
+              options.path,
+              defaultAppName,
+              options.sourceRoot,
+            ),
+          ])(tree, context),
+    addAppsToCliOptions(options.path, options.name, defaultAppName),
     branchAndMerge(mergeWith(generate(options))),
   ]);
 }
@@ -73,6 +85,26 @@ function transform(options: SubAppOptions): SubAppOptions {
       : normalize(defaultSourceRoot);
 
   return target;
+}
+
+function isMonorepo(host: Tree) {
+  console.log('??');
+  const nestFileExists = host.exists('nest.json');
+  const nestCliFileExists = host.exists('nest-cli.json');
+  if (!nestFileExists && !nestCliFileExists) {
+    return false;
+  }
+  console.log('exists?');
+  const filename = nestCliFileExists ? 'nest-cli.json' : 'nest.json';
+  const source = host.read(filename);
+  if (!source) {
+    console.log('no srouce');
+    return false;
+  }
+  const sourceText = source.toString('utf-8');
+  const optionsObj = parseJson(sourceText) as Record<string, any>;
+  console.log(optionsObj);
+  return !!optionsObj.monorepo;
 }
 
 function updateJsonFile<T>(
@@ -186,18 +218,25 @@ function moveDefaultAppToApps(
     if (process.env.NODE_ENV === TEST_ENV) {
       return host;
     }
-    if (fse.existsSync(sourceRoot)) {
-      fse.moveSync(sourceRoot, join(projectRoot as Path, appName, sourceRoot));
-    }
-    const testDir = 'test';
-    if (fse.existsSync(testDir)) {
-      fse.moveSync(testDir, join(projectRoot as Path, appName, testDir));
+    try {
+      if (fse.existsSync(sourceRoot)) {
+        fse.moveSync(
+          sourceRoot,
+          join(projectRoot as Path, appName, sourceRoot),
+        );
+      }
+      const testDir = 'test';
+      if (fse.existsSync(testDir)) {
+        fse.moveSync(testDir, join(projectRoot as Path, appName, testDir));
+      }
+    } catch (err) {
+      throw new SchematicsException(`Directory ${projectRoot} already exists.`);
     }
     return host;
   };
 }
 
-function addSubAppToCliOptions(
+function addAppsToCliOptions(
   projectRoot: string,
   projectName: string,
   appName: string,
@@ -218,25 +257,36 @@ function addSubAppToCliOptions(
       host,
       nestCliFileExists ? 'nest-cli.json' : 'nest.json',
       (optionsFile: Record<string, any>) => {
+        updateMainAppOptions(optionsFile, projectRoot, appName);
         if (!optionsFile.projects) {
           optionsFile.projects = {} as any;
         }
         optionsFile.projects[projectName] = project;
-
-        // Update initial application options
-        if (
-          optionsFile.sourceRoot &&
-          optionsFile.sourceRoot.indexOf(projectRoot) >= 0
-        ) {
-          return;
-        }
-        optionsFile.sourceRoot = join(
-          projectRoot as Path,
-          appName,
-          optionsFile.sourceRoot || DEFAULT_PATH_NAME,
-        );
       },
     );
+  };
+}
+
+function updateMainAppOptions(
+  optionsFile: Record<string, any>,
+  projectRoot: string,
+  appName: string,
+) {
+  if (optionsFile.monorepo) {
+    return;
+  }
+  optionsFile.monorepo = true;
+  optionsFile.sourceRoot = join(
+    projectRoot as Path,
+    appName,
+    optionsFile.sourceRoot || DEFAULT_PATH_NAME,
+  );
+  if (!optionsFile.projects) {
+    optionsFile.projects = {} as any;
+  }
+  optionsFile.projects[appName] = {
+    root: join(projectRoot as Path, appName),
+    sourceRoot: join(projectRoot as Path, appName, DEFAULT_PATH_NAME),
   };
 }
 
