@@ -18,7 +18,11 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import { DEFAULT_LANGUAGE, DEFAULT_LIB_PATH } from '../defaults';
+import {
+  DEFAULT_LANGUAGE,
+  DEFAULT_LIB_PATH,
+  DEFAULT_PATH_NAME,
+} from '../defaults';
 import { LibraryOptions } from './library.schema';
 
 type UpdateJsonFn<T> = (obj: T) => T | void;
@@ -34,6 +38,7 @@ interface TsConfigPartialType {
 export function main(options: LibraryOptions): Rule {
   options = transform(options);
   return chain([
+    updatePackageJson(options),
     updateTsConfig(options.name, options.prefix, options.path),
     addLibraryToCliOptions(options.path, options.name),
     branchAndMerge(mergeWith(generate(options))),
@@ -57,6 +62,36 @@ function transform(options: LibraryOptions): LibraryOptions {
 
   target.prefix = target.prefix || '@app';
   return target;
+}
+
+function updatePackageJson(options: LibraryOptions) {
+  return (host: Tree) => {
+    if (!host.exists('package.json')) {
+      return host;
+    }
+    return updateJsonFile(
+      host,
+      'package.json',
+      (packageJson: Record<string, any>) => {
+        // tslint:disable:no-unused-expression
+        packageJson.scripts && updateNpmScripts(packageJson.scripts);
+      },
+    );
+  };
+}
+
+function updateNpmScripts(scripts: Record<string, any>) {
+  const defaultFormatScriptName = 'format';
+  if (!scripts[defaultFormatScriptName]) {
+    return;
+  }
+  if (
+    scripts[defaultFormatScriptName] &&
+    scripts[defaultFormatScriptName].indexOf(DEFAULT_PATH_NAME) >= 0
+  ) {
+    scripts[defaultFormatScriptName] =
+      'prettier --write "src/**/*.ts" "test/**/*.ts" "libs/**/*.ts"';
+  }
 }
 
 function updateJsonFile<T>(
