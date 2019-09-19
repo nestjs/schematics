@@ -20,7 +20,6 @@ describe('Configuration Factory', () => {
       files.find(filename => filename === '/project/nest-cli.json'),
     ).not.toBeUndefined();
     expect(JSON.parse(tree.readContent('/project/nest-cli.json'))).toEqual({
-      language: 'ts',
       collection: '@nestjs/schematics',
       sourceRoot: 'src',
     });
@@ -52,7 +51,6 @@ describe('Configuration Factory', () => {
       files.find(filename => filename === '/project/nest-cli.json'),
     ).not.toBeUndefined();
     expect(JSON.parse(tree.readContent('/project/nest-cli.json'))).toEqual({
-      language: 'ts',
       collection: 'foo',
       sourceRoot: 'src',
     });

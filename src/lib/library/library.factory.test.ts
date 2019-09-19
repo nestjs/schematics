@@ -18,8 +18,6 @@ describe('Library Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('library', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
-      '/libs/project/.gitignore',
-      '/libs/project/package.json',
       '/libs/project/tsconfig.lib.json',
       '/libs/project/tslint.json',
       '/libs/project/src/index.ts',
@@ -36,8 +34,6 @@ describe('Library Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('library', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
-      '/libs/awesome-project/.gitignore',
-      '/libs/awesome-project/package.json',
       '/libs/awesome-project/tsconfig.lib.json',
       '/libs/awesome-project/tslint.json',
       '/libs/awesome-project/src/index.ts',
@@ -56,9 +52,7 @@ describe('Library Factory', () => {
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/libs/project/.babelrc',
-      '/libs/project/.gitignore',
       '/libs/project/jsconfig.json',
-      '/libs/project/package.json',
       '/libs/project/src/index.js',
       '/libs/project/src/project.module.js',
       '/libs/project/src/project.service.js',
