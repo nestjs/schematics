@@ -90,7 +90,7 @@
       "description": "Create a Nest library (mono-repo).",
       "schema": "./lib/library/schema.json"
     },
-    "app": {
+    "sub-app": {
       "factory": "./lib/sub-app/sub-app.factory#main",
       "description": "Create a Nest application (mono-repo).",
       "schema": "./lib/sub-app/schema.json"
