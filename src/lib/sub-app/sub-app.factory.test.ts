@@ -14,7 +14,7 @@ describe('SubApp Factory', () => {
     const options: SubAppOptions = {
       name: 'project',
     };
-    const tree: UnitTestTree = runner.runSchematic('app', options);
+    const tree: UnitTestTree = runner.runSchematic('sub-app', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/apps/main/tsconfig.app.json',
@@ -34,7 +34,7 @@ describe('SubApp Factory', () => {
     const options: SubAppOptions = {
       name: 'awesomeProject',
     };
-    const tree: UnitTestTree = runner.runSchematic('app', options);
+    const tree: UnitTestTree = runner.runSchematic('sub-app', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/apps/main/tsconfig.app.json',
@@ -55,7 +55,7 @@ describe('SubApp Factory', () => {
       name: 'project',
       language: 'js',
     };
-    const tree: UnitTestTree = runner.runSchematic('app', options);
+    const tree: UnitTestTree = runner.runSchematic('sub-app', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/apps/main/.babelrc',
