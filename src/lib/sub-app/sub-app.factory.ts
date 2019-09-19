@@ -21,12 +21,12 @@ import {
 } from '@angular-devkit/schematics';
 import * as fse from 'fs-extra';
 import {
-  ALTERNATIVE_DIR_ENTRY_APP,
   DEFAULT_APPS_PATH,
   DEFAULT_DIR_ENTRY_APP,
   DEFAULT_LANGUAGE,
   DEFAULT_LIB_PATH,
   DEFAULT_PATH_NAME,
+  PROJECT_TYPE,
   TEST_ENV,
 } from '../defaults';
 import { SubAppOptions } from './sub-app.schema';
@@ -42,31 +42,38 @@ interface TsConfigPartialType {
 }
 
 export function main(options: SubAppOptions): Rule {
-  const defaultAppName =
-    options.name === DEFAULT_DIR_ENTRY_APP
-      ? ALTERNATIVE_DIR_ENTRY_APP
-      : DEFAULT_DIR_ENTRY_APP;
-
+  const appName = getAppNameFromPackageJson();
   options = transform(options);
   return chain([
     updateTsConfig(),
-    updatePackageJson(options, defaultAppName),
+    updatePackageJson(options, appName),
     (tree, context) =>
       isMonorepo(tree)
         ? noop()(tree, context)
         : chain([
-            branchAndMerge(
-              mergeWith(generateWorkspace(options, defaultAppName)),
-            ),
-            moveDefaultAppToApps(
-              options.path,
-              defaultAppName,
-              options.sourceRoot,
-            ),
+            branchAndMerge(mergeWith(generateWorkspace(options, appName))),
+            moveDefaultAppToApps(options.path, appName, options.sourceRoot),
           ])(tree, context),
-    addAppsToCliOptions(options.path, options.name, defaultAppName),
+    addAppsToCliOptions(options.path, options.name, appName),
     branchAndMerge(mergeWith(generate(options))),
   ]);
+}
+
+function getAppNameFromPackageJson(): string {
+  try {
+    if (!fse.existsSync('./package.json')) {
+      return DEFAULT_DIR_ENTRY_APP;
+    }
+    const packageJson = fse.readJsonSync('./package.json');
+    if (!packageJson.name) {
+      return DEFAULT_DIR_ENTRY_APP;
+    }
+    let name = packageJson.name;
+    name = name.replace(/[^\w.]+/g, '-').replace(/\-+/g, '-');
+    return name[0] === '-' ? name.substr(1) : name;
+  } catch {
+    return DEFAULT_DIR_ENTRY_APP;
+  }
 }
 
 function transform(options: SubAppOptions): SubAppOptions {
@@ -226,7 +233,9 @@ function moveDefaultAppToApps(
         fse.moveSync(testDir, join(projectRoot as Path, appName, testDir));
       }
     } catch (err) {
-      throw new SchematicsException(`Directory ${projectRoot} already exists.`);
+      throw new SchematicsException(
+        `The ${projectRoot} directory already exists.`,
+      );
     }
     return host;
   };
@@ -238,6 +247,7 @@ function addAppsToCliOptions(
   appName: string,
 ): Rule {
   const project = {
+    type: PROJECT_TYPE.APPLICATION,
     root: join(projectRoot as Path, projectName),
     sourceRoot: join(projectRoot as Path, projectName, DEFAULT_PATH_NAME),
   };
@@ -281,6 +291,7 @@ function updateMainAppOptions(
     optionsFile.projects = {} as any;
   }
   optionsFile.projects[appName] = {
+    type: PROJECT_TYPE.APPLICATION,
     root: join(projectRoot as Path, appName),
     sourceRoot: join(projectRoot as Path, appName, DEFAULT_PATH_NAME),
   };

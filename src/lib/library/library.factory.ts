@@ -22,6 +22,7 @@ import {
   DEFAULT_LANGUAGE,
   DEFAULT_LIB_PATH,
   DEFAULT_PATH_NAME,
+  PROJECT_TYPE,
 } from '../defaults';
 import { LibraryOptions } from './library.schema';
 
@@ -157,6 +158,7 @@ function addLibraryToCliOptions(
   projectName: string,
 ): Rule {
   const project = {
+    type: PROJECT_TYPE.LIBRARY,
     root: join(projectRoot as Path, projectName),
     sourceRoot: join(projectRoot as Path, projectName, 'src'),
   };
