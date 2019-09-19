@@ -88,22 +88,18 @@ function transform(options: SubAppOptions): SubAppOptions {
 }
 
 function isMonorepo(host: Tree) {
-  console.log('??');
   const nestFileExists = host.exists('nest.json');
   const nestCliFileExists = host.exists('nest-cli.json');
   if (!nestFileExists && !nestCliFileExists) {
     return false;
   }
-  console.log('exists?');
   const filename = nestCliFileExists ? 'nest-cli.json' : 'nest.json';
   const source = host.read(filename);
   if (!source) {
-    console.log('no srouce');
     return false;
   }
   const sourceText = source.toString('utf-8');
   const optionsObj = parseJson(sourceText) as Record<string, any>;
-  console.log(optionsObj);
   return !!optionsObj.monorepo;
 }
 
