@@ -24,6 +24,7 @@ import {
   DEFAULT_APPS_PATH,
   DEFAULT_DIR_ENTRY_APP,
   DEFAULT_LANGUAGE,
+  DEFAULT_LIB_PATH,
   DEFAULT_PATH_NAME,
   TEST_ENV,
 } from '../defaults';
@@ -121,26 +122,59 @@ function updatePackageJson(options: SubAppOptions, defaultAppName: string) {
       host,
       'package.json',
       (packageJson: Record<string, any>) => {
-        const scripts = packageJson.scripts;
-        if (!scripts) {
-          return;
-        }
-        const defaultTestScriptName = 'test:e2e';
-        if (!scripts[defaultTestScriptName]) {
-          return;
-        }
-        const defaultTestDir = 'test';
-        const newTestDir = join(
-          options.path as Path,
-          defaultAppName,
-          options.sourceRoot,
-        );
-        scripts[defaultTestScriptName] = (scripts[
-          defaultTestScriptName
-        ] as string).replace(defaultTestDir, newTestDir);
+        // tslint:disable:no-unused-expression
+        packageJson.scripts &&
+          updateNpmScripts(packageJson.scripts, options, defaultAppName);
+        packageJson.jest && updateJestOptions(packageJson.jest, options);
       },
     );
   };
+}
+
+function updateNpmScripts(
+  scripts: Record<string, any>,
+  options: SubAppOptions,
+  defaultAppName: string,
+) {
+  const defaultFormatScriptName = 'format';
+  const defaultTestScriptName = 'test:e2e';
+  if (!scripts[defaultTestScriptName] && !scripts[defaultFormatScriptName]) {
+    return;
+  }
+  if (
+    scripts[defaultTestScriptName] &&
+    scripts[defaultTestScriptName].indexOf(options.path as string) < 0
+  ) {
+    const defaultTestDir = 'test';
+    const newTestDir = join(
+      options.path as Path,
+      defaultAppName,
+      defaultTestDir,
+    );
+    scripts[defaultTestScriptName] = (scripts[
+      defaultTestScriptName
+    ] as string).replace(defaultTestDir, newTestDir);
+  }
+  if (
+    scripts[defaultFormatScriptName] &&
+    scripts[defaultFormatScriptName].indexOf(DEFAULT_PATH_NAME) >= 0
+  ) {
+    scripts[defaultFormatScriptName] =
+      'prettier --write "apps/**/*.ts" "libs/**/*.ts"';
+  }
+}
+
+function updateJestOptions(jest: Record<string, any>, options: SubAppOptions) {
+  if (jest.rootDit !== options.sourceRoot) {
+    return;
+  }
+  jest.rootDir = '.';
+  jest.roots = [
+    `<rootDir>/${options.sourceRoot}/`,
+    `<rootDir>/${DEFAULT_LIB_PATH}/`,
+    `<rootDir>/${options.path}/`,
+  ];
+  jest.coverageDirectory = './coverage';
 }
 
 function moveDefaultAppToApps(
@@ -170,7 +204,7 @@ function addSubAppToCliOptions(
 ): Rule {
   const project = {
     root: join(projectRoot as Path, projectName),
-    sourceRoot: join(projectRoot as Path, projectName, 'src'),
+    sourceRoot: join(projectRoot as Path, projectName, DEFAULT_PATH_NAME),
   };
   return (host: Tree) => {
     const nestCliFileExists = host.exists('nest-cli.json');
