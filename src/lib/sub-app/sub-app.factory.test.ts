@@ -17,6 +17,8 @@ describe('SubApp Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('app', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
+      '/apps/main/tsconfig.app.json',
+      '/apps/main/tslint.json',
       '/apps/project/tsconfig.app.json',
       '/apps/project/tslint.json',
       '/apps/project/src/app.controller.spec.ts',
@@ -35,6 +37,8 @@ describe('SubApp Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('app', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
+      '/apps/main/tsconfig.app.json',
+      '/apps/main/tslint.json',
       '/apps/awesome-project/tsconfig.app.json',
       '/apps/awesome-project/tslint.json',
       '/apps/awesome-project/src/app.controller.spec.ts',
@@ -54,6 +58,9 @@ describe('SubApp Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('app', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
+      '/apps/main/.babelrc',
+      '/apps/main/index.js',
+      '/apps/main/jsconfig.json',
       '/apps/project/.babelrc',
       '/apps/project/index.js',
       '/apps/project/jsconfig.json',

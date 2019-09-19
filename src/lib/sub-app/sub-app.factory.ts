@@ -20,7 +20,9 @@ import {
 } from '@angular-devkit/schematics';
 import * as fse from 'fs-extra';
 import {
+  ALTERNATIVE_DIR_ENTRY_APP,
   DEFAULT_APPS_PATH,
+  DEFAULT_DIR_ENTRY_APP,
   DEFAULT_LANGUAGE,
   DEFAULT_PATH_NAME,
   TEST_ENV,
@@ -38,11 +40,18 @@ interface TsConfigPartialType {
 }
 
 export function main(options: SubAppOptions): Rule {
+  const defaultAppName =
+    options.name === DEFAULT_DIR_ENTRY_APP
+      ? ALTERNATIVE_DIR_ENTRY_APP
+      : DEFAULT_DIR_ENTRY_APP;
+
   options = transform(options);
   return chain([
     updateTsConfig(),
-    addSubAppToCliOptions(options.path, options.name),
-    moveDefaultAppToApps(options.path),
+    updatePackageJson(options, defaultAppName),
+    addSubAppToCliOptions(options.path, options.name, defaultAppName),
+    branchAndMerge(mergeWith(generateWorkspace(options, defaultAppName))),
+    moveDefaultAppToApps(options.path, defaultAppName, options.sourceRoot),
     branchAndMerge(mergeWith(generate(options))),
   ]);
 }
@@ -77,7 +86,6 @@ function updateJsonFile<T>(
     callback((json as {}) as T);
     host.overwrite(path, JSON.stringify(json, null, 2));
   }
-
   return host;
 }
 
@@ -104,32 +112,62 @@ function updateTsConfig() {
   };
 }
 
-function moveDefaultAppToApps(projectRoot: string): Rule {
+function updatePackageJson(options: SubAppOptions, defaultAppName: string) {
   return (host: Tree) => {
-    const nestCliFileExists = host.exists('nest-cli.json');
-    const nestFileExists = host.exists('nest.json');
-
-    let sourceRoot: string;
-    if (!nestCliFileExists && !nestFileExists) {
-      sourceRoot = DEFAULT_PATH_NAME;
-    } else {
-      const source = host.read(
-        nestCliFileExists ? 'nest-cli.json' : 'nest.json',
-      );
-      if (source) {
-        const sourceText = source.toString('utf-8');
-        const config = parseJson(sourceText) as Record<string, any>;
-        sourceRoot = (config && config.sourceRoot) || DEFAULT_PATH_NAME;
-      }
+    if (!host.exists('package.json')) {
+      return host;
     }
-    if (fse.existsSync(sourceRoot) && process.env.NODE_ENV !== TEST_ENV) {
-      fse.moveSync(sourceRoot, join(projectRoot as Path, sourceRoot));
+    return updateJsonFile(
+      host,
+      'package.json',
+      (packageJson: Record<string, any>) => {
+        const scripts = packageJson.scripts;
+        if (!scripts) {
+          return;
+        }
+        const defaultTestScriptName = 'test:e2e';
+        if (!scripts[defaultTestScriptName]) {
+          return;
+        }
+        const defaultTestDir = 'test';
+        const newTestDir = join(
+          options.path as Path,
+          defaultAppName,
+          options.sourceRoot,
+        );
+        scripts[defaultTestScriptName] = (scripts[
+          defaultTestScriptName
+        ] as string).replace(defaultTestDir, newTestDir);
+      },
+    );
+  };
+}
+
+function moveDefaultAppToApps(
+  projectRoot: string,
+  appName: string,
+  sourceRoot = DEFAULT_PATH_NAME,
+): Rule {
+  return (host: Tree) => {
+    if (process.env.NODE_ENV === TEST_ENV) {
+      return host;
+    }
+    if (fse.existsSync(sourceRoot)) {
+      fse.moveSync(sourceRoot, join(projectRoot as Path, appName, sourceRoot));
+    }
+    const testDir = 'test';
+    if (fse.existsSync(testDir)) {
+      fse.moveSync(testDir, join(projectRoot as Path, appName, testDir));
     }
     return host;
   };
 }
 
-function addSubAppToCliOptions(projectRoot: string, projectName: string): Rule {
+function addSubAppToCliOptions(
+  projectRoot: string,
+  projectName: string,
+  appName: string,
+): Rule {
   const project = {
     root: join(projectRoot as Path, projectName),
     sourceRoot: join(projectRoot as Path, projectName, 'src'),
@@ -151,13 +189,32 @@ function addSubAppToCliOptions(projectRoot: string, projectName: string): Rule {
         optionsFile.projects[projectName] = project;
 
         // Update initial application options
+        if (
+          optionsFile.sourceRoot &&
+          optionsFile.sourceRoot.indexOf(projectRoot) >= 0
+        ) {
+          return;
+        }
         optionsFile.sourceRoot = join(
           projectRoot as Path,
+          appName,
           optionsFile.sourceRoot || DEFAULT_PATH_NAME,
         );
       },
     );
   };
+}
+
+function generateWorkspace(options: SubAppOptions, appName: string): Source {
+  const path = join(options.path as Path, appName);
+
+  return apply(url(join('./workspace' as Path, options.language)), [
+    template({
+      ...strings,
+      ...options,
+    }),
+    move(path),
+  ]);
 }
 
 function generate(options: SubAppOptions): Source {

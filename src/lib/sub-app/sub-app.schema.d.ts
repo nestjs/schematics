@@ -17,4 +17,5 @@ export interface SubAppOptions {
    * Applications root directory
    */
   rootDir?: string | Path;
+  sourceRoot?: string;
 }
