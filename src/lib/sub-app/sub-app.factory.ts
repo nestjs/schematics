@@ -45,6 +45,7 @@ export function main(options: SubAppOptions): Rule {
   const appName = getAppNameFromPackageJson();
   options = transform(options);
   return chain([
+    addAppsToCliOptions(options.path, options.name, appName),
     updateTsConfig(),
     updatePackageJson(options, appName),
     (tree, context) =>
@@ -54,7 +55,6 @@ export function main(options: SubAppOptions): Rule {
             branchAndMerge(mergeWith(generateWorkspace(options, appName))),
             moveDefaultAppToApps(options.path, appName, options.sourceRoot),
           ])(tree, context),
-    addAppsToCliOptions(options.path, options.name, appName),
     branchAndMerge(mergeWith(generate(options))),
   ]);
 }
@@ -272,6 +272,11 @@ function addAppsToCliOptions(
         if (!optionsFile.projects) {
           optionsFile.projects = {} as any;
         }
+        if (optionsFile.projects[projectName]) {
+          throw new SchematicsException(
+            `Project "${projectName}" exists in the workspace already.`,
+          );
+        }
         optionsFile.projects[projectName] = project;
       },
     );
@@ -286,27 +291,32 @@ function updateMainAppOptions(
   if (optionsFile.monorepo) {
     return;
   }
+  const rootFilePath = join(projectRoot as Path, appName);
+  const tsConfigPath = join(rootFilePath, 'tsconfig.app.json');
+
   optionsFile.monorepo = true;
-  if (!optionsFile.compilerOptions) {
-    optionsFile.compilerOptions = {};
-  }
-  optionsFile.compilerOptions.webpack = true;
+  optionsFile.root = rootFilePath;
   optionsFile.sourceRoot = join(
     projectRoot as Path,
     appName,
     optionsFile.sourceRoot || DEFAULT_PATH_NAME,
   );
+  if (!optionsFile.compilerOptions) {
+    optionsFile.compilerOptions = {};
+  }
+  optionsFile.compilerOptions.webpack = true;
+  optionsFile.compilerOptions.tsConfigPath = tsConfigPath;
+
   if (!optionsFile.projects) {
     optionsFile.projects = {} as any;
   }
-  const rootFilePath = join(projectRoot as Path, appName);
   optionsFile.projects[appName] = {
     type: PROJECT_TYPE.APPLICATION,
     root: rootFilePath,
     entryFile: optionsFile.entryFile || 'main',
     sourceRoot: join(rootFilePath, DEFAULT_PATH_NAME),
     compilerOptions: {
-      tsConfigPath: join(rootFilePath, 'tsconfig.app.json'),
+      tsConfigPath,
     },
   };
 }

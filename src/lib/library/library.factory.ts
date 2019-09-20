@@ -39,9 +39,9 @@ interface TsConfigPartialType {
 export function main(options: LibraryOptions): Rule {
   options = transform(options);
   return chain([
+    addLibraryToCliOptions(options.path, options.name),
     updatePackageJson(options),
     updateTsConfig(options.name, options.prefix, options.path),
-    addLibraryToCliOptions(options.path, options.name),
     branchAndMerge(mergeWith(generate(options))),
   ]);
 }
@@ -199,6 +199,11 @@ function addLibraryToCliOptions(
       (optionsFile: Record<string, any>) => {
         if (!optionsFile.projects) {
           optionsFile.projects = {} as any;
+        }
+        if (optionsFile.projects[projectName]) {
+          throw new SchematicsException(
+            `Project "${projectName}" exists in the workspace already.`,
+          );
         }
         optionsFile.projects[projectName] = project;
       },
