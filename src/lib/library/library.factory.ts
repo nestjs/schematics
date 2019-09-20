@@ -79,37 +79,66 @@ function updatePackageJson(options: LibraryOptions) {
       host,
       'package.json',
       (packageJson: Record<string, any>) => {
-        if (packageJson.scripts) {
-          updateNpmScripts(packageJson.scripts);
-        }
-        if (!packageJson.jest) {
-          return;
-        }
-        if (!packageJson.jest.moduleNameMapper) {
-          packageJson.jest.moduleNameMapper = {};
-        }
-        const deepPackagePath = packageKey + '/(.*)';
-        packageJson.jest.moduleNameMapper[deepPackagePath] = join(
-          '<rootDir>' as Path,
-          distRoot,
-          '$1',
-        );
+        updateNpmScripts(packageJson.scripts, options);
+        updateJestConfig(packageJson.jest, options, packageKey, distRoot);
       },
     );
   };
 }
 
-function updateNpmScripts(scripts: Record<string, any>) {
+function updateJestConfig(
+  jestOptions: Record<string, any>,
+  options: LibraryOptions,
+  packageKey: string,
+  distRoot: string,
+) {
+  if (!jestOptions) {
+    return;
+  }
+  if (jestOptions.rootDir === DEFAULT_PATH_NAME) {
+    jestOptions.rootDir = '.';
+    jestOptions.coverageDirectory = './coverage';
+  }
+  const defaultSourceRoot =
+    options.rootDir !== undefined ? options.rootDir : DEFAULT_LIB_PATH;
+  if (!jestOptions.roots) {
+    jestOptions.roots = ['<rootDir>/src/', `<rootDir>/${defaultSourceRoot}/`];
+  } else if (jestOptions.roots.indexOf(defaultSourceRoot) < 0) {
+    jestOptions.roots.push(`<rootDir>/${defaultSourceRoot}/`);
+  }
+
+  if (!jestOptions.moduleNameMapper) {
+    jestOptions.moduleNameMapper = {};
+  }
+  const deepPackagePath = packageKey + '/(.*)';
+  jestOptions.moduleNameMapper[deepPackagePath] = join(
+    '<rootDir>' as Path,
+    distRoot,
+    '$1',
+  );
+}
+
+function updateNpmScripts(
+  scripts: Record<string, any>,
+  options: LibraryOptions,
+) {
+  if (!scripts) {
+    return;
+  }
   const defaultFormatScriptName = 'format';
   if (!scripts[defaultFormatScriptName]) {
     return;
   }
+
   if (
     scripts[defaultFormatScriptName] &&
     scripts[defaultFormatScriptName].indexOf(DEFAULT_PATH_NAME) >= 0
   ) {
-    scripts[defaultFormatScriptName] =
-      'prettier --write "src/**/*.ts" "test/**/*.ts" "libs/**/*.ts"';
+    const defaultSourceRoot =
+      options.rootDir !== undefined ? options.rootDir : DEFAULT_LIB_PATH;
+    scripts[
+      defaultFormatScriptName
+    ] = `prettier --write "src/**/*.ts" "test/**/*.ts" "${defaultSourceRoot}/**/*.ts"`;
   }
 }
 

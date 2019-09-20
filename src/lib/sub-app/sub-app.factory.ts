@@ -157,10 +157,8 @@ function updatePackageJson(options: SubAppOptions, defaultAppName: string) {
       host,
       'package.json',
       (packageJson: Record<string, any>) => {
-        // tslint:disable:no-unused-expression
-        packageJson.scripts &&
-          updateNpmScripts(packageJson.scripts, options, defaultAppName);
-        packageJson.jest && updateJestOptions(packageJson.jest, options);
+        updateNpmScripts(packageJson.scripts, options, defaultAppName);
+        updateJestOptions(packageJson.jest, options);
       },
     );
   };
@@ -171,6 +169,9 @@ function updateNpmScripts(
   options: SubAppOptions,
   defaultAppName: string,
 ) {
+  if (!scripts) {
+    return;
+  }
   const defaultFormatScriptName = 'format';
   const defaultTestScriptName = 'test:e2e';
   if (!scripts[defaultTestScriptName] && !scripts[defaultFormatScriptName]) {
@@ -194,22 +195,32 @@ function updateNpmScripts(
     scripts[defaultFormatScriptName] &&
     scripts[defaultFormatScriptName].indexOf(DEFAULT_PATH_NAME) >= 0
   ) {
-    scripts[defaultFormatScriptName] =
-      'prettier --write "apps/**/*.ts" "libs/**/*.ts"';
+    const defaultSourceRoot =
+      options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
+    scripts[
+      defaultFormatScriptName
+    ] = `prettier --write "${defaultSourceRoot}/**/*.ts" "${DEFAULT_LIB_PATH}/**/*.ts"`;
   }
 }
 
-function updateJestOptions(jest: Record<string, any>, options: SubAppOptions) {
-  if (jest.rootDit !== options.sourceRoot) {
+function updateJestOptions(
+  jestOptions: Record<string, any>,
+  options: SubAppOptions,
+) {
+  if (!jestOptions) {
     return;
   }
-  jest.rootDir = '.';
-  jest.roots = [
-    `<rootDir>/${options.sourceRoot}/`,
-    `<rootDir>/${DEFAULT_LIB_PATH}/`,
-    `<rootDir>/${options.path}/`,
-  ];
-  jest.coverageDirectory = './coverage';
+  if (jestOptions.rootDir === DEFAULT_PATH_NAME) {
+    jestOptions.rootDir = '.';
+    jestOptions.coverageDirectory = './coverage';
+  }
+  const defaultSourceRoot =
+    options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
+  if (!jestOptions.roots) {
+    jestOptions.roots = [`<rootDir>/${defaultSourceRoot}/`];
+  } else if (jestOptions.roots.indexOf(defaultSourceRoot) < 0) {
+    jestOptions.roots.push(`<rootDir>/${defaultSourceRoot}/`);
+  }
 }
 
 function moveDefaultAppToApps(
