@@ -45,7 +45,6 @@ export function main(options: SubAppOptions): Rule {
   const appName = getAppNameFromPackageJson();
   options = transform(options);
   return chain([
-    addAppsToCliOptions(options.path, options.name, appName),
     updateTsConfig(),
     updatePackageJson(options, appName),
     (tree, context) =>
@@ -55,6 +54,7 @@ export function main(options: SubAppOptions): Rule {
             branchAndMerge(mergeWith(generateWorkspace(options, appName))),
             moveDefaultAppToApps(options.path, appName, options.sourceRoot),
           ])(tree, context),
+    addAppsToCliOptions(options.path, options.name, appName),
     branchAndMerge(mergeWith(generate(options))),
   ]);
 }
