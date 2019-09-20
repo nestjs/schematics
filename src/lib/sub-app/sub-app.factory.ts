@@ -216,10 +216,11 @@ function updateJestOptions(
   }
   const defaultSourceRoot =
     options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
+  const jestSourceRoot = `<rootDir>/${defaultSourceRoot}/`;
   if (!jestOptions.roots) {
-    jestOptions.roots = [`<rootDir>/${defaultSourceRoot}/`];
-  } else if (jestOptions.roots.indexOf(defaultSourceRoot) < 0) {
-    jestOptions.roots.push(`<rootDir>/${defaultSourceRoot}/`);
+    jestOptions.roots = [jestSourceRoot];
+  } else if (jestOptions.roots.indexOf(jestSourceRoot) < 0) {
+    jestOptions.roots.push(jestSourceRoot);
   }
 }
 

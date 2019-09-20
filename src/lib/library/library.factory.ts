@@ -101,10 +101,12 @@ function updateJestConfig(
   }
   const defaultSourceRoot =
     options.rootDir !== undefined ? options.rootDir : DEFAULT_LIB_PATH;
+
+  const jestSourceRoot = `<rootDir>/${defaultSourceRoot}/`;
   if (!jestOptions.roots) {
-    jestOptions.roots = ['<rootDir>/src/', `<rootDir>/${defaultSourceRoot}/`];
-  } else if (jestOptions.roots.indexOf(defaultSourceRoot) < 0) {
-    jestOptions.roots.push(`<rootDir>/${defaultSourceRoot}/`);
+    jestOptions.roots = ['<rootDir>/src/', jestSourceRoot];
+  } else if (jestOptions.roots.indexOf(jestSourceRoot) < 0) {
+    jestOptions.roots.push(jestSourceRoot);
   }
 
   if (!jestOptions.moduleNameMapper) {
