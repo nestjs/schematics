@@ -234,7 +234,7 @@ function moveDefaultAppToApps(
       }
     } catch (err) {
       throw new SchematicsException(
-        `The ${projectRoot} directory already exists.`,
+        `The "${projectRoot}" directory exists already.`,
       );
     }
     return host;
@@ -253,7 +253,7 @@ function addAppsToCliOptions(
     entryFile: 'main',
     sourceRoot: join(rootPath, DEFAULT_PATH_NAME),
     compilerOptions: {
-      tsConfigPath: join(rootPath, 'tsconfig.lib.json'),
+      tsConfigPath: join(rootPath, 'tsconfig.app.json'),
     },
   };
   return (host: Tree) => {
@@ -274,7 +274,7 @@ function addAppsToCliOptions(
         }
         if (optionsFile.projects[projectName]) {
           throw new SchematicsException(
-            `Project "${projectName}" exists in the workspace already.`,
+            `Project "${projectName}" exists in this workspace already.`,
           );
         }
         optionsFile.projects[projectName] = project;

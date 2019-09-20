@@ -202,7 +202,7 @@ function addLibraryToCliOptions(
         }
         if (optionsFile.projects[projectName]) {
           throw new SchematicsException(
-            `Project "${projectName}" exists in the workspace already.`,
+            `Project "${projectName}" exists in this workspace already.`,
           );
         }
         optionsFile.projects[projectName] = project;
