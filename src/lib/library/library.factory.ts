@@ -157,10 +157,15 @@ function addLibraryToCliOptions(
   projectRoot: string,
   projectName: string,
 ): Rule {
+  const rootPath = join(projectRoot as Path, projectName);
   const project = {
     type: PROJECT_TYPE.LIBRARY,
-    root: join(projectRoot as Path, projectName),
-    sourceRoot: join(projectRoot as Path, projectName, 'src'),
+    root: rootPath,
+    entryFile: 'index',
+    sourceRoot: join(rootPath, 'src'),
+    compilerOptions: {
+      tsConfigPath: join(rootPath, 'tsconfig.lib.json'),
+    },
   };
   return (host: Tree) => {
     const nestFileExists = host.exists('nest.json');

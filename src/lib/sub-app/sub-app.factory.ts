@@ -246,10 +246,15 @@ function addAppsToCliOptions(
   projectName: string,
   appName: string,
 ): Rule {
+  const rootPath = join(projectRoot as Path, projectName);
   const project = {
     type: PROJECT_TYPE.APPLICATION,
-    root: join(projectRoot as Path, projectName),
-    sourceRoot: join(projectRoot as Path, projectName, DEFAULT_PATH_NAME),
+    root: rootPath,
+    entryFile: 'main',
+    sourceRoot: join(rootPath, DEFAULT_PATH_NAME),
+    compilerOptions: {
+      tsConfigPath: join(rootPath, 'tsconfig.lib.json'),
+    },
   };
   return (host: Tree) => {
     const nestFileExists = host.exists('nest.json');
@@ -282,6 +287,7 @@ function updateMainAppOptions(
     return;
   }
   optionsFile.monorepo = true;
+  optionsFile.webpack = true;
   optionsFile.sourceRoot = join(
     projectRoot as Path,
     appName,
@@ -290,10 +296,15 @@ function updateMainAppOptions(
   if (!optionsFile.projects) {
     optionsFile.projects = {} as any;
   }
+  const rootFilePath = join(projectRoot as Path, appName);
   optionsFile.projects[appName] = {
     type: PROJECT_TYPE.APPLICATION,
-    root: join(projectRoot as Path, appName),
-    sourceRoot: join(projectRoot as Path, appName, DEFAULT_PATH_NAME),
+    root: rootFilePath,
+    entryFile: optionsFile.entryFile || 'main',
+    sourceRoot: join(rootFilePath, DEFAULT_PATH_NAME),
+    compilerOptions: {
+      tsConfigPath: join(rootFilePath, 'tsconfig.app.json'),
+    },
   };
 }
 
@@ -304,6 +315,7 @@ function generateWorkspace(options: SubAppOptions, appName: string): Source {
     template({
       ...strings,
       ...options,
+      name: appName,
     }),
     move(path),
   ]);
