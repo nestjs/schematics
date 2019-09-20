@@ -287,7 +287,10 @@ function updateMainAppOptions(
     return;
   }
   optionsFile.monorepo = true;
-  optionsFile.webpack = true;
+  if (!optionsFile.compilerOptions) {
+    optionsFile.compilerOptions = {};
+  }
+  optionsFile.compilerOptions.webpack = true;
   optionsFile.sourceRoot = join(
     projectRoot as Path,
     appName,
