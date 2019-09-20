@@ -66,6 +66,11 @@ function transform(options: LibraryOptions): LibraryOptions {
 }
 
 function updatePackageJson(options: LibraryOptions) {
+  const distRoot = join(options.path as Path, options.name, 'src');
+  const packageKey = options.prefix
+    ? options.prefix + '/' + options.name
+    : options.name;
+
   return (host: Tree) => {
     if (!host.exists('package.json')) {
       return host;
@@ -74,8 +79,21 @@ function updatePackageJson(options: LibraryOptions) {
       host,
       'package.json',
       (packageJson: Record<string, any>) => {
-        // tslint:disable:no-unused-expression
-        packageJson.scripts && updateNpmScripts(packageJson.scripts);
+        if (packageJson.scripts) {
+          updateNpmScripts(packageJson.scripts);
+        }
+        if (!packageJson.jest) {
+          return;
+        }
+        if (!packageJson.jest.moduleNameMapper) {
+          packageJson.jest.moduleNameMapper = {};
+        }
+        const deepPackagePath = packageKey + '/(.*)';
+        packageJson.jest.moduleNameMapper[deepPackagePath] = join(
+          '<rootDir>' as Path,
+          distRoot,
+          '$1',
+        );
       },
     );
   };
