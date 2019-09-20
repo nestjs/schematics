@@ -34,7 +34,7 @@
     "typescript": "3.4.5"
   },
   "devDependencies": {
-    "@types/fs-extra": "^8.0.0",
+    "@types/fs-extra": "8.0.0",
     "@types/jest": "23.3.14",
     "@types/node": "10.14.18",
     "gulp": "4.0.1",
