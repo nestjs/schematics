@@ -221,6 +221,14 @@ function updateJestOptions(
     jestOptions.roots = [jestSourceRoot];
   } else if (jestOptions.roots.indexOf(jestSourceRoot) < 0) {
     jestOptions.roots.push(jestSourceRoot);
+
+    const originalSourceRoot = `<rootDir>/src/`;
+    const originalSourceRootIndex = jestOptions.roots.indexOf(
+      originalSourceRoot,
+    );
+    if (originalSourceRootIndex >= 0) {
+      (jestOptions.roots as string[]).splice(originalSourceRootIndex, 1);
+    }
   }
 }
 
