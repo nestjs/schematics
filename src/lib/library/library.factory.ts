@@ -156,7 +156,6 @@ function updateJsonFile<T>(
     callback((json as {}) as T);
     host.overwrite(path, JSON.stringify(json, null, 2));
   }
-
   return host;
 }
 
@@ -230,6 +229,12 @@ function addLibraryToCliOptions(
       (optionsFile: Record<string, any>) => {
         if (!optionsFile.projects) {
           optionsFile.projects = {} as any;
+        }
+        if (!optionsFile.compilerOptions) {
+          optionsFile.compilerOptions = {};
+        }
+        if (optionsFile.compilerOptions.webpack === undefined) {
+          optionsFile.compilerOptions.webpack = true;
         }
         if (optionsFile.projects[projectName]) {
           throw new SchematicsException(
