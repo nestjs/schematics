@@ -1,18 +1,18 @@
 export interface ApplicationOptions {
   /**
-   * The Nest application name.
+   * Nest application name.
    */
   name: string;
   /**
-   * The Nest application author.
+   * Nest application author.
    */
   author?: string;
   /**
-   * The Nest application description.
+   * Nest application description.
    */
   description?: string;
   /**
-   * The Nest application version.
+   * Nest application version.
    */
   version?: string;
   /**
@@ -24,11 +24,11 @@ export interface ApplicationOptions {
    */
   packageManager?: 'npm' | 'yarn';
   /**
-   * The Nest included production dependencies (comma separated values).
+   * Nest included dependencies (comma separated values).
    */
   dependencies?: string;
   /**
-   * The Nest included development dependencies (comma separated values).
+   * Nest included development dependencies (comma separated values).
    */
   devDependencies?: string;
 }
