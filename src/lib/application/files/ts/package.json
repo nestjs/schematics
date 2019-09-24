@@ -5,13 +5,12 @@
   "author": "<%= author %>",
   "license": "MIT",
   "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "start": "ts-node -r tsconfig-paths/register src/main.ts",
+    "start:dev": "tsc-watch -p tsconfig.build.json --onSuccess \"node dist/main.js\"",
+    "start:debug": "tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect-brk dist/main.js\"",
+    "start:prod": "node dist/main.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -20,45 +19,39 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^6.7.1",
-    "@nestjs/core": "^6.7.1",
-    "@nestjs/microservices": "^6.7.1",
-    "@nestjs/platform-express": "^6.7.1",
-    "@nestjs/websockets": "^6.7.1",
-    "reflect-metadata": "0.1.13",
-    "rimraf": "3.0.0",
-    "rxjs": "6.5.3"
+    "@nestjs/common": "^6.0.0",
+    "@nestjs/core": "^6.0.0",
+    "@nestjs/platform-express": "^6.0.0", <% if (dependencies.indexOf('microservices') !== -1) { %>
+    "@nestjs/microservices": "^6.0.0", <% } %><% if (dependencies.indexOf('websockets') !== -1) { %>
+    "@nestjs/websockets": "^6.0.0", <% } %>
+    "reflect-metadata": "^0.1.12",
+    "rimraf": "^2.6.2",
+    "rxjs": "^6.3.3"
   },
   "devDependencies": {
-    "@nestjs/cli": "6.8.1",
-    "@nestjs/schematics": "6.6.6",
-    "@nestjs/testing": "6.7.1",
-    "@types/express": "4.17.1",
-    "@types/jest": "24.0.18",
-    "@types/node": "12.7.5",
-    "@types/supertest": "2.0.8",
-    "jest": "24.9.0",
-    "prettier": "1.18.2",
+    "@nestjs/testing": "^6.0.0",
+    "@types/express": "4.16.1",
+    "@types/jest": "24.0.11",
+    "@types/node": "11.13.4",
+    "@types/supertest": "2.0.7",
+    "jest": "24.7.1",
+    "prettier": "1.17.0",
     "supertest": "4.0.2",
-    "ts-jest": "24.1.0",
-    "ts-loader": "6.1.1",
-    "ts-node": "8.4.1",
-    "tsconfig-paths": "3.9.0",
-    "tslint": "5.20.0",
-    "typescript": "3.6.3"
+    "ts-jest": "24.0.2",
+    "ts-node": "8.1.0",
+    "tsc-watch": "2.2.1",
+    "tsconfig-paths": "3.8.0",
+    "tslint": "5.16.0",
+    "typescript": "3.4.3"
   },
   "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
+    "moduleFileExtensions": ["js", "json", "ts"],
     "rootDir": "src",
     "testRegex": ".spec.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "./coverage",
     "testEnvironment": "node"
   }
 }
