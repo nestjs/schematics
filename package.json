@@ -36,7 +36,7 @@
   "devDependencies": {
     "@types/fs-extra": "8.0.0",
     "@types/jest": "23.3.14",
-    "@types/node": "10.14.18",
+    "@types/node": "10.14.19",
     "gulp": "4.0.1",
     "jest": "24.9.0",
     "nyc": "14.1.1",
