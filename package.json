@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/schematics",
-  "version": "6.6.8",
+  "version": "6.7.0",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "main": "index.js",
   "publishConfig": {
@@ -35,9 +35,9 @@
   },
   "devDependencies": {
     "@types/fs-extra": "8.0.0",
-    "@types/jest": "23.3.14",
-    "@types/node": "10.14.19",
-    "gulp": "4.0.1",
+    "@types/jest": "24.0.18",
+    "@types/node": "12.7.8",
+    "gulp": "4.0.2",
     "jest": "24.9.0",
     "nyc": "14.1.1",
     "ts-jest": "24.1.0",
