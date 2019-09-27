@@ -5,12 +5,13 @@
   "author": "<%= author %>",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf dist && tsc -p tsconfig.build.json",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "start": "ts-node -r tsconfig-paths/register src/main.ts",
-    "start:dev": "tsc-watch -p tsconfig.build.json --onSuccess \"node dist/main.js\"",
-    "start:debug": "tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect-brk dist/main.js\"",
-    "start:prod": "node dist/main.js",
+    "prebuild": "rimraf dist",
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -27,8 +28,8 @@
     "rxjs": "^6.5.3"
   },
   "devDependencies": {
-    "@nestjs/cli": "^6.8.1",
-    "@nestjs/schematics": "^6.6.6",
+    "@nestjs/cli": "^6.9.0",
+    "@nestjs/schematics": "^6.7.0",
     "@nestjs/testing": "^6.7.1",
     "@types/express": "^4.17.1",
     "@types/jest": "^24.0.18",
@@ -40,7 +41,6 @@
     "ts-jest": "^24.1.0",
     "ts-loader": "^6.1.1",
     "ts-node": "^8.4.1",
-    "tsc-watch": "^2.4.0",
     "tsconfig-paths": "^3.9.0",
     "tslint": "^5.20.0",
     "typescript": "^3.6.3"
