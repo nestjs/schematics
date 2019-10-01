@@ -2,15 +2,26 @@
   "name": "@nestjs/schematics",
   "version": "6.7.0",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "files": [
+    "dist/utils/**/*",
+    "dist/lib/**/*"
+  ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "rm -rf dist && tsc --project tsconfig.json",
+    "build": "rm -rf dist && npm run build:lib && npm run build:utils",
+    "postbuild": "npm run clean:dist && npm run copy:collection && npm run copy:lib",
+    "clean:dist": "gulp clean:dist",
+    "clean:src": "gulp clean:src",
+    "build:lib": "tsc --project tsconfig.lib.json",
+    "build:utils": "rm -rf dist/utils && tsc --project tsconfig.utils.json",
+    "copy:collection": "cpx src/collection.json dist",
+    "copy:lib": "cpx 'src/lib/**/*.*' dist/lib",
     "lint:src": "tslint --project tsconfig.json",
     "lint:test": "tslint --project test/tsconfig.json",
-    "test": "NODE_ENV=test jest --no-cache --config test/jest-config.json",
+    "test": "npm run clean:src && NODE_ENV=test jest --no-cache --config test/jest-config.json",
     "test:dev": "NODE_ENV=test npm run -s test -- --watchAll"
   },
   "repository": {
@@ -19,7 +30,8 @@
   },
   "contributors": [
     "ThomRick",
-    "Kamil Mysliwiec"
+    "Kamil Mysliwiec",
+    "John Biundo"
   ],
   "license": "MIT",
   "bugs": {
@@ -27,8 +39,8 @@
   },
   "homepage": "https://github.com/nestjs/schematics#readme",
   "dependencies": {
-    "@angular-devkit/core": "8.3.6",
-    "@angular-devkit/schematics": "8.3.6",
+    "@angular-devkit/core": "8.3.8",
+    "@angular-devkit/schematics": "8.3.8",
     "fs-extra": "^8.1.0",
     "ts-morph": "^4.0.0",
     "typescript": "3.4.5"
@@ -37,13 +49,16 @@
     "@types/fs-extra": "8.0.0",
     "@types/jest": "24.0.18",
     "@types/node": "12.7.8",
+    "cpx": "^1.5.0",
     "gulp": "4.0.2",
+    "gulp-clean": "^0.4.0",
     "jest": "24.9.0",
     "nyc": "14.1.1",
     "ts-jest": "24.1.0",
+    "ts-node": "^8.4.1",
     "tslint": "5.20.0"
   },
-  "schematics": "./collection.json",
+  "schematics": "./dist/collection.json",
   "nyc": {
     "include": [
       "src"
