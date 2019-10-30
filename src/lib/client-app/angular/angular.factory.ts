@@ -41,7 +41,7 @@ export function main(options: AngularOptions): Rule {
   };
 }
 
-function transform(source: AngularOptions): ModuleOptions {
+function transform(source: AngularOptions): ModuleOptions & AngularOptions {
   const target: AngularOptions = Object.assign({}, source);
   target.directory = target.name ? strings.dasherize(target.name) : 'client';
   target.name = 'Angular';

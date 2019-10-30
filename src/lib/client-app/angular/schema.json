@@ -18,7 +18,15 @@
         "index": 0
       },
       "x-prompt": "What name would you like to (or do you) use for Angular application?"
+    },
+    "version": {
+      "type": "string",
+      "description": "The version of the Angular CLI to use.",
+      "visible": false,
+      "$default": {
+        "$source": "ng-cli-version"
+      }
     }
   },
-  "required": ["name"]
+  "required": ["name", "version"]
 }

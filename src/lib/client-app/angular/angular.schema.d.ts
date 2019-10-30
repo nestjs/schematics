@@ -6,6 +6,10 @@ export interface AngularOptions {
    */
   name: string;
   /**
+   * Angular version.
+   */
+  version: string;
+  /**
    * The directory of the application.
    */
   directory?: string;
