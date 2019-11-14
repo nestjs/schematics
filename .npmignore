@@ -3,6 +3,7 @@
 
 .git
 .dockerignore
+.prettierrc
 Dockerfile
 
 .npmrc

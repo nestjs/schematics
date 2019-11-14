@@ -41,6 +41,7 @@ export function main(options: LibraryOptions): Rule {
   return chain([
     addLibraryToCliOptions(options.path, options.name),
     updatePackageJson(options),
+    updateJestEndToEnd(options),
     updateTsConfig(options.name, options.prefix, options.path),
     branchAndMerge(mergeWith(generate(options))),
   ]);
@@ -66,15 +67,15 @@ function transform(options: LibraryOptions): LibraryOptions {
 }
 
 function updatePackageJson(options: LibraryOptions) {
-  const distRoot = join(options.path as Path, options.name, 'src');
-  const packageKey = options.prefix
-    ? options.prefix + '/' + options.name
-    : options.name;
-
   return (host: Tree) => {
     if (!host.exists('package.json')) {
       return host;
     }
+    const distRoot = join(options.path as Path, options.name, 'src');
+    const packageKey = options.prefix
+      ? options.prefix + '/' + options.name
+      : options.name;
+
     return updateJsonFile(
       host,
       'package.json',
@@ -113,11 +114,9 @@ function updateJestConfig(
     jestOptions.moduleNameMapper = {};
   }
   const deepPackagePath = packageKey + '/(.*)';
-  jestOptions.moduleNameMapper[deepPackagePath] = join(
-    '<rootDir>' as Path,
-    distRoot,
-    '$1',
-  );
+  const packageRoot = join('<rootDir>' as Path, distRoot);
+  jestOptions.moduleNameMapper[packageKey] = packageRoot;
+  jestOptions.moduleNameMapper[deepPackagePath] = join(packageRoot, '$1');
 }
 
 function updateNpmScripts(
@@ -142,6 +141,33 @@ function updateNpmScripts(
       defaultFormatScriptName
     ] = `prettier --write "src/**/*.ts" "test/**/*.ts" "${defaultSourceRoot}/**/*.ts"`;
   }
+}
+
+function updateJestEndToEnd(options: LibraryOptions) {
+  return (host: Tree) => {
+    const pathToFile = join('test' as Path, 'jest-e2e.json');
+    if (!host.exists(pathToFile)) {
+      return host;
+    }
+    const distRoot = join(options.path as Path, options.name, 'src');
+    const packageKey = options.prefix
+      ? options.prefix + '/' + options.name
+      : options.name;
+
+    return updateJsonFile(
+      host,
+      pathToFile,
+      (jestOptions: Record<string, any>) => {
+        if (!jestOptions.moduleNameMapper) {
+          jestOptions.moduleNameMapper = {};
+        }
+        const deepPackagePath = packageKey + '/(.*)';
+        const packageRoot = '<rootDir>/../' + distRoot;
+        jestOptions.moduleNameMapper[packageKey] = packageRoot;
+        jestOptions.moduleNameMapper[deepPackagePath] = packageRoot + '/$1';
+      },
+    );
+  };
 }
 
 function updateJsonFile<T>(
