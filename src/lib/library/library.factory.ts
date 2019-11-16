@@ -115,8 +115,8 @@ function updateJestConfig(
   }
   const deepPackagePath = packageKey + '/(.*)';
   const packageRoot = join('<rootDir>' as Path, distRoot);
-  jestOptions.moduleNameMapper[packageKey] = packageRoot;
   jestOptions.moduleNameMapper[deepPackagePath] = join(packageRoot, '$1');
+  jestOptions.moduleNameMapper[packageKey] = packageRoot;
 }
 
 function updateNpmScripts(
@@ -163,8 +163,8 @@ function updateJestEndToEnd(options: LibraryOptions) {
         }
         const deepPackagePath = packageKey + '/(.*)';
         const packageRoot = '<rootDir>/../' + distRoot;
-        jestOptions.moduleNameMapper[packageKey] = packageRoot;
         jestOptions.moduleNameMapper[deepPackagePath] = packageRoot + '/$1';
+        jestOptions.moduleNameMapper[packageKey] = packageRoot;
       },
     );
   };
