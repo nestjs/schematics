@@ -1,10 +1,10 @@
+import * as nodePath from 'path'
 import { join, Path, strings } from '@angular-devkit/core';
 import {
   apply,
   mergeWith,
   move,
   Rule,
-  SchematicsException,
   Source,
   template,
   url,
@@ -18,8 +18,10 @@ import {
 import { ApplicationOptions } from './application.schema';
 
 export function main(options: ApplicationOptions): Rule {
+  options.name = strings.dasherize(options.name)
+  const { name: path } = options
   options = transform(options);
-  return mergeWith(generate(options));
+  return mergeWith(generate(options, path));
 }
 
 function transform(options: ApplicationOptions): ApplicationOptions {
@@ -30,7 +32,7 @@ function transform(options: ApplicationOptions): ApplicationOptions {
     ? target.description
     : DEFAULT_DESCRIPTION;
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
-  target.name = strings.dasherize(target.name);
+  target.name = resolvePackageName(target.name);
   target.version = !!target.version ? target.version : DEFAULT_VERSION;
 
   target.packageManager = !!target.packageManager
@@ -43,12 +45,22 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   return target;
 }
 
-function generate(options: ApplicationOptions): Source {
+function resolvePackageName(path: string) {
+  const { name } = nodePath.parse(path)
+
+  if (name === '.') {
+    return nodePath.basename(process.cwd())
+  }
+
+  return name
+}
+
+function generate(options: ApplicationOptions, path: string): Source {
   return apply(url(join('./files' as Path, options.language)), [
     template({
       ...strings,
       ...options,
     }),
-    move(options.name),
+    move(path),
   ]);
 }
