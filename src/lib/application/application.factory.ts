@@ -1,4 +1,3 @@
-import * as nodePath from 'path'
 import { join, Path, strings } from '@angular-devkit/core';
 import {
   apply,
@@ -9,6 +8,7 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
+import * as nodePath from 'path';
 import {
   DEFAULT_AUTHOR,
   DEFAULT_DESCRIPTION,
@@ -18,8 +18,8 @@ import {
 import { ApplicationOptions } from './application.schema';
 
 export function main(options: ApplicationOptions): Rule {
-  options.name = strings.dasherize(options.name)
-  const { name: path } = options
+  options.name = strings.dasherize(options.name);
+  const { name: path } = options;
   options = transform(options);
   return mergeWith(generate(options, path));
 }
@@ -46,13 +46,13 @@ function transform(options: ApplicationOptions): ApplicationOptions {
 }
 
 function resolvePackageName(path: string) {
-  const { name } = nodePath.parse(path)
+  const { name } = nodePath.parse(path);
 
   if (name === '.') {
-    return nodePath.basename(process.cwd())
+    return nodePath.basename(process.cwd());
   }
 
-  return name
+  return name;
 }
 
 function generate(options: ApplicationOptions, path: string): Source {
