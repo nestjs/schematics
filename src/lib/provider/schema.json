@@ -33,6 +33,10 @@
     "spec": {
       "default": true,
       "description": "Specifies if a spec file is generated."
+    },
+    "className": {
+      "type": "string",
+      "description": "Class name to be used internally."
     }
   },
   "required": ["name"]

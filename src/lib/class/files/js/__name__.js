@@ -1,1 +1,1 @@
-export class <%= classify(name) %> {}
+export class <%= classify(className) %> {}

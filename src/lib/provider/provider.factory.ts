@@ -45,6 +45,12 @@ function transform(options: ProviderOptions): ProviderOptions {
   }
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
+  if (target.name.includes('.')) {
+    target.className = strings.classify(target.name).replace('.', '');
+  } else {
+    target.className = target.name;
+  }
+
   target.path = strings.dasherize(location.path);
   target.language = target.language !== undefined ? target.language : 'ts';
 

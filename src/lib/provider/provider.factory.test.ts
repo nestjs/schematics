@@ -148,4 +148,19 @@ describe('Provider Factory', () => {
         'export class FooModule {}\n',
     );
   });
+  it('should remove . from name', () => {
+    const options: ProviderOptions = {
+      name: 'foo.entity',
+      spec: true,
+      flat: true,
+    };
+    const tree: UnitTestTree = runner.runSchematic('provider', options);
+    const files: string[] = tree.files;
+
+    expect(files.find(filename => filename === '/foo.entity.ts')).not.toBeUndefined();
+    expect(tree.readContent('/foo.entity.ts')).toEqual(`import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class FooEntity {}\n`);
+  });
 });

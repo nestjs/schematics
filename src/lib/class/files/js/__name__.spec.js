@@ -1,7 +1,7 @@
-import { <%= classify(name) %> } from './<%= name %>';
+import { <%= classify(className) %> } from './<%= name %>';
 
-describe('<%= classify(name) %>', () => {
+describe('<%= classify(className) %>', () => {
   it('should be defined', () => {
-    expect(new <%= classify(name) %>()).toBeDefined();
+    expect(new <%= classify(className) %>()).toBeDefined();
   });
 });
