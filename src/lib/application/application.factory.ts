@@ -8,7 +8,7 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import * as nodePath from 'path';
+import { parse, basename } from 'path';
 import {
   DEFAULT_AUTHOR,
   DEFAULT_DESCRIPTION,
@@ -19,7 +19,8 @@ import { ApplicationOptions } from './application.schema';
 
 export function main(options: ApplicationOptions): Rule {
   options.name = strings.dasherize(options.name);
-  const { name: path } = options;
+
+  const path = options.name;
   options = transform(options);
   return mergeWith(generate(options, path));
 }
@@ -46,12 +47,10 @@ function transform(options: ApplicationOptions): ApplicationOptions {
 }
 
 function resolvePackageName(path: string) {
-  const { name } = nodePath.parse(path);
-
+  const { name } = parse(path);
   if (name === '.') {
-    return nodePath.basename(process.cwd());
+    return basename(process.cwd());
   }
-
   return name;
 }
 
