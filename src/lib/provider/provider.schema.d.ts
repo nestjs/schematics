@@ -30,7 +30,7 @@ export interface ProviderOptions {
    */
   language?: string;
   /**
-   * The source root path
+   * The source root path.
    */
   sourceRoot?: string;
   /**
@@ -41,4 +41,8 @@ export interface ProviderOptions {
    * Flag to indicate if a directory is created.
    */
   flat?: boolean;
+  /**
+   * Class name to be used internally.
+   */
+  className?: string;
 }

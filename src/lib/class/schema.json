@@ -36,7 +36,7 @@
     },
     "className": {
       "type": "string",
-      "description": "Class Name to be used internally."
+      "description": "Class name to be used internally."
     }
   },
   "required": ["name"]

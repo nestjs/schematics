@@ -14,7 +14,7 @@ export interface ClassOptions {
    */
   language?: string;
   /**
-   * The source root path
+   * The source root path.
    */
   sourceRoot?: string;
   /**
@@ -26,7 +26,7 @@ export interface ClassOptions {
    */
   flat?: boolean;
   /**
-   * Class Name to be used internally.
+   * Class name to be used internally.
    */
   className?: string;
 }
