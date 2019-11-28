@@ -8,7 +8,7 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import { parse, basename } from 'path';
+import { basename, parse } from 'path';
 import {
   DEFAULT_AUTHOR,
   DEFAULT_DESCRIPTION,
