@@ -33,6 +33,10 @@
     "sourceRoot": {
       "type": "string",
       "description": "Nest controller source root directory."
+    },
+    "className": {
+      "type": "string",
+      "description": "Class Name to be used internally."
     }
   },
   "required": ["name"]

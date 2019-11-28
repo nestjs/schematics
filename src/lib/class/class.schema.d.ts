@@ -25,4 +25,8 @@ export interface ClassOptions {
    * Flag to indicate if a directory is created.
    */
   flat?: boolean;
+  /**
+   * Class Name to be used internally.
+   */
+  className?: string;
 }

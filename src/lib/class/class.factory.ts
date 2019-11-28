@@ -29,7 +29,14 @@ function transform(options: ClassOptions): ClassOptions {
     throw new SchematicsException('Option (name) is required.');
   }
   const location: Location = new NameParser().parse(target);
+
   target.name = strings.dasherize(location.name);
+  if (target.name.includes('.')) {
+    target.className = strings.classify(target.name).replace('.', '');
+  } else {
+    target.className = target.name;
+  }
+
   target.language =
     target.language !== undefined ? target.language : DEFAULT_LANGUAGE;
 
