@@ -81,6 +81,42 @@ describe('Module Factory', () => {
         'export class FooBarModule {}\n',
     );
   });
+  it('should manage name and path', () => {
+    const options: ModuleOptions = {
+      name: 'foo',
+      path: 'bar',
+      skipImport: true,
+    };
+    const tree: UnitTestTree = runner.runSchematic('module', options);
+    const files: string[] = tree.files;
+    expect(
+      files.find(filename => filename === '/bar/foo/foo.module.ts'),
+    ).not.toBeUndefined();
+    expect(tree.readContent('/bar/foo/foo.module.ts')).toEqual(
+      "import { Module } from '@nestjs/common';\n" +
+        '\n' +
+        '@Module({})\n' +
+        'export class FooModule {}\n',
+    );
+  });
+  it('should not create a directory if "flat" is true', () => {
+    const options: ModuleOptions = {
+      name: 'fooBar',
+      skipImport: true,
+      flat: true,
+    };
+    const tree: UnitTestTree = runner.runSchematic('module', options);
+    const files: string[] = tree.files;
+    expect(
+      files.find(filename => filename === '/foo-bar.module.ts'),
+    ).not.toBeUndefined();
+    expect(tree.readContent('foo-bar.module.ts')).toEqual(
+      "import { Module } from '@nestjs/common';\n" +
+        '\n' +
+        '@Module({})\n' +
+        'export class FooBarModule {}\n',
+    );
+  });
   it('should manage path to dasherize', () => {
     const options: ModuleOptions = {
       name: 'barBaz/foo',

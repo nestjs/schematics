@@ -40,8 +40,12 @@ function transform(source: ModuleOptions): ModuleOptions {
 
   const location: Location = new NameParser().parse(target);
   target.name = strings.dasherize(location.name);
-  target.path = join(strings.dasherize(location.path) as Path, target.name);
   target.language = target.language !== undefined ? target.language : 'ts';
+  target.path = strings.dasherize(location.path);
+
+  target.path = target.flat
+    ? target.path
+    : join(target.path as Path, target.name);
   return target;
 }
 

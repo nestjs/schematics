@@ -34,6 +34,10 @@
     "skipImport": {
       "description": "Flag to skip the module import.",
       "default": false
+    },
+    "flat": {
+      "default": false,
+      "description": "Flag to indicate if a directory is created."
     }
   },
   "required": ["name"]

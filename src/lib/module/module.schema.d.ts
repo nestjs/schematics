@@ -33,4 +33,8 @@ export interface ModuleOptions {
    * The source root path
    */
   sourceRoot?: string;
+  /**
+   * Flag to indicate if a directory is created.
+   */
+  flat?: boolean;
 }
