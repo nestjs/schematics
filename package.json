@@ -30,7 +30,7 @@
     "@angular-devkit/core": "8.3.20",
     "@angular-devkit/schematics": "8.3.20",
     "fs-extra": "^8.1.0",
-    "ts-morph": "^4.0.0",
+    "ts-morph": "^5.0.0",
     "typescript": "3.4.5"
   },
   "devDependencies": {
