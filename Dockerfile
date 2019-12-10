@@ -4,8 +4,8 @@ COPY package.json package.json
 COPY package-lock.json package-lock.json
 COPY .npmignore .npmignore
 
-RUN npm install
 RUN npm config set unsafe-perm true
+RUN npm install
 
 FROM node:carbon-alpine as prod-dependencies
 WORKDIR /nestjs/schematics
