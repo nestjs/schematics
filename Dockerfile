@@ -26,11 +26,15 @@ RUN npm run -s lint:src && npm run -s lint:test
 FROM node:carbon-alpine as tester
 WORKDIR /nestjs/schematics
 COPY --from=linter /nestjs/schematics .
+COPY tools tools
+COPY gulpfile.js gulpfile.js
 RUN npm test -s
 
 FROM node:carbon-alpine as builder
 WORKDIR /nestjs/schematics
 COPY --from=tester /nestjs/schematics .
+COPY tsconfig.lib.json tsconfig.lib.json
+COPY tsconfig.utils.json tsconfig.utils.json
 RUN npm run -s build
 
 FROM node:carbon-alpine

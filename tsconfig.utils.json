@@ -9,6 +9,6 @@
     "sourceMap": false,
     "skipLibCheck": true
   },
-  "include": ["src/utils", "src/lib", "src/index.ts"],
+  "include": ["src/utils", "src/index.ts"],
   "exclude": ["node_modules", "src/**/*.test.ts", "src/**/files/**"]
 }
