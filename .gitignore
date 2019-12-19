@@ -7,4 +7,11 @@ node_modules
 schematics/
 dist
 
+src/lib/**/*.js
+src/lib/**/*.d.ts
+!src/lib/**/files/**/*
+!src/lib/**/workspace/**/*
+src/utils/**/*.js
+src/utils/**/*.d.ts
+
 .DS_Store
