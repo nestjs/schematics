@@ -54,7 +54,8 @@
     "nyc": "14.1.1",
     "ts-jest": "24.2.0",
     "ts-node": "8.5.4",
-    "tslint": "5.20.1"
+    "tslint": "5.20.1",
+    "typescript": "3.6.4"
   },
   "peerDependencies": {
     "typescript": "^3.4.5"
