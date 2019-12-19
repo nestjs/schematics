@@ -1,14 +1,11 @@
 {
-  "moduleFileExtensions": [
-    "js", 
-    "ts"
-  ],
-  "rootDir": "./../",
+  "moduleFileExtensions": ["js", "ts"],
+  "rootDir": ".",
   "testRegex": ".(test|spec).ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "coverageDirectory": "../coverage",
+  "coverageDirectory": "./coverage",
   "verbose": true,
   "bail": true,
   "testPathIgnorePatterns": ["/node_modules/", "files"]

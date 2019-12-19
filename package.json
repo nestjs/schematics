@@ -15,13 +15,12 @@
     "clean": "gulp clean:src",
     "copy:collection": "cpx src/collection.json dist && cpx 'src/lib/**/schema.json' dist/lib",
     "copy:lib": "cpx 'src/lib/**/files/**/*.*' dist/lib",
-    "lint:src": "tslint --project tsconfig.json",
-    "lint:test": "tslint --project test/tsconfig.json",
+    "lint": "tslint --project tsconfig.json",
     "prepublish:next": "npm run build",
     "publish:next": "npm publish --access public --tag next",
     "prepublish:npm": "npm run build",
     "publish:npm": "npm publish --access public",
-    "test": "npm run clean && NODE_ENV=test jest --no-cache --config test/jest-config.json",
+    "test": "npm run clean && NODE_ENV=test jest --no-cache --config jest.json",
     "test:dev": "NODE_ENV=test npm run -s test -- --watchAll"
   },
   "repository": {
