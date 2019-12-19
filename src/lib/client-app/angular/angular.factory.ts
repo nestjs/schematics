@@ -14,7 +14,6 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { join } from 'path';
-import * as ts from 'ts-morph';
 import { Path } from 'typescript';
 import {
   DeclarationOptions,
@@ -113,6 +112,7 @@ function addGlobalPrefix(): Rule {
     if (!fileRef) {
       return tree;
     }
+    const ts = require('ts-morph');
     const tsProject = new ts.Project({
       manipulationSettings: {
         indentationText: ts.IndentationText.TwoSpaces,
