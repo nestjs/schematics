@@ -1,6 +1,6 @@
 import { src, task } from 'gulp';
 import * as clean from 'gulp-clean';
-import { dist, sources } from '../config';
+import { sources } from '../config';
 
 /**
  * Cleans the build output assets from the src folders
@@ -18,16 +18,4 @@ function cleanSrc() {
   }).pipe(clean());
 }
 
-/**
- * Cleans the source assets from the dist folders
- */
-function cleanDist() {
-  const files = dist.map(folder => [`${folder}/**/*.ts`]);
-  return src(files.reduce((a, b) => a.concat(b), []), {
-    read: false,
-    ignore: ['**/files/**/*'],
-  }).pipe(clean());
-}
-
 task('clean:src', cleanSrc);
-task('clean:dist', cleanDist);
