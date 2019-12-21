@@ -20,7 +20,7 @@
     "publish:next": "npm publish --access public --tag next",
     "prepublish:npm": "npm run build",
     "publish:npm": "npm publish --access public",
-    "test": "npm run clean && NODE_ENV=test jest --no-cache --config jest.json",
+    "test": "npm run clean && NODE_ENV=test jest -w 1 --no-cache --config jest.json",
     "test:dev": "NODE_ENV=test npm run -s test -- --watchAll"
   },
   "repository": {
