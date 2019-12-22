@@ -30,8 +30,7 @@ describe('Application Factory', () => {
       '/project/src/app.module.ts',
       '/project/src/app.service.ts',
       '/project/src/main.ts',
-      '/project/test/app.e2e-spec.ts',
-      '/project/test/jest-e2e.json',
+      '/project/test/e2e/app.spec.ts',
     ]);
   });
   it('should manage name to dasherize', () => {
@@ -54,8 +53,7 @@ describe('Application Factory', () => {
       '/awesome-project/src/app.module.ts',
       '/awesome-project/src/app.service.ts',
       '/awesome-project/src/main.ts',
-      '/awesome-project/test/app.e2e-spec.ts',
-      '/awesome-project/test/jest-e2e.json',
+      '/awesome-project/test/e2e/app.spec.ts',
     ]);
   });
   it('should manage javascript files', () => {
@@ -80,8 +78,7 @@ describe('Application Factory', () => {
       '/project/src/app.module.js',
       '/project/src/app.service.js',
       '/project/src/main.js',
-      '/project/test/app.e2e-spec.js',
-      '/project/test/jest-e2e.json',
+      '/project/test/e2e/app.spec.js',
     ]);
   });
 });
