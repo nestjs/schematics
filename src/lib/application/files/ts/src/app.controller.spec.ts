@@ -1,3 +1,9 @@
+/**
+ * Tests AppController class.
+ * 
+ * @group functional/App/AppController
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
