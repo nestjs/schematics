@@ -8,9 +8,9 @@
     "format": "prettier --write \"**/*.js\"",
     "start": "babel-node index.js",
     "start:dev": "nodemon",
-    "test": "jest",
+    "test": "jest --group=functional --group=unit",
     "test:cov": "jest --coverage",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --group=e2e"
   },
   "dependencies": {
     "@nestjs/common": "^6.7.2",
@@ -29,6 +29,7 @@
     "@babel/register": "^7.6.2",
     "@babel/runtime": "^7.6.2",
     "jest": "^24.9.0",
+    "jest-runner-groups": "^1.0.0",
     "nodemon": "^1.19.2",
     "prettier": "^1.18.2",
     "supertest": "^4.0.2"
@@ -38,7 +39,11 @@
       "js",
       "json"
     ],
-    "rootDir": "src",
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/test/"
+    ],
+    "runner": "groups",
     "testRegex": ".spec.js$",
     "coverageDirectory": "./coverage"
   }

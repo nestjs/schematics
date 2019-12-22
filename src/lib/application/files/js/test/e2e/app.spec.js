@@ -1,3 +1,10 @@
+/**
+ * Tests app controller.
+ * 
+ * @group supertest
+ * @group e2e/App/AppController
+ */
+
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
