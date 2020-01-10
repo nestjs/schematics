@@ -1,3 +1,3 @@
-import { ReflectMetadata } from '@nestjs/common';
+import { SetMetadata } from '@nestjs/common';
 
-export const <%= classify(name) %> = (...args: string[]) => ReflectMetadata('<%= name %>', args);
+export const <%= classify(name) %> = (...args: string[]) => SetMetadata('<%= name %>', args);
