@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/schematics",
-  "version": "6.8.1",
+  "version": "6.8.2",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "main": "dist/index.js",
   "files": [
@@ -14,7 +14,7 @@
     "build": "rm -rf dist && tsc --project tsconfig.lib.json",
     "clean": "gulp clean:src",
     "copy:collection": "cpx src/collection.json dist && cpx 'src/lib/**/schema.json' dist/lib",
-    "copy:lib": "cpx 'src/lib/**/files/**/*.*' dist/lib",
+    "copy:lib": "cpx 'src/lib/**/{files,workspace}/**/*.*' dist/lib",
     "lint": "tslint --project tsconfig.json",
     "prepublish:next": "npm run build",
     "publish:next": "npm publish --access public --tag next",
