@@ -23,6 +23,10 @@
       "description": "Nest application description.",
       "default": ""
     },
+    "directory": {
+      "type": "string",
+      "description": "Nest application destination directory"
+    },
     "version": {
       "type": "string",
       "description": "Nest application version.",

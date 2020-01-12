@@ -12,6 +12,10 @@ export interface ApplicationOptions {
    */
   description?: string;
   /**
+   * Nest application destination directory
+   */
+  directory?: string;
+  /**
    * Nest application version.
    */
   version?: string;
