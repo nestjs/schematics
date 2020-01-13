@@ -8,7 +8,7 @@ describe('AppController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [<%= classify(name) || 'App' %>Controller],
-      providers: [AppService],
+      providers: [<%= classify(name) || 'App' %>Service],
     }).compile();
 
     <%= (classify(name) || 'App').toLowerCase() %>Controller = app.get<<%= classify(name) || 'App' %>Controller>(<%= classify(name) || 'App' %>Controller);
