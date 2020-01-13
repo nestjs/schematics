@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { <%= classify(name) || 'App' %>Controller } from './app.controller';
+import { <%= classify(name) || 'App' %>Service } from './app.service';
 
 @Module({
   imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [<%= classify(name) || 'App' %>Controller],
+  providers: [<%= classify(name) || 'App' %>Service],
 })
-export class AppModule {}
+export class <%= classify(name) || 'App' %>Module {}

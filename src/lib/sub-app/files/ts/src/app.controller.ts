@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { <%= classify(name) || 'App' %>Service } from './app.service';
 
 @Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+export class <%= classify(name) || 'App' %>Controller {
+  constructor(private readonly  <%= (classify(name) || 'App').toLowerCase() %>Service: <%= classify(name) || 'App' %>Service) {}
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    return this.<%= (classify(name) || 'App').toLowerCase() %>Service.getHello();
   }
 }

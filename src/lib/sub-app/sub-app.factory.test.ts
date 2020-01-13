@@ -45,7 +45,7 @@ describe('SubApp Factory', () => {
       '/apps/awesome-project/tslint.json',
       '/apps/awesome-project/src/app.controller.spec.ts',
       '/apps/awesome-project/src/app.controller.ts',
-      '/apps/awesome-project/src/app.module.ts',
+      '/apps/awesome-project/src/aaa.module.ts',
       '/apps/awesome-project/src/app.service.ts',
       '/apps/awesome-project/src/main.ts',
       '/apps/awesome-project/test/app.e2e-spec.ts',
