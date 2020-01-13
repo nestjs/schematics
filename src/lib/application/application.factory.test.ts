@@ -84,4 +84,29 @@ describe('Application Factory', () => {
       '/project/test/jest-e2e.json',
     ]);
   });
+  it('should manage destination directory', () => {
+    const options: ApplicationOptions = {
+      name: '@scope/package',
+      directory: 'scope-package',
+    };
+    const tree: UnitTestTree = runner.runSchematic('application', options);
+    const files: string[] = tree.files;
+    expect(files).toEqual([
+      '/scope-package/.gitignore',
+      '/scope-package/.prettierrc',
+      '/scope-package/README.md',
+      '/scope-package/nest-cli.json',
+      '/scope-package/package.json',
+      '/scope-package/tsconfig.build.json',
+      '/scope-package/tsconfig.json',
+      '/scope-package/tslint.json',
+      '/scope-package/src/app.controller.spec.ts',
+      '/scope-package/src/app.controller.ts',
+      '/scope-package/src/app.module.ts',
+      '/scope-package/src/app.service.ts',
+      '/scope-package/src/main.ts',
+      '/scope-package/test/app.e2e-spec.ts',
+      '/scope-package/test/jest-e2e.json',
+    ]);
+  });
 });
