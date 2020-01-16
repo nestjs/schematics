@@ -54,7 +54,7 @@
     "ts-jest": "24.3.0",
     "ts-node": "8.6.2",
     "tslint": "5.20.1",
-    "typescript": "3.7.4"
+    "typescript": "3.7.5"
   },
   "peerDependencies": {
     "typescript": "^3.4.5"
