@@ -20,7 +20,7 @@ import { ApplicationOptions } from './application.schema';
 export function main(options: ApplicationOptions): Rule {
   options.name = strings.dasherize(options.name);
 
-  const path = options.name;
+  const path = options.directory || options.name;
   options = transform(options);
   return mergeWith(generate(options, path));
 }
