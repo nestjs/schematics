@@ -112,6 +112,7 @@ function addGlobalPrefix(): Rule {
     if (!fileRef) {
       return tree;
     }
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const ts = require('ts-morph');
     const tsProject = new ts.Project({
       manipulationSettings: {

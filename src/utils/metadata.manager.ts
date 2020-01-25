@@ -78,6 +78,7 @@ export class MetadataManager {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private getDecoratorMetadata(source: SourceFile, identifier: string): Node[] {
     return this.getSourceNodes(source)
       .filter(
