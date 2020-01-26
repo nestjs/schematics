@@ -20,7 +20,11 @@ import { ApplicationOptions } from './application.schema';
 export function main(options: ApplicationOptions): Rule {
   options.name = strings.dasherize(options.name);
 
-  const path = options.directory || options.name;
+  const path =
+    !options.directory || options.directory === 'undefined'
+      ? options.name
+      : options.directory;
+
   options = transform(options);
   return mergeWith(generate(options, path));
 }
@@ -36,9 +40,10 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   target.name = resolvePackageName(target.name);
   target.version = !!target.version ? target.version : DEFAULT_VERSION;
 
-  target.packageManager = !!target.packageManager
-    ? target.packageManager
-    : 'npm';
+  target.packageManager =
+    !target.packageManager || target.packageManager === 'undefined'
+      ? 'npm'
+      : target.packageManager;
   target.dependencies = !!target.dependencies ? target.dependencies : '';
   target.devDependencies = !!target.devDependencies
     ? target.devDependencies
