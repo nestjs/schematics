@@ -3,7 +3,8 @@
   "version": "<%= version %>",
   "description": "<%= description %>",
   "author": "<%= author %>",
-  "license": "MIT",
+  "private": true,
+  "license": "UNLICENSED",
   "scripts": {
     "format": "prettier --write \"**/*.js\"",
     "start": "babel-node index.js",
