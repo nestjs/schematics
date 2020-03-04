@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { <%= classify(name) || 'App' %>Module } from './../src/app.module';
+import { <%= classify(name)%>Module } from './../src/<%= classify(name)%>.module';
 
 describe('AppController (e2e)', () => {
   let app;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [<%= classify(name) || 'App' %>Module],
+      imports: [<%= classify(name)%>Module],
     }).compile();
 
     app = moduleFixture.createNestApplication();
