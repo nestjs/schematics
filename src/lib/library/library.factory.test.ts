@@ -20,7 +20,6 @@ describe('Library Factory', () => {
     expect(files).toEqual([
       '/nest-cli.json',
       '/libs/project/tsconfig.lib.json',
-      '/libs/project/tslint.json',
       '/libs/project/src/index.ts',
       '/libs/project/src/project.module.ts',
       '/libs/project/src/project.service.spec.ts',
@@ -37,7 +36,6 @@ describe('Library Factory', () => {
     expect(files).toEqual([
       '/nest-cli.json',
       '/libs/awesome-project/tsconfig.lib.json',
-      '/libs/awesome-project/tslint.json',
       '/libs/awesome-project/src/index.ts',
       '/libs/awesome-project/src/awesome-project.module.ts',
       '/libs/awesome-project/src/awesome-project.service.spec.ts',

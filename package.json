@@ -1,7 +1,7 @@
 {
   "name": "@nestjs/schematics",
-  "version": "6.8.0",
-  "description": "Nest - modern, fast, powerful node.js web framework (@schematics)!",
+  "version": "6.9.4",
+  "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "main": "dist/index.js",
   "files": [
     "dist/**/*"
@@ -14,14 +14,16 @@
     "build": "rm -rf dist && tsc --project tsconfig.lib.json",
     "clean": "gulp clean:src",
     "copy:collection": "cpx src/collection.json dist && cpx 'src/lib/**/schema.json' dist/lib",
-    "copy:lib": "cpx 'src/lib/**/files/**/*.*' dist/lib",
-    "lint": "tslint --project tsconfig.json",
+    "copy:lib": "cpx 'src/lib/**/{files,workspace}/**/*.*' dist/lib && cpx 'src/lib/**/{files,workspace}/**/.!(gitignore)' dist/lib",
+    "lint": "eslint '{src,test}/**/*.ts' --fix",
     "prepublish:next": "npm run build",
     "publish:next": "npm publish --access public --tag next",
     "prepublish:npm": "npm run build",
     "publish:npm": "npm publish --access public",
     "test": "npm run clean && NODE_ENV=test jest -w 1 --no-cache --config jest.json",
-    "test:dev": "NODE_ENV=test npm run -s test -- --watchAll"
+    "test:dev": "NODE_ENV=test npm run -s test -- --watchAll",
+    "prerelease": "npm run build",
+    "release": "release-it"
   },
   "repository": {
     "type": "git",
@@ -43,23 +45,36 @@
     "fs-extra": "8.1.0"
   },
   "devDependencies": {
-    "@types/fs-extra": "8.0.1",
-    "@types/jest": "24.0.25",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-angular": "^8.3.4",
+    "@types/fs-extra": "8.1.0",
+    "@types/jest": "25.1.3",
     "@types/node": "12.12.21",
+    "@typescript-eslint/eslint-plugin": "2.22.0",
+    "@typescript-eslint/parser": "2.22.0",
     "cpx": "1.5.0",
+    "eslint": "6.8.0",
+    "eslint-config-prettier": "6.10.0",
+    "eslint-plugin-import": "2.20.1",
     "gulp": "4.0.2",
     "gulp-clean": "0.4.0",
-    "jest": "24.9.0",
+    "husky": "4.2.3",
+    "jest": "25.1.0",
     "nyc": "15.0.0",
-    "ts-jest": "24.3.0",
-    "ts-node": "8.5.4",
-    "tslint": "5.20.1",
-    "typescript": "3.7.4"
+    "release-it": "^12.4.3",
+    "ts-jest": "25.2.1",
+    "ts-node": "8.6.2",
+    "typescript": "3.8.3"
   },
   "peerDependencies": {
     "typescript": "^3.4.5"
   },
   "schematics": "./dist/collection.json",
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -c .commitlintrc.json -E HUSKY_GIT_PARAMS"
+    }
+  },
   "nyc": {
     "include": [
       "src"

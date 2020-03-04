@@ -17,6 +17,7 @@ describe('Application Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('application', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
+      '/project/.eslintrc.js',
       '/project/.gitignore',
       '/project/.prettierrc',
       '/project/README.md',
@@ -24,7 +25,6 @@ describe('Application Factory', () => {
       '/project/package.json',
       '/project/tsconfig.build.json',
       '/project/tsconfig.json',
-      '/project/tslint.json',
       '/project/src/app.controller.spec.ts',
       '/project/src/app.controller.ts',
       '/project/src/app.module.ts',
@@ -41,6 +41,7 @@ describe('Application Factory', () => {
     const tree: UnitTestTree = runner.runSchematic('application', options);
     const files: string[] = tree.files;
     expect(files).toEqual([
+      '/awesome-project/.eslintrc.js',
       '/awesome-project/.gitignore',
       '/awesome-project/.prettierrc',
       '/awesome-project/README.md',
@@ -48,7 +49,6 @@ describe('Application Factory', () => {
       '/awesome-project/package.json',
       '/awesome-project/tsconfig.build.json',
       '/awesome-project/tsconfig.json',
-      '/awesome-project/tslint.json',
       '/awesome-project/src/app.controller.spec.ts',
       '/awesome-project/src/app.controller.ts',
       '/awesome-project/src/app.module.ts',
@@ -82,6 +82,31 @@ describe('Application Factory', () => {
       '/project/src/main.js',
       '/project/test/app.e2e-spec.js',
       '/project/test/jest-e2e.json',
+    ]);
+  });
+  it('should manage destination directory', () => {
+    const options: ApplicationOptions = {
+      name: '@scope/package',
+      directory: 'scope-package',
+    };
+    const tree: UnitTestTree = runner.runSchematic('application', options);
+    const files: string[] = tree.files;
+    expect(files).toEqual([
+      '/scope-package/.eslintrc.js',
+      '/scope-package/.gitignore',
+      '/scope-package/.prettierrc',
+      '/scope-package/README.md',
+      '/scope-package/nest-cli.json',
+      '/scope-package/package.json',
+      '/scope-package/tsconfig.build.json',
+      '/scope-package/tsconfig.json',
+      '/scope-package/src/app.controller.spec.ts',
+      '/scope-package/src/app.controller.ts',
+      '/scope-package/src/app.module.ts',
+      '/scope-package/src/app.service.ts',
+      '/scope-package/src/main.ts',
+      '/scope-package/test/app.e2e-spec.ts',
+      '/scope-package/test/jest-e2e.json',
     ]);
   });
 });

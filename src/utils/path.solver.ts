@@ -1,8 +1,6 @@
 import { basename, dirname, Path, relative } from '@angular-devkit/core';
 
 export class PathSolver {
-  constructor() {}
-
   public relative(from: Path, to: Path): string {
     const placeholder = '/placeholder';
     const relativeDir = relative(

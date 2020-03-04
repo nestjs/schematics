@@ -12,6 +12,10 @@ export interface ApplicationOptions {
    */
   description?: string;
   /**
+   * Nest application destination directory
+   */
+  directory?: string;
+  /**
    * Nest application version.
    */
   version?: string;
@@ -22,7 +26,7 @@ export interface ApplicationOptions {
   /**
    * The used package manager.
    */
-  packageManager?: 'npm' | 'yarn';
+  packageManager?: 'npm' | 'yarn' | 'undefined';
   /**
    * Nest included production dependencies (comma separated values).
    */

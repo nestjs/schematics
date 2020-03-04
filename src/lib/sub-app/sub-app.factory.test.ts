@@ -19,7 +19,6 @@ describe('SubApp Factory', () => {
     expect(files).toEqual([
       '/nest-cli.json',
       '/apps/nestjs-schematics/tsconfig.app.json',
-      '/apps/nestjs-schematics/tslint.json',
       '/apps/project/tsconfig.app.json',
       '/apps/project/tslint.json',
       '/apps/project/src/main.ts',
@@ -40,7 +39,6 @@ describe('SubApp Factory', () => {
     expect(files).toEqual([
       '/nest-cli.json',
       '/apps/nestjs-schematics/tsconfig.app.json',
-      '/apps/nestjs-schematics/tslint.json',
       '/apps/awesome-project/tsconfig.app.json',
       '/apps/awesome-project/tslint.json',
       '/apps/awesome-project/src/main.ts',
