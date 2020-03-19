@@ -42,7 +42,7 @@
   "dependencies": {
     "@angular-devkit/core": "9.0.6",
     "@angular-devkit/schematics": "9.0.6",
-    "fs-extra": "8.1.0"
+    "fs-extra": "9.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
