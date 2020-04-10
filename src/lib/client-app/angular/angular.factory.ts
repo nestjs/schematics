@@ -119,7 +119,7 @@ function addGlobalPrefix(): Rule {
         indentationText: ts.IndentationText.TwoSpaces,
       },
     });
-    const tsFile = tsProject.addExistingSourceFile(mainFilePath);
+    const tsFile = tsProject.addSourceFileAtPath(mainFilePath);
     const bootstrapFunction = tsFile.getFunction('bootstrap');
     const listenStatement = bootstrapFunction.getStatement(node =>
       node.getText().includes('listen'),
