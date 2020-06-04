@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { <%= classify(name) %>Controller } from './<%= name %>.controller';
 
-describe('<%= classify(name) %> Controller', () => {
+describe('<%= classify(name) %>Controller', () => {
   let controller: <%= classify(name) %>Controller;
 
   beforeEach(async () => {
