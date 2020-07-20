@@ -1,4 +1,4 @@
 import { Resolver } from '@nestjs/graphql';
 
-@Resolver('<%= classify(name) %>')
+@Resolver(() => <%= classify(name) %>)
 export class <%= classify(name) %>Resolver {}

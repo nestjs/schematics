@@ -23,7 +23,7 @@ describe('Resolver Factory', () => {
     expect(tree.readContent('/foo/foo.resolver.ts')).toEqual(
       "import { Resolver } from '@nestjs/graphql';\n" +
         '\n' +
-        '@Resolver(\'Foo\')\n' +
+        '@Resolver(() => Foo)\n' +
         'export class FooResolver {}\n',
     );
   });
@@ -40,7 +40,7 @@ describe('Resolver Factory', () => {
     expect(tree.readContent('/bar/foo/foo.resolver.ts')).toEqual(
       "import { Resolver } from '@nestjs/graphql';\n" +
         '\n' +
-        '@Resolver(\'Foo\')\n' +
+        '@Resolver(() => Foo)\n' +
         'export class FooResolver {}\n',
     );
   });
@@ -58,7 +58,7 @@ describe('Resolver Factory', () => {
     expect(tree.readContent('/baz/foo/foo.resolver.ts')).toEqual(
       "import { Resolver } from '@nestjs/graphql';\n" +
         '\n' +
-        '@Resolver(\'Foo\')\n' +
+        '@Resolver(() => Foo)\n' +
         'export class FooResolver {}\n',
     );
   });
@@ -75,7 +75,7 @@ describe('Resolver Factory', () => {
     expect(tree.readContent('/foo-bar/foo-bar.resolver.ts')).toEqual(
       "import { Resolver } from '@nestjs/graphql';\n" +
         '\n' +
-        '@Resolver(\'FooBar\')\n' +
+        '@Resolver(() => FooBar)\n' +
         'export class FooBarResolver {}\n',
     );
   });
@@ -92,7 +92,7 @@ describe('Resolver Factory', () => {
     expect(tree.readContent('/bar-baz/foo/foo.resolver.ts')).toEqual(
       "import { Resolver } from '@nestjs/graphql';\n" +
         '\n' +
-        '@Resolver(\'Foo\')\n' +
+        '@Resolver(() => Foo)\n' +
         'export class FooResolver {}\n',
     );
   });
@@ -110,7 +110,7 @@ describe('Resolver Factory', () => {
     expect(tree.readContent('/foo/foo.resolver.js')).toEqual(
       "import { Resolver } from '@nestjs/graphql';\n" +
         '\n' +
-        '@Resolver(\'Foo\')\n' +
+        '@Resolver(() => Foo)\n' +
         'export class FooResolver {}\n',
     );
   });
