@@ -41,4 +41,8 @@ export interface ControllerOptions {
    * Flag to indicate if a directory is created.
    */
   flat?: boolean;
+  /**
+   * Flag to indicate if CRUD handlers are required
+   */
+  resource: boolean;
 }
