@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Put, Delete, Param } from '@nestjs/common';
+import { Controller<% if (resource) { %>, Post, Get, Put, Delete, Param <% } %> } from '@nestjs/common';
 
 @Controller('<%= dasherize(name) %>')
 export class <%= classify(name) %>Controller {
@@ -19,8 +19,8 @@ export class <%= classify(name) %>Controller {
   }
 
   @Delete(':id')
-  deleteImage(@Param('id') id: string) {
-    return this.imagesService.deleteImage(id)
+  delete(@Param('id') id: string) {
+    return 'This action deletes an item'
   }
   <% } %>
 }
