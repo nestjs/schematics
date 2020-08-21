@@ -44,5 +44,5 @@ export interface ControllerOptions {
   /**
    * Flag to indicate if CRUD handlers are required
    */
-  resource: boolean;
+  resource?: boolean;
 }
