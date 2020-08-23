@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "SchematicsNestResource",
+  "title": "Nest Resource Options Schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the resource.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What name would you like to use for this resource (plural, e.g., \"users\")?"
+    },
+    "path": {
+      "type": "string",
+      "format": "path",
+      "description": "The path to create the resource."
+    },
+    "sourceRoot": {
+      "type": "string",
+      "description": "Nest resource source root directory."
+    },
+    "language": {
+      "type": "string",
+      "description": "Application language (ts/js)."
+    },
+    "flat": {
+      "default": false,
+      "description": "Flag to indicate if a directory is created."
+    },
+    "spec": {
+      "default": true,
+      "description": "Specifies if specs file are generated."
+    },
+    "type": {
+      "description": "The transport layer.",
+      "type": "string",
+      "default": "rest",
+      "enum": [
+        "rest",
+        "graphql-code-first",
+        "graphql-schema-first",
+        "microservice",
+        "ws"
+      ],
+      "x-prompt": {
+        "message": "What transport layer do you use?",
+        "type": "list",
+        "items": [
+          { "value": "rest", "label": "REST API" },
+          {
+            "value": "graphql-code-first",
+            "label": "GraphQL (code first)"
+          },
+          {
+            "value": "graphql-schema-first",
+            "label": "GraphQL (schema first)"
+          },
+          {
+            "value": "microservice",
+            "label": "Microservice (non-HTTP)"
+          },
+          {
+            "value": "ws",
+            "label": "WebSockets"
+          }
+        ]
+      }
+    },
+    "skipImport": {
+      "description": "Flag to skip the module import.",
+      "default": false
+    },
+    "crud": {
+      "description": "When true, CRUD entry points are generated.",
+      "type": "boolean",
+      "default": true,
+      "x-prompt": {
+        "message": "Would you like to generate CRUD entry points?",
+        "type": "confirmation"
+      }
+    }
+  },
+  "required": ["name"]
+}
