@@ -1,8 +1,14 @@
-type <%= singular(classify(name)) %> {}
+type <%= singular(classify(name)) %> {
+  # Example field (placeholder)
+  exampleField: Int
+}
 
-type Create<%= singular(classify(name)) %>Input {}
+input Create<%= singular(classify(name)) %>Input {
+  # Example field (placeholder)
+  exampleField: Int
+}
 
-type Update<%= singular(classify(name)) %>Input {
+input Update<%= singular(classify(name)) %>Input {
   id: Int!
 }
 
