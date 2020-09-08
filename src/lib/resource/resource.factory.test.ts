@@ -1010,19 +1010,25 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/entities/user.entity.ts'))
-        .toEqual(`import { ObjectType } from '@nestjs/graphql';
+        .toEqual(`import { ObjectType, Field, Int } from '@nestjs/graphql';
 
 @ObjectType()
-export class User {}
+export class User {
+  @Field(() => Int, { description: 'Example field (placeholder)' })
+  exampleField: number;
+}
 `);
     });
 
     it('should generate "CreateUserInput" class', () => {
       expect(tree.readContent('/users/dto/create-user.input.ts')).toEqual(
-        `import { InputType } from '@nestjs/graphql';
+        `import { InputType, Int, Field } from '@nestjs/graphql';
 
 @InputType()
-export class CreateUserInput {}`,
+export class CreateUserInput {
+  @Field(() => Int, { description: 'Example field (placeholder)' })
+  exampleField: number;
+}`,
       );
     });
 
@@ -1307,11 +1313,17 @@ describe('UsersService', () => {
     });
 
     it('should generate "Users" GraphQL file', () => {
-      expect(tree.readContent('/users/users.graphql')).toEqual(`type User {}
+      expect(tree.readContent('/users/users.graphql')).toEqual(`type User {
+  # Example field (placeholder)
+  exampleField: Int
+}
 
-type CreateUserInput {}
+input CreateUserInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
 
-type UpdateUserInput {
+input UpdateUserInput {
   id: Int!
 }
 

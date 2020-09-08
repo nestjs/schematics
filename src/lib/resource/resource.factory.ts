@@ -98,7 +98,10 @@ function generate(options: ResourceOptions): Source {
         if (path.endsWith('.gateway.ts') || path.endsWith('.gateway.spec.ts')) {
           return options.type === 'ws';
         }
-        if (path.endsWith('.entity.ts')) {
+        if (path.includes('@ent')) {
+          // Entity class file workaround
+          // When an invalid glob path for entities has been specified (on the application part)
+          // TypeORM was trying to load a template class
           return options.crud;
         }
         return true;
@@ -114,6 +117,7 @@ function generate(options: ResourceOptions): Source {
           );
         },
         singular: (name: string) => pluralize.singular(name),
+        ent: (name: string) => name + '.entity',
       }),
       move(options.path),
     ])(context);
