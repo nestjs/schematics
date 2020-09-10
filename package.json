@@ -68,7 +68,7 @@
     "typescript": "3.9.7"
   },
   "peerDependencies": {
-    "typescript": "^3.4.5"
+    "typescript": ">=3.4.5"
   },
   "schematics": "./dist/collection.json",
   "husky": {
