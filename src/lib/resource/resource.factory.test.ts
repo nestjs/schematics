@@ -1034,9 +1034,8 @@ export class CreateUserInput {
 
     it('should generate "UpdateUserInput" class', () => {
       expect(tree.readContent('/users/dto/update-user.input.ts'))
-        .toEqual(`import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserInput } from './create-user.input';
-import { InputType, Field, Int } from '@nestjs/graphql';
+        .toEqual(`import { CreateUserInput } from './create-user.input';
+import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateUserInput extends PartialType(CreateUserInput) {
@@ -1257,8 +1256,8 @@ export class UsersModule {}
 
     it('should generate "UpdateUserInput" class', () => {
       expect(tree.readContent('/users/dto/update-user.input.ts'))
-        .toEqual(`import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserInput } from './create-user.input';
+        .toEqual(`import { CreateUserInput } from './create-user.input';
+import { PartialType } from '@nestjs/graphql';
 
 export class UpdateUserInput extends PartialType(CreateUserInput) {
   id: number;
