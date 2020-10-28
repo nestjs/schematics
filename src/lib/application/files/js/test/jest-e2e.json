@@ -1,5 +1,7 @@
 {
   "moduleFileExtensions": ["js", "json"],
-  "rootDir": ".",
-  "testRegex": ".e2e-spec.js$"
+  "rootDir": "..",
+  "testRegex": ".e2e-spec.js$",
+  "moduleDirectories": ["src", "node_modules"],
+  "modulePaths": ["."]
 }
