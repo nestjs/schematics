@@ -1,7 +1,7 @@
-<% if (crud && type === 'rest') { %>import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';<% 
+<% if (crud && type === 'rest') { %>import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';<%
 } else if (crud && type === 'microservice') { %>import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';<% 
-} else { %>import { Controller } from '@nestjs/common';<% 
+import { MessagePattern, Payload } from '@nestjs/microservices';<%
+} else { %>import { Controller } from '@nestjs/common';<%
 } %>
 import { <%= classify(name) %>Service } from './<%= name %>.service';<% if (crud) { %>
 import { Create<%= singular(classify(name)) %>Dto } from './dto/create-<%= singular(name) %>.dto';
@@ -10,7 +10,7 @@ import { Update<%= singular(classify(name)) %>Dto } from './dto/update-<%= singu
 <% if (type === 'rest') { %>@Controller('<%= dasherize(name) %>')<% } else { %>@Controller()<% } %>
 export class <%= classify(name) %>Controller {
   constructor(private readonly <%= lowercased(name) %>Service: <%= classify(name) %>Service) {}<% if (type === 'rest' && crud) { %>
-  
+
   @Post()
   create(@Body() create<%= singular(classify(name)) %>Dto: Create<%= singular(classify(name)) %>Dto) {
     return this.<%= lowercased(name) %>Service.create(create<%= singular(classify(name)) %>Dto);

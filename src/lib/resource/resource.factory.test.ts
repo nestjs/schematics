@@ -85,7 +85,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-  
+
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
@@ -167,7 +167,8 @@ export class UsersModule {}
 
     it('should generate "CreateUserDto" class', () => {
       expect(tree.readContent('/users/dto/create-user.dto.ts')).toEqual(
-        `export class CreateUserDto {}`,
+        `export class CreateUserDto {}
+`,
       );
     });
 
@@ -176,7 +177,8 @@ export class UsersModule {}
         .toEqual(`import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}`);
+export class UpdateUserDto extends PartialType(CreateUserDto) {}
+`);
     });
 
     it('should generate "UsersController" spec file', () => {
@@ -450,7 +452,8 @@ export class UsersModule {}
 
     it('should generate "CreateUserDto" class', () => {
       expect(tree.readContent('/users/dto/create-user.dto.ts')).toEqual(
-        `export class CreateUserDto {}`,
+        `export class CreateUserDto {}
+`,
       );
     });
 
@@ -461,7 +464,8 @@ import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   id: number;
-}`);
+}
+`);
     });
 
     it('should generate "UsersController" spec file', () => {
@@ -734,7 +738,8 @@ export class UsersModule {}
 
     it('should generate "CreateUserDto" class', () => {
       expect(tree.readContent('/users/dto/create-user.dto.ts')).toEqual(
-        `export class CreateUserDto {}`,
+        `export class CreateUserDto {}
+`,
       );
     });
 
@@ -745,7 +750,8 @@ import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   id: number;
-}`);
+}
+`);
     });
 
     it('should generate "UsersGateway" spec file', () => {
@@ -1028,7 +1034,8 @@ export class User {
 export class CreateUserInput {
   @Field(() => Int, { description: 'Example field (placeholder)' })
   exampleField: number;
-}`,
+}
+`,
       );
     });
 
@@ -1042,7 +1049,8 @@ import { InputType, Field, Int } from '@nestjs/graphql';
 export class UpdateUserInput extends PartialType(CreateUserInput) {
   @Field(() => Int)
   id: number;
-}`);
+}
+`);
     });
 
     it('should generate "UsersResolver" spec file', () => {
@@ -1251,7 +1259,8 @@ export class UsersModule {}
 
     it('should generate "CreateUserInput" class', () => {
       expect(tree.readContent('/users/dto/create-user.input.ts')).toEqual(
-        `export class CreateUserInput {}`,
+        `export class CreateUserInput {}
+`,
       );
     });
 
@@ -1262,7 +1271,8 @@ import { CreateUserInput } from './create-user.input';
 
 export class UpdateUserInput extends PartialType(CreateUserInput) {
   id: number;
-}`);
+}
+`);
     });
 
     it('should generate "UsersResolver" spec file', () => {
