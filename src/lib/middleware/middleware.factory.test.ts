@@ -7,12 +7,12 @@ describe('Middleware Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
-  it('should manage name only', () => {
+  it('should manage name only', async () => {
     const options: MiddlewareOptions = {
       name: 'foo',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('middleware', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('middleware', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo/foo.middleware.ts'),
@@ -28,12 +28,12 @@ describe('Middleware Factory', () => {
         '}\n',
     );
   });
-  it('should manage name as a path', () => {
+  it('should manage name as a path', async () => {
     const options: MiddlewareOptions = {
       name: 'bar/foo',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('middleware', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('middleware', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/bar/foo/foo.middleware.ts'),
@@ -49,13 +49,13 @@ describe('Middleware Factory', () => {
         '}\n',
     );
   });
-  it('should manage name and path', () => {
+  it('should manage name and path', async () => {
     const options: MiddlewareOptions = {
       name: 'foo',
       path: 'baz',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('middleware', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('middleware', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/baz/foo/foo.middleware.ts'),
@@ -71,12 +71,12 @@ describe('Middleware Factory', () => {
         '}\n',
     );
   });
-  it('should manage name to dasherize', () => {
+  it('should manage name to dasherize', async () => {
     const options: MiddlewareOptions = {
       name: 'fooBar',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('middleware', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('middleware', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo-bar/foo-bar.middleware.ts'),
@@ -92,12 +92,12 @@ describe('Middleware Factory', () => {
         '}\n',
     );
   });
-  it('should manage path to dasherize', () => {
+  it('should manage path to dasherize', async () => {
     const options: MiddlewareOptions = {
       name: 'barBaz/foo',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('middleware', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('middleware', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/bar-baz/foo/foo.middleware.ts'),
@@ -113,13 +113,13 @@ describe('Middleware Factory', () => {
         '}\n',
     );
   });
-  it('should manage javascript file', () => {
+  it('should manage javascript file', async () => {
     const options: MiddlewareOptions = {
       name: 'foo',
       language: 'js',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('middleware', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('middleware', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo/foo.middleware.js'),

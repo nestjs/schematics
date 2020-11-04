@@ -10,12 +10,12 @@ describe('Resolver Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
-  it('should manage name only', () => {
+  it('should manage name only', async () => {
     const options: ResolverOptions = {
       name: 'foo',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('resolver', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('resolver', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo/foo.resolver.ts'),
@@ -27,12 +27,12 @@ describe('Resolver Factory', () => {
         'export class FooResolver {}\n',
     );
   });
-  it('should manage name as a path', () => {
+  it('should manage name as a path', async () => {
     const options: ResolverOptions = {
       name: 'bar/foo',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('resolver', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('resolver', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar/foo/foo.resolver.ts'),
@@ -44,13 +44,13 @@ describe('Resolver Factory', () => {
         'export class FooResolver {}\n',
     );
   });
-  it('should manage name and path', () => {
+  it('should manage name and path', async () => {
     const options: ResolverOptions = {
       name: 'foo',
       path: 'baz',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('resolver', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('resolver', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/baz/foo/foo.resolver.ts'),
@@ -62,12 +62,12 @@ describe('Resolver Factory', () => {
         'export class FooResolver {}\n',
     );
   });
-  it('should manage name to dasherize', () => {
+  it('should manage name to dasherize', async () => {
     const options: ResolverOptions = {
       name: 'fooBar',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('resolver', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('resolver', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo-bar/foo-bar.resolver.ts'),
@@ -79,12 +79,12 @@ describe('Resolver Factory', () => {
         'export class FooBarResolver {}\n',
     );
   });
-  it('should manage path to dasherize', () => {
+  it('should manage path to dasherize', async () => {
     const options: ResolverOptions = {
       name: 'barBaz/foo',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('resolver', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('resolver', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar-baz/foo/foo.resolver.ts'),
@@ -96,13 +96,13 @@ describe('Resolver Factory', () => {
         'export class FooResolver {}\n',
     );
   });
-  it('should manage javascript file', () => {
+  it('should manage javascript file', async () => {
     const options: ResolverOptions = {
       name: 'foo',
       language: 'js',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('resolver', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('resolver', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo/foo.resolver.js'),

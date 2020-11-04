@@ -10,12 +10,12 @@ describe('Decorator Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
-  it('should manage name only', () => {
+  it('should manage name only', async () => {
     const options: DecoratorOptions = {
       name: 'foo',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('decorator', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('decorator', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo/foo.decorator.ts'),
@@ -26,12 +26,12 @@ describe('Decorator Factory', () => {
         "export const Foo = (...args: string[]) => SetMetadata('foo', args);\n",
     );
   });
-  it('should manage name as a path', () => {
+  it('should manage name as a path', async () => {
     const options: DecoratorOptions = {
       name: 'bar/foo',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('decorator', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('decorator', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/bar/foo/foo.decorator.ts'),
@@ -42,13 +42,13 @@ describe('Decorator Factory', () => {
         "export const Foo = (...args: string[]) => SetMetadata('foo', args);\n",
     );
   });
-  it('should manage name and path', () => {
+  it('should manage name and path', async () => {
     const options: DecoratorOptions = {
       name: 'foo',
       path: 'baz',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('decorator', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('decorator', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/baz/foo/foo.decorator.ts'),
@@ -59,12 +59,12 @@ describe('Decorator Factory', () => {
         "export const Foo = (...args: string[]) => SetMetadata('foo', args);\n",
     );
   });
-  it('should manage name to dasherize', () => {
+  it('should manage name to dasherize', async () => {
     const options: DecoratorOptions = {
       name: 'fooBar',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('decorator', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('decorator', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo-bar/foo-bar.decorator.ts'),
@@ -75,12 +75,12 @@ describe('Decorator Factory', () => {
         "export const FooBar = (...args: string[]) => SetMetadata('foo-bar', args);\n",
     );
   });
-  it('should manage path to dasherize', () => {
+  it('should manage path to dasherize', async () => {
     const options: DecoratorOptions = {
       name: 'barBaz/foo',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('decorator', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('decorator', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/bar-baz/foo/foo.decorator.ts'),
@@ -91,13 +91,13 @@ describe('Decorator Factory', () => {
         "export const Foo = (...args: string[]) => SetMetadata('foo', args);\n",
     );
   });
-  it('should manage javascript file', () => {
+  it('should manage javascript file', async () => {
     const options: DecoratorOptions = {
       name: 'foo',
       language: 'js',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('decorator', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('decorator', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo/foo.decorator.js'),

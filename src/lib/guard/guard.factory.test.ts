@@ -11,11 +11,11 @@ describe('Guard Factory', () => {
     path.join(process.cwd(), 'src/collection.json'),
   );
 
-  it('should manage name only', () => {
+  it('should manage name only', async () => {
     const options: GuardOptions = {
       name: 'foo',
     };
-    const tree: UnitTestTree = runner.runSchematic('guard', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('guard', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo.guard.ts'),
@@ -35,11 +35,11 @@ describe('Guard Factory', () => {
     );
   });
 
-  it('should manage name has a path', () => {
+  it('should manage name has a path', async () => {
     const options: GuardOptions = {
       name: 'bar/foo',
     };
-    const tree: UnitTestTree = runner.runSchematic('guard', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('guard', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/bar/foo.guard.ts'),
@@ -59,12 +59,12 @@ describe('Guard Factory', () => {
     );
   });
 
-  it('should manage name and path', () => {
+  it('should manage name and path', async () => {
     const options: GuardOptions = {
       name: 'foo',
       path: 'baz',
     };
-    const tree: UnitTestTree = runner.runSchematic('guard', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('guard', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/baz/foo.guard.ts'),
@@ -84,11 +84,11 @@ describe('Guard Factory', () => {
     );
   });
 
-  it('should manage name to dasherize', () => {
+  it('should manage name to dasherize', async () => {
     const options: GuardOptions = {
       name: 'fooBar',
     };
-    const tree: UnitTestTree = runner.runSchematic('guard', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('guard', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo-bar.guard.ts'),
@@ -108,11 +108,11 @@ describe('Guard Factory', () => {
     );
   });
 
-  it('should manage path to dasherize', () => {
+  it('should manage path to dasherize', async () => {
     const options: GuardOptions = {
       name: 'barBaz/foo',
     };
-    const tree: UnitTestTree = runner.runSchematic('guard', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('guard', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/bar-baz/foo.guard.ts'),
@@ -132,12 +132,12 @@ describe('Guard Factory', () => {
     );
   });
 
-  it('should manage javascript file', () => {
+  it('should manage javascript file', async () => {
     const options: GuardOptions = {
       name: 'foo',
       language: 'js',
     };
-    const tree: UnitTestTree = runner.runSchematic('guard', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('guard', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo.guard.js'),

@@ -10,11 +10,11 @@ describe('SubApp Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
-  it('should manage name only', () => {
+  it('should manage name only', async () => {
     const options: SubAppOptions = {
       name: 'project',
     };
-    const tree: UnitTestTree = runner.runSchematic('sub-app', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('sub-app', options).toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/nest-cli.json',
@@ -29,11 +29,11 @@ describe('SubApp Factory', () => {
       '/apps/project/test/jest-e2e.json',
     ]);
   });
-  it('should manage name to dasherize', () => {
+  it('should manage name to dasherize', async () => {
     const options: SubAppOptions = {
       name: 'awesomeProject',
     };
-    const tree: UnitTestTree = runner.runSchematic('sub-app', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('sub-app', options).toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/nest-cli.json',
@@ -48,12 +48,12 @@ describe('SubApp Factory', () => {
       '/apps/awesome-project/test/jest-e2e.json',
     ]);
   });
-  it('should manage javascript files', () => {
+  it('should manage javascript files', async () => {
     const options: SubAppOptions = {
       name: 'project',
       language: 'js',
     };
-    const tree: UnitTestTree = runner.runSchematic('sub-app', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('sub-app', options).toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/nest-cli.json',

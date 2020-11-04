@@ -10,12 +10,12 @@ describe('Gateway Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
-  it('should manage name only', () => {
+  it('should manage name only', async () => {
     const options: GatewayOptions = {
       name: 'foo',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('gateway', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('gateway', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo/foo.gateway.ts'),
@@ -32,12 +32,12 @@ describe('Gateway Factory', () => {
         '}\n',
     );
   });
-  it('should manage name as a path', () => {
+  it('should manage name as a path', async () => {
     const options: GatewayOptions = {
       name: 'bar/foo',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('gateway', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('gateway', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/bar/foo/foo.gateway.ts'),
@@ -54,13 +54,13 @@ describe('Gateway Factory', () => {
         '}\n',
     );
   });
-  it('should manage name and path', () => {
+  it('should manage name and path', async () => {
     const options: GatewayOptions = {
       name: 'foo',
       path: 'baz',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('gateway', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('gateway', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/baz/foo/foo.gateway.ts'),
@@ -77,12 +77,12 @@ describe('Gateway Factory', () => {
         '}\n',
     );
   });
-  it('should manage name to dasherize', () => {
+  it('should manage name to dasherize', async () => {
     const options: GatewayOptions = {
       name: 'fooBar',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('gateway', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('gateway', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo-bar/foo-bar.gateway.ts'),
@@ -99,12 +99,12 @@ describe('Gateway Factory', () => {
         '}\n',
     );
   });
-  it('should manage path to dasherize', () => {
+  it('should manage path to dasherize', async () => {
     const options: GatewayOptions = {
       name: 'barBaz/foo',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('gateway', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('gateway', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/bar-baz/foo/foo.gateway.ts'),
@@ -121,13 +121,13 @@ describe('Gateway Factory', () => {
         '}\n',
     );
   });
-  it('should manage javascript file', () => {
+  it('should manage javascript file', async () => {
     const options: GatewayOptions = {
       name: 'foo',
       language: 'js',
       flat: false,
     };
-    const tree: UnitTestTree = runner.runSchematic('gateway', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('gateway', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo/foo.gateway.js'),

@@ -11,11 +11,11 @@ describe('Filter Factory', () => {
     path.join(process.cwd(), 'src/collection.json'),
   );
 
-  it('should manage name only', () => {
+  it('should manage name only', async () => {
     const options: FilterOptions = {
       name: 'foo',
     };
-    const tree: UnitTestTree = runner.runSchematic('filter', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('filter', options).toPromise();
     const files: string[] = tree.files;
     expect(files.find(filename => filename === '/foo.filter.ts')).toBeDefined();
     expect(tree.readContent('/foo.filter.ts')).toEqual(
@@ -28,11 +28,11 @@ describe('Filter Factory', () => {
     );
   });
 
-  it('should manage name has a path', () => {
+  it('should manage name has a path', async () => {
     const options: FilterOptions = {
       name: 'bar/foo',
     };
-    const tree: UnitTestTree = runner.runSchematic('filter', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('filter', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/bar/foo.filter.ts'),
@@ -47,12 +47,12 @@ describe('Filter Factory', () => {
     );
   });
 
-  it('should manage name and path', () => {
+  it('should manage name and path', async () => {
     const options: FilterOptions = {
       name: 'foo',
       path: 'baz',
     };
-    const tree: UnitTestTree = runner.runSchematic('filter', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('filter', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/baz/foo.filter.ts'),
@@ -67,11 +67,11 @@ describe('Filter Factory', () => {
     );
   });
 
-  it('should manage name to dasherize', () => {
+  it('should manage name to dasherize', async () => {
     const options: FilterOptions = {
       name: 'fooBar',
     };
-    const tree: UnitTestTree = runner.runSchematic('filter', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('filter', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo-bar.filter.ts'),
@@ -86,11 +86,11 @@ describe('Filter Factory', () => {
     );
   });
 
-  it('should manage path to dasherize', () => {
+  it('should manage path to dasherize', async () => {
     const options: FilterOptions = {
       name: 'barBaz/foo',
     };
-    const tree: UnitTestTree = runner.runSchematic('filter', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('filter', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/bar-baz/foo.filter.ts'),
@@ -105,12 +105,12 @@ describe('Filter Factory', () => {
     );
   });
 
-  it('should manage javascript file', () => {
+  it('should manage javascript file', async () => {
     const options: FilterOptions = {
       name: 'foo',
       language: 'js',
     };
-    const tree: UnitTestTree = runner.runSchematic('filter', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('filter', options).toPromise();
     const files: string[] = tree.files;
     expect(files.find(filename => filename === '/foo.filter.js')).toBeDefined();
     expect(tree.readContent('/foo.filter.js')).toEqual(
@@ -123,13 +123,13 @@ describe('Filter Factory', () => {
     );
   });
 
-  it('should add source root to path', () => {
+  it('should add source root to path', async () => {
     const options: FilterOptions = {
       name: 'foo',
       language: 'js',
     };
-    let tree: UnitTestTree = runner.runSchematic('application', { name: '' });
-    tree = runner.runSchematic('filter', options, tree);
+    let tree: UnitTestTree = await runner.runSchematicAsync('application', { name: '' }).toPromise();
+    tree = await runner.runSchematicAsync('filter', options, tree).toPromise();
 
     const files: string[] = tree.files;
     expect(

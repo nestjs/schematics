@@ -40,17 +40,17 @@
   },
   "homepage": "https://github.com/nestjs/schematics#readme",
   "dependencies": {
-    "@angular-devkit/core": "9.1.12",
-    "@angular-devkit/schematics": "9.1.12",
+    "@angular-devkit/core": "10.2.0",
+    "@angular-devkit/schematics": "10.2.0",
     "fs-extra": "9.0.1",
     "pluralize": "8.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-angular": "^8.3.4",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-angular": "^11.0.0",
     "@types/fs-extra": "9.0.3",
     "@types/jest": "26.0.15",
-    "@types/node": "12.12.31",
+    "@types/node": "14.14.6",
     "@typescript-eslint/eslint-plugin": "4.6.1",
     "@typescript-eslint/parser": "4.6.1",
     "cpx": "1.5.0",
@@ -62,13 +62,13 @@
     "husky": "4.3.0",
     "jest": "26.6.3",
     "nyc": "15.1.0",
-    "release-it": "^12.4.3",
+    "release-it": "^14.2.1",
     "ts-jest": "26.4.3",
     "ts-node": "9.0.0",
     "typescript": "3.9.7"
   },
   "peerDependencies": {
-    "typescript": "^3.4.5"
+    "typescript": "^3.4.5 || ^4.0.0"
   },
   "schematics": "./dist/collection.json",
   "husky": {

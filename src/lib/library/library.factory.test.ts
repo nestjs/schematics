@@ -10,12 +10,12 @@ describe('Library Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
-  it('should manage name only', () => {
+  it('should manage name only', async () => {
     const options: LibraryOptions = {
       name: 'project',
       prefix: 'app',
     };
-    const tree: UnitTestTree = runner.runSchematic('library', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('library', options).toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/nest-cli.json',
@@ -26,12 +26,12 @@ describe('Library Factory', () => {
       '/libs/project/src/project.service.ts',
     ]);
   });
-  it('should manage name to dasherize', () => {
+  it('should manage name to dasherize', async () => {
     const options: LibraryOptions = {
       name: 'awesomeProject',
       prefix: 'app',
     };
-    const tree: UnitTestTree = runner.runSchematic('library', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('library', options).toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/nest-cli.json',
@@ -42,13 +42,13 @@ describe('Library Factory', () => {
       '/libs/awesome-project/src/awesome-project.service.ts',
     ]);
   });
-  it('should manage javascript files', () => {
+  it('should manage javascript files', async () => {
     const options: LibraryOptions = {
       name: 'project',
       language: 'js',
       prefix: 'app',
     };
-    const tree: UnitTestTree = runner.runSchematic('library', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('library', options).toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/nest-cli.json',

@@ -13,12 +13,12 @@ describe('Provider Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
-  it('should manage name only', () => {
+  it('should manage name only', async () => {
     const options: ProviderOptions = {
       name: 'foo',
       skipImport: true,
     };
-    const tree: UnitTestTree = runner.runSchematic('provider', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('provider', options).toPromise();
     const files: string[] = tree.files;
     expect(files.find(filename => filename === '/foo.ts')).toBeDefined();
     expect(files.find(filename => filename === '/foo.spec.ts')).toBeDefined();
@@ -29,12 +29,12 @@ describe('Provider Factory', () => {
         'export class Foo {}\n',
     );
   });
-  it('should manage name has a path', () => {
+  it('should manage name has a path', async () => {
     const options: ProviderOptions = {
       name: 'bar/foo',
       skipImport: true,
     };
-    const tree: UnitTestTree = runner.runSchematic('provider', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('provider', options).toPromise();
     const files: string[] = tree.files;
     expect(files.find(filename => filename === '/bar/foo.ts')).toBeDefined();
     expect(
@@ -47,13 +47,13 @@ describe('Provider Factory', () => {
         'export class Foo {}\n',
     );
   });
-  it('should manage name and path', () => {
+  it('should manage name and path', async () => {
     const options: ProviderOptions = {
       name: 'foo',
       path: 'bar',
       skipImport: true,
     };
-    const tree: UnitTestTree = runner.runSchematic('provider', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('provider', options).toPromise();
     const files: string[] = tree.files;
     expect(files.find(filename => filename === '/bar/foo.ts')).toBeDefined();
     expect(
@@ -66,12 +66,12 @@ describe('Provider Factory', () => {
         'export class Foo {}\n',
     );
   });
-  it('should manage name to dasherize', () => {
+  it('should manage name to dasherize', async () => {
     const options: ProviderOptions = {
       name: 'bar-foo',
       skipImport: true,
     };
-    const tree: UnitTestTree = runner.runSchematic('provider', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('provider', options).toPromise();
     const files: string[] = tree.files;
     expect(files.find(filename => filename === '/bar-foo.ts')).toBeDefined();
     expect(
@@ -84,13 +84,13 @@ describe('Provider Factory', () => {
         'export class BarFoo {}\n',
     );
   });
-  it('should manage javascript file', () => {
+  it('should manage javascript file', async () => {
     const options: ProviderOptions = {
       name: 'foo',
       skipImport: true,
       language: 'js',
     };
-    const tree: UnitTestTree = runner.runSchematic('provider', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('provider', options).toPromise();
     const files: string[] = tree.files;
     expect(files.find(filename => filename === '/foo.js')).toBeDefined();
     expect(files.find(filename => filename === '/foo.spec.js')).toBeDefined();
@@ -101,15 +101,15 @@ describe('Provider Factory', () => {
         'export class Foo {}\n',
     );
   });
-  it('should manage declaration in app module', () => {
+  it('should manage declaration in app module', async () => {
     const app: ApplicationOptions = {
       name: '',
     };
-    let tree: UnitTestTree = runner.runSchematic('application', app);
+    let tree: UnitTestTree = await runner.runSchematicAsync('application', app).toPromise();
     const options: ProviderOptions = {
       name: 'foo',
     };
-    tree = runner.runSchematic('provider', options, tree);
+    tree = await runner.runSchematicAsync('provider', options, tree).toPromise();
     expect(tree.readContent(normalize('/src/app.module.ts'))).toEqual(
       "import { Module } from '@nestjs/common';\n" +
         "import { AppController } from './app.controller';\n" +
@@ -124,20 +124,20 @@ describe('Provider Factory', () => {
         'export class AppModule {}\n',
     );
   });
-  it('should manage declaration in foo module', () => {
+  it('should manage declaration in foo module', async () => {
     const app: ApplicationOptions = {
       name: '',
     };
-    let tree: UnitTestTree = runner.runSchematic('application', app);
+    let tree: UnitTestTree = await runner.runSchematicAsync('application', app).toPromise();
     const module: ModuleOptions = {
       name: 'foo',
     };
-    tree = runner.runSchematic('module', module, tree);
+    tree = await runner.runSchematicAsync('module', module, tree).toPromise();
     const options: ProviderOptions = {
       name: 'foo',
       path: 'foo',
     };
-    tree = runner.runSchematic('provider', options, tree);
+    tree = await runner.runSchematicAsync('provider', options, tree).toPromise();
     expect(tree.readContent(normalize('/src/foo/foo.module.ts'))).toEqual(
       "import { Module } from '@nestjs/common';\n" +
         "import { Foo } from './foo';\n" +
@@ -148,13 +148,13 @@ describe('Provider Factory', () => {
         'export class FooModule {}\n',
     );
   });
-  it('should remove . from name', () => {
+  it('should remove . from name', async () => {
     const options: ProviderOptions = {
       name: 'foo.entity',
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = runner.runSchematic('provider', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('provider', options).toPromise();
     const files: string[] = tree.files;
 
     expect(files.find(filename => filename === '/foo.entity.ts')).not.toBeUndefined();

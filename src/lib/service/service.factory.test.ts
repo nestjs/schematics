@@ -13,13 +13,13 @@ describe('Service Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
-  it('should manage name only', () => {
+  it('should manage name only', async () => {
     const options: ServiceOptions = {
       name: 'foo',
       skipImport: true,
       flat: true,
     };
-    const tree: UnitTestTree = runner.runSchematic('service', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('service', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo.service.ts'),
@@ -34,13 +34,13 @@ describe('Service Factory', () => {
         'export class FooService {}\n',
     );
   });
-  it('should manage name as a path', () => {
+  it('should manage name as a path', async () => {
     const options: ServiceOptions = {
       name: 'bar/foo',
       skipImport: true,
       flat: true,
     };
-    const tree: UnitTestTree = runner.runSchematic('service', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('service', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/bar/foo.service.ts'),
@@ -55,14 +55,14 @@ describe('Service Factory', () => {
         'export class FooService {}\n',
     );
   });
-  it('should manage name and path', () => {
+  it('should manage name and path', async () => {
     const options: ServiceOptions = {
       name: 'foo',
       path: 'bar',
       skipImport: true,
       flat: true,
     };
-    const tree: UnitTestTree = runner.runSchematic('service', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('service', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/bar/foo.service.ts'),
@@ -77,13 +77,13 @@ describe('Service Factory', () => {
         'export class FooService {}\n',
     );
   });
-  it('should manage name to dasherize', () => {
+  it('should manage name to dasherize', async () => {
     const options: ServiceOptions = {
       name: 'fooBar',
       skipImport: true,
       flat: true,
     };
-    const tree: UnitTestTree = runner.runSchematic('service', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('service', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo-bar.service.ts'),
@@ -95,13 +95,13 @@ describe('Service Factory', () => {
         'export class FooBarService {}\n',
     );
   });
-  it('should manage path to dasherize', () => {
+  it('should manage path to dasherize', async () => {
     const options: ServiceOptions = {
       name: 'barBaz/foo',
       skipImport: true,
       flat: true,
     };
-    const tree: UnitTestTree = runner.runSchematic('service', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('service', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/bar-baz/foo.service.ts'),
@@ -116,14 +116,14 @@ describe('Service Factory', () => {
         'export class FooService {}\n',
     );
   });
-  it('should manage javascript file', () => {
+  it('should manage javascript file', async () => {
     const options: ServiceOptions = {
       name: 'foo',
       skipImport: true,
       language: 'js',
       flat: true,
     };
-    const tree: UnitTestTree = runner.runSchematic('service', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('service', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/foo.service.js'),
@@ -138,16 +138,16 @@ describe('Service Factory', () => {
         'export class FooService {}\n',
     );
   });
-  it('should manage declaration in app module', () => {
+  it('should manage declaration in app module', async () => {
     const app: ApplicationOptions = {
       name: '',
     };
-    let tree: UnitTestTree = runner.runSchematic('application', app);
+    let tree: UnitTestTree = await runner.runSchematicAsync('application', app).toPromise();
     const options: ServiceOptions = {
       name: 'foo',
       flat: true,
     };
-    tree = runner.runSchematic('service', options, tree);
+    tree = await runner.runSchematicAsync('service', options, tree).toPromise();
     expect(tree.readContent(normalize('/src/app.module.ts'))).toEqual(
       "import { Module } from '@nestjs/common';\n" +
         "import { AppController } from './app.controller';\n" +
@@ -162,21 +162,21 @@ describe('Service Factory', () => {
         'export class AppModule {}\n',
     );
   });
-  it('should manage declaration in foo module', () => {
+  it('should manage declaration in foo module', async () => {
     const app: ApplicationOptions = {
       name: '',
     };
-    let tree: UnitTestTree = runner.runSchematic('application', app);
+    let tree: UnitTestTree = await runner.runSchematicAsync('application', app).toPromise();
     const module: ModuleOptions = {
       name: 'foo',
     };
-    tree = runner.runSchematic('module', module, tree);
+    tree = await runner.runSchematicAsync('module', module, tree).toPromise();;
     const options: ServiceOptions = {
       name: 'foo',
       path: 'foo',
       flat: true,
     };
-    tree = runner.runSchematic('service', options, tree);
+    tree = await runner.runSchematicAsync('service', options, tree).toPromise();
     expect(tree.readContent(normalize('/src/foo/foo.module.ts'))).toEqual(
       "import { Module } from '@nestjs/common';\n" +
         "import { FooService } from './foo.service';\n" +

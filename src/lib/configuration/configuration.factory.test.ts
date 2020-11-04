@@ -10,11 +10,11 @@ describe('Configuration Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
-  it('should manage a default configuation', () => {
+  it('should manage a default configuation', async () => {
     const options: ConfigurationOptions = {
       project: 'project',
     };
-    const tree: UnitTestTree = runner.runSchematic('configuration', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('configuration', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/project/nest-cli.json'),
@@ -24,12 +24,12 @@ describe('Configuration Factory', () => {
       sourceRoot: 'src',
     });
   });
-  it('should manage provided language input', () => {
+  it('should manage provided language input', async () => {
     const options: ConfigurationOptions = {
       project: 'project',
       language: 'js',
     };
-    const tree: UnitTestTree = runner.runSchematic('configuration', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('configuration', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/project/nest-cli.json'),
@@ -40,12 +40,12 @@ describe('Configuration Factory', () => {
       sourceRoot: 'src',
     });
   });
-  it('should manage provided collection input', () => {
+  it('should manage provided collection input', async () => {
     const options: ConfigurationOptions = {
       project: 'project',
       collection: 'foo',
     };
-    const tree: UnitTestTree = runner.runSchematic('configuration', options);
+    const tree: UnitTestTree = await runner.runSchematicAsync('configuration', options).toPromise();
     const files: string[] = tree.files;
     expect(
       files.find(filename => filename === '/project/nest-cli.json'),
