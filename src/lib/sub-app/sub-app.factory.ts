@@ -21,6 +21,7 @@ import {
 } from '@angular-devkit/schematics';
 import * as fse from 'fs-extra';
 import {
+  DEFAULT_APP_NAME,
   DEFAULT_APPS_PATH,
   DEFAULT_DIR_ENTRY_APP,
   DEFAULT_LANGUAGE,
@@ -82,7 +83,7 @@ function transform(options: SubAppOptions): SubAppOptions {
     options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
 
   if (!target.name) {
-    throw new SchematicsException('Option (name) is required.');
+    target.name = DEFAULT_APP_NAME;
   }
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
   target.name = strings.dasherize(target.name);
@@ -343,7 +344,6 @@ function updateMainAppOptions(
 
 function generateWorkspace(options: SubAppOptions, appName: string): Source {
   const path = join(options.path as Path, appName);
-
   return apply(url(join('./workspace' as Path, options.language)), [
     template({
       ...strings,
@@ -356,7 +356,6 @@ function generateWorkspace(options: SubAppOptions, appName: string): Source {
 
 function generate(options: SubAppOptions): Source {
   const path = join(options.path as Path, options.name);
-
   return apply(url(join('./files' as Path, options.language)), [
     template({
       ...strings,

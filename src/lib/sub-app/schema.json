@@ -27,6 +27,5 @@
       "format": "path",
       "description": "Applications root directory."
     }
-  },
-  "required": ["name"]
+  }
 }
