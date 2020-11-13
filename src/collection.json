@@ -26,6 +26,11 @@
       "description": "Create a Nest decorator.",
       "schema": "./lib/decorator/schema.json"
     },
+    "entity": {
+      "factory": "./lib/entity/entity.factory#main",
+      "description": "Create a Nest entity.",
+      "schema": "./lib/entity/schema.json"
+    },
     "filter": {
       "factory": "./lib/filter/filter.factory#main",
       "description": "Create a Nest filter.",
@@ -99,11 +104,6 @@
       "factory": "./lib/resource/resource.factory#main",
       "description": "Create a Nest resource.",
       "schema": "./lib/resource/schema.json"
-    },
-    "entity": {
-      "factory": "./lib/entity/entity.factory#main",
-      "description": "Create a Nest entity.",
-      "schema": "./lib/entity/schema.json"
     }
   }
 }
