@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "id": "SchematicsNestClass",
+    "title": "Nest Repository Options Schema",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "The name of the repository.",
+        "$default": {
+          "$source": "argv",
+          "index": 0
+        },
+        "x-prompt": "What name would you like to use for the repository?"
+      },
+      "flat": {
+        "default": true,
+        "description": "Flag to indicate if a directory is created."
+      },
+      "spec": {
+        "default": true,
+        "description": "Specifies if a spec file is generated."
+      },
+      "path": {
+        "type": "string",
+        "format": "path",
+        "description": "The path to create the repository."
+      },
+      "language": {
+        "type": "string",
+        "description": "Nest class language (ts/js)."
+      },
+      "sourceRoot": {
+        "type": "string",
+        "description": "Nest repository source root directory."
+      },
+      "className": {
+        "type": "string",
+        "description": "Class name to be used internally."
+      }
+    },
+    "required": ["name"]
+  }
+  

@@ -99,6 +99,11 @@
       "factory": "./lib/resource/resource.factory#main",
       "description": "Create a Nest resource.",
       "schema": "./lib/resource/schema.json"
+    },
+    "repository": {
+      "factory": "./lib/repository/repository.factory#main",
+      "description": "Create a Nest repository.",
+      "schema": "./lib/repository/schema.json"
     }
   }
 }
