@@ -32,3 +32,7 @@ Learn more in the [official documentation](https://docs.nestjs.com/).
 
 - Website - [https://nestjs.com](https://nestjs.com/)
 - Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## License
+
+Nest is [MIT licensed](LICENSE).
