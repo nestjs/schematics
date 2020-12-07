@@ -7,6 +7,7 @@ export interface DeclarationOptions {
   metadata: string;
   type?: string;
   name: string;
+  className?: string;
   path: Path;
   module: Path;
   symbol?: string;
@@ -31,6 +32,9 @@ export class ModuleDeclarator {
 
   private computeSymbol(options: DeclarationOptions): DeclarationOptions {
     const target = Object.assign({}, options);
+    if (options.className) {
+      target.symbol = options.className;
+    }
     if (options.type !== undefined) {
       target.symbol = classify(options.name).concat(capitalize(options.type));
     } else {
