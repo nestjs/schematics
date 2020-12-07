@@ -34,8 +34,7 @@ export class ModuleDeclarator {
     const target = Object.assign({}, options);
     if (options.className) {
       target.symbol = options.className;
-    }
-    else if (options.type !== undefined) {
+    } else if (options.type !== undefined) {
       target.symbol = classify(options.name).concat(capitalize(options.type));
     } else {
       target.symbol = classify(options.name);

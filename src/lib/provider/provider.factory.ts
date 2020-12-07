@@ -48,7 +48,7 @@ function transform(options: ProviderOptions): ProviderOptions {
   if (target.name.includes('.')) {
     target.className = strings.classify(target.name).replace('.', '');
   } else {
-    target.className = target.name;
+    target.className = strings.classify(target.name);
   }
 
   target.path = strings.dasherize(location.path);
@@ -63,7 +63,7 @@ function transform(options: ProviderOptions): ProviderOptions {
 function generate(options: ProviderOptions) {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
-      options.spec ? noop() : filter(path => !path.endsWith('.spec.ts')),
+      options.spec ? noop() : filter((path) => !path.endsWith('.spec.ts')),
       template({
         ...strings,
         ...options,
