@@ -174,7 +174,7 @@ export class UsersModule {}
 
     it('should generate "UpdateUserDto" class', () => {
       expect(tree.readContent('/users/dto/update-user.dto.ts'))
-        .toEqual(`import { PartialType } from '@nestjs/mapped-types';
+        .toEqual(`import { PartialType } from '@nestjs/swagger';
 import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}
@@ -459,7 +459,7 @@ export class UsersModule {}
 
     it('should generate "UpdateUserDto" class', () => {
       expect(tree.readContent('/users/dto/update-user.dto.ts'))
-        .toEqual(`import { PartialType } from '@nestjs/mapped-types';
+        .toEqual(`import { PartialType } from '@nestjs/swagger';
 import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
@@ -745,7 +745,7 @@ export class UsersModule {}
 
     it('should generate "UpdateUserDto" class', () => {
       expect(tree.readContent('/users/dto/update-user.dto.ts'))
-        .toEqual(`import { PartialType } from '@nestjs/mapped-types';
+        .toEqual(`import { PartialType } from '@nestjs/swagger';
 import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
