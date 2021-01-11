@@ -40,8 +40,8 @@
   },
   "homepage": "https://github.com/nestjs/schematics#readme",
   "dependencies": {
-    "@angular-devkit/core": "11.0.5",
-    "@angular-devkit/schematics": "11.0.5",
+    "@angular-devkit/core": "11.0.6",
+    "@angular-devkit/schematics": "11.0.6",
     "fs-extra": "9.0.1",
     "pluralize": "8.0.0"
   },
