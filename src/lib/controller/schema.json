@@ -39,6 +39,7 @@
       "description": "Flag to indicate if a directory is created."
     },
     "spec": {
+      "type": "boolean",
       "default": true,
       "description": "Specifies if a spec file is generated."
     }
