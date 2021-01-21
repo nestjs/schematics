@@ -27,16 +27,18 @@
       "description": "Application language (ts/js)."
     },
     "flat": {
+      "type": "boolean",
       "default": false,
       "description": "Flag to indicate if a directory is created."
     },
     "spec": {
+      "type": "boolean",
       "default": true,
       "description": "Specifies if specs file are generated."
     },
     "type": {
-      "description": "The transport layer.",
       "type": "string",
+      "description": "The transport layer.",
       "default": "rest",
       "enum": [
         "rest",
@@ -70,12 +72,13 @@
       }
     },
     "skipImport": {
+      "type": "boolean",
       "description": "Flag to skip the module import.",
       "default": false
     },
     "crud": {
-      "description": "When true, CRUD entry points are generated.",
       "type": "boolean",
+      "description": "When true, CRUD entry points are generated.",
       "default": true,
       "x-prompt": {
         "message": "Would you like to generate CRUD entry points?",
