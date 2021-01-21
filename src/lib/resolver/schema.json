@@ -27,10 +27,12 @@
       "description": "Nest resolver source root directory."
     },
     "flat": {
+      "type": "boolean",
       "default": false,
       "description": "Flag to indicate if a directory is created."
     },
     "spec": {
+      "type": "boolean",
       "default": true,
       "description": "Specifies if a spec file is generated."
     }
