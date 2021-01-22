@@ -26,7 +26,7 @@
       "type": "string",
       "description": "Nest middleware source root directory."
     },
-    "flat":{
+    "flat": {
       "type": "boolean",
       "default": true,
       "description": "Flag to indicate if a directory is created."
