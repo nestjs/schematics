@@ -32,10 +32,12 @@
       "description": "Nest module source root directory."
     },
     "skipImport": {
+      "type": "boolean",
       "description": "Flag to skip the module import.",
       "default": false
     },
     "flat": {
+      "type": "boolean",
       "default": false,
       "description": "Flag to indicate if a directory is created."
     }

@@ -23,6 +23,7 @@
       "description": "Nest interface source root directory."
     },
     "flat": {
+      "type": "boolean",
       "default": true,
       "description": "Flag to indicate if a directory is created."
     }
