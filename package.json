@@ -65,7 +65,7 @@
     "release-it": "^14.2.1",
     "ts-jest": "26.5.1",
     "ts-node": "9.1.1",
-    "typescript": "3.9.7"
+    "typescript": "3.9.9"
   },
   "peerDependencies": {
     "typescript": "^3.4.5 || ^4.0.0"
