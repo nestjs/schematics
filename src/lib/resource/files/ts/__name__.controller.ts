@@ -26,7 +26,7 @@ export class <%= classify(name) %>Controller {
     return this.<%= lowercased(name) %>Service.findOne(+id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() update<%= singular(classify(name)) %>Dto: Update<%= singular(classify(name)) %>Dto) {
     return this.<%= lowercased(name) %>Service.update(+id, update<%= singular(classify(name)) %>Dto);
   }
