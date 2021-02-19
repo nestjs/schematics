@@ -1,4 +1,4 @@
-<% if (crud && type === 'rest') { %>import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';<%
+<% if (crud && type === 'rest') { %>import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';<%
 } else if (crud && type === 'microservice') { %>import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';<%
 } else { %>import { Controller } from '@nestjs/common';<%
