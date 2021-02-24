@@ -21,6 +21,7 @@ describe('Application Factory', () => {
       '/project/.gitignore',
       '/project/.prettierrc',
       '/project/README.md',
+      '/project/jest.config.ts',
       '/project/nest-cli.json',
       '/project/package.json',
       '/project/tsconfig.build.json',
@@ -31,7 +32,7 @@ describe('Application Factory', () => {
       '/project/src/app.service.ts',
       '/project/src/main.ts',
       '/project/test/app.e2e-spec.ts',
-      '/project/test/jest-e2e.json',
+      '/project/test/jest-e2e.ts',
     ]);
   });
   it('should manage name to dasherize', async () => {
@@ -45,6 +46,7 @@ describe('Application Factory', () => {
       '/awesome-project/.gitignore',
       '/awesome-project/.prettierrc',
       '/awesome-project/README.md',
+      '/awesome-project/jest.config.ts',
       '/awesome-project/nest-cli.json',
       '/awesome-project/package.json',
       '/awesome-project/tsconfig.build.json',
@@ -55,7 +57,7 @@ describe('Application Factory', () => {
       '/awesome-project/src/app.service.ts',
       '/awesome-project/src/main.ts',
       '/awesome-project/test/app.e2e-spec.ts',
-      '/awesome-project/test/jest-e2e.json',
+      '/awesome-project/test/jest-e2e.ts',
     ]);
   });
   it('should manage javascript files', async () => {
@@ -96,6 +98,7 @@ describe('Application Factory', () => {
       '/scope-package/.gitignore',
       '/scope-package/.prettierrc',
       '/scope-package/README.md',
+      '/scope-package/jest.config.ts',
       '/scope-package/nest-cli.json',
       '/scope-package/package.json',
       '/scope-package/tsconfig.build.json',
@@ -106,7 +109,7 @@ describe('Application Factory', () => {
       '/scope-package/src/app.service.ts',
       '/scope-package/src/main.ts',
       '/scope-package/test/app.e2e-spec.ts',
-      '/scope-package/test/jest-e2e.json',
+      '/scope-package/test/jest-e2e.ts',
     ]);
   });
 });
