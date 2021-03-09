@@ -1,4 +1,4 @@
-<% if (crud && type === 'rest') { %>import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';<%
+<% if (crud && type === 'rest') { %>import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';<%
 } else if (crud && type === 'microservice') { %>import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';<%
 } else { %>import { Controller } from '@nestjs/common';<%
@@ -26,7 +26,7 @@ export class <%= classify(name) %>Controller {
     return this.<%= lowercased(name) %>Service.findOne(+id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() update<%= singular(classify(name)) %>Dto: Update<%= singular(classify(name)) %>Dto) {
     return this.<%= lowercased(name) %>Service.update(+id, update<%= singular(classify(name)) %>Dto);
   }
