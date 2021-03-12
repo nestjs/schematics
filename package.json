@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/schematics",
-  "version": "7.2.9",
+  "version": "7.3.0",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "main": "dist/index.js",
   "files": [
