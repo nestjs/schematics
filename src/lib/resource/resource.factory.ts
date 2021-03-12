@@ -21,6 +21,12 @@ import { ResourceOptions } from './resource.schema';
 import { classify } from '@angular-devkit/core/src/utils/strings';
 import * as pluralize from 'pluralize';
 import { ModuleFinder, ModuleDeclarator, DeclarationOptions } from '../..';
+import {
+  addPackageJsonDependency,
+  getPackageJsonDependency,
+  NodeDependencyType,
+} from '../../utils/dependencies.utils';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 export function main(options: ResourceOptions): Rule {
   options = transform(options);
@@ -28,6 +34,7 @@ export function main(options: ResourceOptions): Rule {
   return (tree: Tree, context: SchematicContext) => {
     return branchAndMerge(
       chain([
+        addMappedTypesDependencyIfApplies(options),
         mergeSourceRoot(options),
         addDeclarationToModule(options),
         mergeWith(generate(options)),
@@ -56,6 +63,8 @@ function transform(options: ResourceOptions): ResourceOptions {
   target.path = target.flat
     ? target.path
     : join(target.path as Path, target.name);
+  target.isSwaggerInstalled = options.isSwaggerInstalled ?? false;
+
   return target;
 }
 
@@ -145,5 +154,39 @@ function addDeclarationToModule(options: ResourceOptions): Rule {
       } as DeclarationOptions),
     );
     return tree;
+  };
+}
+
+function addMappedTypesDependencyIfApplies(options: ResourceOptions): Rule {
+  return (host: Tree, context: SchematicContext) => {
+    try {
+      if (options.type === 'graphql-code-first') {
+        return;
+      }
+      if (options.type === 'rest') {
+        const nodeDependencyRef = getPackageJsonDependency(
+          host,
+          '@nestjs/swagger',
+        );
+        if (nodeDependencyRef) {
+          options.isSwaggerInstalled = true;
+          return;
+        }
+      }
+      const nodeDependencyRef = getPackageJsonDependency(
+        host,
+        '@nestjs/mapped-types',
+      );
+      if (!nodeDependencyRef) {
+        addPackageJsonDependency(host, {
+          type: NodeDependencyType.Default,
+          name: '@nestjs/mapped-types',
+          version: '*',
+        });
+        context.addTask(new NodePackageInstallTask());
+      }
+    } catch (err) {
+      // ignore if "package.json" not found
+    }
   };
 }

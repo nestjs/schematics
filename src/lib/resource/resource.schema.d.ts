@@ -50,4 +50,8 @@ export interface ResourceOptions {
    * Flag to indicate if a directory is created.
    */
   flat?: boolean;
+  /**
+   * When true, "@nestjs/swagger" dependency is installed in the project.
+   */
+  isSwaggerInstalled?: boolean;
 }

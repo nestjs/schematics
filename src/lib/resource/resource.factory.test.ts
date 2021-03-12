@@ -16,7 +16,9 @@ describe('Resource Factory', () => {
       const options: ResourceOptions = {
         name: 'users',
       };
-      const tree = await runner.runSchematicAsync('resource', options).toPromise();
+      const tree = await runner
+        .runSchematicAsync('resource', options)
+        .toPromise();
       const files = tree.files;
       expect(files).toEqual([
         '/users/users.controller.spec.ts',
@@ -35,7 +37,9 @@ describe('Resource Factory', () => {
           name: 'users',
           crud: false,
         };
-        const tree = await runner.runSchematicAsync('resource', options).toPromise();
+        const tree = await runner
+          .runSchematicAsync('resource', options)
+          .toPromise();
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.controller.spec.ts',
@@ -53,7 +57,9 @@ describe('Resource Factory', () => {
           spec: false,
           crud: false,
         };
-        const tree = await runner.runSchematicAsync('resource', options).toPromise();
+        const tree = await runner
+          .runSchematicAsync('resource', options)
+          .toPromise();
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.controller.ts',
@@ -67,6 +73,7 @@ describe('Resource Factory', () => {
   describe('[REST API]', () => {
     const options: ResourceOptions = {
       name: 'users',
+      isSwaggerInstalled: true,
     };
 
     let tree: UnitTestTree;
@@ -174,7 +181,7 @@ export class UsersModule {}
 
     it('should generate "UpdateUserDto" class', () => {
       expect(tree.readContent('/users/dto/update-user.dto.ts'))
-        .toEqual(`import { PartialType } from '@nestjs/mapped-types';
+        .toEqual(`import { PartialType } from '@nestjs/swagger';
 import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}
@@ -297,7 +304,9 @@ export class UsersModule {}
         name: 'users',
         type: 'microservice',
       };
-      const tree = await runner.runSchematicAsync('resource', options).toPromise();
+      const tree = await runner
+        .runSchematicAsync('resource', options)
+        .toPromise();
       const files = tree.files;
       expect(files).toEqual([
         '/users/users.controller.spec.ts',
@@ -317,7 +326,9 @@ export class UsersModule {}
           crud: false,
           type: 'microservice',
         };
-        const tree = await runner.runSchematicAsync('resource', options).toPromise();
+        const tree = await runner
+          .runSchematicAsync('resource', options)
+          .toPromise();
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.controller.spec.ts',
@@ -336,7 +347,9 @@ export class UsersModule {}
           crud: false,
           type: 'microservice',
         };
-        const tree = await runner.runSchematicAsync('resource', options).toPromise();
+        const tree = await runner
+          .runSchematicAsync('resource', options)
+          .toPromise();
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.controller.ts',
@@ -585,7 +598,9 @@ export class UsersModule {}
         name: 'users',
         type: 'ws',
       };
-      const tree = await runner.runSchematicAsync('resource', options).toPromise();
+      const tree = await runner
+        .runSchematicAsync('resource', options)
+        .toPromise();
       const files = tree.files;
       expect(files).toEqual([
         '/users/users.gateway.spec.ts',
@@ -605,7 +620,9 @@ export class UsersModule {}
           crud: false,
           type: 'ws',
         };
-        const tree = await runner.runSchematicAsync('resource', options).toPromise();
+        const tree = await runner
+          .runSchematicAsync('resource', options)
+          .toPromise();
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.gateway.spec.ts',
@@ -624,7 +641,9 @@ export class UsersModule {}
           crud: false,
           type: 'ws',
         };
-        const tree = await runner.runSchematicAsync('resource', options).toPromise();
+        const tree = await runner
+          .runSchematicAsync('resource', options)
+          .toPromise();
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.gateway.ts',
@@ -869,7 +888,9 @@ export class UsersModule {}
         crud: true,
         type: 'graphql-code-first',
       };
-      const tree = await runner.runSchematicAsync('resource', options).toPromise();
+      const tree = await runner
+        .runSchematicAsync('resource', options)
+        .toPromise();
       const files = tree.files;
       expect(files).toEqual([
         '/users/users.module.ts',
@@ -889,7 +910,9 @@ export class UsersModule {}
           crud: false,
           type: 'graphql-code-first',
         };
-        const tree = await runner.runSchematicAsync('resource', options).toPromise();
+        const tree = await runner
+          .runSchematicAsync('resource', options)
+          .toPromise();
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.module.ts',
@@ -908,7 +931,9 @@ export class UsersModule {}
           crud: false,
           type: 'graphql-code-first',
         };
-        const tree = await runner.runSchematicAsync('resource', options).toPromise();
+        const tree = await runner
+          .runSchematicAsync('resource', options)
+          .toPromise();
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.module.ts',
@@ -1106,7 +1131,9 @@ describe('UsersService', () => {
         name: 'users',
         type: 'graphql-schema-first',
       };
-      const tree = await runner.runSchematicAsync('resource', options).toPromise();
+      const tree = await runner
+        .runSchematicAsync('resource', options)
+        .toPromise();
       const files = tree.files;
       expect(files).toEqual([
         '/users/users.graphql',
@@ -1127,7 +1154,9 @@ describe('UsersService', () => {
           crud: false,
           type: 'graphql-schema-first',
         };
-        const tree = await runner.runSchematicAsync('resource', options).toPromise();
+        const tree = await runner
+          .runSchematicAsync('resource', options)
+          .toPromise();
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.module.ts',
@@ -1146,7 +1175,9 @@ describe('UsersService', () => {
           crud: false,
           type: 'graphql-schema-first',
         };
-        const tree = await runner.runSchematicAsync('resource', options).toPromise();
+        const tree = await runner
+          .runSchematicAsync('resource', options)
+          .toPromise();
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.module.ts',
@@ -1266,7 +1297,7 @@ export class UsersModule {}
     it('should generate "UpdateUserInput" class', () => {
       expect(tree.readContent('/users/dto/update-user.input.ts'))
         .toEqual(`import { CreateUserInput } from './create-user.input';
-import { PartialType } from '@nestjs/graphql';
+import { PartialType } from '@nestjs/mapped-types';
 
 export class UpdateUserInput extends PartialType(CreateUserInput) {
   id: number;

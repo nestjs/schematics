@@ -6,7 +6,7 @@ export class Update<%= singular(classify(name)) %>Input extends PartialType(Crea
   @Field(() => Int)
   id: number;
 }<% } else { %>
-import { PartialType } from '@nestjs/graphql';
+import { PartialType } from '@nestjs/mapped-types';
 
 export class Update<%= singular(classify(name)) %>Input extends PartialType(Create<%= singular(classify(name)) %>Input) {
   id: number;
