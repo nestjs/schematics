@@ -11,7 +11,7 @@ export class <%= classify(name) %>Service {<% if (crud) { %>
   }
 
   findAll() {
-    return `This action returns all <%= lowercased(classify(name)) %>`;
+    return 'This action returns all <%= lowercased(classify(name)) %>';
   }
 
   findOne(id: number) {
