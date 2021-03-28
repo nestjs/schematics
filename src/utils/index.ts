@@ -1,3 +1,5 @@
+export * from './dependencies.utils';
+export * from './json-file.util';
 export * from './metadata.manager';
 export * from './module-import.declarator';
 export * from './module-metadata.declarator';
