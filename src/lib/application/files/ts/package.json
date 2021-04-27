@@ -66,5 +66,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }
