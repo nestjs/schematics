@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "SchematicsNestResolver",
+  "$id": "SchematicsNestResolver",
   "title": "Nest Resolver Options Schema",
   "type": "object",
   "properties": {

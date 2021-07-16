@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "SchematicsNestLibrary",
+  "$id": "SchematicsNestLibrary",
   "title": "Nest Library Options Schema",
   "type": "object",
   "properties": {
