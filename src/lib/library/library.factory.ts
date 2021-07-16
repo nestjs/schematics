@@ -113,10 +113,9 @@ function updateJestConfig(
   if (!jestOptions.moduleNameMapper) {
     jestOptions.moduleNameMapper = {};
   }
-  const deepPackagePath = packageKey + '/(.*)';
+  const packageKeyRegex = '^' + packageKey + '(|/.*)$';
   const packageRoot = join('<rootDir>' as Path, distRoot);
-  jestOptions.moduleNameMapper[deepPackagePath] = join(packageRoot, '$1');
-  jestOptions.moduleNameMapper[packageKey] = packageRoot;
+  jestOptions.moduleNameMapper[packageKeyRegex] = join(packageRoot, '$1');
 }
 
 function updateNpmScripts(
