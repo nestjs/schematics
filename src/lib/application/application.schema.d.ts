@@ -12,9 +12,13 @@ export interface ApplicationOptions {
    */
   description?: string;
   /**
-   * Nest application destination directory
+   * Nest application destination directory.
    */
   directory?: string;
+  /**
+   * With TypeScript strict mode.
+   */
+  strict?: boolean;
   /**
    * Nest application version.
    */

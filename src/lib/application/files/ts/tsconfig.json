@@ -11,6 +11,11 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strictNullChecks": <%= strict %>,
+    "noImplicitAny": <%= strict %>,
+    "strictBindCallApply": <%= strict %>,
+    "forceConsistentCasingInFileNames": <%= strict %>,
+    "noFallthroughCasesInSwitch": <%= strict %>
   }
 }
