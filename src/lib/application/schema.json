@@ -25,7 +25,12 @@
     },
     "directory": {
       "type": "string",
-      "description": "Nest application destination directory"
+      "description": "Nest application destination directory."
+    },
+    "strict": {
+      "type": "boolean",
+      "description": "With TypeScript strict mode.",
+      "default": false
     },
     "version": {
       "type": "string",
