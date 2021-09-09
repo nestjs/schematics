@@ -14,14 +14,14 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^8.0.0",
-    "@nestjs/core": "^8.0.0",
-    "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/common": "8.0.6",
+    "@nestjs/core": "8.0.6",
+    "@nestjs/platform-express": "8.0.6",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
-    "@nestjs/testing": "^8.0.0",
+    "@nestjs/testing": "8.0.6",
     "@babel/core": "7.15.5",
     "@babel/node": "7.15.4",
     "@babel/plugin-proposal-decorators": "7.15.4",
