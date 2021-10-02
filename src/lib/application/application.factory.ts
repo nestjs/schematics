@@ -68,6 +68,8 @@ function generate(options: ApplicationOptions, path: string): Source {
     template({
       ...strings,
       ...options,
+      useExpress: options.platform === 'express',
+      useFastify: options.platform === 'fastify',
     }),
     move(path),
   ]);
