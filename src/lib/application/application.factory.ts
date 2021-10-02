@@ -3,12 +3,14 @@ import {
   apply,
   mergeWith,
   move,
+  filter,
   Rule,
   Source,
   template,
   url,
 } from '@angular-devkit/schematics';
 import { basename, parse } from 'path';
+import { rename } from '../../utils/rename.rule';
 import {
   DEFAULT_AUTHOR,
   DEFAULT_DESCRIPTION,
@@ -64,12 +66,34 @@ function resolvePackageName(path: string) {
 }
 
 function generate(options: ApplicationOptions, path: string): Source {
+  const AVAILABE_HTTP_PLATFORMS = ['express', 'fastify'] as const;
+
+  const pathExtsToExclude = AVAILABE_HTTP_PLATFORMS
+    //
+    .filter((platform) => platform !== options.platform)
+    .map((platform) => '.' + platform);
+
+  /**
+   * @returns A rule to remove the platform-specific identifier from template
+   * file path.
+   */
+  const removeHttpPlatformFromPathExt = (platform: string) => {
+    const httpPlatformPathExt = '.' + platform;
+    return rename(
+      (templatePath) => templatePath.endsWith(httpPlatformPathExt),
+      (templatePath) => templatePath.slice(0, -httpPlatformPathExt.length),
+    );
+  };
+
+  const shouldIncludeFile = (path: string): boolean =>
+    !pathExtsToExclude.some((ext) => path.endsWith(ext));
+
   return apply(url(join('./files' as Path, options.language)), [
+    filter(shouldIncludeFile),
+    removeHttpPlatformFromPathExt(options.platform),
     template({
       ...strings,
       ...options,
-      useExpress: options.platform === 'express',
-      useFastify: options.platform === 'fastify',
     }),
     move(path),
   ]);
