@@ -4,6 +4,7 @@ import {
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { ApplicationOptions } from './application.schema';
+import { transform } from './application.factory';
 
 describe('Application Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
@@ -116,5 +117,189 @@ describe('Application Factory', () => {
       '/scope-package/test/app.e2e-spec.ts',
       '/scope-package/test/jest-e2e.json',
     ]);
+  });
+
+  describe('[HTTP Application]', () => {
+    it('should use express as the default HTTP platform', () => {
+      const options: ApplicationOptions = {
+        name: 'project',
+      };
+
+      expect(transform(options).platform).toBe('express');
+    });
+
+    describe('TypeScript project', () => {
+      describe('When providing "express" as the platform', () => {
+        let tree: UnitTestTree;
+
+        beforeAll(async () => {
+          const options: ApplicationOptions = {
+            name: 'project',
+            language: 'ts',
+            platform: 'express',
+          };
+          tree = await runner
+            .runSchematicAsync('application', options)
+            .toPromise();
+        });
+
+        it('should generate bootstrap file for express platform, when providing platform option', async () => {
+          const mainFileContent = tree.readContent(`/project/src/main.ts`);
+
+          expect(mainFileContent.trim()).toEqual(
+            `
+import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  await app.listen(3000);
+}
+bootstrap();
+  `.trim(),
+          );
+        });
+
+        it('should generate package.json with only express-related dependencies', async () => {
+          const packageJson = JSON.parse(
+            tree.readContent(`/project/package.json`),
+          );
+          const prodDependenciesNames = Object.keys(packageJson.dependencies);
+          const devDependenciesNames = Object.keys(packageJson.devDependencies);
+
+          expect(prodDependenciesNames).toEqual(
+            expect.arrayContaining(['@nestjs/platform-express']),
+          );
+          expect(devDependenciesNames).toEqual(
+            expect.arrayContaining(['@types/express']),
+          );
+          expect(prodDependenciesNames).toEqual(
+            expect.not.arrayContaining(['@nestjs/platform-fastify']),
+          );
+        });
+      });
+
+      describe('When providing "fastify" as the platform', () => {
+        let tree: UnitTestTree;
+
+        beforeAll(async () => {
+          const options: ApplicationOptions = {
+            name: 'project',
+            language: 'ts',
+            platform: 'fastify',
+          };
+          tree = await runner
+            .runSchematicAsync('application', options)
+            .toPromise();
+        });
+
+        it('should generate bootstrap file for fastify platform', async () => {
+          const mainFileContent = tree.readContent(`/project/src/main.ts`);
+
+          expect(mainFileContent.trim()).toEqual(
+            `
+import { NestFactory } from '@nestjs/core';
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter()
+  );
+  await app.listen(3000);
+}
+bootstrap();
+  `.trim(),
+          );
+        });
+
+        it('should generate package.json with only fastify-related dependencies', async () => {
+          const packageJson = JSON.parse(
+            tree.readContent(`/project/package.json`),
+          );
+          const prodDependenciesNames = Object.keys(packageJson.dependencies);
+          const devDependenciesNames = Object.keys(packageJson.devDependencies);
+
+          expect(prodDependenciesNames).toEqual(
+            expect.arrayContaining(['@nestjs/platform-fastify']),
+          );
+          expect(devDependenciesNames).toEqual(
+            expect.not.arrayContaining(['@types/express']),
+          );
+          expect(prodDependenciesNames).toEqual(
+            expect.not.arrayContaining(['@nestjs/platform-express']),
+          );
+        });
+      });
+    });
+
+    describe('JavaScript project', () => {
+      describe('When providing "express" as the platform', () => {
+        let tree: UnitTestTree;
+
+        beforeAll(async () => {
+          const options: ApplicationOptions = {
+            name: 'project',
+            language: 'js',
+            platform: 'express',
+          };
+          tree = await runner
+            .runSchematicAsync('application', options)
+            .toPromise();
+        });
+
+        it('should generate bootstrap file for express platform', async () => {
+          const mainFileContent = tree.readContent(`/project/src/main.js`);
+
+          expect(mainFileContent.trim()).toEqual(
+            `
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(3000);
+}
+bootstrap();
+`.trim(),
+          );
+        });
+      });
+
+      describe('When providing "fastify" as the platform', () => {
+        let tree: UnitTestTree;
+
+        beforeAll(async () => {
+          const options: ApplicationOptions = {
+            name: 'project',
+            language: 'js',
+            platform: 'fastify',
+          };
+          tree = await runner
+            .runSchematicAsync('application', options)
+            .toPromise();
+        });
+
+        it('should generate bootstrap file for fastify platform', async () => {
+          const mainFileContent = tree.readContent(`/project/src/main.js`);
+
+          expect(mainFileContent.trim()).toEqual(
+            `
+import { NestFactory } from '@nestjs/core';
+import { FastifyAdapter } from '@nestjs/platform-fastify';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule, new FastifyAdapter());
+  await app.listen(3000);
+}
+bootstrap();
+`.trim(),
+          );
+        });
+      });
+    });
   });
 });

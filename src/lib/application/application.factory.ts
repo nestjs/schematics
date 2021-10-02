@@ -30,7 +30,7 @@ export function main(options: ApplicationOptions): Rule {
   return mergeWith(generate(options, path));
 }
 
-function transform(options: ApplicationOptions): ApplicationOptions {
+export function transform(options: ApplicationOptions): ApplicationOptions {
   const target: ApplicationOptions = Object.assign({}, options);
 
   target.author = !!target.author ? target.author : DEFAULT_AUTHOR;

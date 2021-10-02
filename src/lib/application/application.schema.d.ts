@@ -26,7 +26,7 @@ export interface ApplicationOptions {
   /**
    * Application language.
    */
-  language?: string;
+  language?: 'js' | 'ts';
   /**
    * The used package manager.
    */
