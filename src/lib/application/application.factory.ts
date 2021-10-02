@@ -14,7 +14,7 @@ import {
   DEFAULT_DESCRIPTION,
   DEFAULT_LANGUAGE,
   DEFAULT_VERSION,
-} from '../defaults';
+} from './application.defaults';
 import { ApplicationOptions } from './application.schema';
 
 export function main(options: ApplicationOptions): Rule {
