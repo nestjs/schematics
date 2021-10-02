@@ -14,7 +14,9 @@ describe('Application Factory', () => {
     const options: ApplicationOptions = {
       name: 'project',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('application', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/project/.eslintrc.js',
@@ -38,7 +40,9 @@ describe('Application Factory', () => {
     const options: ApplicationOptions = {
       name: 'awesomeProject',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('application', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/awesome-project/.eslintrc.js',
@@ -63,7 +67,9 @@ describe('Application Factory', () => {
       name: 'project',
       language: 'js',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('application', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/project/.babelrc',
@@ -89,7 +95,9 @@ describe('Application Factory', () => {
       name: '@scope/package',
       directory: 'scope-package',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('application', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/scope-package/.eslintrc.js',
