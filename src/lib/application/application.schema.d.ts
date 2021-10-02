@@ -32,6 +32,10 @@ export interface ApplicationOptions {
    */
   packageManager?: 'npm' | 'yarn' | 'undefined';
   /**
+   * The underlying HTTP platform to use.
+   */
+  platform?: 'express' | 'fastify';
+  /**
    * Nest included production dependencies (comma separated values).
    */
   dependencies?: string;

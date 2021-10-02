@@ -45,6 +45,15 @@
       "type": "string",
       "description": "Nest application package manager."
     },
+    "platform": {
+      "type": "string",
+      "description": "Nest application underlying platform to use.",
+      "x-prompt": {
+        "type": "list",
+        "message": "Which HTTP platform do you want to use?",
+        "items": ["express", "fastify"]
+      }
+    },
     "dependencies": {
       "type": "string",
       "description": "Nest application dependencies."

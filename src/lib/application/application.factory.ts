@@ -12,6 +12,7 @@ import { basename, parse } from 'path';
 import {
   DEFAULT_AUTHOR,
   DEFAULT_DESCRIPTION,
+  DEFAULT_HTTP_PLATFORM_APP,
   DEFAULT_LANGUAGE,
   DEFAULT_VERSION,
 } from './application.defaults';
@@ -39,6 +40,9 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
   target.name = resolvePackageName(target.name);
   target.version = !!target.version ? target.version : DEFAULT_VERSION;
+  target.platform = !!target.platform
+    ? target.platform
+    : DEFAULT_HTTP_PLATFORM_APP;
 
   target.packageManager =
     !target.packageManager || target.packageManager === 'undefined'
