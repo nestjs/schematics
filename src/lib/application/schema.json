@@ -47,12 +47,7 @@
     },
     "platform": {
       "type": "string",
-      "description": "Nest application underlying platform to use.",
-      "x-prompt": {
-        "type": "list",
-        "message": "Which HTTP platform do you want to use?",
-        "items": ["express", "fastify"]
-      }
+      "description": "Nest application underlying platform to use."
     },
     "dependencies": {
       "type": "string",
