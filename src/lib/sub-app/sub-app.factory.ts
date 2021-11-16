@@ -1,7 +1,6 @@
 import {
   join,
   normalize,
-  parseJson,
   Path,
   strings,
 } from '@angular-devkit/core';
@@ -19,6 +18,7 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
+import { parse } from "jsonc-parser"
 import * as fse from 'fs-extra';
 import {
   DEFAULT_APP_NAME,
@@ -107,7 +107,7 @@ function isMonorepo(host: Tree) {
     return false;
   }
   const sourceText = source.toString('utf-8');
-  const optionsObj = parseJson(sourceText) as Record<string, any>;
+  const optionsObj = parse(sourceText) as Record<string, any>;
   return !!optionsObj.monorepo;
 }
 
@@ -119,7 +119,7 @@ function updateJsonFile<T>(
   const source = host.read(path);
   if (source) {
     const sourceText = source.toString('utf-8');
-    const json = parseJson(sourceText);
+    const json = parse(sourceText);
     callback((json as {}) as T);
     host.overwrite(path, JSON.stringify(json, null, 2));
   }

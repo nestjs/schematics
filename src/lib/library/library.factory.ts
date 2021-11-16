@@ -1,7 +1,6 @@
 import {
   join,
   normalize,
-  parseJson,
   Path,
   strings,
 } from '@angular-devkit/core';
@@ -18,6 +17,7 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
+import { parse } from "jsonc-parser"
 import {
   DEFAULT_LANGUAGE,
   DEFAULT_LIB_PATH,
@@ -177,7 +177,7 @@ function updateJsonFile<T>(
   const source = host.read(path);
   if (source) {
     const sourceText = source.toString('utf-8');
-    const json = parseJson(sourceText);
+    const json = parse(sourceText);
     callback((json as {}) as T);
     host.overwrite(path, JSON.stringify(json, null, 2));
   }
