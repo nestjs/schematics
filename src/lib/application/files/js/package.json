@@ -29,7 +29,7 @@
     "@babel/preset-env": "7.16.7",
     "@babel/register": "7.16.7",
     "@babel/runtime": "7.16.7",
-    "jest": "27.4.5",
+    "jest": "27.4.6",
     "nodemon": "2.0.15",
     "prettier": "2.5.1",
     "supertest": "6.1.6"
