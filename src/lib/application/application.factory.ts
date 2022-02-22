@@ -52,11 +52,11 @@ function transform(options: ApplicationOptions): ApplicationOptions {
 }
 
 function resolvePackageName(path: string) {
-  const { name } = parse(path);
-  if (name === '.') {
+  const { base: baseFilename } = parse(path);
+  if (baseFilename === '.') {
     return basename(process.cwd());
   }
-  return name;
+  return baseFilename;
 }
 
 function generate(options: ApplicationOptions, path: string): Source {

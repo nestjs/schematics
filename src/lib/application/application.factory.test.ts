@@ -10,53 +10,91 @@ describe('Application Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
-  it('should manage name only', async () => {
-    const options: ApplicationOptions = {
-      name: 'project',
-    };
-    const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
-    const files: string[] = tree.files;
-    expect(files).toEqual([
-      '/project/.eslintrc.js',
-      '/project/.gitignore',
-      '/project/.prettierrc',
-      '/project/README.md',
-      '/project/nest-cli.json',
-      '/project/package.json',
-      '/project/tsconfig.build.json',
-      '/project/tsconfig.json',
-      '/project/src/app.controller.spec.ts',
-      '/project/src/app.controller.ts',
-      '/project/src/app.module.ts',
-      '/project/src/app.service.ts',
-      '/project/src/main.ts',
-      '/project/test/app.e2e-spec.ts',
-      '/project/test/jest-e2e.json',
-    ]);
-  });
-  it('should manage name to dasherize', async () => {
-    const options: ApplicationOptions = {
-      name: 'awesomeProject',
-    };
-    const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
-    const files: string[] = tree.files;
-    expect(files).toEqual([
-      '/awesome-project/.eslintrc.js',
-      '/awesome-project/.gitignore',
-      '/awesome-project/.prettierrc',
-      '/awesome-project/README.md',
-      '/awesome-project/nest-cli.json',
-      '/awesome-project/package.json',
-      '/awesome-project/tsconfig.build.json',
-      '/awesome-project/tsconfig.json',
-      '/awesome-project/src/app.controller.spec.ts',
-      '/awesome-project/src/app.controller.ts',
-      '/awesome-project/src/app.module.ts',
-      '/awesome-project/src/app.service.ts',
-      '/awesome-project/src/main.ts',
-      '/awesome-project/test/app.e2e-spec.ts',
-      '/awesome-project/test/jest-e2e.json',
-    ]);
+  describe('when only the name is supplied', () => {
+    it('should manage basic (ie., cross-platform) name', async () => {
+      const options: ApplicationOptions = {
+        name: 'project',
+      };
+      const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+      const files: string[] = tree.files;
+      expect(files).toEqual([
+        '/project/.eslintrc.js',
+        '/project/.gitignore',
+        '/project/.prettierrc',
+        '/project/README.md',
+        '/project/nest-cli.json',
+        '/project/package.json',
+        '/project/tsconfig.build.json',
+        '/project/tsconfig.json',
+        '/project/src/app.controller.spec.ts',
+        '/project/src/app.controller.ts',
+        '/project/src/app.module.ts',
+        '/project/src/app.service.ts',
+        '/project/src/main.ts',
+        '/project/test/app.e2e-spec.ts',
+        '/project/test/jest-e2e.json',
+      ]);
+
+      expect(JSON.parse(tree.readContent('/project/package.json'))).toMatchObject({
+        name: 'project',
+      });
+    });
+    it('should manage name with dots in it', async () => {
+      const options: ApplicationOptions = {
+        name: 'project.foo.bar',
+      };
+      const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+      const files: string[] = tree.files;
+      expect(files).toEqual([
+        `/project.foo.bar/.eslintrc.js`,
+        `/project.foo.bar/.gitignore`,
+        `/project.foo.bar/.prettierrc`,
+        `/project.foo.bar/README.md`,
+        `/project.foo.bar/nest-cli.json`,
+        `/project.foo.bar/package.json`,
+        `/project.foo.bar/tsconfig.build.json`,
+        `/project.foo.bar/tsconfig.json`,
+        `/project.foo.bar/src/app.controller.spec.ts`,
+        `/project.foo.bar/src/app.controller.ts`,
+        `/project.foo.bar/src/app.module.ts`,
+        `/project.foo.bar/src/app.service.ts`,
+        `/project.foo.bar/src/main.ts`,
+        `/project.foo.bar/test/app.e2e-spec.ts`,
+        `/project.foo.bar/test/jest-e2e.json`,
+      ]);
+
+      expect(JSON.parse(tree.readContent('/project.foo.bar/package.json'))).toMatchObject({
+        name: 'project.foo.bar',
+      });
+    });
+    it('should manage name to dasherize', async () => {
+      const options: ApplicationOptions = {
+        name: 'awesomeProject',
+      };
+      const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+      const files: string[] = tree.files;
+      expect(files).toEqual([
+        '/awesome-project/.eslintrc.js',
+        '/awesome-project/.gitignore',
+        '/awesome-project/.prettierrc',
+        '/awesome-project/README.md',
+        '/awesome-project/nest-cli.json',
+        '/awesome-project/package.json',
+        '/awesome-project/tsconfig.build.json',
+        '/awesome-project/tsconfig.json',
+        '/awesome-project/src/app.controller.spec.ts',
+        '/awesome-project/src/app.controller.ts',
+        '/awesome-project/src/app.module.ts',
+        '/awesome-project/src/app.service.ts',
+        '/awesome-project/src/main.ts',
+        '/awesome-project/test/app.e2e-spec.ts',
+        '/awesome-project/test/jest-e2e.json',
+      ]);
+
+      expect(JSON.parse(tree.readContent('/awesome-project/package.json'))).toMatchObject({
+        name: 'awesome-project',
+      });
+    });
   });
   it('should manage javascript files', async () => {
     const options: ApplicationOptions = {
@@ -83,6 +121,10 @@ describe('Application Factory', () => {
       '/project/test/app.e2e-spec.js',
       '/project/test/jest-e2e.json',
     ]);
+
+    expect(JSON.parse(tree.readContent('/project/package.json'))).toMatchObject({
+      name: 'project',
+    });
   });
   it('should manage destination directory', async () => {
     const options: ApplicationOptions = {
@@ -108,5 +150,9 @@ describe('Application Factory', () => {
       '/scope-package/test/app.e2e-spec.ts',
       '/scope-package/test/jest-e2e.json',
     ]);
+
+    expect(JSON.parse(tree.readContent('/scope-package/package.json'))).toMatchObject({
+      name: 'package',
+    });
   });
 });
