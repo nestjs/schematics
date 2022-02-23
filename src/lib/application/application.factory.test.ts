@@ -123,6 +123,34 @@ describe('Application Factory', () => {
         name: 'package',
       });
     });
+    it('should manage the name "." (ie., current working directory)', async () => {
+      const options: ApplicationOptions = {
+        name: '.',
+      };
+      const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+      const files: string[] = tree.files;
+      expect(files).toEqual([
+        '/.eslintrc.js',
+        '/.gitignore',
+        '/.prettierrc',
+        '/README.md',
+        '/nest-cli.json',
+        '/package.json',
+        '/tsconfig.build.json',
+        '/tsconfig.json',
+        '/src/app.controller.spec.ts',
+        '/src/app.controller.ts',
+        '/src/app.module.ts',
+        '/src/app.service.ts',
+        '/src/main.ts',
+        '/test/app.e2e-spec.ts',
+        '/test/jest-e2e.json',
+      ]);
+
+      expect(JSON.parse(tree.readContent('/package.json'))).toMatchObject({
+        name: path.basename(process.cwd()),
+      });
+    });
     describe('and it meant to be a scoped package', () => {
       describe('that leads to a valid scope name', () => {
         it('should manage basic name', async () => {
