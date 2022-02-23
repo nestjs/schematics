@@ -8,7 +8,7 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import { basename, parse } from 'path';
+import { basename, parse, delimiter } from 'path';
 import {
   DEFAULT_AUTHOR,
   DEFAULT_DESCRIPTION,
@@ -51,12 +51,26 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   return target;
 }
 
+/**
+ * The rules for `name` field defined at https://www.npmjs.com/package/normalize-package-data
+ * are the following: the string may not:
+ * 1. start with a period.
+ * 2. contain the following characters: `/@\s+%`.
+ * 3. contain any characters that would need to be encoded for use in URLs.
+ * 4. resemble the word `node_modules` or `favicon.ico` (case doesn't matter).
+ * but only the rule *1* is addressed by this function as the other ones doesn't
+ * have a canonical representation.
+ */
 function resolvePackageName(path: string) {
-  const { name } = parse(path);
-  if (name === '.') {
+  const { base: baseFilename, dir: dirname } = parse(path);
+  if (baseFilename === '.') {
     return basename(process.cwd());
   }
-  return name;
+  // If is as a package with scope (https://docs.npmjs.com/misc/scope)
+  if (dirname.match(/^@[^\s]/)) {
+    return `${dirname}/${baseFilename}`;
+  }
+  return baseFilename;
 }
 
 function generate(options: ApplicationOptions, path: string): Source {
