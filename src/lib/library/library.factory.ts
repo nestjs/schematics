@@ -1,9 +1,4 @@
-import {
-  join,
-  normalize,
-  Path,
-  strings,
-} from '@angular-devkit/core';
+import { join, normalize, Path, strings } from '@angular-devkit/core';
 import {
   apply,
   branchAndMerge,
@@ -17,7 +12,7 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import { parse } from "jsonc-parser"
+import { parse } from 'jsonc-parser';
 import {
   DEFAULT_LANGUAGE,
   DEFAULT_LIB_PATH,
@@ -178,7 +173,7 @@ function updateJsonFile<T>(
   if (source) {
     const sourceText = source.toString('utf-8');
     const json = parse(sourceText);
-    callback((json as {}) as T);
+    callback(json as unknown as T);
     host.overwrite(path, JSON.stringify(json, null, 2));
   }
   return host;
