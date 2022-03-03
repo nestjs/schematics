@@ -8,7 +8,8 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import { basename, parse, delimiter } from 'path';
+import { basename, parse } from 'path';
+import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import {
   DEFAULT_AUTHOR,
   DEFAULT_DESCRIPTION,
@@ -18,7 +19,7 @@ import {
 import { ApplicationOptions } from './application.schema';
 
 export function main(options: ApplicationOptions): Rule {
-  options.name = strings.dasherize(options.name);
+  options.name = normalizeToKebabOrSnakeCase(options.name);
 
   const path =
     !options.directory || options.directory === 'undefined'

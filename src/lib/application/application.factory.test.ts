@@ -15,7 +15,9 @@ describe('Application Factory', () => {
       const options: ApplicationOptions = {
         name: 'project',
       };
-      const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+      const tree: UnitTestTree = await runner
+        .runSchematicAsync('application', options)
+        .toPromise();
       const files: string[] = tree.files;
       expect(files).toEqual([
         '/project/.eslintrc.js',
@@ -35,7 +37,9 @@ describe('Application Factory', () => {
         '/project/test/jest-e2e.json',
       ]);
 
-      expect(JSON.parse(tree.readContent('/project/package.json'))).toMatchObject({
+      expect(
+        JSON.parse(tree.readContent('/project/package.json')),
+      ).toMatchObject({
         name: 'project',
       });
     });
@@ -43,7 +47,9 @@ describe('Application Factory', () => {
       const options: ApplicationOptions = {
         name: 'project.foo.bar',
       };
-      const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+      const tree: UnitTestTree = await runner
+        .runSchematicAsync('application', options)
+        .toPromise();
       const files: string[] = tree.files;
       expect(files).toEqual([
         `/project.foo.bar/.eslintrc.js`,
@@ -63,15 +69,19 @@ describe('Application Factory', () => {
         `/project.foo.bar/test/jest-e2e.json`,
       ]);
 
-      expect(JSON.parse(tree.readContent('/project.foo.bar/package.json'))).toMatchObject({
+      expect(
+        JSON.parse(tree.readContent('/project.foo.bar/package.json')),
+      ).toMatchObject({
         name: 'project.foo.bar',
       });
     });
-    it('should manage name to dasherize from camel case name', async () => {
+    it('should manage name to normalize from camel case name', async () => {
       const options: ApplicationOptions = {
         name: 'awesomeProject',
       };
-      const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+      const tree: UnitTestTree = await runner
+        .runSchematicAsync('application', options)
+        .toPromise();
       const files: string[] = tree.files;
       expect(files).toEqual([
         '/awesome-project/.eslintrc.js',
@@ -91,15 +101,51 @@ describe('Application Factory', () => {
         '/awesome-project/test/jest-e2e.json',
       ]);
 
-      expect(JSON.parse(tree.readContent('/awesome-project/package.json'))).toMatchObject({
+      expect(
+        JSON.parse(tree.readContent('/awesome-project/package.json')),
+      ).toMatchObject({
         name: 'awesome-project',
+      });
+    });
+    it('should keep backspaces', async () => {
+      const options: ApplicationOptions = {
+        name: '_awesomeProject',
+      };
+      const tree: UnitTestTree = await runner
+        .runSchematicAsync('application', options)
+        .toPromise();
+      const files: string[] = tree.files;
+      expect(files).toEqual([
+        '/_awesome-project/.eslintrc.js',
+        '/_awesome-project/.gitignore',
+        '/_awesome-project/.prettierrc',
+        '/_awesome-project/README.md',
+        '/_awesome-project/nest-cli.json',
+        '/_awesome-project/package.json',
+        '/_awesome-project/tsconfig.build.json',
+        '/_awesome-project/tsconfig.json',
+        '/_awesome-project/src/app.controller.spec.ts',
+        '/_awesome-project/src/app.controller.ts',
+        '/_awesome-project/src/app.module.ts',
+        '/_awesome-project/src/app.service.ts',
+        '/_awesome-project/src/main.ts',
+        '/_awesome-project/test/app.e2e-spec.ts',
+        '/_awesome-project/test/jest-e2e.json',
+      ]);
+
+      expect(
+        JSON.parse(tree.readContent('/_awesome-project/package.json')),
+      ).toMatchObject({
+        name: '_awesome-project',
       });
     });
     it('should manage basic name that has no scope name in it but starts with "@"', async () => {
       const options: ApplicationOptions = {
         name: '@/package',
       };
-      const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+      const tree: UnitTestTree = await runner
+        .runSchematicAsync('application', options)
+        .toPromise();
       const files: string[] = tree.files;
       expect(files).toEqual([
         '/@/package/.eslintrc.js',
@@ -119,7 +165,9 @@ describe('Application Factory', () => {
         '/@/package/test/jest-e2e.json',
       ]);
 
-      expect(JSON.parse(tree.readContent('/@/package/package.json'))).toMatchObject({
+      expect(
+        JSON.parse(tree.readContent('/@/package/package.json')),
+      ).toMatchObject({
         name: 'package',
       });
     });
@@ -127,7 +175,9 @@ describe('Application Factory', () => {
       const options: ApplicationOptions = {
         name: '.',
       };
-      const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+      const tree: UnitTestTree = await runner
+        .runSchematicAsync('application', options)
+        .toPromise();
       const files: string[] = tree.files;
       expect(files).toEqual([
         '/.eslintrc.js',
@@ -157,7 +207,9 @@ describe('Application Factory', () => {
           const options: ApplicationOptions = {
             name: '@scope/package',
           };
-          const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+          const tree: UnitTestTree = await runner
+            .runSchematicAsync('application', options)
+            .toPromise();
           const files: string[] = tree.files;
           expect(files).toEqual([
             '/@scope/package/.eslintrc.js',
@@ -177,7 +229,9 @@ describe('Application Factory', () => {
             '/@scope/package/test/jest-e2e.json',
           ]);
 
-          expect(JSON.parse(tree.readContent('/@scope/package/package.json'))).toMatchObject({
+          expect(
+            JSON.parse(tree.readContent('/@scope/package/package.json')),
+          ).toMatchObject({
             name: '@scope/package',
           });
         });
@@ -185,7 +239,9 @@ describe('Application Factory', () => {
           const options: ApplicationOptions = {
             name: '@ /package',
           };
-          const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+          const tree: UnitTestTree = await runner
+            .runSchematicAsync('application', options)
+            .toPromise();
           const files: string[] = tree.files;
           expect(files).toEqual([
             '/@-/package/.eslintrc.js',
@@ -205,7 +261,9 @@ describe('Application Factory', () => {
             '/@-/package/test/jest-e2e.json',
           ]);
 
-          expect(JSON.parse(tree.readContent('/@-/package/package.json'))).toMatchObject({
+          expect(
+            JSON.parse(tree.readContent('/@-/package/package.json')),
+          ).toMatchObject({
             name: '@-/package',
           });
         });
@@ -217,7 +275,9 @@ describe('Application Factory', () => {
       name: 'project',
       language: 'js',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('application', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/project/.babelrc',
@@ -238,16 +298,20 @@ describe('Application Factory', () => {
       '/project/test/jest-e2e.json',
     ]);
 
-    expect(JSON.parse(tree.readContent('/project/package.json'))).toMatchObject({
-      name: 'project',
-    });
+    expect(JSON.parse(tree.readContent('/project/package.json'))).toMatchObject(
+      {
+        name: 'project',
+      },
+    );
   });
   it('should manage destination directory', async () => {
     const options: ApplicationOptions = {
       name: 'project',
       directory: 'app',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('application', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('application', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/app/.eslintrc.js',
