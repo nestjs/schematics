@@ -101,7 +101,7 @@ describe('Decorator Factory', () => {
         "export const Foo = (...args: string[]) => SetMetadata('foo', args);\n",
     );
   });
-  it('should keep underscores', async () => {
+  it("should keep underscores on application's name", async () => {
     const options: DecoratorOptions = {
       name: '_bar/_foo',
       flat: false,

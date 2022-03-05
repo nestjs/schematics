@@ -96,7 +96,7 @@ describe('Filter Factory', () => {
     );
   });
 
-  it('should keep underscores', async () => {
+  it('should keep underscores on path only', async () => {
     const options: FilterOptions = {
       name: '_foo',
     };
