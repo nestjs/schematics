@@ -16,10 +16,14 @@ describe('Class Factory', () => {
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('class', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('class', options)
+      .toPromise();
     const files: string[] = tree.files;
 
-    expect(files.find(filename => filename === '/foo.ts')).not.toBeUndefined();
+    expect(
+      files.find((filename) => filename === '/foo.ts'),
+    ).not.toBeUndefined();
     expect(tree.readContent('/foo.ts')).toEqual('export class Foo {}\n');
   });
   it('should manage name as a path', async () => {
@@ -28,11 +32,13 @@ describe('Class Factory', () => {
       flat: false,
       spec: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('class', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('class', options)
+      .toPromise();
     const files: string[] = tree.files;
 
     expect(
-      files.find(filename => filename === '/bar/foo/foo.ts'),
+      files.find((filename) => filename === '/bar/foo/foo.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar/foo/foo.ts')).toEqual(
       'export class Foo {}\n',
@@ -45,42 +51,48 @@ describe('Class Factory', () => {
       flat: false,
       spec: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('class', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('class', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/baz/foo/foo.ts'),
+      files.find((filename) => filename === '/baz/foo/foo.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/baz/foo/foo.ts')).toEqual(
       'export class Foo {}\n',
     );
   });
-  it('should manage name to dasherize', async () => {
+  it('should manage name to normalize', async () => {
     const options: ClassOptions = {
-      name: 'fooBar',
+      name: '_fooBar',
       flat: false,
       spec: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('class', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('class', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo-bar/foo-bar.ts'),
+      files.find((filename) => filename === '/_foo-bar/_foo-bar.ts'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/foo-bar/foo-bar.ts')).toEqual(
+    expect(tree.readContent('/_foo-bar/_foo-bar.ts')).toEqual(
       'export class FooBar {}\n',
     );
   });
-  it('should manage path to dasherize', async () => {
+  it('should manage path to normalize', async () => {
     const options: ClassOptions = {
-      name: 'barBaz/foo',
+      name: 'barBaz/_foo',
       spec: false,
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('class', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('class', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/bar-baz/foo/foo.ts'),
+      files.find((filename) => filename === '/bar-baz/_foo/_foo.ts'),
     ).not.toBeUndefined();
-    expect(tree.readContent('/bar-baz/foo/foo.ts')).toEqual(
+    expect(tree.readContent('/bar-baz/_foo/_foo.ts')).toEqual(
       'export class Foo {}\n',
     );
   });
@@ -91,10 +103,12 @@ describe('Class Factory', () => {
       flat: false,
       spec: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('class', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('class', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo/foo.js'),
+      files.find((filename) => filename === '/foo/foo.js'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo/foo.js')).toEqual('export class Foo {}\n');
   });
@@ -104,11 +118,13 @@ describe('Class Factory', () => {
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('class', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('class', options)
+      .toPromise();
     const files: string[] = tree.files;
 
     expect(
-      files.find(filename => filename === '/foo.entity.ts'),
+      files.find((filename) => filename === '/foo.entity.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo.entity.ts')).toEqual(
       'export class FooEntity {}\n',
