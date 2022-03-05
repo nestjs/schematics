@@ -107,7 +107,7 @@ describe('Application Factory', () => {
         name: 'awesome-project',
       });
     });
-    it('should keep backspaces', async () => {
+    it('should keep underscores', async () => {
       const options: ApplicationOptions = {
         name: '_awesomeProject',
       };

@@ -107,7 +107,7 @@ describe('Gateway Factory', () => {
         '}\n',
     );
   });
-  it('should keep backspaces', async () => {
+  it('should keep underscores', async () => {
     const options: GatewayOptions = {
       name: '_foo',
       flat: false,

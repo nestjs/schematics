@@ -96,7 +96,7 @@ describe('Filter Factory', () => {
     );
   });
 
-  it('should keep backspaces', async () => {
+  it('should keep underscores', async () => {
     const options: FilterOptions = {
       name: '_foo',
     };
