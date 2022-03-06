@@ -20,14 +20,16 @@ describe('Controller Factory', () => {
       spec: false,
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('controller', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('controller', options)
+      .toPromise();
     const files: string[] = tree.files;
 
     expect(
-      files.find(filename => filename === '/foo/foo.controller.ts'),
+      files.find((filename) => filename === '/foo/foo.controller.ts'),
     ).toBeDefined();
     expect(
-      files.find(filename => filename === '/foo/foo.controller.spec.ts'),
+      files.find((filename) => filename === '/foo/foo.controller.spec.ts'),
     ).not.toBeDefined();
     expect(tree.readContent('/foo/foo.controller.ts')).toEqual(
       "import { Controller } from '@nestjs/common';\n" +
@@ -41,13 +43,15 @@ describe('Controller Factory', () => {
       name: 'bar/foo',
       skipImport: true,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('controller', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('controller', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/bar/foo/foo.controller.ts'),
+      files.find((filename) => filename === '/bar/foo/foo.controller.ts'),
     ).toBeDefined();
     expect(
-      files.find(filename => filename === '/bar/foo/foo.controller.spec.ts'),
+      files.find((filename) => filename === '/bar/foo/foo.controller.spec.ts'),
     ).toBeDefined();
     expect(tree.readContent('/bar/foo/foo.controller.ts')).toEqual(
       "import { Controller } from '@nestjs/common';\n" +
@@ -62,13 +66,15 @@ describe('Controller Factory', () => {
       path: 'bar',
       skipImport: true,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('controller', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('controller', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/bar/foo/foo.controller.ts'),
+      files.find((filename) => filename === '/bar/foo/foo.controller.ts'),
     ).toBeDefined();
     expect(
-      files.find(filename => filename === '/bar/foo/foo.controller.spec.ts'),
+      files.find((filename) => filename === '/bar/foo/foo.controller.spec.ts'),
     ).toBeDefined();
     expect(tree.readContent('/bar/foo/foo.controller.ts')).toEqual(
       "import { Controller } from '@nestjs/common';\n" +
@@ -77,19 +83,21 @@ describe('Controller Factory', () => {
         'export class FooController {}\n',
     );
   });
-  it('should manage name to dasherize', async () => {
+  it('should manage name to normalize', async () => {
     const options: ControllerOptions = {
       name: 'fooBar',
       skipImport: true,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('controller', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('controller', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo-bar/foo-bar.controller.ts'),
+      files.find((filename) => filename === '/foo-bar/foo-bar.controller.ts'),
     ).toBeDefined();
     expect(
       files.find(
-        filename => filename === '/foo-bar/foo-bar.controller.spec.ts',
+        (filename) => filename === '/foo-bar/foo-bar.controller.spec.ts',
       ),
     ).toBeDefined();
     expect(tree.readContent('/foo-bar/foo-bar.controller.ts')).toEqual(
@@ -99,19 +107,43 @@ describe('Controller Factory', () => {
         'export class FooBarController {}\n',
     );
   });
-  it('should manage path to dasherize', async () => {
+  it('manage keep underscores in path', async () => {
+    const options: ControllerOptions = {
+      name: '_bar/foo',
+      skipImport: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('controller', options)
+      .toPromise();
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) => filename === '/_bar/foo/foo.controller.ts'),
+    ).toBeDefined();
+    expect(
+      files.find((filename) => filename === '/_bar/foo/foo.controller.spec.ts'),
+    ).toBeDefined();
+    expect(tree.readContent('/_bar/foo/foo.controller.ts')).toEqual(
+      "import { Controller } from '@nestjs/common';\n" +
+        '\n' +
+        "@Controller('foo')\n" +
+        'export class FooController {}\n',
+    );
+  });
+  it('should keep underscores in path and file name', async () => {
     const options: ControllerOptions = {
       name: 'barBaz/foo',
       skipImport: true,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('controller', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('controller', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/bar-baz/foo/foo.controller.ts'),
+      files.find((filename) => filename === '/bar-baz/foo/foo.controller.ts'),
     ).toBeDefined();
     expect(
       files.find(
-        filename => filename === '/bar-baz/foo/foo.controller.spec.ts',
+        (filename) => filename === '/bar-baz/foo/foo.controller.spec.ts',
       ),
     ).toBeDefined();
     expect(tree.readContent('/bar-baz/foo/foo.controller.ts')).toEqual(
@@ -127,13 +159,15 @@ describe('Controller Factory', () => {
       language: 'js',
       skipImport: true,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('controller', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('controller', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo/foo.controller.js'),
+      files.find((filename) => filename === '/foo/foo.controller.js'),
     ).toBeDefined();
     expect(
-      files.find(filename => filename === '/foo/foo.controller.spec.js'),
+      files.find((filename) => filename === '/foo/foo.controller.spec.js'),
     ).toBeDefined();
     expect(tree.readContent('/foo/foo.controller.js')).toEqual(
       "import { Controller } from '@nestjs/common';\n" +
@@ -146,11 +180,15 @@ describe('Controller Factory', () => {
     const app: ApplicationOptions = {
       name: '',
     };
-    let tree: UnitTestTree = await runner.runSchematicAsync('application', app).toPromise();
+    let tree: UnitTestTree = await runner
+      .runSchematicAsync('application', app)
+      .toPromise();
     const options: ControllerOptions = {
       name: 'foo',
     };
-    tree = await runner.runSchematicAsync('controller', options, tree).toPromise();
+    tree = await runner
+      .runSchematicAsync('controller', options, tree)
+      .toPromise();
     expect(tree.readContent(normalize('/src/app.module.ts'))).toEqual(
       "import { Module } from '@nestjs/common';\n" +
         "import { AppController } from './app.controller';\n" +
@@ -169,15 +207,19 @@ describe('Controller Factory', () => {
     const app: ApplicationOptions = {
       name: '',
     };
-    let tree: UnitTestTree = await runner.runSchematicAsync('application', app).toPromise();
+    let tree: UnitTestTree = await runner
+      .runSchematicAsync('application', app)
+      .toPromise();
     const module: ModuleOptions = {
       name: 'foo',
     };
-    tree = await runner.runSchematicAsync('module', module, tree).toPromise();;
+    tree = await runner.runSchematicAsync('module', module, tree).toPromise();
     const options: ControllerOptions = {
       name: 'foo',
     };
-    tree = await runner.runSchematicAsync('controller', options, tree).toPromise();
+    tree = await runner
+      .runSchematicAsync('controller', options, tree)
+      .toPromise();
     expect(tree.readContent(normalize('/src/foo/foo.module.ts'))).toEqual(
       "import { Module } from '@nestjs/common';\n" +
         "import { FooController } from './foo.controller';\n" +
