@@ -14,7 +14,9 @@ describe('SubApp Factory', () => {
     const options: SubAppOptions = {
       name: 'project',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('sub-app', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('sub-app', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/nest-cli.json',
@@ -29,11 +31,13 @@ describe('SubApp Factory', () => {
       '/apps/project/test/jest-e2e.json',
     ]);
   });
-  it('should manage name to dasherize', async () => {
+  it('should manage name to normalize', async () => {
     const options: SubAppOptions = {
       name: 'awesomeProject',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('sub-app', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('sub-app', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/nest-cli.json',
@@ -48,12 +52,35 @@ describe('SubApp Factory', () => {
       '/apps/awesome-project/test/jest-e2e.json',
     ]);
   });
+  it('should keep underscores in path and file name', async () => {
+    const options: SubAppOptions = {
+      name: '_project',
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('sub-app', options)
+      .toPromise();
+    const files: string[] = tree.files;
+    expect(files).toEqual([
+      '/nest-cli.json',
+      '/apps/nestjs-schematics/tsconfig.app.json',
+      '/apps/_project/tsconfig.app.json',
+      '/apps/_project/src/main.ts',
+      '/apps/_project/src/_project.controller.spec.ts',
+      '/apps/_project/src/_project.controller.ts',
+      '/apps/_project/src/_project.module.ts',
+      '/apps/_project/src/_project.service.ts',
+      '/apps/_project/test/app.e2e-spec.ts',
+      '/apps/_project/test/jest-e2e.json',
+    ]);
+  });
   it('should manage javascript files', async () => {
     const options: SubAppOptions = {
       name: 'project',
       language: 'js',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('sub-app', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('sub-app', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/nest-cli.json',
