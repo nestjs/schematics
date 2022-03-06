@@ -92,7 +92,7 @@ describe('Interface Factory', () => {
     );
   });
 
-  it('should keep underscores in path and file names', async () => {
+  it("should keep underscores in interface's path and file names", async () => {
     const options: InterfaceOptions = {
       name: '_bar/_foo',
     };

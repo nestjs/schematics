@@ -31,7 +31,7 @@ describe('Resource Factory', () => {
         '/users/entities/user.entity.ts',
       ]);
     });
-    it('should keep underscores in path and file name', async () => {
+    it("should keep underscores in resource's path and file name", async () => {
       const options: ResourceOptions = {
         name: '_users',
       };

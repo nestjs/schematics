@@ -52,7 +52,7 @@ describe('SubApp Factory', () => {
       '/apps/awesome-project/test/jest-e2e.json',
     ]);
   });
-  it('should keep underscores in path and file name', async () => {
+  it("should keep underscores in sub-app's path and file name", async () => {
     const options: SubAppOptions = {
       name: '_project',
     };

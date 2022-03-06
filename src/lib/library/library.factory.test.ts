@@ -46,7 +46,7 @@ describe('Library Factory', () => {
       '/libs/awesome-project/src/awesome-project.service.ts',
     ]);
   });
-  it('should keep underscores in path and file name', async () => {
+  it("should keep underscores in library's path and file name", async () => {
     const options: LibraryOptions = {
       name: '_project',
       prefix: 'app',

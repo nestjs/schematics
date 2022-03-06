@@ -148,7 +148,7 @@ describe('Module Factory', () => {
         'export class FooModule {}\n',
     );
   });
-  it('should keep underscores in path and file name', async () => {
+  it("should keep underscores in module's path and file name", async () => {
     const options: ModuleOptions = {
       name: '_bar/_foo',
       skipImport: true,

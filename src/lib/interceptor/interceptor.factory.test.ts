@@ -108,7 +108,7 @@ describe('Interceptor Factory', () => {
     );
   });
 
-  it('should keep underscores in path and file name', async () => {
+  it("should keep underscores in interceptor's path and file name", async () => {
     const options: InterceptorOptions = {
       name: '_bar/_foo',
     };

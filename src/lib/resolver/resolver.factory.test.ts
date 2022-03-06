@@ -106,7 +106,7 @@ describe('Resolver Factory', () => {
         'export class FooResolver {}\n',
     );
   });
-  it('should keep underscores in path and file name', async () => {
+  it("should keep underscores in resolver's path and file name", async () => {
     const options: ResolverOptions = {
       name: '_bar/_foo',
       flat: false,

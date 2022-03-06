@@ -129,7 +129,7 @@ describe('Controller Factory', () => {
         'export class FooController {}\n',
     );
   });
-  it('should keep underscores in path and file name', async () => {
+  it("should keep underscores in controller's path and file name", async () => {
     const options: ControllerOptions = {
       name: 'barBaz/foo',
       skipImport: true,

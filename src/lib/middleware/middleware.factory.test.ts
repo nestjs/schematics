@@ -126,7 +126,7 @@ describe('Middleware Factory', () => {
         '}\n',
     );
   });
-  it('should keep underscores in path and file name', async () => {
+  it("should keep underscores in middleware's path and file name", async () => {
     const options: MiddlewareOptions = {
       name: '_bar/_foo',
       flat: false,

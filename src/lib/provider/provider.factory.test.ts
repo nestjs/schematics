@@ -92,7 +92,7 @@ describe('Provider Factory', () => {
         'export class BarFoo {}\n',
     );
   });
-  it('should keep underscores in file name', async () => {
+  it("should keep underscores in provider's file name", async () => {
     const options: ProviderOptions = {
       name: '_bar',
       skipImport: true,
