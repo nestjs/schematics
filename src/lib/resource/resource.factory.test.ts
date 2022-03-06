@@ -31,6 +31,25 @@ describe('Resource Factory', () => {
         '/users/entities/user.entity.ts',
       ]);
     });
+    it('should keep underscores in path and file name', async () => {
+      const options: ResourceOptions = {
+        name: '_users',
+      };
+      const tree = await runner
+        .runSchematicAsync('resource', options)
+        .toPromise();
+      const files = tree.files;
+      expect(files).toEqual([
+        '/_users/_users.controller.spec.ts',
+        '/_users/_users.controller.ts',
+        '/_users/_users.module.ts',
+        '/_users/_users.service.spec.ts',
+        '/_users/_users.service.ts',
+        '/_users/dto/create-_user.dto.ts',
+        '/_users/dto/update-_user.dto.ts',
+        '/_users/entities/_user.entity.ts',
+      ]);
+    });
     describe('when "crud" option is not enabled', () => {
       it('should generate appropriate files (without dtos)', async () => {
         const options: ResourceOptions = {
