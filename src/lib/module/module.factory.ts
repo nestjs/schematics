@@ -11,6 +11,7 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
+import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import {
   DeclarationOptions,
   ModuleDeclarator,
@@ -39,9 +40,9 @@ function transform(source: ModuleOptions): ModuleOptions {
   target.type = 'module';
 
   const location: Location = new NameParser().parse(target);
-  target.name = strings.dasherize(location.name);
+  target.name = normalizeToKebabOrSnakeCase(location.name);
+  target.path = normalizeToKebabOrSnakeCase(location.path);
   target.language = target.language !== undefined ? target.language : 'ts';
-  target.path = strings.dasherize(location.path);
 
   target.path = target.flat
     ? target.path
