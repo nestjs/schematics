@@ -1,9 +1,4 @@
-import {
-  join,
-  normalize,
-  Path,
-  strings,
-} from '@angular-devkit/core';
+import { join, normalize, Path, strings } from '@angular-devkit/core';
 import {
   apply,
   branchAndMerge,
@@ -18,11 +13,11 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import { parse } from "jsonc-parser"
 import * as fse from 'fs-extra';
+import { parse } from 'jsonc-parser';
 import {
-  DEFAULT_APP_NAME,
   DEFAULT_APPS_PATH,
+  DEFAULT_APP_NAME,
   DEFAULT_DIR_ENTRY_APP,
   DEFAULT_LANGUAGE,
   DEFAULT_LIB_PATH,
@@ -120,7 +115,7 @@ function updateJsonFile<T>(
   if (source) {
     const sourceText = source.toString('utf-8');
     const json = parse(sourceText);
-    callback((json as {}) as T);
+    callback(json as unknown as T);
     host.overwrite(path, JSON.stringify(json, null, 2));
   }
   return host;
@@ -188,9 +183,9 @@ function updateNpmScripts(
       defaultAppName,
       defaultTestDir,
     );
-    scripts[defaultTestScriptName] = (scripts[
-      defaultTestScriptName
-    ] as string).replace(defaultTestDir, newTestDir);
+    scripts[defaultTestScriptName] = (
+      scripts[defaultTestScriptName] as string
+    ).replace(defaultTestDir, newTestDir);
   }
   if (
     scripts[defaultFormatScriptName] &&
@@ -224,9 +219,8 @@ function updateJestOptions(
     jestOptions.roots.push(jestSourceRoot);
 
     const originalSourceRoot = `<rootDir>/src/`;
-    const originalSourceRootIndex = jestOptions.roots.indexOf(
-      originalSourceRoot,
-    );
+    const originalSourceRootIndex =
+      jestOptions.roots.indexOf(originalSourceRoot);
     if (originalSourceRootIndex >= 0) {
       (jestOptions.roots as string[]).splice(originalSourceRootIndex, 1);
     }
