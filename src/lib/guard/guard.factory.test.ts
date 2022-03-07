@@ -15,10 +15,12 @@ describe('Guard Factory', () => {
     const options: GuardOptions = {
       name: 'foo',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('guard', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('guard', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo.guard.ts'),
+      files.find((filename) => filename === '/foo.guard.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo.guard.ts')).toEqual(
       "import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';\n" +
@@ -39,10 +41,12 @@ describe('Guard Factory', () => {
     const options: GuardOptions = {
       name: 'bar/foo',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('guard', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('guard', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/bar/foo.guard.ts'),
+      files.find((filename) => filename === '/bar/foo.guard.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar/foo.guard.ts')).toEqual(
       "import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';\n" +
@@ -64,10 +68,12 @@ describe('Guard Factory', () => {
       name: 'foo',
       path: 'baz',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('guard', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('guard', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/baz/foo.guard.ts'),
+      files.find((filename) => filename === '/baz/foo.guard.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/baz/foo.guard.ts')).toEqual(
       "import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';\n" +
@@ -84,14 +90,16 @@ describe('Guard Factory', () => {
     );
   });
 
-  it('should manage name to dasherize', async () => {
+  it('should manage name to normalize', async () => {
     const options: GuardOptions = {
       name: 'fooBar',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('guard', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('guard', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo-bar.guard.ts'),
+      files.find((filename) => filename === '/foo-bar.guard.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo-bar.guard.ts')).toEqual(
       "import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';\n" +
@@ -108,14 +116,16 @@ describe('Guard Factory', () => {
     );
   });
 
-  it('should manage path to dasherize', async () => {
+  it('should manage path to normalize', async () => {
     const options: GuardOptions = {
       name: 'barBaz/foo',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('guard', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('guard', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/bar-baz/foo.guard.ts'),
+      files.find((filename) => filename === '/bar-baz/foo.guard.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar-baz/foo.guard.ts')).toEqual(
       "import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';\n" +
@@ -132,15 +142,43 @@ describe('Guard Factory', () => {
     );
   });
 
+  it('should keep underscore in path and name', async () => {
+    const options: GuardOptions = {
+      name: '_foo/_bar',
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('guard', options)
+      .toPromise();
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) => filename === '/_foo/_bar.guard.ts'),
+    ).not.toBeUndefined();
+    expect(tree.readContent('/_foo/_bar.guard.ts')).toEqual(
+      "import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';\n" +
+        "import { Observable } from 'rxjs';\n" +
+        '\n' +
+        '@Injectable()\n' +
+        'export class BarGuard implements CanActivate {\n' +
+        '  canActivate(\n' +
+        '    context: ExecutionContext,\n' +
+        '  ): boolean | Promise<boolean> | Observable<boolean> {\n' +
+        '    return true;\n' +
+        '  }\n' +
+        '}\n',
+    );
+  });
+
   it('should manage javascript file', async () => {
     const options: GuardOptions = {
       name: 'foo',
       language: 'js',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('guard', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('guard', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo.guard.js'),
+      files.find((filename) => filename === '/foo.guard.js'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo.guard.js')).toEqual(
       "import { Injectable } from '@nestjs/common';\n" +

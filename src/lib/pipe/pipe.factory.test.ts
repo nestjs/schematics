@@ -15,10 +15,12 @@ describe('Pipe Factory', () => {
       name: 'foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('pipe', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('pipe', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo/foo.pipe.ts'),
+      files.find((filename) => filename === '/foo/foo.pipe.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo/foo.pipe.ts')).toEqual(
       "import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';\n" +
@@ -36,10 +38,12 @@ describe('Pipe Factory', () => {
       name: 'bar/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('pipe', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('pipe', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/bar/foo/foo.pipe.ts'),
+      files.find((filename) => filename === '/bar/foo/foo.pipe.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar/foo/foo.pipe.ts')).toEqual(
       "import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';\n" +
@@ -58,10 +62,12 @@ describe('Pipe Factory', () => {
       path: 'baz',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('pipe', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('pipe', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/baz/foo/foo.pipe.ts'),
+      files.find((filename) => filename === '/baz/foo/foo.pipe.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/baz/foo/foo.pipe.ts')).toEqual(
       "import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';\n" +
@@ -74,15 +80,17 @@ describe('Pipe Factory', () => {
         '}\n',
     );
   });
-  it('should manage name to dasherize', async () => {
+  it('should manage name to normalize', async () => {
     const options: PipeOptions = {
       name: 'fooBar',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('pipe', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('pipe', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo-bar/foo-bar.pipe.ts'),
+      files.find((filename) => filename === '/foo-bar/foo-bar.pipe.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo-bar/foo-bar.pipe.ts')).toEqual(
       "import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';\n" +
@@ -95,15 +103,17 @@ describe('Pipe Factory', () => {
         '}\n',
     );
   });
-  it('should manage path to dasherize', async () => {
+  it('should manage path to normalize', async () => {
     const options: PipeOptions = {
       name: 'barBaz/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('pipe', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('pipe', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/bar-baz/foo/foo.pipe.ts'),
+      files.find((filename) => filename === '/bar-baz/foo/foo.pipe.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar-baz/foo/foo.pipe.ts')).toEqual(
       "import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';\n" +
@@ -116,16 +126,43 @@ describe('Pipe Factory', () => {
         '}\n',
     );
   });
+
+  it("should manage to keep underscores on pipe's path and name", async () => {
+    const options: PipeOptions = {
+      name: '_bar/_foo',
+      flat: false,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('pipe', options)
+      .toPromise();
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) => filename === '/_bar/_foo/_foo.pipe.ts'),
+    ).not.toBeUndefined();
+    expect(tree.readContent('/_bar/_foo/_foo.pipe.ts')).toEqual(
+      "import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';\n" +
+        '\n' +
+        '@Injectable()\n' +
+        'export class FooPipe implements PipeTransform {\n' +
+        '  transform(value: any, metadata: ArgumentMetadata) {\n' +
+        '    return value;\n' +
+        '  }\n' +
+        '}\n',
+    );
+  });
+
   it('should manage javascript file', async () => {
     const options: PipeOptions = {
       name: 'foo',
       language: 'js',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('pipe', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('pipe', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo/foo.pipe.js'),
+      files.find((filename) => filename === '/foo/foo.pipe.js'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo/foo.pipe.js')).toEqual(
       "import { Injectable } from '@nestjs/common';\n" +

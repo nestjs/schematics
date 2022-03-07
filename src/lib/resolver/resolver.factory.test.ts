@@ -15,7 +15,9 @@ describe('Resolver Factory', () => {
       name: 'foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('resolver', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('resolver', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo/foo.resolver.ts'),
@@ -32,7 +34,9 @@ describe('Resolver Factory', () => {
       name: 'bar/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('resolver', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('resolver', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar/foo/foo.resolver.ts'),
@@ -50,7 +54,9 @@ describe('Resolver Factory', () => {
       path: 'baz',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('resolver', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('resolver', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/baz/foo/foo.resolver.ts'),
@@ -62,12 +68,14 @@ describe('Resolver Factory', () => {
         'export class FooResolver {}\n',
     );
   });
-  it('should manage name to dasherize', async () => {
+  it('should manage name to normalize', async () => {
     const options: ResolverOptions = {
       name: 'fooBar',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('resolver', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('resolver', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo-bar/foo-bar.resolver.ts'),
@@ -79,17 +87,38 @@ describe('Resolver Factory', () => {
         'export class FooBarResolver {}\n',
     );
   });
-  it('should manage path to dasherize', async () => {
+  it('should manage path to normalize', async () => {
     const options: ResolverOptions = {
       name: 'barBaz/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('resolver', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('resolver', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar-baz/foo/foo.resolver.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar-baz/foo/foo.resolver.ts')).toEqual(
+      "import { Resolver } from '@nestjs/graphql';\n" +
+        '\n' +
+        '@Resolver()\n' +
+        'export class FooResolver {}\n',
+    );
+  });
+  it("should keep underscores in resolver's path and file name", async () => {
+    const options: ResolverOptions = {
+      name: '_bar/_foo',
+      flat: false,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('resolver', options)
+      .toPromise();
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) => filename === '/_bar/_foo/_foo.resolver.ts'),
+    ).not.toBeUndefined();
+    expect(tree.readContent('/_bar/_foo/_foo.resolver.ts')).toEqual(
       "import { Resolver } from '@nestjs/graphql';\n" +
         '\n' +
         '@Resolver()\n' +
@@ -102,7 +131,9 @@ describe('Resolver Factory', () => {
       language: 'js',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('resolver', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('resolver', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo/foo.resolver.js'),

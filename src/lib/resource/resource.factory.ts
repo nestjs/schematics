@@ -1,6 +1,8 @@
 import { join, Path, strings } from '@angular-devkit/core';
+import { classify } from '@angular-devkit/core/src/utils/strings';
 import {
   apply,
+  branchAndMerge,
   chain,
   filter,
   mergeWith,
@@ -11,22 +13,21 @@ import {
   SchematicsException,
   Source,
   template,
-  url,
   Tree,
-  branchAndMerge,
+  url,
 } from '@angular-devkit/schematics';
-import { Location, NameParser } from '../../utils/name.parser';
-import { mergeSourceRoot } from '../../utils/source-root.helpers';
-import { ResourceOptions } from './resource.schema';
-import { classify } from '@angular-devkit/core/src/utils/strings';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import * as pluralize from 'pluralize';
-import { ModuleFinder, ModuleDeclarator, DeclarationOptions } from '../..';
+import { DeclarationOptions, ModuleDeclarator, ModuleFinder } from '../..';
 import {
   addPackageJsonDependency,
   getPackageJsonDependency,
   NodeDependencyType,
 } from '../../utils/dependencies.utils';
-import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { Location, NameParser } from '../../utils/name.parser';
+import { mergeSourceRoot } from '../../utils/source-root.helpers';
+import { ResourceOptions } from './resource.schema';
 
 export function main(options: ResourceOptions): Rule {
   options = transform(options);
@@ -51,8 +52,8 @@ function transform(options: ResourceOptions): ResourceOptions {
   target.metadata = 'imports';
 
   const location: Location = new NameParser().parse(target);
-  target.name = strings.dasherize(location.name);
-  target.path = strings.dasherize(location.path);
+  target.name = normalizeToKebabOrSnakeCase(location.name);
+  target.path = normalizeToKebabOrSnakeCase(location.path);
   target.language = target.language !== undefined ? target.language : 'ts';
   if (target.language === 'js') {
     throw new Error(

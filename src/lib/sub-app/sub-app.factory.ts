@@ -15,6 +15,7 @@ import {
 } from '@angular-devkit/schematics';
 import * as fse from 'fs-extra';
 import { parse } from 'jsonc-parser';
+import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import {
   DEFAULT_APPS_PATH,
   DEFAULT_APP_NAME,
@@ -81,7 +82,7 @@ function transform(options: SubAppOptions): SubAppOptions {
     target.name = DEFAULT_APP_NAME;
   }
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
-  target.name = strings.dasherize(target.name);
+  target.name = normalizeToKebabOrSnakeCase(target.name);
   target.path =
     target.path !== undefined
       ? join(normalize(defaultSourceRoot), target.path)

@@ -1,4 +1,7 @@
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import {
+  SchematicTestRunner,
+  UnitTestTree,
+} from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { MiddlewareOptions } from './middleware.schema';
 
@@ -12,10 +15,12 @@ describe('Middleware Factory', () => {
       name: 'foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('middleware', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('middleware', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo/foo.middleware.ts'),
+      files.find((filename) => filename === '/foo/foo.middleware.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo/foo.middleware.ts')).toEqual(
       "import { Injectable, NestMiddleware } from '@nestjs/common';\n" +
@@ -33,10 +38,12 @@ describe('Middleware Factory', () => {
       name: 'bar/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('middleware', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('middleware', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/bar/foo/foo.middleware.ts'),
+      files.find((filename) => filename === '/bar/foo/foo.middleware.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar/foo/foo.middleware.ts')).toEqual(
       "import { Injectable, NestMiddleware } from '@nestjs/common';\n" +
@@ -55,10 +62,12 @@ describe('Middleware Factory', () => {
       path: 'baz',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('middleware', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('middleware', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/baz/foo/foo.middleware.ts'),
+      files.find((filename) => filename === '/baz/foo/foo.middleware.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/baz/foo/foo.middleware.ts')).toEqual(
       "import { Injectable, NestMiddleware } from '@nestjs/common';\n" +
@@ -71,15 +80,17 @@ describe('Middleware Factory', () => {
         '}\n',
     );
   });
-  it('should manage name to dasherize', async () => {
+  it('should manage name to normalize', async () => {
     const options: MiddlewareOptions = {
       name: 'fooBar',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('middleware', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('middleware', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo-bar/foo-bar.middleware.ts'),
+      files.find((filename) => filename === '/foo-bar/foo-bar.middleware.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo-bar/foo-bar.middleware.ts')).toEqual(
       "import { Injectable, NestMiddleware } from '@nestjs/common';\n" +
@@ -92,17 +103,42 @@ describe('Middleware Factory', () => {
         '}\n',
     );
   });
-  it('should manage path to dasherize', async () => {
+  it('should manage path to normalize', async () => {
     const options: MiddlewareOptions = {
       name: 'barBaz/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('middleware', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('middleware', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/bar-baz/foo/foo.middleware.ts'),
+      files.find((filename) => filename === '/bar-baz/foo/foo.middleware.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar-baz/foo/foo.middleware.ts')).toEqual(
+      "import { Injectable, NestMiddleware } from '@nestjs/common';\n" +
+        '\n' +
+        '@Injectable()\n' +
+        'export class FooMiddleware implements NestMiddleware {\n' +
+        '  use(req: any, res: any, next: () => void) {\n' +
+        '    next();\n' +
+        '  }\n' +
+        '}\n',
+    );
+  });
+  it("should keep underscores in middleware's path and file name", async () => {
+    const options: MiddlewareOptions = {
+      name: '_bar/_foo',
+      flat: false,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('middleware', options)
+      .toPromise();
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) => filename === '/_bar/_foo/_foo.middleware.ts'),
+    ).not.toBeUndefined();
+    expect(tree.readContent('/_bar/_foo/_foo.middleware.ts')).toEqual(
       "import { Injectable, NestMiddleware } from '@nestjs/common';\n" +
         '\n' +
         '@Injectable()\n' +
@@ -119,10 +155,12 @@ describe('Middleware Factory', () => {
       language: 'js',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('middleware', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('middleware', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo/foo.middleware.js'),
+      files.find((filename) => filename === '/foo/foo.middleware.js'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo/foo.middleware.js')).toEqual(
       "import { Injectable } from '@nestjs/common';\n" +

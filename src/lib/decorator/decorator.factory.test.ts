@@ -15,10 +15,12 @@ describe('Decorator Factory', () => {
       name: 'foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('decorator', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('decorator', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo/foo.decorator.ts'),
+      files.find((filename) => filename === '/foo/foo.decorator.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo/foo.decorator.ts')).toEqual(
       "import { SetMetadata } from '@nestjs/common';\n" +
@@ -31,10 +33,12 @@ describe('Decorator Factory', () => {
       name: 'bar/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('decorator', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('decorator', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/bar/foo/foo.decorator.ts'),
+      files.find((filename) => filename === '/bar/foo/foo.decorator.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar/foo/foo.decorator.ts')).toEqual(
       "import { SetMetadata } from '@nestjs/common';\n" +
@@ -48,10 +52,12 @@ describe('Decorator Factory', () => {
       path: 'baz',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('decorator', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('decorator', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/baz/foo/foo.decorator.ts'),
+      files.find((filename) => filename === '/baz/foo/foo.decorator.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/baz/foo/foo.decorator.ts')).toEqual(
       "import { SetMetadata } from '@nestjs/common';\n" +
@@ -59,15 +65,17 @@ describe('Decorator Factory', () => {
         "export const Foo = (...args: string[]) => SetMetadata('foo', args);\n",
     );
   });
-  it('should manage name to dasherize', async () => {
+  it('should manage name to normalize', async () => {
     const options: DecoratorOptions = {
       name: 'fooBar',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('decorator', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('decorator', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo-bar/foo-bar.decorator.ts'),
+      files.find((filename) => filename === '/foo-bar/foo-bar.decorator.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo-bar/foo-bar.decorator.ts')).toEqual(
       "import { SetMetadata } from '@nestjs/common';\n" +
@@ -75,20 +83,40 @@ describe('Decorator Factory', () => {
         "export const FooBar = (...args: string[]) => SetMetadata('foo-bar', args);\n",
     );
   });
-  it('should manage path to dasherize', async () => {
+  it('should manage path to normalize', async () => {
     const options: DecoratorOptions = {
       name: 'barBaz/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('decorator', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('decorator', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/bar-baz/foo/foo.decorator.ts'),
+      files.find((filename) => filename === '/bar-baz/foo/foo.decorator.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar-baz/foo/foo.decorator.ts')).toEqual(
       "import { SetMetadata } from '@nestjs/common';\n" +
         '\n' +
         "export const Foo = (...args: string[]) => SetMetadata('foo', args);\n",
+    );
+  });
+  it("should keep underscores on application's name", async () => {
+    const options: DecoratorOptions = {
+      name: '_bar/_foo',
+      flat: false,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('decorator', options)
+      .toPromise();
+    const files: string[] = tree.files;
+    expect(
+      files.find((filename) => filename === '/_bar/_foo/_foo.decorator.ts'),
+    ).not.toBeUndefined();
+    expect(tree.readContent('/_bar/_foo/_foo.decorator.ts')).toEqual(
+      "import { SetMetadata } from '@nestjs/common';\n" +
+        '\n' +
+        "export const Foo = (...args: string[]) => SetMetadata('_foo', args);\n",
     );
   });
   it('should manage javascript file', async () => {
@@ -97,10 +125,12 @@ describe('Decorator Factory', () => {
       language: 'js',
       flat: false,
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('decorator', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('decorator', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/foo/foo.decorator.js'),
+      files.find((filename) => filename === '/foo/foo.decorator.js'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo/foo.decorator.js')).toEqual(
       "import { SetMetadata } from '@nestjs/common';\n" +

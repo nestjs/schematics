@@ -13,6 +13,7 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
+import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import { Location, NameParser } from '../../utils/name.parser';
 import { mergeSourceRoot } from '../../utils/source-root.helpers';
 import { DEFAULT_LANGUAGE } from '../defaults';
@@ -30,7 +31,7 @@ function transform(options: ClassOptions): ClassOptions {
   }
   const location: Location = new NameParser().parse(target);
 
-  target.name = strings.dasherize(location.name);
+  target.name = normalizeToKebabOrSnakeCase(location.name);
   if (target.name.includes('.')) {
     target.className = strings.classify(target.name).replace('.', '');
   } else {
@@ -40,7 +41,7 @@ function transform(options: ClassOptions): ClassOptions {
   target.language =
     target.language !== undefined ? target.language : DEFAULT_LANGUAGE;
 
-  target.path = strings.dasherize(location.path);
+  target.path = normalizeToKebabOrSnakeCase(location.path);
   target.path = target.flat
     ? target.path
     : join(target.path as Path, target.name);
@@ -51,7 +52,7 @@ function transform(options: ClassOptions): ClassOptions {
 function generate(options: ClassOptions): Source {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
-      options.spec ? noop() : filter(path => !path.endsWith('.spec.ts')),
+      options.spec ? noop() : filter((path) => !path.endsWith('.spec.ts')),
       template({
         ...strings,
         ...options,
