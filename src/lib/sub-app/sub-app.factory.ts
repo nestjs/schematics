@@ -116,7 +116,7 @@ function updateJsonFile<T>(
   if (source) {
     const sourceText = source.toString('utf-8');
     const json = parse(sourceText);
-    callback(json as {} as T);
+    callback(json as unknown as T);
     host.overwrite(path, JSON.stringify(json, null, 2));
   }
   return host;
