@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/nest-cli",
   "language": "<%= language %>",
   "collection": "<%= collection %>",
   "sourceRoot": "src"
