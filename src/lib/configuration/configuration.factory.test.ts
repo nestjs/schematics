@@ -20,6 +20,7 @@ describe('Configuration Factory', () => {
       files.find(filename => filename === '/project/nest-cli.json'),
     ).not.toBeUndefined();
     expect(JSON.parse(tree.readContent('/project/nest-cli.json'))).toEqual({
+      $schema: 'https://json.schemastore.org/nest-cli',
       collection: '@nestjs/schematics',
       sourceRoot: 'src',
     });
@@ -35,6 +36,7 @@ describe('Configuration Factory', () => {
       files.find(filename => filename === '/project/nest-cli.json'),
     ).not.toBeUndefined();
     expect(JSON.parse(tree.readContent('/project/nest-cli.json'))).toEqual({
+      $schema: 'https://json.schemastore.org/nest-cli',
       language: 'js',
       collection: '@nestjs/schematics',
       sourceRoot: 'src',
@@ -51,6 +53,7 @@ describe('Configuration Factory', () => {
       files.find(filename => filename === '/project/nest-cli.json'),
     ).not.toBeUndefined();
     expect(JSON.parse(tree.readContent('/project/nest-cli.json'))).toEqual({
+      $schema: 'https://json.schemastore.org/nest-cli',
       collection: 'foo',
       sourceRoot: 'src',
     });
