@@ -2,7 +2,7 @@ export interface ApplicationOptions {
   /**
    * Nest application name.
    */
-  name: string;
+  name: string | number;
   /**
    * Nest application author.
    */

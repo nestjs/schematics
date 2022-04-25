@@ -19,7 +19,7 @@ import {
 import { ApplicationOptions } from './application.schema';
 
 export function main(options: ApplicationOptions): Rule {
-  options.name = normalizeToKebabOrSnakeCase(options.name);
+  options.name = normalizeToKebabOrSnakeCase(options.name.toString());
 
   const path =
     !options.directory || options.directory === 'undefined'
@@ -62,8 +62,8 @@ function transform(options: ApplicationOptions): ApplicationOptions {
  * but only the rule *1* is addressed by this function as the other ones doesn't
  * have a canonical representation.
  */
-function resolvePackageName(path: string) {
-  const { base: baseFilename, dir: dirname } = parse(path);
+function resolvePackageName(path: string | number) {
+  const { base: baseFilename, dir: dirname } = parse(path.toString());
   if (baseFilename === '.') {
     return basename(process.cwd());
   }
