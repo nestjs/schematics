@@ -38,7 +38,7 @@ function transform(options: ApplicationOptions): ApplicationOptions {
     ? target.description
     : DEFAULT_DESCRIPTION;
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
-  target.name = resolvePackageName(target.name);
+  target.name = resolvePackageName(target.name.toString());
   target.version = !!target.version ? target.version : DEFAULT_VERSION;
 
   target.packageManager =
@@ -62,8 +62,8 @@ function transform(options: ApplicationOptions): ApplicationOptions {
  * but only the rule *1* is addressed by this function as the other ones doesn't
  * have a canonical representation.
  */
-function resolvePackageName(path: string | number) {
-  const { base: baseFilename, dir: dirname } = parse(path.toString());
+function resolvePackageName(path: string) {
+  const { base: baseFilename, dir: dirname } = parse(path);
   if (baseFilename === '.') {
     return basename(process.cwd());
   }
