@@ -270,6 +270,38 @@ describe('Application Factory', () => {
       });
     });
   });
+  it('should manage name as number', async () => {
+    const options: ApplicationOptions = {
+      name: 123,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('application', options)
+      .toPromise();
+    const files: string[] = tree.files;
+    expect(files).toEqual([
+      '/123/.eslintrc.js',
+      '/123/.gitignore',
+      '/123/.prettierrc',
+      '/123/README.md',
+      '/123/nest-cli.json',
+      '/123/package.json',
+      '/123/tsconfig.build.json',
+      '/123/tsconfig.json',
+      '/123/src/app.controller.spec.ts',
+      '/123/src/app.controller.ts',
+      '/123/src/app.module.ts',
+      '/123/src/app.service.ts',
+      '/123/src/main.ts',
+      '/123/test/app.e2e-spec.ts',
+      '/123/test/jest-e2e.json',
+    ]);
+
+    expect(
+      JSON.parse(tree.readContent('/123/package.json')),
+    ).toMatchObject({
+      name: '123',
+    });
+  });
   it('should manage javascript files', async () => {
     const options: ApplicationOptions = {
       name: 'project',

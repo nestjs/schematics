@@ -5,7 +5,10 @@
   "type": "object",
   "properties": {
     "name": {
-      "type": "string",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "number" }
+      ],
       "description": "The name of the application.",
       "$default": {
         "$source": "argv",

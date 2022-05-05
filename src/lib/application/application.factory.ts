@@ -19,7 +19,7 @@ import {
 import { ApplicationOptions } from './application.schema';
 
 export function main(options: ApplicationOptions): Rule {
-  options.name = normalizeToKebabOrSnakeCase(options.name);
+  options.name = normalizeToKebabOrSnakeCase(options.name.toString());
 
   const path =
     !options.directory || options.directory === 'undefined'
@@ -38,7 +38,7 @@ function transform(options: ApplicationOptions): ApplicationOptions {
     ? target.description
     : DEFAULT_DESCRIPTION;
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
-  target.name = resolvePackageName(target.name);
+  target.name = resolvePackageName(target.name.toString());
   target.version = !!target.version ? target.version : DEFAULT_VERSION;
 
   target.packageManager =
