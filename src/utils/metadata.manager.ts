@@ -189,11 +189,12 @@ export class MetadataManager {
       toInsert = staticOptions ? this.addBlankLines(symbol) : `${symbol}`;
     } else {
       const text = (node as Node).getFullText(source);
-      if (text.match(/^\r?\n/)) {
-        toInsert = `,${text.match(/^\r?\n(\r?)\s+/)[0]}${symbol}`;
-      } else {
-        toInsert = `, ${symbol}`;
-      }
+      const itemSeparator = ( 
+        text.match(/^\r?\n(\r?)\s+/) ||
+        text.match(/^\r?\n/) ||
+        ' '
+      )[0];
+      toInsert = `,${itemSeparator}${symbol}`;
     }
     return this.content.split('').reduce((content, char, index) => {
       if (index === position) {

@@ -60,6 +60,51 @@ describe('Metadata Manager', () => {
       'export class FooModule {}\n'
     );
   });
+  it('should insert the symbol to the metadata reusing the line separator', () => {
+    const lineSeparator = '\r\n'
+
+    const manager = new MetadataManager(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n' +
+      `  imports: [${lineSeparator}` +
+      'BarModule]\n' +
+      '})\n' +
+      'export class FooModule {}\n'
+    );
+    const metadata = 'imports';
+    const symbol = 'FooModule';
+    expect(manager.insert(metadata, symbol)).toEqual(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n' +
+      `  imports: [${lineSeparator}` +
+      `BarModule,${lineSeparator}`+
+      'FooModule]\n' +
+      '})\n' +
+      'export class FooModule {}\n'
+    );
+  });
+  it("should insert the symbol to the metadata separated by a blank space when there's no line separator", () => {
+    const manager = new MetadataManager(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [BarModule]\n' +
+      '})\n' +
+      'export class FooModule {}\n'
+    );
+    const metadata = 'imports';
+    const symbol = 'FooModule';
+    expect(manager.insert(metadata, symbol)).toEqual(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [BarModule, FooModule]\n' +
+      '})\n' +
+      'export class FooModule {}\n'
+    );
+  });
   it('should insert the symbol to right metadata', () => {
     const metadata = 'imports';
     const symbol = 'FooModule';
