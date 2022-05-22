@@ -95,6 +95,6 @@
     "instrument": true
   },
   "lint-staged": {
-    "packages/**/*.{ts,json}": []
+    "**/*.{ts,json}": []
   }
 }
