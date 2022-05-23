@@ -23,7 +23,8 @@
     "test": "npm run clean && NODE_ENV=test jest -w 1 --no-cache --config jest.json",
     "test:dev": "NODE_ENV=test npm run -s test -- --watchAll",
     "prerelease": "npm run build",
-    "release": "release-it"
+    "release": "release-it",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -72,11 +73,6 @@
     "typescript": "^3.4.5 || ^4.3.5"
   },
   "schematics": "./dist/collection.json",
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -c .commitlintrc.json -E HUSKY_GIT_PARAMS"
-    }
-  },
   "nyc": {
     "include": [
       "src"
@@ -97,5 +93,8 @@
     ],
     "sourceMap": true,
     "instrument": true
+  },
+  "lint-staged": {
+    "**/*.{ts,json}": []
   }
 }
