@@ -58,6 +58,12 @@
       "description": "Create a Nest interface.",
       "schema": "./lib/interface/schema.json"
     },
+    "enum": {
+      "factory": "./lib/enum/enum.factory#main",
+      "description": "Create a Nest enum.",
+      "schema": "./lib/enum/schema.json",
+      "aliases": ["em"]
+    },
     "middleware": {
       "factory": "./lib/middleware/middleware.factory#main",
       "description": "Create a Nest middleware.",
