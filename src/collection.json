@@ -51,12 +51,13 @@
       "factory": "./lib/interceptor/interceptor.factory#main",
       "description": "Create a Nest interceptor.",
       "schema": "./lib/interceptor/schema.json",
-      "aliases": ["in"]
+      "aliases": ["itc"]
     },
     "interface": {
       "factory": "./lib/interface/interface.factory#main",
       "description": "Create a Nest interface.",
-      "schema": "./lib/interface/schema.json"
+      "schema": "./lib/interface/schema.json",
+      "aliases": ["itf"]
     },
     "middleware": {
       "factory": "./lib/middleware/middleware.factory#main",
