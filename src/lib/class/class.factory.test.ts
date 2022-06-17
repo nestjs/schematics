@@ -130,4 +130,39 @@ describe('Class Factory', () => {
       'export class FooEntity {}\n',
     );
   });
+  it('should create a spec file', async () => {
+    const options: ClassOptions = {
+      name: 'foo.entity',
+      spec: true,
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('class', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.entity.spec.ts'),
+    ).not.toBeUndefined();
+  });
+  it('should create a spec file with custom file suffix', async () => {
+    const options: ClassOptions = {
+      name: 'foo.entity',
+      spec: true,
+      specFileSuffix: 'test',
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('class', options)
+      .toPromise();
+    const files: string[] = tree.files;
+    console.log(files);
+
+    expect(
+      files.find((filename) => filename === '/foo.entity.spec.ts'),
+    ).toBeUndefined();
+    expect(
+      files.find((filename) => filename === '/foo.entity.test.ts'),
+    ).not.toBeUndefined();
+  });
 });
