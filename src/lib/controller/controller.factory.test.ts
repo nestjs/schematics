@@ -230,7 +230,7 @@ describe('Controller Factory', () => {
         'export class FooModule {}\n',
     );
   });
-    it('should create a spec file', async () => {
+  it('should create a spec file', async () => {
     const options: ControllerOptions = {
       name: 'foo.controller',
       spec: true,
