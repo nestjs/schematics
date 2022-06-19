@@ -191,4 +191,38 @@ describe('Guard Factory', () => {
         '}\n',
     );
   });
+  it('should create a spec file', async () => {
+    const options: GuardOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('guard', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.guard.spec.ts'),
+    ).not.toBeUndefined();
+  });
+  it('should create a spec file with custom file suffix', async () => {
+    const options: GuardOptions = {
+      name: 'foo',
+      spec: true,
+      specFileSuffix: 'test',
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('guard', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.guard.spec.ts'),
+    ).toBeUndefined();
+    expect(
+      files.find((filename) => filename === '/foo.guard.test.ts'),
+    ).not.toBeUndefined();
+  });
 });
