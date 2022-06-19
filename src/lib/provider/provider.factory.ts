@@ -40,6 +40,9 @@ export function main(options: ProviderOptions): Rule {
 function transform(options: ProviderOptions): ProviderOptions {
   const target: ProviderOptions = Object.assign({}, options);
   target.metadata = 'providers';
+  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+    options.specFileSuffix || 'spec',
+  );
 
   if (!target.name) {
     throw new SchematicsException('Option (name) is required.');
@@ -64,7 +67,13 @@ function transform(options: ProviderOptions): ProviderOptions {
 function generate(options: ProviderOptions) {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
-      options.spec ? noop() : filter((path) => !path.endsWith('.spec.ts')),
+      options.spec 
+        ? noop() 
+        : filter((path) => {
+            const languageExtension = options.language || 'ts';
+            const suffix = `.__specFileSuffix__.${languageExtension}`;
+            return !path.endsWith(suffix)
+        }),
       template({
         ...strings,
         ...options,
