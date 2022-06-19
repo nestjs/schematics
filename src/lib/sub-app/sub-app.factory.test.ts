@@ -18,7 +18,7 @@ describe('SubApp Factory', () => {
       .runSchematicAsync('sub-app', options)
       .toPromise();
     const files: string[] = tree.files;
-    expect(files).toEqual([
+    expect(files.sort()).toEqual([
       '/nest-cli.json',
       '/apps/nestjs-schematics/tsconfig.app.json',
       '/apps/project/tsconfig.app.json',
@@ -29,7 +29,7 @@ describe('SubApp Factory', () => {
       '/apps/project/src/project.service.ts',
       '/apps/project/test/app.e2e-spec.ts',
       '/apps/project/test/jest-e2e.json',
-    ]);
+    ].sort());
   });
   it('should manage name to normalize', async () => {
     const options: SubAppOptions = {
@@ -39,7 +39,7 @@ describe('SubApp Factory', () => {
       .runSchematicAsync('sub-app', options)
       .toPromise();
     const files: string[] = tree.files;
-    expect(files).toEqual([
+    expect(files.sort()).toEqual([
       '/nest-cli.json',
       '/apps/nestjs-schematics/tsconfig.app.json',
       '/apps/awesome-project/tsconfig.app.json',
@@ -50,7 +50,7 @@ describe('SubApp Factory', () => {
       '/apps/awesome-project/src/awesome-project.service.ts',
       '/apps/awesome-project/test/app.e2e-spec.ts',
       '/apps/awesome-project/test/jest-e2e.json',
-    ]);
+    ].sort());
   });
   it("should keep underscores in sub-app's path and file name", async () => {
     const options: SubAppOptions = {
@@ -60,7 +60,7 @@ describe('SubApp Factory', () => {
       .runSchematicAsync('sub-app', options)
       .toPromise();
     const files: string[] = tree.files;
-    expect(files).toEqual([
+    expect(files.sort()).toEqual([
       '/nest-cli.json',
       '/apps/nestjs-schematics/tsconfig.app.json',
       '/apps/_project/tsconfig.app.json',
@@ -71,7 +71,7 @@ describe('SubApp Factory', () => {
       '/apps/_project/src/_project.service.ts',
       '/apps/_project/test/app.e2e-spec.ts',
       '/apps/_project/test/jest-e2e.json',
-    ]);
+    ].sort());
   });
   it('should manage javascript files', async () => {
     const options: SubAppOptions = {
@@ -82,7 +82,7 @@ describe('SubApp Factory', () => {
       .runSchematicAsync('sub-app', options)
       .toPromise();
     const files: string[] = tree.files;
-    expect(files).toEqual([
+    expect(files.sort()).toEqual([
       '/nest-cli.json',
       '/apps/nestjs-schematics/.babelrc',
       '/apps/nestjs-schematics/index.js',
@@ -97,6 +97,28 @@ describe('SubApp Factory', () => {
       '/apps/project/src/main.js',
       '/apps/project/test/app.e2e-spec.js',
       '/apps/project/test/jest-e2e.json',
-    ]);
+    ].sort());
+  });
+  it('should generate spec files with custom suffix', async () => {
+    const options: SubAppOptions = {
+      name: 'project',
+      specFileSuffix: 'test',
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('sub-app', options)
+      .toPromise();
+    const files: string[] = tree.files;
+    expect(files.sort()).toEqual([
+      '/nest-cli.json',
+      '/apps/nestjs-schematics/tsconfig.app.json',
+      '/apps/project/tsconfig.app.json',
+      '/apps/project/src/main.ts',
+      '/apps/project/src/project.controller.test.ts',
+      '/apps/project/src/project.controller.ts',
+      '/apps/project/src/project.module.ts',
+      '/apps/project/src/project.service.ts',
+      '/apps/project/test/jest-e2e.json',
+      '/apps/project/test/app.e2e-test.ts',
+    ].sort());
   });
 });
