@@ -58,9 +58,8 @@ function generate(options: ClassOptions): Source {
       options.spec
         ? noop()
         : filter((path) => {
-            const specNamingConvention = options.specFileSuffix || 'spec';
             const languageExtension = options.language || 'ts';
-            const suffix = `.${specNamingConvention}.${languageExtension}`;
+            const suffix = `.__specFileSuffix__.${languageExtension}`;
             return !path.endsWith(suffix);
           }),
       template({

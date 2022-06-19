@@ -156,7 +156,6 @@ describe('Class Factory', () => {
       .runSchematicAsync('class', options)
       .toPromise();
     const files: string[] = tree.files;
-    console.log(files);
 
     expect(
       files.find((filename) => filename === '/foo.entity.spec.ts'),
