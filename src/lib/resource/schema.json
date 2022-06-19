@@ -36,6 +36,11 @@
       "default": true,
       "description": "Specifies if specs file are generated."
     },
+    "specFileSuffix": {
+      "type": "string",
+      "default": "spec",
+      "description": "Specifies the file suffix of spec files."
+    },
     "type": {
       "type": "string",
       "description": "The transport layer.",

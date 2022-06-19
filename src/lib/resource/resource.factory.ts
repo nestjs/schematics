@@ -60,6 +60,9 @@ function transform(options: ResourceOptions): ResourceOptions {
       'The "resource" schematic does not support JavaScript language (only TypeScript is supported).',
     );
   }
+  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+    options.specFileSuffix || 'spec',
+  );
 
   target.path = target.flat
     ? target.path
@@ -89,7 +92,7 @@ function generate(options: ResourceOptions): Source {
         }
         if (
           path.endsWith('.resolver.ts') ||
-          path.endsWith('.resolver.spec.ts')
+          path.endsWith('.resolver.__specFileSuffix__.ts')
         ) {
           return (
             options.type === 'graphql-code-first' ||
@@ -101,11 +104,11 @@ function generate(options: ResourceOptions): Source {
         }
         if (
           path.endsWith('controller.ts') ||
-          path.endsWith('.controller.spec.ts')
+          path.endsWith('.controller.__specFileSuffix__.ts')
         ) {
           return options.type === 'microservice' || options.type === 'rest';
         }
-        if (path.endsWith('.gateway.ts') || path.endsWith('.gateway.spec.ts')) {
+        if (path.endsWith('.gateway.ts') || path.endsWith('.gateway.__specFileSuffix__.ts')) {
           return options.type === 'ws';
         }
         if (path.includes('@ent')) {
@@ -116,7 +119,12 @@ function generate(options: ResourceOptions): Source {
         }
         return true;
       }),
-      options.spec ? noop() : filter((path) => !path.endsWith('.spec.ts')),
+      options.spec 
+        ? noop() 
+        : filter((path) => {
+            const suffix = `.__specFileSuffix__.ts`;
+            return !path.endsWith(suffix)
+        }),
       template({
         ...strings,
         ...options,

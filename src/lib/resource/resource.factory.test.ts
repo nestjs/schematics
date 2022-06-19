@@ -1399,4 +1399,48 @@ type Mutation {
 `);
     });
   });
+  it('should create spec files', async () => {
+    const options: ResourceOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('resource', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.controller.spec.ts'),
+    ).toBeDefined();
+    expect(
+      files.find((filename) => filename === '/foo.service.spec.ts'),
+    ).toBeDefined();
+  });
+  it('should create spec files with custom file suffix', async () => {
+    const options: ResourceOptions = {
+      name: 'foo',
+      spec: true,
+      specFileSuffix: 'test',
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('resource', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.controller.spec.ts'),
+    ).toBeUndefined();
+    expect(
+      files.find((filename) => filename === '/foo.controller.test.ts'),
+    ).toBeDefined();
+
+    expect(
+      files.find((filename) => filename === '/foo.service.spec.ts'),
+    ).toBeUndefined();
+    expect(
+      files.find((filename) => filename === '/foo.service.test.ts'),
+    ).toBeDefined();
+  });
 });
