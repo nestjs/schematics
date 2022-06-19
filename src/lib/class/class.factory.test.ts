@@ -132,7 +132,7 @@ describe('Class Factory', () => {
   });
   it('should create a spec file', async () => {
     const options: ClassOptions = {
-      name: 'foo.entity',
+      name: 'foo',
       spec: true,
       flat: true,
     };
@@ -142,12 +142,12 @@ describe('Class Factory', () => {
     const files: string[] = tree.files;
 
     expect(
-      files.find((filename) => filename === '/foo.entity.spec.ts'),
+      files.find((filename) => filename === '/foo.spec.ts'),
     ).not.toBeUndefined();
   });
   it('should create a spec file with custom file suffix', async () => {
     const options: ClassOptions = {
-      name: 'foo.entity',
+      name: 'foo',
       spec: true,
       specFileSuffix: 'test',
       flat: true,
@@ -158,10 +158,10 @@ describe('Class Factory', () => {
     const files: string[] = tree.files;
 
     expect(
-      files.find((filename) => filename === '/foo.entity.spec.ts'),
+      files.find((filename) => filename === '/foo.spec.ts'),
     ).toBeUndefined();
     expect(
-      files.find((filename) => filename === '/foo.entity.test.ts'),
-    ).not.toBeUndefined();
+      files.find((filename) => filename === '/foo.test.ts'),
+    ).toBeDefined();
   });
 });

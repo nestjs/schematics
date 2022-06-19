@@ -232,12 +232,12 @@ describe('Controller Factory', () => {
   });
   it('should create a spec file', async () => {
     const options: ControllerOptions = {
-      name: 'foo.controller',
+      name: 'foo',
       spec: true,
       flat: true,
     };
     const tree: UnitTestTree = await runner
-      .runSchematicAsync('class', options)
+      .runSchematicAsync('controller', options)
       .toPromise();
     const files: string[] = tree.files;
 
@@ -247,13 +247,13 @@ describe('Controller Factory', () => {
   });
   it('should create a spec file with custom file suffix', async () => {
     const options: ControllerOptions = {
-      name: 'foo.controller',
+      name: 'foo',
       spec: true,
       specFileSuffix: 'test',
       flat: true,
     };
     const tree: UnitTestTree = await runner
-      .runSchematicAsync('class', options)
+      .runSchematicAsync('controller', options)
       .toPromise();
     const files: string[] = tree.files;
 
