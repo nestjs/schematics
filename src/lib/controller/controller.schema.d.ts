@@ -38,6 +38,10 @@ export interface ControllerOptions {
    */
   spec?: boolean;
   /**
+   * Specifies the file suffix of spec files.
+   */
+  specFileSuffix?: string;
+  /**
    * Flag to indicate if a directory is created.
    */
   flat?: boolean;

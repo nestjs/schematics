@@ -230,4 +230,38 @@ describe('Controller Factory', () => {
         'export class FooModule {}\n',
     );
   });
+    it('should create a spec file', async () => {
+    const options: ControllerOptions = {
+      name: 'foo.controller',
+      spec: true,
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('class', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.controller.spec.ts'),
+    ).not.toBeUndefined();
+  });
+  it('should create a spec file with custom file suffix', async () => {
+    const options: ControllerOptions = {
+      name: 'foo.controller',
+      spec: true,
+      specFileSuffix: 'test',
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('class', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.controller.spec.ts'),
+    ).toBeUndefined();
+    expect(
+      files.find((filename) => filename === '/foo.controller.test.ts'),
+    ).not.toBeUndefined();
+  });
 });
