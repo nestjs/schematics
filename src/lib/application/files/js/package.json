@@ -30,7 +30,7 @@
     "@babel/register": "7.17.7",
     "@babel/runtime": "7.18.3",
     "jest": "28.1.1",
-    "nodemon": "2.0.16",
+    "nodemon": "2.0.18",
     "prettier": "2.7.1",
     "supertest": "6.2.3"
   },
