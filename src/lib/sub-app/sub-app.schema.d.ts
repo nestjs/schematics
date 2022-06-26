@@ -19,6 +19,7 @@ export interface SubAppOptions {
   rootDir?: string | Path;
   /**
    * Specifies the file suffix of spec files.
+   * @default "spec"
    */
   specFileSuffix?: string;
   sourceRoot?: string;

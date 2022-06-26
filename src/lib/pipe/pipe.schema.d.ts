@@ -23,6 +23,7 @@ export interface PipeOptions {
   spec?: boolean;
   /**
    * Specifies the file suffix of spec files.
+   * @default "spec"
    */
   specFileSuffix?: string;
   /**

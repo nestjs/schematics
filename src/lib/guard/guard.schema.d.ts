@@ -23,6 +23,7 @@ export interface GuardOptions {
   spec?: boolean;
   /**
    * Specifies the file suffix of spec files.
+   * @default "spec"
    */
   specFileSuffix?: string;
   /**
