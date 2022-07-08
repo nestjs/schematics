@@ -26,6 +26,11 @@
       "type": "string",
       "format": "path",
       "description": "Applications root directory."
+    },
+    "specFileSuffix": {
+      "type": "string",
+      "default": "spec",
+      "description": "Specifies the file suffix of spec files."
     }
   },
   "required": ["name"]

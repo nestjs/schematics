@@ -206,4 +206,38 @@ describe('Provider Factory', () => {
 @Injectable()
 export class FooEntity {}\n`);
   });
+  it('should create a spec file', async () => {
+    const options: ProviderOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('provider', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.spec.ts'),
+    ).toBeDefined();
+  });
+  it('should create a spec file with custom file suffix', async () => {
+    const options: ProviderOptions = {
+      name: 'foo',
+      spec: true,
+      specFileSuffix: 'test',
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('provider', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.spec.ts'),
+    ).toBeUndefined();
+    expect(
+      files.find((filename) => filename === '/foo.test.ts'),
+    ).toBeDefined();
+  });
 });

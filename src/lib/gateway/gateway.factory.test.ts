@@ -180,4 +180,38 @@ describe('Gateway Factory', () => {
         '}\n',
     );
   });
+  it('should create a spec file', async () => {
+    const options: GatewayOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('gateway', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.gateway.spec.ts'),
+    ).toBeDefined();
+  });
+  it('should create a spec file with custom file suffix', async () => {
+    const options: GatewayOptions = {
+      name: 'foo',
+      spec: true,
+      specFileSuffix: 'test',
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('gateway', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.gateway.spec.ts'),
+    ).toBeUndefined();
+    expect(
+      files.find((filename) => filename === '/foo.gateway.test.ts'),
+    ).toBeDefined();
+  });
 });

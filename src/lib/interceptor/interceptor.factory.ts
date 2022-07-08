@@ -32,6 +32,9 @@ function transform(options: InterceptorOptions): InterceptorOptions {
   target.name = normalizeToKebabOrSnakeCase(location.name);
   target.path = normalizeToKebabOrSnakeCase(location.path);
   target.language = target.language !== undefined ? target.language : 'ts';
+  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+    options.specFileSuffix || 'spec',
+  );
 
   target.path = target.flat
     ? target.path
@@ -43,6 +46,13 @@ function generate(options: InterceptorOptions): Source {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
       options.spec ? noop() : filter((path) => !path.endsWith('.spec.ts')),
+      options.spec 
+        ? noop() 
+        : filter((path) => {
+            const languageExtension = options.language || 'ts';
+            const suffix = `.__specFileSuffix__.${languageExtension}`;
+            return !path.endsWith(suffix)
+        }),
       template({
         ...strings,
         ...options,

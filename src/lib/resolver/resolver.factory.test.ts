@@ -145,4 +145,38 @@ describe('Resolver Factory', () => {
         'export class FooResolver {}\n',
     );
   });
+  it('should create a spec file', async () => {
+    const options: ResolverOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('resolver', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.resolver.spec.ts'),
+    ).not.toBeUndefined();
+  });
+  it('should create a spec file with custom file suffix', async () => {
+    const options: ResolverOptions = {
+      name: 'foo',
+      spec: true,
+      specFileSuffix: 'test',
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('resolver', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.resolver.spec.ts'),
+    ).toBeUndefined();
+    expect(
+      files.find((filename) => filename === '/foo.resolver.test.ts'),
+    ).not.toBeUndefined();
+  });
 });

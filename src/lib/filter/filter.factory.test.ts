@@ -183,4 +183,38 @@ describe('Filter Factory', () => {
         '}\n',
     );
   });
+    it('should create a spec file', async () => {
+    const options: FilterOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('filter', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.filter.spec.ts'),
+    ).not.toBeUndefined();
+  });
+  it('should create a spec file with custom file suffix', async () => {
+    const options: FilterOptions = {
+      name: 'foo',
+      spec: true,
+      specFileSuffix: 'test',
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('filter', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.filter.spec.ts'),
+    ).toBeUndefined();
+    expect(
+      files.find((filename) => filename === '/foo.filter.test.ts'),
+    ).toBeDefined();
+  });
 });

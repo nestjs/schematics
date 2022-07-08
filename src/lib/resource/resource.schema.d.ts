@@ -22,6 +22,11 @@ export interface ResourceOptions {
    */
   spec?: boolean;
   /**
+   * Specifies the file suffix of spec files.
+   * @default "spec"
+   */
+  specFileSuffix?: string;
+  /**
    * The path to insert the module declaration.
    */
   module?: Path;

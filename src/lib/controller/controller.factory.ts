@@ -51,6 +51,10 @@ function transform(source: ControllerOptions): ControllerOptions {
   target.language =
     target.language !== undefined ? target.language : DEFAULT_LANGUAGE;
 
+  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+    source.specFileSuffix || 'spec',
+  );
+
   target.path = target.flat
     ? target.path
     : join(target.path as Path, target.name);
@@ -60,7 +64,13 @@ function transform(source: ControllerOptions): ControllerOptions {
 function generate(options: ControllerOptions) {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
-      options.spec ? noop() : filter((path) => !path.endsWith('.spec.ts')),
+      options.spec 
+        ? noop() 
+        : filter((path) => {
+            const languageExtension = options.language || 'ts';
+            const suffix = `.__specFileSuffix__.${languageExtension}`;
+            return !path.endsWith(suffix)
+        }),
       template({
         ...strings,
         ...options,

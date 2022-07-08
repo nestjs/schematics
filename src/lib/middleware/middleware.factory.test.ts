@@ -173,4 +173,38 @@ describe('Middleware Factory', () => {
         '}\n',
     );
   });
+  it('should create a spec file', async () => {
+    const options: MiddlewareOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('middleware', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.middleware.spec.ts'),
+    ).not.toBeUndefined();
+  });
+  it('should create a spec file with custom file suffix', async () => {
+    const options: MiddlewareOptions = {
+      name: 'foo',
+      spec: true,
+      specFileSuffix: 'test',
+      flat: true,
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('middleware', options)
+      .toPromise();
+    const files: string[] = tree.files;
+
+    expect(
+      files.find((filename) => filename === '/foo.middleware.spec.ts'),
+    ).toBeUndefined();
+    expect(
+      files.find((filename) => filename === '/foo.middleware.test.ts'),
+    ).not.toBeUndefined();
+  });
 });

@@ -32,6 +32,9 @@ function transform(options: ClassOptions): ClassOptions {
   const location: Location = new NameParser().parse(target);
 
   target.name = normalizeToKebabOrSnakeCase(location.name);
+  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+    options.specFileSuffix || 'spec',
+  );
   if (target.name.includes('.')) {
     target.className = strings.classify(target.name).replace('.', '');
   } else {
@@ -52,7 +55,13 @@ function transform(options: ClassOptions): ClassOptions {
 function generate(options: ClassOptions): Source {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
-      options.spec ? noop() : filter((path) => !path.endsWith('.spec.ts')),
+      options.spec
+        ? noop()
+        : filter((path) => {
+            const languageExtension = options.language || 'ts';
+            const suffix = `.__specFileSuffix__.${languageExtension}`;
+            return !path.endsWith(suffix);
+          }),
       template({
         ...strings,
         ...options,
