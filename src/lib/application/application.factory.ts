@@ -6,6 +6,7 @@ import {
   Rule,
   Source,
   template,
+  Tree,
   url,
 } from '@angular-devkit/schematics';
 import { basename, parse } from 'path';
@@ -74,8 +75,17 @@ function resolvePackageName(path: string) {
   return baseFilename;
 }
 
+const renameGitIgnores: Rule = (rootTree: Tree) => {
+  rootTree.visit((visitor) => {
+    if (visitor.includes('.template')) {
+      rootTree.rename(visitor, visitor.replace('.template', ''));
+    }
+  });
+};
+
 function generate(options: ApplicationOptions, path: string): Source {
   return apply(url(join('./files' as Path, options.language)), [
+    renameGitIgnores,
     template({
       ...strings,
       ...options,
