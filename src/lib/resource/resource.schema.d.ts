@@ -46,7 +46,8 @@ export interface ResourceOptions {
     | 'graphql-code-first'
     | 'graphql-schema-first'
     | 'microservice'
-    | 'ws';
+    | 'ws'
+    | 'cqrs';
   /**
    * When true, CRUD entry points are generated.
    */
