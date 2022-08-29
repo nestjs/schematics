@@ -48,7 +48,7 @@
     "pluralize": "8.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "17.1.1",
+    "@commitlint/cli": "17.1.2",
     "@commitlint/config-angular": "17.1.0",
     "@types/fs-extra": "9.0.13",
     "@types/jest": "28.1.8",
