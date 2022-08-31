@@ -108,7 +108,19 @@ function generate(options: ResourceOptions): Source {
         ) {
           return options.type === 'microservice' || options.type === 'rest';
         }
-        if (path.endsWith('.gateway.ts') || path.endsWith('.gateway.__specFileSuffix__.ts')) {
+        if (
+          path.endsWith('saga.ts') ||
+          path.endsWith('event.ts') ||
+          path.endsWith('handler.ts') ||
+          path.endsWith('command.ts') ||
+          path.endsWith('consumer.ts')
+        ) {
+          return options.type === 'cqrs';
+        }
+        if (
+          path.endsWith('.gateway.ts') ||
+          path.endsWith('.gateway.__specFileSuffix__.ts')
+        ) {
           return options.type === 'ws';
         }
         if (path.includes('@ent')) {
@@ -119,12 +131,12 @@ function generate(options: ResourceOptions): Source {
         }
         return true;
       }),
-      options.spec 
-        ? noop() 
+      options.spec
+        ? noop()
         : filter((path) => {
             const suffix = `.__specFileSuffix__.ts`;
-            return !path.endsWith(suffix)
-        }),
+            return !path.endsWith(suffix);
+          }),
       template({
         ...strings,
         ...options,
