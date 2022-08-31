@@ -50,7 +50,8 @@
         "graphql-code-first",
         "graphql-schema-first",
         "microservice",
-        "ws"
+        "ws",
+        "cqrs"
       ],
       "x-prompt": {
         "message": "What transport layer do you use?",
@@ -72,6 +73,10 @@
           {
             "value": "ws",
             "label": "WebSockets"
+          },
+          {
+            "value": "cqrs",
+            "label": "CQRS (Command Query Responsibility Segregation) REST API"
           }
         ]
       }
