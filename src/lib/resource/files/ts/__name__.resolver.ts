@@ -9,52 +9,52 @@ export class <%= classify(name) %>Resolver {
   constructor(private readonly <%= lowercased(name) %>Service: <%= classify(name) %>Service) {}<% if (crud && type === 'graphql-code-first') { %>
 
   @Mutation(() => <%= singular(classify(name)) %>)
-  create<%= singular(classify(name)) %>(@Args('create<%= singular(classify(name)) %>Input') create<%= singular(classify(name)) %>Input: Create<%= singular(classify(name)) %>Input) {
+  async create<%= singular(classify(name)) %>(@Args('create<%= singular(classify(name)) %>Input') create<%= singular(classify(name)) %>Input: Create<%= singular(classify(name)) %>Input) {
     return this.<%= lowercased(name) %>Service.create(create<%= singular(classify(name)) %>Input);
   }
 
   @Query(() => [<%= singular(classify(name)) %>], { name: '<%= lowercased(classify(name)) %>' })
-  findAll() {
+  async findAll() {
     return this.<%= lowercased(name) %>Service.findAll();
   }
 
   @Query(() => <%= singular(classify(name)) %>, { name: '<%= lowercased(singular(classify(name))) %>' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  async findOne(@Args('id', { type: () => Int }) id: number) {
     return this.<%= lowercased(name) %>Service.findOne(id);
   }
 
   @Mutation(() => <%= singular(classify(name)) %>)
-  update<%= singular(classify(name)) %>(@Args('update<%= singular(classify(name)) %>Input') update<%= singular(classify(name)) %>Input: Update<%= singular(classify(name)) %>Input) {
+  async update<%= singular(classify(name)) %>(@Args('update<%= singular(classify(name)) %>Input') update<%= singular(classify(name)) %>Input: Update<%= singular(classify(name)) %>Input) {
     return this.<%= lowercased(name) %>Service.update(update<%= singular(classify(name)) %>Input.id, update<%= singular(classify(name)) %>Input);
   }
 
   @Mutation(() => <%= singular(classify(name)) %>)
-  remove<%= singular(classify(name)) %>(@Args('id', { type: () => Int }) id: number) {
+  async remove<%= singular(classify(name)) %>(@Args('id', { type: () => Int }) id: number) {
     return this.<%= lowercased(name) %>Service.remove(id);
   }<% } else if (crud && type === 'graphql-schema-first') {%>
 
   @Mutation('create<%= singular(classify(name)) %>')
-  create(@Args('create<%= singular(classify(name)) %>Input') create<%= singular(classify(name)) %>Input: Create<%= singular(classify(name)) %>Input) {
+  async create(@Args('create<%= singular(classify(name)) %>Input') create<%= singular(classify(name)) %>Input: Create<%= singular(classify(name)) %>Input) {
     return this.<%= lowercased(name) %>Service.create(create<%= singular(classify(name)) %>Input);
   }
 
   @Query('<%= lowercased(classify(name)) %>')
-  findAll() {
+  async findAll() {
     return this.<%= lowercased(name) %>Service.findAll();
   }
 
   @Query('<%= lowercased(singular(classify(name))) %>')
-  findOne(@Args('id') id: number) {
+  async findOne(@Args('id') id: number) {
     return this.<%= lowercased(name) %>Service.findOne(id);
   }
 
   @Mutation('update<%= singular(classify(name)) %>')
-  update(@Args('update<%= singular(classify(name)) %>Input') update<%= singular(classify(name)) %>Input: Update<%= singular(classify(name)) %>Input) {
+  async update(@Args('update<%= singular(classify(name)) %>Input') update<%= singular(classify(name)) %>Input: Update<%= singular(classify(name)) %>Input) {
     return this.<%= lowercased(name) %>Service.update(update<%= singular(classify(name)) %>Input.id, update<%= singular(classify(name)) %>Input);
   }
 
   @Mutation('remove<%= singular(classify(name)) %>')
-  remove(@Args('id') id: number) {
+  async remove(@Args('id') id: number) {
     return this.<%= lowercased(name) %>Service.remove(id);
   }<% } %>
 }

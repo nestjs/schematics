@@ -113,27 +113,27 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
 }
@@ -148,23 +148,23 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  async findAll() {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return \`This action removes a #\${id} user\`;
   }
 }
@@ -404,27 +404,27 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @MessagePattern('createUser')
-  create(@Payload() createUserDto: CreateUserDto) {
+  async create(@Payload() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @MessagePattern('findAllUsers')
-  findAll() {
+  async findAll() {
     return this.usersService.findAll();
   }
 
   @MessagePattern('findOneUser')
-  findOne(@Payload() id: number) {
+  async findOne(@Payload() id: number) {
     return this.usersService.findOne(id);
   }
 
   @MessagePattern('updateUser')
-  update(@Payload() updateUserDto: UpdateUserDto) {
+  async update(@Payload() updateUserDto: UpdateUserDto) {
     return this.usersService.update(updateUserDto.id, updateUserDto);
   }
 
   @MessagePattern('removeUser')
-  remove(@Payload() id: number) {
+  async remove(@Payload() id: number) {
     return this.usersService.remove(id);
   }
 }
@@ -439,23 +439,23 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  async findAll() {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return \`This action removes a #\${id} user\`;
   }
 }
@@ -698,27 +698,27 @@ export class UsersGateway {
   constructor(private readonly usersService: UsersService) {}
 
   @SubscribeMessage('createUser')
-  create(@MessageBody() createUserDto: CreateUserDto) {
+  async create(@MessageBody() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @SubscribeMessage('findAllUsers')
-  findAll() {
+  async findAll() {
     return this.usersService.findAll();
   }
 
   @SubscribeMessage('findOneUser')
-  findOne(@MessageBody() id: number) {
+  async findOne(@MessageBody() id: number) {
     return this.usersService.findOne(id);
   }
 
   @SubscribeMessage('updateUser')
-  update(@MessageBody() updateUserDto: UpdateUserDto) {
+  async update(@MessageBody() updateUserDto: UpdateUserDto) {
     return this.usersService.update(updateUserDto.id, updateUserDto);
   }
 
   @SubscribeMessage('removeUser')
-  remove(@MessageBody() id: number) {
+  async remove(@MessageBody() id: number) {
     return this.usersService.remove(id);
   }
 }
@@ -732,23 +732,23 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  async findAll() {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return \`This action removes a #\${id} user\`;
   }
 }
@@ -988,27 +988,27 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Mutation(() => User)
-  createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
+  async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
     return this.usersService.create(createUserInput);
   }
 
   @Query(() => [User], { name: 'users' })
-  findAll() {
+  async findAll() {
     return this.usersService.findAll();
   }
 
   @Query(() => User, { name: 'user' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  async findOne(@Args('id', { type: () => Int }) id: number) {
     return this.usersService.findOne(id);
   }
 
   @Mutation(() => User)
-  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
+  async updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
     return this.usersService.update(updateUserInput.id, updateUserInput);
   }
 
   @Mutation(() => User)
-  removeUser(@Args('id', { type: () => Int }) id: number) {
+  async removeUser(@Args('id', { type: () => Int }) id: number) {
     return this.usersService.remove(id);
   }
 }
@@ -1022,23 +1022,23 @@ import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
 export class UsersService {
-  create(createUserInput: CreateUserInput) {
+  async create(createUserInput: CreateUserInput) {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  async findAll() {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
+  async update(id: number, updateUserInput: UpdateUserInput) {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return \`This action removes a #\${id} user\`;
   }
 }
@@ -1230,27 +1230,27 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Mutation('createUser')
-  create(@Args('createUserInput') createUserInput: CreateUserInput) {
+  async create(@Args('createUserInput') createUserInput: CreateUserInput) {
     return this.usersService.create(createUserInput);
   }
 
   @Query('users')
-  findAll() {
+  async findAll() {
     return this.usersService.findAll();
   }
 
   @Query('user')
-  findOne(@Args('id') id: number) {
+  async findOne(@Args('id') id: number) {
     return this.usersService.findOne(id);
   }
 
   @Mutation('updateUser')
-  update(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
+  async update(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
     return this.usersService.update(updateUserInput.id, updateUserInput);
   }
 
   @Mutation('removeUser')
-  remove(@Args('id') id: number) {
+  async remove(@Args('id') id: number) {
     return this.usersService.remove(id);
   }
 }
@@ -1264,23 +1264,23 @@ import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
 export class UsersService {
-  create(createUserInput: CreateUserInput) {
+  async create(createUserInput: CreateUserInput) {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  async findAll() {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
+  async update(id: number, updateUserInput: UpdateUserInput) {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return \`This action removes a #\${id} user\`;
   }
 }
