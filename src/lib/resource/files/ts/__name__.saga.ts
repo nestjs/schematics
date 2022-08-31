@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Saga, ICommand, ofType } from '@nestjs/cqrs';
 import { Observable, map } from 'rxjs';
-import { <%= singular(classify(name)) %>CreatedEvent } from './events/<%= singular(name) %>-created.event';
+import { <%= classify(name) %>CreatedEvent } from './events/<%= singular(name) %>-created.event';
 import { Remove<%= singular(classify(name)) %>Command } from './commands/remove-<%= singular(name) %>.command';
 
 const oneMinute = 1 * 60 * 1000;

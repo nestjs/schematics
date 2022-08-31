@@ -106,7 +106,11 @@ function generate(options: ResourceOptions): Source {
           path.endsWith('controller.ts') ||
           path.endsWith('.controller.__specFileSuffix__.ts')
         ) {
-          return options.type === 'microservice' || options.type === 'rest';
+          return (
+            options.type === 'microservice' ||
+            options.type === 'rest' ||
+            options.type === 'cqrs'
+          );
         }
         if (
           path.endsWith('saga.ts') ||
