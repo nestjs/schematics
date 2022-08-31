@@ -4,4 +4,17 @@
 export class <%= singular(classify(name)) %> {
   @Field(() => Int, { description: 'Example field (placeholder)' })
   exampleField: number;
-}<% } else { %>export class <%= singular(classify(name)) %> {}<% } %>
+}<% } if (type !== 'graphql-code-first' && type !== 'cqrs') { %>export class <%= singular(classify(name)) %> {}<% } %>
+<% if (type === 'cqrs') { %>
+import { AggregateRoot } from '@nestjs/cqrs';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class <%= singular(classify(name)) %> extends AggregateRoot {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ length: 50 })
+  name: string;
+}
+<% } %>
