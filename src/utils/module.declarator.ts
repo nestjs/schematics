@@ -11,6 +11,7 @@ export interface DeclarationOptions {
   path: Path;
   module: Path;
   symbol?: string;
+  skipImport?: boolean;
   staticOptions?: {
     name: string;
     value: Record<string, any>;
@@ -25,7 +26,9 @@ export class ModuleDeclarator {
 
   public declare(content: string, options: DeclarationOptions): string {
     options = this.computeSymbol(options);
-    content = this.imports.declare(content, options);
+    if (options.skipImport !== undefined && options.skipImport) {
+      content = this.imports.declare(content, options);
+    }
     content = this.metadata.declare(content, options);
     return content;
   }

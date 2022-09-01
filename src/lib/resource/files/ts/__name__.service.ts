@@ -24,8 +24,8 @@ import { InjectQueue } from '@nestjs/bull';
 export class <%= classify(name) %>Service {<% if (crud) { %>
   <% if (type === 'cqrs') { %>
   constructor(
-    @InjectRepository(<%= classify(name) %>)
-    private readonly <%= singular(name) %>Repository: Repository<<%= classify(name) %>>,
+    @InjectRepository(<%= singular(classify(name)) %>)
+    private readonly <%= singular(name) %>Repository: Repository<<%= singular(classify(name)) %>>,
     private commandBus: CommandBus,
     private eventBus: EventBus,
     @InjectQueue('<%= singular(name) %>-queue') private <%= singular(name) %>Queue: Queue,
@@ -38,9 +38,10 @@ export class <%= classify(name) %>Service {<% if (crud) { %>
   }<% } %>
 
   create(<% if (type !== 'graphql-code-first' && type !== 'graphql-schema-first') { %>create<%= singular(classify(name)) %>Dto: Create<%= singular(classify(name)) %>Dto<% } else { %>create<%= singular(classify(name)) %>Input: Create<%= singular(classify(name)) %>Input<% } %>) {
-    <% if (type === 'cqrs') { %>this.eventBus.publish(new <%= classify(name) %>CreatedEvent(create<%= singular(classify(name)) %>Dto));
+    <% if (type === 'cqrs') { %>this.eventBus.publish(new <%= singular(classify(name)) %>CreatedEvent(create<%= singular(classify(name)) %>Dto));
     <% } %>
-    return 'This action adds a new <%= lowercased(singular(classify(name))) %>';
+    <% if (type === 'cqrs') { %>return this.<%= singular(name) %>Repository.save(create<%= singular(classify(name)) %>Dto);
+    <% } else { %>return 'This action adds a new <%= lowercased(singular(classify(name))) %>';
   }
 
   findAll() {
@@ -57,9 +58,10 @@ export class <%= classify(name) %>Service {<% if (crud) { %>
   }
   <% } %>
   update(id: number, <% if (type !== 'graphql-code-first' && type !== 'graphql-schema-first') { %>update<%= singular(classify(name)) %>Dto: Update<%= singular(classify(name)) %>Dto<% } else { %>update<%= singular(classify(name)) %>Input: Update<%= singular(classify(name)) %>Input<% } %>) {
-    <% if (type === 'cqrs') { %>this.eventBus.publish(new <%= classify(name) %>UpdatedEvent(id, update<%= singular(classify(name)) %>Dto));
+    <% if (type === 'cqrs') { %>this.eventBus.publish(new <%= singular(classify(name)) %>UpdatedEvent(id, update<%= singular(classify(name)) %>Dto));
     <% } %>
-    return `This action updates a #${id} <%= lowercased(singular(classify(name))) %>`;
+    <% if (type === 'cqrs') { %>return this.<%= singular(name) %>Repository.save({id, ...update<%= singular(classify(name)) %>Dto});
+    <% } else { %>return `This action updates a #${id} <%= lowercased(singular(classify(name))) %>`;
   }
   <% if (type === 'cqrs') { %>
   async fireRemove(id: number) {
@@ -68,8 +70,10 @@ export class <%= classify(name) %>Service {<% if (crud) { %>
   }
   <% } %>
   remove(id: number) {
-    <% if (type === 'cqrs') { %>this.eventBus.publish(new <%= classify(name) %>RemovedEvent(id));
+    <% if (type === 'cqrs') { %>this.eventBus.publish(new <%= singular(classify(name)) %>RemovedEvent(id));
     <% } %>
-    return `This action removes a #${id} <%= lowercased(singular(classify(name))) %>`;
+    <% if (type === 'cqrs') { %>return this.<%= singular(name) %>Repository.delete(id);
+    <% } else { %>return `This action removes a #${id} <%= lowercased(singular(classify(name))) %>`;
+    <% } %>
   }
 <% } %>}

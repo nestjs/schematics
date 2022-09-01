@@ -11,7 +11,7 @@ import { <%= singular(classify(name)) %>CreatedHandler } from './event-handlers/
 import { <%= singular(classify(name)) %>UpdatedHandler } from './event-handlers/<%= singular(name) %>-updated.handler';
 import { <%= singular(classify(name)) %>RemovedHandler } from './event-handlers/<%= singular(name) %>-removed.handler';
 import { CqrsModule } from '@nestjs/cqrs';
-import { <%= classify(name) %>Sagas } from './<%= name %>.saga';
+import { <%= singular(classify(name)) %>Sagas } from './<%= name %>.saga';
 import { <%= classify(name) %>Consumer } from './consumers/<%= singular(name) %>.consumer';
 import { BullModule } from '@nestjs/bull';
 
@@ -21,16 +21,16 @@ export const CommandHandlers = [
   Remove<%= singular(classify(name)) %>Handler,
 ];
 export const EventHandlers = [
-  <%= classify(name) %>CreatedHandler,
-  <%= classify(name) %>UpdatedHandler,
-  <%= classify(name) %>RemovedHandler,
+  <%= singular(classify(name)) %>CreatedHandler,
+  <%= singular(classify(name)) %>UpdatedHandler,
+  <%= singular(classify(name)) %>RemovedHandler,
 ];
 export const Consumers = [<%= classify(name) %>Consumer];
 <% } %>
 
 @Module({
   <% if (type === 'cqrs') { %>imports: [
-    TypeOrmModule.forFeature([<%= classify(name) %>]),
+    TypeOrmModule.forFeature([<%= singular(classify(name)) %>]),
     CqrsModule,
     BullModule.registerQueue({
       name: '<%= singular(name) %>-queue',
@@ -38,6 +38,6 @@ export const Consumers = [<%= classify(name) %>Consumer];
   ],<% } %>
   <% if (type === 'rest' || type === 'microservice') { %>controllers: [<%= classify(name) %>Controller],
   providers: [<%= classify(name) %>Service]<% } else if (type === 'graphql-code-first' || type === 'graphql-schema-first') { %>providers: [<%= classify(name) %>Resolver, <%= classify(name) %>Service]<% } else if (type === 'cqrs') { %>controllers: [<%= classify(name) %>Controller],
-    providers: [<%= classify(name) %>Service, <%= classify(name) %>Sagas, ...CommandHandlers, ...EventHandlers, ...Consumers]<% } else { %>providers: [<%= classify(name) %>Gateway, <%= classify(name) %>Service]<% } %>
+    providers: [<%= classify(name) %>Service, <%= singular(classify(name)) %>Sagas, ...CommandHandlers, ...EventHandlers, ...Consumers]<% } else { %>providers: [<%= classify(name) %>Gateway, <%= classify(name) %>Service]<% } %>
 })
 export class <%= classify(name) %>Module {}

@@ -76,7 +76,7 @@
           },
           {
             "value": "cqrs",
-            "label": "CQRS (Command Query Responsibility Segregation) REST API"
+            "label": "CQRS (Command Query Responsibility Segregation) REST API + Bull"
           }
         ]
       }

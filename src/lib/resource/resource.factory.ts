@@ -207,7 +207,10 @@ function addBullQueueModuleDeclarationIfApplies(
       declarator.declare(content, {
         ...options,
         className: 'BullModule',
-        type: 'module',
+        type: undefined,
+        path: '@nestjs' as Path,
+        name: 'bull',
+        skipImport: true,
         staticOptions: {
           name: 'registerQueue',
           value: { name: `${pluralize.singular(options.name)}-queue` },

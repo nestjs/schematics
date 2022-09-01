@@ -20,7 +20,7 @@ export class <%= classify(name) %>Consumer {
     if (created) {
       job.update({ id: created.id });
       await job.progress(100);
-      this.eventBus.publish(new <%= classify(name) %>CreatedEvent(created.id));
+      this.eventBus.publish(new <%= singular(classify(name)) %>CreatedEvent(created.id));
     }
   }
 
@@ -31,16 +31,16 @@ export class <%= classify(name) %>Consumer {
     if (updated) {
       job.update({ id: updated.id });
       await job.progress(100);
-      this.eventBus.publish(new <%= classify(name) %>UpdatedEvent(updated.id));
+      this.eventBus.publish(new <%= singular(classify(name)) %>UpdatedEvent(updated.id));
     }
   }
 
   @Process('remove-<%= singular(name) %>')
   async remove(job: Job) {
     const removed = this.<%= singular(name) %>Service.remove(job.data.id);
-    if (removed) {
+    if (removed.affected === 1) {
       await job.progress(100);
-      this.eventBus.publish(new <%= classify(name) %>RemovedEvent(removed.id));
+      this.eventBus.publish(new <%= singular(classify(name)) %>RemovedEvent(job.data.id));
     }
     await job.discard();
   }
