@@ -18,7 +18,7 @@ export class <%= classify(name) %>Consumer {
     const { dto } = job.data;
     const created = await this.<%= singular(name) %>Service.create(create<%= classify(name) %>Dto, files);
     if (created) {
-      job.update({ <%= singular(name) %>Id: created.id });
+      job.update({ id: created.id });
       await job.progress(100);
       this.eventBus.publish(new <%= classify(name) %>CreatedEvent(created.id));
     }
@@ -29,7 +29,7 @@ export class <%= classify(name) %>Consumer {
     const { dto, id } = job.data;
     const updated = await this.<%= singular(name) %>Service.update(id, update<%= classify(name) %>Dto);
     if (updated) {
-      job.update({ <%= singular(name) %>Id: updated.id });
+      job.update({ id: updated.id });
       await job.progress(100);
       this.eventBus.publish(new <%= classify(name) %>UpdatedEvent(created.id));
     }
