@@ -1,10 +1,10 @@
 import { Processor, Process, OnQueueActive } from '@nestjs/bull';
 import { Job } from 'bull';
-import { <%= classify(name) %>CreatedEvent } from '../events/<%= singular(name) %>-created.event';
-import { <%= classify(name) %>UpdatedEvent } from '../events/<%= singular(name) %>-updated.event';
-import { <%= classify(name) %>RemovedEvent } from '../events/<%= singular(name) %>-removed.event';
+import { <%= singular(classify(name)) %>CreatedEvent } from '../events/<%= singular(name) %>-created.event';
+import { <%= singular(classify(name)) %>UpdatedEvent } from '../events/<%= singular(name) %>-updated.event';
+import { <%= singular(classify(name)) %>RemovedEvent } from '../events/<%= singular(name) %>-removed.event';
 import { EventBus } from '@nestjs/cqrs';
-import { <%= classify(name) %>Service } from '../<%= singular(name) %>.service';
+import { <%= classify(name) %>Service } from '../<%= name %>.service';
 
 @Processor('<%= singular(name) %>-queue')
 export class <%= classify(name) %>Consumer {
@@ -31,7 +31,7 @@ export class <%= classify(name) %>Consumer {
     if (updated) {
       job.update({ id: updated.id });
       await job.progress(100);
-      this.eventBus.publish(new <%= classify(name) %>UpdatedEvent(created.id));
+      this.eventBus.publish(new <%= classify(name) %>UpdatedEvent(updated.id));
     }
   }
 

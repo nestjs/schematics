@@ -3,15 +3,15 @@ import { <%= classify(name) %>Service } from './<%= name %>.service';
 <% if (type === 'rest' || type === 'microservice' || type === 'cqrs') { %>import { <%= classify(name) %>Controller } from './<%= name %>.controller';<% } %><% if (type === 'graphql-code-first' || type === 'graphql-schema-first') { %>import { <%= classify(name) %>Resolver } from './<%= name %>.resolver';<% } %><% if (type === 'ws') { %>import { <%= classify(name) %>Gateway } from './<%= name %>.gateway';<% } %>
 <% if (type === 'cqrs') { %>
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { <%= classify(name) %> } from './entities/<%= singular(name) %>.entity';
+import { <%= singular(classify(name)) %> } from './entities/<%= singular(name) %>.entity';
 import { Create<%= singular(classify(name)) %>Handler } from './command-handlers/create-<%= singular(name) %>.handler';
 import { Update<%= singular(classify(name)) %>Handler } from './command-handlers/update-<%= singular(name) %>.handler';
 import { Remove<%= singular(classify(name)) %>Handler } from './command-handlers/remove-<%= singular(name) %>.handler';
-import { <%= classify(name) %>CreatedHandler } from './event-handlers/<%= singular(name) %>-created.handler';
-import { <%= classify(name) %>UpdatedHandler } from './event-handlers/<%= singular(name) %>-updated.handler';
-import { <%= classify(name) %>RemovedHandler } from './event-handlers/<%= singular(name) %>-removed.handler';
+import { <%= singular(classify(name)) %>CreatedHandler } from './event-handlers/<%= singular(name) %>-created.handler';
+import { <%= singular(classify(name)) %>UpdatedHandler } from './event-handlers/<%= singular(name) %>-updated.handler';
+import { <%= singular(classify(name)) %>RemovedHandler } from './event-handlers/<%= singular(name) %>-removed.handler';
 import { CqrsModule } from '@nestjs/cqrs';
-import { <%= classify(name) %>Sagas } from './<%= singular(name) %>.saga';
+import { <%= classify(name) %>Sagas } from './<%= name %>.saga';
 import { <%= classify(name) %>Consumer } from './consumers/<%= singular(name) %>.consumer';
 import { BullModule } from '@nestjs/bull';
 
