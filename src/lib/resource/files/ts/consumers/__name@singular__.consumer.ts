@@ -16,7 +16,7 @@ export class <%= classify(name) %>Consumer {
   @Process('create-<%= singular(name) %>')
   async create(job: Job) {
     const { dto } = job.data;
-    const created = await this.<%= singular(name) %>Service.create(create<%= classify(name) %>Dto, files);
+    const created = await this.<%= singular(name) %>Service.create(dto);
     if (created) {
       job.update({ id: created.id });
       await job.progress(100);
@@ -27,7 +27,7 @@ export class <%= classify(name) %>Consumer {
   @Process('update-<%= singular(name) %>')
   async update(job: Job) {
     const { dto, id } = job.data;
-    const updated = await this.<%= singular(name) %>Service.update(id, update<%= classify(name) %>Dto);
+    const updated = await this.<%= singular(name) %>Service.update(id, dto);
     if (updated) {
       job.update({ id: updated.id });
       await job.progress(100);
@@ -37,7 +37,7 @@ export class <%= classify(name) %>Consumer {
 
   @Process('remove-<%= singular(name) %>')
   async remove(job: Job) {
-    const removed = this.<%= singular(name) %>Service.remove(job.data.<%= singular(name) %>Id);
+    const removed = this.<%= singular(name) %>Service.remove(job.data.id);
     if (removed) {
       await job.progress(100);
       this.eventBus.publish(new <%= classify(name) %>RemovedEvent(removed.id));
