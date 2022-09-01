@@ -37,6 +37,7 @@ export function main(options: ResourceOptions): Rule {
       chain([
         addMappedTypesDependencyIfApplies(options),
         mergeSourceRoot(options),
+        addBullQueueModuleDeclarationIfApplies(options),
         addDeclarationToModule(options),
         mergeWith(generate(options)),
       ]),
@@ -176,6 +177,41 @@ function addDeclarationToModule(options: ResourceOptions): Rule {
       declarator.declare(content, {
         ...options,
         type: 'module',
+      } as DeclarationOptions),
+    );
+    return tree;
+  };
+}
+
+function addBullQueueModuleDeclarationIfApplies(
+  options: ResourceOptions,
+): Rule {
+  return (tree: Tree) => {
+    if (
+      (options.skipImport !== undefined && options.skipImport) ||
+      options.type !== 'cqrs'
+    ) {
+      return tree;
+    }
+    options.module = new ModuleFinder(tree).find({
+      name: options.name,
+      path: options.path as Path,
+    });
+    if (!options.module) {
+      return tree;
+    }
+    const content = tree.read(options.module).toString();
+    const declarator: ModuleDeclarator = new ModuleDeclarator();
+    tree.overwrite(
+      options.module,
+      declarator.declare(content, {
+        ...options,
+        className: 'BullModule',
+        type: 'module',
+        staticOptions: {
+          name: 'registerQueue',
+          value: { name: `${options.name}-queue` },
+        },
       } as DeclarationOptions),
     );
     return tree;
