@@ -210,7 +210,7 @@ function addBullQueueModuleDeclarationIfApplies(
         type: 'module',
         staticOptions: {
           name: 'registerQueue',
-          value: { name: `${options.name}-queue` },
+          value: { name: `${pluralize.singular(options.name)}-queue` },
         },
       } as DeclarationOptions),
     );
