@@ -3,7 +3,6 @@ import { Create<%= singular(classify(name)) %>Dto } from './dto/create-<%= singu
 import { Update<%= singular(classify(name)) %>Dto } from './dto/update-<%= singular(name) %>.dto';<% } else if (crud) { %>
 import { Create<%= singular(classify(name)) %>Input } from './dto/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './dto/update-<%= singular(name) %>.input';<% } %>
-
 <% if (crud && type === 'cqrs') { %>
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { Create<%= singular(classify(name)) %>Command } from './commands/create-<%= singular(name) %>.command';
@@ -41,7 +40,7 @@ export class <%= classify(name) %>Service {<% if (crud) { %>
     <% if (type === 'cqrs') { %>this.eventBus.publish(new <%= singular(classify(name)) %>CreatedEvent(create<%= singular(classify(name)) %>Dto));
     <% } %>
     <% if (type === 'cqrs') { %>return this.<%= singular(name) %>Repository.save(create<%= singular(classify(name)) %>Dto);
-    <% } else { %>return 'This action adds a new <%= lowercased(singular(classify(name))) %>';
+    <% } else { %>return 'This action adds a new <%= lowercased(singular(classify(name))) %>';<% } %>
   }
 
   findAll() {
@@ -61,7 +60,7 @@ export class <%= classify(name) %>Service {<% if (crud) { %>
     <% if (type === 'cqrs') { %>this.eventBus.publish(new <%= singular(classify(name)) %>UpdatedEvent(id, update<%= singular(classify(name)) %>Dto));
     <% } %>
     <% if (type === 'cqrs') { %>return this.<%= singular(name) %>Repository.save({id, ...update<%= singular(classify(name)) %>Dto});
-    <% } else { %>return `This action updates a #${id} <%= lowercased(singular(classify(name))) %>`;
+    <% } else { %>return `This action updates a #${id} <%= lowercased(singular(classify(name))) %>`;<% } %>
   }
   <% if (type === 'cqrs') { %>
   async fireRemove(id: number) {

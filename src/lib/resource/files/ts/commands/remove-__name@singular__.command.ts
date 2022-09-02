@@ -2,6 +2,7 @@ import { Remove<%= singular(classify(name)) %>Dto } from '../dto/remove-<%= sing
 
 export class Remove<%= singular(classify(name)) %>Command {
   constructor(
-    public readonly id: number
+    public readonly id: number,
+    public readonly delay: number = 0
   ) {}
 }

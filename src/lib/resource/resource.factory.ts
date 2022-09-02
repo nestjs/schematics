@@ -37,8 +37,8 @@ export function main(options: ResourceOptions): Rule {
       chain([
         addMappedTypesDependencyIfApplies(options),
         mergeSourceRoot(options),
-        addBullQueueModuleDeclarationIfApplies(options),
         addDeclarationToModule(options),
+        addBullQueueModuleDeclarationIfApplies(options),
         mergeWith(generate(options)),
       ]),
     )(tree, context);
@@ -177,6 +177,7 @@ function addDeclarationToModule(options: ResourceOptions): Rule {
       declarator.declare(content, {
         ...options,
         type: 'module',
+        skipImport: false,
       } as DeclarationOptions),
     );
     return tree;

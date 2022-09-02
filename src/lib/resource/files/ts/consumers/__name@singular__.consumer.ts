@@ -37,7 +37,7 @@ export class <%= classify(name) %>Consumer {
 
   @Process('remove-<%= singular(name) %>')
   async remove(job: Job) {
-    const removed = this.<%= singular(name) %>Service.remove(job.data.id);
+    const removed = await this.<%= singular(name) %>Service.remove(job.data.id);
     if (removed.affected === 1) {
       await job.progress(100);
       this.eventBus.publish(new <%= singular(classify(name)) %>RemovedEvent(job.data.id));

@@ -10,6 +10,10 @@ export class Remove<%= singular(classify(name)) %>Handler implements ICommandHan
   async execute(command: Remove<%= singular(classify(name)) %>Command) {
     return this.<%= singular(name) %>Queue.add('remove-<%= singular(name) %>', {
       id: command.id
-    });
+    },
+    {
+      delay: command.delay
+    }
+    );
   }
 }
