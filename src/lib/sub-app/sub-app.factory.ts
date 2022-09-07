@@ -43,7 +43,7 @@ export function main(options: SubAppOptions): Rule {
   options = transform(options);
   return chain([
     updateTsConfig(),
-    updatePackageJson(options, appName),
+    updatePackageJson(options),
     (tree, context) =>
       isMonorepo(tree)
         ? noop()(tree, context)
@@ -52,6 +52,7 @@ export function main(options: SubAppOptions): Rule {
             moveDefaultAppToApps(options.path, appName, options.sourceRoot),
           ])(tree, context),
     addAppsToCliOptions(options.path, options.name, appName),
+    addAppsToE2eOptions(options.path, options.name, appName),
     branchAndMerge(mergeWith(generate(options))),
   ]);
 }
@@ -145,7 +146,7 @@ function updateTsConfig() {
   };
 }
 
-function updatePackageJson(options: SubAppOptions, defaultAppName: string) {
+function updatePackageJson(options: SubAppOptions) {
   return (host: Tree) => {
     if (!host.exists('package.json')) {
       return host;
@@ -154,7 +155,7 @@ function updatePackageJson(options: SubAppOptions, defaultAppName: string) {
       host,
       'package.json',
       (packageJson: Record<string, any>) => {
-        updateNpmScripts(packageJson.scripts, options, defaultAppName);
+        updateNpmScripts(packageJson.scripts, options);
         updateJestOptions(packageJson.jest, options);
       },
     );
@@ -164,7 +165,6 @@ function updatePackageJson(options: SubAppOptions, defaultAppName: string) {
 function updateNpmScripts(
   scripts: Record<string, any>,
   options: SubAppOptions,
-  defaultAppName: string,
 ) {
   if (!scripts) {
     return;
@@ -178,15 +178,9 @@ function updateNpmScripts(
     scripts[defaultTestScriptName] &&
     scripts[defaultTestScriptName].indexOf(options.path as string) < 0
   ) {
-    const defaultTestDir = 'test';
-    const newTestDir = join(
-      options.path as Path,
-      defaultAppName,
-      defaultTestDir,
-    );
-    scripts[defaultTestScriptName] = (
-      scripts[defaultTestScriptName] as string
-    ).replace(defaultTestDir, newTestDir);
+    scripts[
+      defaultTestScriptName
+      ] = `jest --config jest-e2e.json`;
   }
   if (
     scripts[defaultFormatScriptName] &&
@@ -299,6 +293,41 @@ function addAppsToCliOptions(
   };
 }
 
+function addAppsToE2eOptions(
+  projectRoot: string,
+  projectName: string,
+  appName: string,
+): Rule {
+  return (host: Tree) => {
+    const rootE2eFilePath = 'jest-e2e.json';
+    const rootE2eFileExists = host.exists(rootE2eFilePath);
+    if (!rootE2eFileExists) {
+      host.create(rootE2eFilePath, '{}');
+    }
+
+    return updateJsonFile(
+      host,
+      rootE2eFilePath,
+      (optionsFile: Record<string, any>) => {
+        updateMainAppE2eOptions(optionsFile, projectRoot, appName);
+        if (!optionsFile.projects) {
+          optionsFile.projects = [] as string[];
+        }
+
+        for (const project of optionsFile.projects as string) {
+          if (project.includes(`${projectRoot}/${projectName}/test/jest-e2e.json`)) {
+            throw new SchematicsException(
+              `Project "${projectName}" exists in the root E2E config already.`,
+            );
+          }
+        }
+
+        optionsFile.projects.push(`${projectRoot}/${projectName}/test/jest-e2e.json`);
+      },
+    );
+  }
+}
+
 function updateMainAppOptions(
   optionsFile: Record<string, any>,
   projectRoot: string,
@@ -335,6 +364,21 @@ function updateMainAppOptions(
       tsConfigPath,
     },
   };
+}
+
+function updateMainAppE2eOptions(
+  optionsFile: Record<string, any>,
+  projectRoot: string,
+  appName: string,
+) {
+  if (optionsFile.projects) {
+    return;
+  }
+  const rootFilePath = join(projectRoot as Path, appName);
+  const e2ePath = join(rootFilePath, 'test/jest-e2e.json');
+
+  optionsFile.projects = [] as string[];
+  optionsFile.projects.push(e2ePath);
 }
 
 function generateWorkspace(options: SubAppOptions, appName: string): Source {
