@@ -170,8 +170,13 @@ function updateNpmScripts(
     return;
   }
   const defaultFormatScriptName = 'format';
+  const defaultStartScriptName = 'start:prod';
   const defaultTestScriptName = 'test:e2e';
-  if (!scripts[defaultTestScriptName] && !scripts[defaultFormatScriptName]) {
+  if (
+    !scripts[defaultTestScriptName] &&
+    !scripts[defaultFormatScriptName] &&
+    !scripts[defaultStartScriptName]
+  ) {
     return;
   }
   if (
@@ -197,6 +202,16 @@ function updateNpmScripts(
     scripts[
       defaultFormatScriptName
     ] = `prettier --write "${defaultSourceRoot}/**/*.ts" "${DEFAULT_LIB_PATH}/**/*.ts"`;
+  }
+  if (
+    scripts[defaultStartScriptName] &&
+    scripts[defaultStartScriptName].indexOf('dist/main') >= 0
+  ) {
+    const defaultSourceRoot =
+      options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
+    scripts[
+      defaultStartScriptName
+      ] = `node dist/${defaultSourceRoot}/${defaultAppName}/main`;
   }
 }
 
