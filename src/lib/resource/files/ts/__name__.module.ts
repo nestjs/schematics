@@ -25,8 +25,7 @@ export const EventHandlers = [
   <%= singular(classify(name)) %>UpdatedHandler,
   <%= singular(classify(name)) %>RemovedHandler,
 ];
-export const Consumers = [<%= classify(name) %>Consumer];
-<% } %>
+export const Consumers = [<%= classify(name) %>Consumer];<% } %>
 
 @Module({
   <% if (type === 'cqrs') { %>imports: [
@@ -35,8 +34,7 @@ export const Consumers = [<%= classify(name) %>Consumer];
     BullModule.registerQueue({
       name: '<%= singular(name) %>-queue',
     }),
-  ],<% } %>
-  <% if (type === 'rest' || type === 'microservice') { %>controllers: [<%= classify(name) %>Controller],
+  ],<% } %><% if (type === 'rest' || type === 'microservice') { %>controllers: [<%= classify(name) %>Controller],
   providers: [<%= classify(name) %>Service]<% } else if (type === 'graphql-code-first' || type === 'graphql-schema-first') { %>providers: [<%= classify(name) %>Resolver, <%= classify(name) %>Service]<% } else if (type === 'cqrs') { %>controllers: [<%= classify(name) %>Controller],
     providers: [<%= classify(name) %>Service, <%= singular(classify(name)) %>Sagas, ...CommandHandlers, ...EventHandlers, ...Consumers]<% } else { %>providers: [<%= classify(name) %>Gateway, <%= classify(name) %>Service]<% } %>
 })
