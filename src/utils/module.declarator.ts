@@ -25,8 +25,9 @@ export class ModuleDeclarator {
   ) {}
 
   public declare(content: string, options: DeclarationOptions): string {
+    const skipImport = options.skipImport ?? false;
     options = this.computeSymbol(options);
-    if (options.skipImport !== undefined && options.skipImport === false) {
+    if (skipImport === false) {
       content = this.imports.declare(content, options);
     }
     content = this.metadata.declare(content, options);
