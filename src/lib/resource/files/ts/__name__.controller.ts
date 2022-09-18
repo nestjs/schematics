@@ -10,16 +10,17 @@ import { Update<%= singular(classify(name)) %>Dto } from './dto/update-<%= singu
 <% if (type === 'rest' || type === 'cqrs') { %>@Controller('<%= dasherize(name) %>')<% } else { %>@Controller()<% } %>
 export class <%= classify(name) %>Controller {
   constructor(private readonly <%= lowercased(name) %>Service: <%= classify(name) %>Service) {}<% if (type === 'rest' && crud || type === 'cqrs' && crud) { %>
-  <% if (type === 'cqrs') { %>
+<% if (type === 'cqrs') { %>
   @Post()
   create(@Body() create<%= singular(classify(name)) %>Dto: Create<%= singular(classify(name)) %>Dto) {
     return this.<%= lowercased(name) %>Service.fireCreate(create<%= singular(classify(name)) %>Dto);
-  }<% } else { %>
+  }
+<% } else { %>
   @Post()
   create(@Body() create<%= singular(classify(name)) %>Dto: Create<%= singular(classify(name)) %>Dto) {
     return this.<%= lowercased(name) %>Service.create(create<%= singular(classify(name)) %>Dto);
   }
-  <% } %>
+<% } %>
   @Get()
   findAll() {
     return this.<%= lowercased(name) %>Service.findAll();
@@ -29,7 +30,7 @@ export class <%= classify(name) %>Controller {
   findOne(@Param('id') id: string) {
     return this.<%= lowercased(name) %>Service.findOne(+id);
   }
-  <% if (type === 'cqrs') { %>
+<% if (type === 'cqrs') { %>
   @Post()
   @Patch(':id')
   update(@Param('id') id: string, @Body() update<%= singular(classify(name)) %>Dto: Update<%= singular(classify(name)) %>Dto) {
@@ -38,9 +39,8 @@ export class <%= classify(name) %>Controller {
   @Patch(':id')
   update(@Param('id') id: string, @Body() update<%= singular(classify(name)) %>Dto: Update<%= singular(classify(name)) %>Dto) {
     return this.<%= lowercased(name) %>Service.update(+id, update<%= singular(classify(name)) %>Dto);
-  }
-  <% } %>
-  <% if (type === 'cqrs') { %>
+  }<% } %>
+<% if (type === 'cqrs') { %>
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.<%= lowercased(name) %>Service.fireRemove(+id);
@@ -48,8 +48,8 @@ export class <%= classify(name) %>Controller {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.<%= lowercased(name) %>Service.remove(+id);
-  }
-  <% } %><% } else if (type === 'microservice' && crud) { %>
+  }<% } %><% } else if (type === 'microservice' && crud) { %>
+
   @MessagePattern('create<%= singular(classify(name)) %>')
   create(@Payload() create<%= singular(classify(name)) %>Dto: Create<%= singular(classify(name)) %>Dto) {
     return this.<%= lowercased(name) %>Service.create(create<%= singular(classify(name)) %>Dto);
