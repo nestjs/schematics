@@ -51,12 +51,12 @@ export class <%= classify(name) %>Service {<% if (crud) { %>
   findOne(id: number) {
     return `This action returns a #${id} <%= lowercased(singular(classify(name))) %>`;
   }
-  <% if (type === 'cqrs') { %>
+<% if (type === 'cqrs') { %>
   async fireUpdate(id: number, dto: Update<%= singular(classify(name)) %>Dto) {
     const job: Job = await this.commandBus.execute(new Update<%= singular(classify(name)) %>Command(id, dto));
     return job.id;
   }
-  <% } %>
+<% } %>
   <% if (type === 'cqrs') { %>async <% } %>update(id: number, <% if (type !== 'graphql-code-first' && type !== 'graphql-schema-first') { %>update<%= singular(classify(name)) %>Dto: Update<%= singular(classify(name)) %>Dto<% if (type === 'cqrs') { %>, job?: Job<% } %><% } else { %>update<%= singular(classify(name)) %>Input: Update<%= singular(classify(name)) %>Input<% } %>) {
     <% if (type === 'cqrs') { %>const updated = await this.<%= singular(name) %>Repository.save({id, ...update<%= singular(classify(name)) %>Dto});
     if (updated) {
@@ -67,12 +67,12 @@ export class <%= classify(name) %>Service {<% if (crud) { %>
       this.eventBus.publish(new <%= singular(classify(name)) %>UpdatedEvent(updated.id));
     }<% } else { %>return `This action updates a #${id} <%= lowercased(singular(classify(name))) %>`;<% } %>
   }
-  <% if (type === 'cqrs') { %>
+<% if (type === 'cqrs') { %>
   async fireRemove(id: number) {
     const job: Job = await this.commandBus.execute(new Remove<%= singular(classify(name)) %>Command(id));
     return job.id;
   }
-  <% } %>
+<% } %>
   <% if (type === 'cqrs') { %>async <% } %>remove(id: number<% if (type === 'cqrs') { %>, job?: Job<% } %>) {
     <% if (type === 'cqrs') { %>const removed = await this.<%= singular(name) %>Repository.delete(id);
       if (removed.affected === 1) {
