@@ -25,8 +25,8 @@ export const EventHandlers = [
   <%= singular(classify(name)) %>UpdatedHandler,
   <%= singular(classify(name)) %>RemovedHandler,
 ];
-export const Consumers = [<%= classify(name) %>Consumer];<% } %>
-
+export const Consumers = [<%= classify(name) %>Consumer];
+<% } %>
 @Module({
   <% if (type === 'cqrs') { %>imports: [
     TypeOrmModule.forFeature([<%= singular(classify(name)) %>]),

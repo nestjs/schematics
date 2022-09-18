@@ -16,8 +16,8 @@ import { <%= singular(classify(name)) %> } from './entities/<%= singular(name) %
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Queue, Job } from 'bull';
-import { InjectQueue } from '@nestjs/bull';<% } %>
-    
+import { InjectQueue } from '@nestjs/bull';
+<% } %>
 @Injectable()
 export class <%= classify(name) %>Service {<% if (crud) { %>
   <% if (type === 'cqrs') { %>constructor(
