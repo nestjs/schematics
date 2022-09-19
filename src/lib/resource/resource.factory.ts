@@ -114,12 +114,13 @@ function generate(options: ResourceOptions): Source {
           );
         }
         if (
-          path.endsWith('saga.ts') ||
           path.endsWith('event.ts') ||
           path.endsWith('handler.ts') ||
-          path.endsWith('command.ts') ||
-          path.endsWith('consumer.ts')
+          path.endsWith('command.ts')
         ) {
+          return options.type === 'cqrs' && options.crud;
+        }
+        if (path.endsWith('saga.ts') || path.endsWith('consumer.ts')) {
           return options.type === 'cqrs';
         }
         if (
