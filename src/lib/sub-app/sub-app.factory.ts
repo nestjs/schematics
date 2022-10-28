@@ -3,6 +3,7 @@ import {
   apply,
   branchAndMerge,
   chain,
+  FileEntry,
   mergeWith,
   move,
   noop,
@@ -211,7 +212,7 @@ function updateNpmScripts(
       options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
     scripts[
       defaultStartScriptName
-      ] = `node dist/${defaultSourceRoot}/${defaultAppName}/main`;
+    ] = `node dist/${defaultSourceRoot}/${defaultAppName}/main`;
   }
 }
 
@@ -252,24 +253,26 @@ function moveDefaultAppToApps(
     if (process.env.NODE_ENV === TEST_ENV) {
       return host;
     }
-    try {
-      if (fse.existsSync(sourceRoot)) {
-        fse.moveSync(
-          sourceRoot,
-          join(projectRoot as Path, appName, sourceRoot),
-        );
-      }
-      const testDir = 'test';
-      if (fse.existsSync(testDir)) {
-        fse.moveSync(testDir, join(projectRoot as Path, appName, testDir));
-      }
-    } catch (err) {
-      throw new SchematicsException(
-        `The "${projectRoot}" directory exists already.`,
-      );
-    }
+    const appDestination = join(projectRoot as Path, appName);
+
+    moveDirectoryTo(sourceRoot, appDestination, host);
+
+    moveDirectoryTo('test', appDestination, host);
     return host;
   };
+}
+
+function moveDirectoryTo(
+  srcDir: string,
+  destination: string,
+  tree: Tree,
+): void {
+  tree.getDir(srcDir).visit((filePath: Path, file: Readonly<FileEntry>) => {
+    const newFilePath = join(destination as Path, filePath);
+    tree.create(newFilePath, file.content);
+    tree.delete(filePath);
+  });
+  tree.delete(srcDir);
 }
 
 function addAppsToCliOptions(
