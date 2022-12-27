@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-      "target": "ES6",
-      "experimentalDecorators": true
+    "target": "ES6",
+    "experimentalDecorators": true
   },
   "exclude": [
-      "node_modules",
-      "dist"
+    "node_modules",
+    "dist"
   ]
 }
