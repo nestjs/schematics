@@ -14,7 +14,7 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import * as fse from 'fs-extra';
+import { existsSync, readFileSync } from 'fs';
 import { parse } from 'jsonc-parser';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import {
@@ -59,10 +59,12 @@ export function main(options: SubAppOptions): Rule {
 
 function getAppNameFromPackageJson(): string {
   try {
-    if (!fse.existsSync('./package.json')) {
+    if (!existsSync('./package.json')) {
       return DEFAULT_DIR_ENTRY_APP;
     }
-    const packageJson = fse.readJsonSync('./package.json');
+    const packageJson = JSON.parse(
+      stripBom(readFileSync('./package.json', 'utf-8')),
+    );
     if (!packageJson.name) {
       return DEFAULT_DIR_ENTRY_APP;
     }
@@ -72,6 +74,13 @@ function getAppNameFromPackageJson(): string {
   } catch {
     return DEFAULT_DIR_ENTRY_APP;
   }
+}
+
+function stripBom(value: string): string {
+  if (value.charCodeAt(0) === 0xfeff) {
+    return value.slice(1);
+  }
+  return value;
 }
 
 function transform(options: SubAppOptions): SubAppOptions {
