@@ -57,7 +57,7 @@
     "@typescript-eslint/parser": "5.54.0",
     "cpx": "1.5.0",
     "eslint": "8.35.0",
-    "eslint-config-prettier": "8.6.0",
+    "eslint-config-prettier": "8.7.0",
     "eslint-plugin-import": "2.27.5",
     "gulp": "4.0.2",
     "gulp-clean": "0.4.0",
