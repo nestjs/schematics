@@ -43,14 +43,12 @@
   "dependencies": {
     "@angular-devkit/core": "15.1.5",
     "@angular-devkit/schematics": "15.1.5",
-    "fs-extra": "11.1.1",
     "jsonc-parser": "3.2.0",
     "pluralize": "8.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "17.5.1",
     "@commitlint/config-angular": "17.4.4",
-    "@types/fs-extra": "11.0.1",
     "@types/jest": "29.5.0",
     "@types/node": "18.15.11",
     "@typescript-eslint/eslint-plugin": "5.57.0",
