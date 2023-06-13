@@ -24,7 +24,7 @@ export class MetadataManager {
     metadata: string,
     symbol: string,
     staticOptions?: DeclarationOptions['staticOptions'],
-  ): string {
+  ): string | undefined {
     const source: SourceFile = createSourceFile(
       'filename.ts',
       this.content,
@@ -32,6 +32,10 @@ export class MetadataManager {
     );
     const decoratorNodes: Node[] = this.getDecoratorMetadata(source, '@Module');
     const node: Node = decoratorNodes[0];
+    // If there is no occurrence of `@Module` decorator, nothing will be inserted
+    if (!node) {
+      return;
+    }
     const matchingProperties: ObjectLiteralElement[] = (
       node as ObjectLiteralExpression
     ).properties
