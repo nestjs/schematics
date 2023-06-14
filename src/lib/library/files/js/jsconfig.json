@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES2021",
     "experimentalDecorators": true
   },
   "exclude": [
