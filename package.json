@@ -43,6 +43,7 @@
   "dependencies": {
     "@angular-devkit/core": "16.1.0",
     "@angular-devkit/schematics": "16.1.0",
+    "comment-json": "4.2.3",
     "jsonc-parser": "3.2.0",
     "pluralize": "8.0.0"
   },
