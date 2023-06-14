@@ -344,4 +344,14 @@ describe('Metadata Manager', () => {
       'export class FooModule {}\n'
     );
   });
+  it('should return undefined if there is no metadata to update', () => {
+    const metadata = 'imports';
+    const symbol = 'FooModule';
+    const manager = new MetadataManager(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      'export class FooModule {}\n'
+    );
+    expect(manager.insert(metadata, symbol)).toEqual(undefined);
+  });
 });
