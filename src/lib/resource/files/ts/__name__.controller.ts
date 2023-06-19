@@ -4,8 +4,8 @@ import { MessagePattern, Payload } from '@nestjs/microservices';<%
 } else { %>import { Controller } from '@nestjs/common';<%
 } %>
 import { <%= classify(name) %>Service } from './<%= name %>.service';<% if (crud) { %>
-import { Create<%= singular(classify(name)) %>Dto } from './dto/create-<%= singular(name) %>.dto';
-import { Update<%= singular(classify(name)) %>Dto } from './dto/update-<%= singular(name) %>.dto';<% } %>
+import { Create<%= singular(classify(name)) %>Dto } from './input/create-<%= singular(name) %>.dto';
+import { Update<%= singular(classify(name)) %>Dto } from './input/update-<%= singular(name) %>.dto';<% } %>
 
 <% if (type === 'rest') { %>@Controller('<%= dasherize(name) %>')<% } else { %>@Controller()<% } %>
 export class <%= classify(name) %>Controller {

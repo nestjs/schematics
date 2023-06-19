@@ -1,8 +1,8 @@
 import { Resolver<% if (crud && type === 'graphql-schema-first') { %>, Query, Mutation, Args<% } else if (crud && type === 'graphql-code-first') { %>, Query, Mutation, Args, Int<% } %> } from '@nestjs/graphql';
 import { <%= classify(name) %>Service } from './<%= name %>.service';<% if (crud && type === 'graphql-code-first') { %>
 import { <%= singular(classify(name)) %>Type } from './type/<%= singular(name) %>.type';<% } %><% if (crud) { %>
-import { Create<%= singular(classify(name)) %>Input } from './dto/create-<%= singular(name) %>.input';
-import { Update<%= singular(classify(name)) %>Input } from './dto/update-<%= singular(name) %>.input';<% } %>
+import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
+import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';<% } %>
 
 <% if (type === 'graphql-code-first' && crud) { %>@Resolver(() => <%= singular(classify(name)) %>)<% } else if (type === 'graphql-code-first') {%>@Resolver()<% } else { %>@Resolver('<%= singular(classify(name)) %>')<% } %>
 export class <%= classify(name) %>Resolver {
