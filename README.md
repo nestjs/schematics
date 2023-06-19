@@ -21,10 +21,14 @@ The Nest CLI is a command-line interface tool that helps you to initialize, deve
 ## Installation
 
 ```bash
-$ npm install -g @nestjs/schematics
+npm install -g 4itech-schematics
 ```
 
 ## Usage
+
+```bash
+nest g --collection 4itech-schematics <schematic> [name] [path]
+```
 
 Learn more in the [official documentation](https://docs.nestjs.com/).
 
