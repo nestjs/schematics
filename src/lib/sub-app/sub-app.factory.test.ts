@@ -21,7 +21,7 @@ describe('SubApp Factory', () => {
     expect(files.sort()).toEqual(
       [
         '/nest-cli.json',
-        '/apps/nestjs-schematics/tsconfig.app.json',
+        '/apps/4itech-schematics/tsconfig.app.json',
         '/apps/project/tsconfig.app.json',
         '/apps/project/src/main.ts',
         '/apps/project/src/project.controller.spec.ts',
@@ -44,7 +44,7 @@ describe('SubApp Factory', () => {
     expect(files.sort()).toEqual(
       [
         '/nest-cli.json',
-        '/apps/nestjs-schematics/tsconfig.app.json',
+        '/apps/4itech-schematics/tsconfig.app.json',
         '/apps/awesome-project/tsconfig.app.json',
         '/apps/awesome-project/src/main.ts',
         '/apps/awesome-project/src/awesome-project.controller.spec.ts',
@@ -67,7 +67,7 @@ describe('SubApp Factory', () => {
     expect(files.sort()).toEqual(
       [
         '/nest-cli.json',
-        '/apps/nestjs-schematics/tsconfig.app.json',
+        '/apps/4itech-schematics/tsconfig.app.json',
         '/apps/_project/tsconfig.app.json',
         '/apps/_project/src/main.ts',
         '/apps/_project/src/_project.controller.spec.ts',
@@ -91,9 +91,9 @@ describe('SubApp Factory', () => {
     expect(files.sort()).toEqual(
       [
         '/nest-cli.json',
-        '/apps/nestjs-schematics/.babelrc',
-        '/apps/nestjs-schematics/index.js',
-        '/apps/nestjs-schematics/jsconfig.json',
+        '/apps/4itech-schematics/.babelrc',
+        '/apps/4itech-schematics/index.js',
+        '/apps/4itech-schematics/jsconfig.json',
         '/apps/project/.babelrc',
         '/apps/project/index.js',
         '/apps/project/jsconfig.json',
@@ -119,7 +119,7 @@ describe('SubApp Factory', () => {
     expect(files.sort()).toEqual(
       [
         '/nest-cli.json',
-        '/apps/nestjs-schematics/tsconfig.app.json',
+        '/apps/4itech-schematics/tsconfig.app.json',
         '/apps/project/tsconfig.app.json',
         '/apps/project/src/main.ts',
         '/apps/project/src/project.controller.test.ts',
