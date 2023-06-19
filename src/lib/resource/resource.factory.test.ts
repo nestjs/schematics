@@ -28,7 +28,7 @@ describe('Resource Factory', () => {
         '/users/users.service.ts',
         '/users/dto/create-user.dto.ts',
         '/users/dto/update-user.dto.ts',
-        '/users/entities/user.entity.ts',
+        '/users/type/user.type.ts',
       ]);
     });
     it("should keep underscores in resource's path and file name", async () => {
@@ -47,7 +47,7 @@ describe('Resource Factory', () => {
         '/_users/_users.service.ts',
         '/_users/dto/create-_user.dto.ts',
         '/_users/dto/update-_user.dto.ts',
-        '/_users/entities/_user.entity.ts',
+        '/_users/type/_user.type.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -186,7 +186,7 @@ export class UsersModule {}
     });
 
     it('should generate "User" class', () => {
-      expect(tree.readContent('/users/entities/user.entity.ts'))
+      expect(tree.readContent('/users/type/user.type.ts'))
         .toEqual(`export class User {}
 `);
     });
@@ -305,7 +305,7 @@ export class UsersModule {}
     });
 
     it('should not generate "User" class', () => {
-      expect(tree.readContent('/users/entities/user.entity.ts')).toEqual('');
+      expect(tree.readContent('/users/type/user.type.ts')).toEqual('');
     });
 
     it('should not generate "CreateUserDto" class', () => {
@@ -335,7 +335,7 @@ export class UsersModule {}
         '/users/users.service.ts',
         '/users/dto/create-user.dto.ts',
         '/users/dto/update-user.dto.ts',
-        '/users/entities/user.entity.ts',
+        '/users/type/user.type.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -477,7 +477,7 @@ export class UsersModule {}
     });
 
     it('should generate "User" class', () => {
-      expect(tree.readContent('/users/entities/user.entity.ts'))
+      expect(tree.readContent('/users/type/user.type.ts'))
         .toEqual(`export class User {}
 `);
     });
@@ -599,7 +599,7 @@ export class UsersModule {}
     });
 
     it('should not generate "User" class', () => {
-      expect(tree.readContent('/users/entities/user.entity.ts')).toEqual('');
+      expect(tree.readContent('/users/type/user.type.ts')).toEqual('');
     });
 
     it('should not generate "CreateUserDto" class', () => {
@@ -629,7 +629,7 @@ export class UsersModule {}
         '/users/users.service.ts',
         '/users/dto/create-user.dto.ts',
         '/users/dto/update-user.dto.ts',
-        '/users/entities/user.entity.ts',
+        '/users/type/user.type.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -769,7 +769,7 @@ export class UsersModule {}
     });
 
     it('should generate "User" class', () => {
-      expect(tree.readContent('/users/entities/user.entity.ts'))
+      expect(tree.readContent('/users/type/user.type.ts'))
         .toEqual(`export class User {}
 `);
     });
@@ -888,7 +888,7 @@ export class UsersModule {}
     });
 
     it('should not generate "User" class', () => {
-      expect(tree.readContent('/users/entities/user.entity.ts')).toEqual('');
+      expect(tree.readContent('/users/type/user.type.ts')).toEqual('');
     });
 
     it('should not generate "CreateUserDto" class', () => {
@@ -919,7 +919,7 @@ export class UsersModule {}
         '/users/users.service.ts',
         '/users/dto/create-user.input.ts',
         '/users/dto/update-user.input.ts',
-        '/users/entities/user.entity.ts',
+        '/users/type/user.type.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -979,7 +979,7 @@ export class UsersModule {}
       expect(tree.readContent('/users/users.resolver.ts'))
         .toEqual(`import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { User } from './entities/user.entity';
+import { UserType } from './type/user.type';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 
@@ -1059,11 +1059,11 @@ export class UsersModule {}
     });
 
     it('should generate "User" class', () => {
-      expect(tree.readContent('/users/entities/user.entity.ts'))
+      expect(tree.readContent('/users/type/user.type.ts'))
         .toEqual(`import { ObjectType, Field, Int } from '@nestjs/graphql';
 
 @ObjectType()
-export class User {
+export class UserType {
   @Field(() => Int, { description: 'Example field (placeholder)' })
   exampleField: number;
 }
@@ -1163,7 +1163,7 @@ describe('UsersService', () => {
         '/users/users.service.ts',
         '/users/dto/create-user.input.ts',
         '/users/dto/update-user.input.ts',
-        '/users/entities/user.entity.ts',
+        '/users/type/user.type.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -1301,7 +1301,7 @@ export class UsersModule {}
     });
 
     it('should generate "User" class', () => {
-      expect(tree.readContent('/users/entities/user.entity.ts'))
+      expect(tree.readContent('/users/type/user.type.ts'))
         .toEqual(`export class User {}
 `);
     });
