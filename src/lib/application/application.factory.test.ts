@@ -296,9 +296,7 @@ describe('Application Factory', () => {
       '/123/test/jest-e2e.json',
     ]);
 
-    expect(
-      JSON.parse(tree.readContent('/123/package.json')),
-    ).toMatchObject({
+    expect(JSON.parse(tree.readContent('/123/package.json'))).toMatchObject({
       name: '123',
     });
   });

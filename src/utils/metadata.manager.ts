@@ -193,11 +193,9 @@ export class MetadataManager {
       toInsert = staticOptions ? this.addBlankLines(symbol) : `${symbol}`;
     } else {
       const text = (node as Node).getFullText(source);
-      const itemSeparator = ( 
-        text.match(/^\r?\n(\r?)\s+/) ||
+      const itemSeparator = (text.match(/^\r?\n(\r?)\s+/) ||
         text.match(/^\r?\n/) ||
-        ' '
-      )[0];
+        ' ')[0];
       toInsert = `,${itemSeparator}${symbol}`;
     }
     return this.content.split('').reduce((content, char, index) => {

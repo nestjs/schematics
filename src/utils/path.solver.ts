@@ -7,9 +7,8 @@ export class PathSolver {
       dirname((placeholder + from) as Path),
       dirname((placeholder + to) as Path),
     );
-    return (relativeDir.startsWith('.')
-      ? relativeDir
-      : './' + relativeDir
+    return (
+      relativeDir.startsWith('.') ? relativeDir : './' + relativeDir
     ).concat(relativeDir.length === 0 ? basename(to) : '/' + basename(to));
   }
 }

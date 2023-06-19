@@ -11,6 +11,7 @@
   },
   "scripts": {
     "postbuild": "npm run copy:collection && npm run copy:lib",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "build": "rm -rf dist && tsc --project tsconfig.lib.json",
     "clean": "gulp clean:src",
     "copy:collection": "cpx src/collection.json dist && cpx 'src/lib/**/schema.json' dist/lib",

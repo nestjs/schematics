@@ -14,10 +14,12 @@ describe('Configuration Factory', () => {
     const options: ConfigurationOptions = {
       project: 'project',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('configuration', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('configuration', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/project/nest-cli.json'),
+      files.find((filename) => filename === '/project/nest-cli.json'),
     ).not.toBeUndefined();
     expect(JSON.parse(tree.readContent('/project/nest-cli.json'))).toEqual({
       $schema: 'https://json.schemastore.org/nest-cli',
@@ -30,10 +32,12 @@ describe('Configuration Factory', () => {
       project: 'project',
       language: 'js',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('configuration', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('configuration', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/project/nest-cli.json'),
+      files.find((filename) => filename === '/project/nest-cli.json'),
     ).not.toBeUndefined();
     expect(JSON.parse(tree.readContent('/project/nest-cli.json'))).toEqual({
       $schema: 'https://json.schemastore.org/nest-cli',
@@ -47,10 +51,12 @@ describe('Configuration Factory', () => {
       project: 'project',
       collection: 'foo',
     };
-    const tree: UnitTestTree = await runner.runSchematicAsync('configuration', options).toPromise();
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('configuration', options)
+      .toPromise();
     const files: string[] = tree.files;
     expect(
-      files.find(filename => filename === '/project/nest-cli.json'),
+      files.find((filename) => filename === '/project/nest-cli.json'),
     ).not.toBeUndefined();
     expect(JSON.parse(tree.readContent('/project/nest-cli.json'))).toEqual({
       $schema: 'https://json.schemastore.org/nest-cli',

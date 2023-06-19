@@ -217,9 +217,7 @@ export class FooEntity {}\n`);
       .toPromise();
     const files: string[] = tree.files;
 
-    expect(
-      files.find((filename) => filename === '/foo.spec.ts'),
-    ).toBeDefined();
+    expect(files.find((filename) => filename === '/foo.spec.ts')).toBeDefined();
   });
   it('should create a spec file with custom file suffix', async () => {
     const options: ProviderOptions = {
@@ -236,8 +234,6 @@ export class FooEntity {}\n`);
     expect(
       files.find((filename) => filename === '/foo.spec.ts'),
     ).toBeUndefined();
-    expect(
-      files.find((filename) => filename === '/foo.test.ts'),
-    ).toBeDefined();
+    expect(files.find((filename) => filename === '/foo.test.ts')).toBeDefined();
   });
 });

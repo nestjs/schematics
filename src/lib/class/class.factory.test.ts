@@ -160,8 +160,6 @@ describe('Class Factory', () => {
     expect(
       files.find((filename) => filename === '/foo.spec.ts'),
     ).toBeUndefined();
-    expect(
-      files.find((filename) => filename === '/foo.test.ts'),
-    ).toBeDefined();
+    expect(files.find((filename) => filename === '/foo.test.ts')).toBeDefined();
   });
 });

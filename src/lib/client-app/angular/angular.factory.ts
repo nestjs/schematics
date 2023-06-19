@@ -93,10 +93,10 @@ function addDeclarationToModule(options: AngularOptions): Rule {
         rootPath,
       },
     };
-    const declarationOptions = ({
+    const declarationOptions = {
       ...options,
       staticOptions,
-    } as unknown) as DeclarationOptions;
+    } as unknown as DeclarationOptions;
     tree.overwrite(
       options.module,
       declarator.declare(content, declarationOptions),
@@ -121,10 +121,10 @@ function addGlobalPrefix(): Rule {
     });
     const tsFile = tsProject.addSourceFileAtPath(mainFilePath);
     const bootstrapFunction = tsFile.getFunction('bootstrap');
-    const listenStatement = bootstrapFunction.getStatement(node =>
+    const listenStatement = bootstrapFunction.getStatement((node) =>
       node.getText().includes('listen'),
     );
-    const setPrefixStatement = bootstrapFunction.getStatement(node =>
+    const setPrefixStatement = bootstrapFunction.getStatement((node) =>
       node.getText().includes('setGlobalPrefix'),
     );
     if (!listenStatement || setPrefixStatement) {

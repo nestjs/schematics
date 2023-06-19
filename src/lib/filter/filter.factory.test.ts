@@ -183,7 +183,7 @@ describe('Filter Factory', () => {
         '}\n',
     );
   });
-    it('should create a spec file', async () => {
+  it('should create a spec file', async () => {
     const options: FilterOptions = {
       name: 'foo',
       spec: true,
