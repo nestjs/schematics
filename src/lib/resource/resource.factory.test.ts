@@ -1062,7 +1062,7 @@ export class UsersModule {}
       expect(tree.readContent('/users/type/user.type.ts'))
         .toEqual(`import { ObjectType, Field, Int } from '@nestjs/graphql';
 
-@ObjectType()
+@ObjectType('User')
 export class UserType {
   @Field(() => Int, { description: 'Example field (placeholder)' })
   exampleField: number;
