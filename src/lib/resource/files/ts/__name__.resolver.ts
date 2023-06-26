@@ -13,13 +13,13 @@ export class <%= classify(name) %>Resolver {
     return this.<%= lowercased(name) %>Service.create(create<%= singular(classify(name)) %>Input);
   }
 
-  @Query(() => [<%= singular(classify(name)) %>Type], { name: '<%= lowercased(classify(name)) %>' })
-  findAll() {
+  @Query(() => [<%= singular(classify(name)) %>Type])
+  <%= lowercased(plural(classify(name))) %>() {
     return this.<%= lowercased(name) %>Service.findAll();
   }
 
-  @Query(() => <%= singular(classify(name)) %>Type, { name: '<%= lowercased(singular(classify(name))) %>' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  @Query(() => <%= singular(classify(name)) %>Type)
+  <%= lowercased(singular(classify(name))) %>(@Args('id', { type: () => Int }) id: number) {
     return this.<%= lowercased(name) %>Service.findOne(id);
   }
 
