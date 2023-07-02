@@ -182,8 +182,9 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
+
 import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
   controllers: [UsersController],
@@ -301,8 +302,9 @@ export class UsersService {}
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
+
 import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
   controllers: [UsersController],
@@ -479,8 +481,9 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
+
 import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
   controllers: [UsersController],
@@ -601,8 +604,9 @@ export class UsersService {}
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
+
 import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
   controllers: [UsersController],
@@ -778,8 +782,9 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
+
 import { UsersGateway } from './users.gateway';
+import { UsersService } from './users.service';
 
 @Module({
   providers: [UsersGateway, UsersService]
@@ -897,8 +902,9 @@ export class UsersService {}
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
+
 import { UsersGateway } from './users.gateway';
+import { UsersService } from './users.service';
 
 @Module({
   providers: [UsersGateway, UsersService]
@@ -1074,8 +1080,9 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
+
 import { UsersResolver } from './users.resolver';
+import { UsersService } from './users.service';
 
 @Module({
   providers: [UsersResolver, UsersService]
@@ -1329,8 +1336,9 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
+
 import { UsersResolver } from './users.resolver';
+import { UsersService } from './users.service';
 
 @Module({
   providers: [UsersResolver, UsersService]
