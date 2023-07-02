@@ -37,7 +37,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
   ) {}
 
   create<%= singular(classify(name)) %>(
-    input: Create<%= singular(classify(name)) %>Input
+    input: Create<%= singular(classify(name)) %>Input,
   ): Promise<<%= singular(classify(name)) %>> {
     const <%= singular(lowercased(name)) %> = this.<%= singular(lowercased(name)) %>Repository.create({
       ...input,
@@ -46,7 +46,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
   }
 
   findBy<%= singular(classify(name)) %>Args(
-    args: <%= singular(classify(name)) %>Args
+    args: <%= singular(classify(name)) %>Args,
   ): Promise<<%= singular(classify(name)) %>[]> {
     return this.<%= singular(lowercased(name)) %>Repository.findBy(args);
   }
@@ -57,7 +57,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
 
   update<%= singular(classify(name)) %>(
     id: string,
-    update<%= singular(classify(name)) %>Input: Update<%= singular(classify(name)) %>Input
+    update<%= singular(classify(name)) %>Input: Update<%= singular(classify(name)) %>Input,
   ): Promise<UpdateResult> {
     return this.<%= singular(lowercased(name)) %>Repository.update(
       id,

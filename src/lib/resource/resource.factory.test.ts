@@ -188,7 +188,7 @@ import { UsersService } from './users.service';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService]
+  providers: [UsersService],
 })
 export class UsersModule {}
 `);
@@ -255,7 +255,9 @@ describe('UsersService', () => {
       providers: [UsersService],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
+    service = module.get<UsersService>(
+      UsersService,
+    );
   });
 
   it('should be defined', () => {
@@ -309,7 +311,7 @@ import { UsersService } from './users.service';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService]
+  providers: [UsersService],
 })
 export class UsersModule {}
 `);
@@ -488,7 +490,7 @@ import { UsersService } from './users.service';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService]
+  providers: [UsersService],
 })
 export class UsersModule {}
 `);
@@ -557,7 +559,9 @@ describe('UsersService', () => {
       providers: [UsersService],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
+    service = module.get<UsersService>(
+      UsersService,
+    );
   });
 
   it('should be defined', () => {
@@ -612,7 +616,7 @@ import { UsersService } from './users.service';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService]
+  providers: [UsersService],
 })
 export class UsersModule {}
 `);
@@ -789,7 +793,7 @@ import { UsersGateway } from './users.gateway';
 import { UsersService } from './users.service';
 
 @Module({
-  providers: [UsersGateway, UsersService]
+  providers: [UsersGateway, UsersService],
 })
 export class UsersModule {}
 `);
@@ -857,7 +861,9 @@ describe('UsersService', () => {
       providers: [UsersService],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
+    service = module.get<UsersService>(
+      UsersService,
+    );
   });
 
   it('should be defined', () => {
@@ -910,7 +916,7 @@ import { UsersGateway } from './users.gateway';
 import { UsersService } from './users.service';
 
 @Module({
-  providers: [UsersGateway, UsersService]
+  providers: [UsersGateway, UsersService],
 })
 export class UsersModule {}
 `);
@@ -1068,7 +1074,7 @@ export class UserService {
   ) {}
 
   createUser(
-    input: CreateUserInput
+    input: CreateUserInput,
   ): Promise<User> {
     const user = this.userRepository.create({
       ...input,
@@ -1077,7 +1083,7 @@ export class UserService {
   }
 
   findByUserArgs(
-    args: UserArgs
+    args: UserArgs,
   ): Promise<User[]> {
     return this.userRepository.findBy(args);
   }
@@ -1088,7 +1094,7 @@ export class UserService {
 
   updateUser(
     id: string,
-    updateUserInput: UpdateUserInput
+    updateUserInput: UpdateUserInput,
   ): Promise<UpdateResult> {
     return this.userRepository.update(
       id,
@@ -1111,7 +1117,7 @@ import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 
 @Module({
-  providers: [UsersResolver, UsersService]
+  providers: [UsersResolver, UsersService],
 })
 export class UsersModule {}
 `);
@@ -1124,7 +1130,7 @@ import { GraphNode } from '@app/graphql-type/type/graph-node.type';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType('User', {
-  implements: [GraphNode, DaoNode]
+  implements: [GraphNode, DaoNode],
 })
 export class UserType extends DaoNode {
   @Field(() => String, { nullable: true })
@@ -1154,7 +1160,7 @@ import { CreateUserInput } from './create-user.input';
 
 @InputType()
 export class UpdateUserInput extends PartialType(
-  CreateUserInput
+  CreateUserInput,
 ) {
   @Field(() => ID)
   id!: string;
@@ -1177,7 +1183,9 @@ describe('UsersResolver', () => {
       providers: [UsersResolver, UsersService],
     }).compile();
 
-    resolver = module.get<UsersResolver>(UsersResolver);
+    resolver = module.get<UsersResolver>(
+      UsersResolver,
+    );
   });
 
   it('should be defined', () => {
@@ -1201,7 +1209,9 @@ describe('UsersService', () => {
       providers: [UsersService],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
+    service = module.get<UsersService>(
+      UsersService,
+    );
   });
 
   it('should be defined', () => {
@@ -1349,7 +1359,7 @@ export class UserService {
   ) {}
 
   createUser(
-    input: CreateUserInput
+    input: CreateUserInput,
   ): Promise<User> {
     const user = this.userRepository.create({
       ...input,
@@ -1358,7 +1368,7 @@ export class UserService {
   }
 
   findByUserArgs(
-    args: UserArgs
+    args: UserArgs,
   ): Promise<User[]> {
     return this.userRepository.findBy(args);
   }
@@ -1369,7 +1379,7 @@ export class UserService {
 
   updateUser(
     id: string,
-    updateUserInput: UpdateUserInput
+    updateUserInput: UpdateUserInput,
   ): Promise<UpdateResult> {
     return this.userRepository.update(
       id,
@@ -1392,7 +1402,7 @@ import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 
 @Module({
-  providers: [UsersResolver, UsersService]
+  providers: [UsersResolver, UsersService],
 })
 export class UsersModule {}
 `);
@@ -1437,7 +1447,9 @@ describe('UsersResolver', () => {
       providers: [UsersResolver, UsersService],
     }).compile();
 
-    resolver = module.get<UsersResolver>(UsersResolver);
+    resolver = module.get<UsersResolver>(
+      UsersResolver,
+    );
   });
 
   it('should be defined', () => {
@@ -1461,7 +1473,9 @@ describe('UsersService', () => {
       providers: [UsersService],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
+    service = module.get<UsersService>(
+      UsersService,
+    );
   });
 
   it('should be defined', () => {

@@ -10,7 +10,9 @@ describe('<%= classify(name) %>Service', () => {
       providers: [<%= classify(name) %>Service],
     }).compile();
 
-    service = module.get<<%= classify(name) %>Service>(<%= classify(name) %>Service);
+    service = module.get<<%= classify(name) %>Service>(
+      <%= classify(name) %>Service,
+    );
   });
 
   it('should be defined', () => {

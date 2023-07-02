@@ -4,7 +4,7 @@ import { Create<%= singular(classify(name)) %>Input } from './create-<%= singula
 
 @InputType()
 export class Update<%= singular(classify(name)) %>Input extends PartialType(
-  Create<%= singular(classify(name)) %>Input
+  Create<%= singular(classify(name)) %>Input,
 ) {
   @Field(() => ID)
   id!: string;

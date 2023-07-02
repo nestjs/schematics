@@ -3,7 +3,7 @@ import { GraphNode } from '@app/graphql-type/type/graph-node.type';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType('<%= singular(classify(name)) %>', {
-  implements: [GraphNode, DaoNode]
+  implements: [GraphNode, DaoNode],
 })
 export class <%= singular(classify(name)) %>Type extends DaoNode {
   @Field(() => String, { nullable: true })
