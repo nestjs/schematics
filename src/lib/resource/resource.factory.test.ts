@@ -1148,9 +1148,9 @@ export class CreateUserInput {
 
     it('should generate "UpdateUserInput" class', () => {
       expect(tree.readContent('/users/input/update-user.input.ts'))
-        .toEqual(`import { CreateUserInput } from './create-user.input';
+        .toEqual(`import { Field, ID, InputType, PartialType } from '@nestjs/graphql';
 
-import { Field, ID, InputType, PartialType } from '@nestjs/graphql';
+import { CreateUserInput } from './create-user.input';
 
 @InputType()
 export class UpdateUserInput extends PartialType(
