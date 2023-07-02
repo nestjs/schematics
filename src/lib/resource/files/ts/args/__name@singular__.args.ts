@@ -2,6 +2,6 @@
 
 @ArgsType()
 export class <%= singular(classify(name)) %>Args {
-  @Field(() => ID)
-  id: string;
+  @Field(() => ID, { nullable: true })
+  id?: string;
 }<% } else { %>export class <%= singular(classify(name)) %>Args {}<% } %>
