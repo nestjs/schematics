@@ -1,7 +1,11 @@
-<% if (type === 'graphql-code-first') { %>import { ObjectType, Field, Int } from '@nestjs/graphql';
+<% if (type === 'graphql-code-first') { %>import { DaoNode } from '@app/graphql-type/type/dao-node.type';
+import { GraphNode } from '@app/graphql-type/type/graph-node.type';
+import { Field, ObjectType } from '@nestjs/graphql';
 
-@ObjectType('<%= singular(classify(name)) %>')
-export class <%= singular(classify(name)) %>Type {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
-}<% } else { %>export class <%= singular(classify(name)) %> {}<% } %>
+@ObjectType('<%= singular(classify(name)) %>', {
+  implements: [GraphNode, DaoNode]
+})
+export class <%= singular(classify(name)) %>Type extends DaoNode {
+  @Field(() => String, { nullable: true })
+  exampleField?: string;
+}<% } else { %>export class <%= singular(classify(name)) %>Type {}<% } %>

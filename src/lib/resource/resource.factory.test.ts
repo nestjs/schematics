@@ -195,7 +195,7 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/type/user.type.ts'))
-        .toEqual(`export class User {}
+        .toEqual(`export class UserType {}
 `);
     });
 
@@ -492,7 +492,7 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/type/user.type.ts'))
-        .toEqual(`export class User {}
+        .toEqual(`export class UserType {}
 `);
     });
 
@@ -790,7 +790,7 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/type/user.type.ts'))
-        .toEqual(`export class User {}
+        .toEqual(`export class UserType {}
 `);
     });
 
@@ -1086,12 +1086,16 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/type/user.type.ts'))
-        .toEqual(`import { ObjectType, Field, Int } from '@nestjs/graphql';
+        .toEqual(`import { DaoNode } from '@app/graphql-type/type/dao-node.type';
+import { GraphNode } from '@app/graphql-type/type/graph-node.type';
+import { Field, ObjectType } from '@nestjs/graphql';
 
-@ObjectType('User')
-export class UserType {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+@ObjectType('User', {
+  implements: [GraphNode, DaoNode]
+})
+export class UserType extends DaoNode {
+  @Field(() => String, { nullable: true })
+  exampleField?: string;
 }
 `);
     });
@@ -1334,7 +1338,7 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/type/user.type.ts'))
-        .toEqual(`export class User {}
+        .toEqual(`export class UserType {}
 `);
     });
 
