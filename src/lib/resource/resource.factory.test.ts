@@ -1085,12 +1085,12 @@ export class UserType {
 
     it('should generate "CreateUserInput" class', () => {
       expect(tree.readContent('/users/input/create-user.input.ts')).toEqual(
-        `import { InputType, Int, Field } from '@nestjs/graphql';
+        `import { Field, ID, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateUserInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field(() => ID, { nullable: true })
+  id?: string;
 }
 `,
       );
