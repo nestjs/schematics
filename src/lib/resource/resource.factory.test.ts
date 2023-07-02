@@ -26,6 +26,7 @@ describe('Resource Factory', () => {
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
+        '/users/args/user.args.ts',
         '/users/input/create-user.dto.ts',
         '/users/input/update-user.dto.ts',
         '/users/type/user.type.ts',
@@ -45,6 +46,7 @@ describe('Resource Factory', () => {
         '/_users/_users.module.ts',
         '/_users/_users.service.spec.ts',
         '/_users/_users.service.ts',
+        '/_users/args/_user.args.ts',
         '/_users/input/create-_user.dto.ts',
         '/_users/input/update-_user.dto.ts',
         '/_users/type/_user.type.ts',
@@ -66,6 +68,7 @@ describe('Resource Factory', () => {
           '/users/users.module.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/args/user.args.ts',
         ]);
       });
     });
@@ -84,6 +87,7 @@ describe('Resource Factory', () => {
           '/users/users.controller.ts',
           '/users/users.module.ts',
           '/users/users.service.ts',
+          '/users/args/user.args.ts',
         ]);
       });
     });
@@ -333,6 +337,7 @@ export class UsersModule {}
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
+        '/users/args/user.args.ts',
         '/users/input/create-user.dto.ts',
         '/users/input/update-user.dto.ts',
         '/users/type/user.type.ts',
@@ -355,6 +360,7 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/args/user.args.ts',
         ]);
       });
     });
@@ -374,6 +380,7 @@ export class UsersModule {}
           '/users/users.controller.ts',
           '/users/users.module.ts',
           '/users/users.service.ts',
+          '/users/args/user.args.ts',
         ]);
       });
     });
@@ -627,6 +634,7 @@ export class UsersModule {}
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
+        '/users/args/user.args.ts',
         '/users/input/create-user.dto.ts',
         '/users/input/update-user.dto.ts',
         '/users/type/user.type.ts',
@@ -649,6 +657,7 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/args/user.args.ts',
         ]);
       });
     });
@@ -668,6 +677,7 @@ export class UsersModule {}
           '/users/users.gateway.ts',
           '/users/users.module.ts',
           '/users/users.service.ts',
+          '/users/args/user.args.ts',
         ]);
       });
     });
@@ -917,6 +927,7 @@ export class UsersModule {}
         '/users/users.resolver.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
+        '/users/args/user.args.ts',
         '/users/input/create-user.input.ts',
         '/users/input/update-user.input.ts',
         '/users/type/user.type.ts',
@@ -939,6 +950,7 @@ export class UsersModule {}
           '/users/users.resolver.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/args/user.args.ts',
         ]);
       });
     });
@@ -958,6 +970,7 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.resolver.ts',
           '/users/users.service.ts',
+          '/users/args/user.args.ts',
         ]);
       });
     });
@@ -1161,6 +1174,7 @@ describe('UsersService', () => {
         '/users/users.resolver.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
+        '/users/args/user.args.ts',
         '/users/input/create-user.input.ts',
         '/users/input/update-user.input.ts',
         '/users/type/user.type.ts',
@@ -1183,6 +1197,7 @@ describe('UsersService', () => {
           '/users/users.resolver.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/args/user.args.ts',
         ]);
       });
     });
@@ -1202,6 +1217,7 @@ describe('UsersService', () => {
           '/users/users.module.ts',
           '/users/users.resolver.ts',
           '/users/users.service.ts',
+          '/users/args/user.args.ts',
         ]);
       });
     });
