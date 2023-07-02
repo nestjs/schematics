@@ -1116,10 +1116,13 @@ export class CreateUserInput {
     it('should generate "UpdateUserInput" class', () => {
       expect(tree.readContent('/users/input/update-user.input.ts'))
         .toEqual(`import { CreateUserInput } from './create-user.input';
+
 import { Field, ID, InputType, PartialType } from '@nestjs/graphql';
 
 @InputType()
-export class UpdateUserInput extends PartialType(CreateUserInput) {
+export class UpdateUserInput extends PartialType(
+  CreateUserInput
+) {
   @Field(() => ID)
   id!: string;
 }
