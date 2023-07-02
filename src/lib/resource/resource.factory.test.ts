@@ -155,7 +155,7 @@ import { CreateUserDto } from './input/create-user.dto';
 import { UpdateUserDto } from './input/update-user.dto';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
@@ -296,7 +296,7 @@ export class UsersController {
         .toEqual(`import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class UsersService {}
+export class UserService {}
 `);
     });
 
@@ -455,7 +455,7 @@ import { CreateUserDto } from './input/create-user.dto';
 import { UpdateUserDto } from './input/update-user.dto';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
@@ -599,7 +599,7 @@ export class UsersController {
         .toEqual(`import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class UsersService {}
+export class UserService {}
 `);
     });
 
@@ -757,7 +757,7 @@ import { CreateUserDto } from './input/create-user.dto';
 import { UpdateUserDto } from './input/update-user.dto';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
@@ -898,7 +898,7 @@ export class UsersGateway {
         .toEqual(`import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class UsersService {}
+export class UserService {}
 `);
     });
 
@@ -1051,30 +1051,53 @@ export class UsersResolver {
     });
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { User } from '@app/db/entity/User.entity'
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, UpdateResult } from 'typeorm';
+
+import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
 import { UpdateUserInput } from './input/update-user.input';
 
 @Injectable()
-export class UsersService {
-  create(createUserInput: CreateUserInput) {
-    return 'This action adds a new user';
+export class UserService {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+
+  createUser(
+    input: CreateUserInput
+  ): Promise<User> {
+    const user = this.userRepository.create({
+      ...input,
+    });
+    return this.userRepository.save(user);
   }
 
-  findAll() {
-    return \`This action returns all users\`;
+  findByUserArgs(
+    args: UserArgs
+  ): Promise<User[]> {
+    return this.userRepository.findBy(args);
   }
 
-  findOne(id: number) {
-    return \`This action returns a #\${id} user\`;
+  findById(id: string): Promise<User | null> {
+    return this.userRepository.findOneBy({ id });
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return \`This action updates a #\${id} user\`;
+  updateUser(
+    id: string,
+    updateUserInput: UpdateUserInput
+  ): Promise<UpdateResult> {
+    return this.userRepository.update(
+      id,
+      updateUserInput,
+    );
   }
 
-  remove(id: number) {
-    return \`This action removes a #\${id} user\`;
+  removeUser(id: string): Promise<User> {
+    return this.userRepository.softRemove({ id });
   }
 }
 `);
@@ -1309,30 +1332,53 @@ export class UsersResolver {
     });
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { User } from '@app/db/entity/User.entity'
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, UpdateResult } from 'typeorm';
+
+import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
 import { UpdateUserInput } from './input/update-user.input';
 
 @Injectable()
-export class UsersService {
-  create(createUserInput: CreateUserInput) {
-    return 'This action adds a new user';
+export class UserService {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+
+  createUser(
+    input: CreateUserInput
+  ): Promise<User> {
+    const user = this.userRepository.create({
+      ...input,
+    });
+    return this.userRepository.save(user);
   }
 
-  findAll() {
-    return \`This action returns all users\`;
+  findByUserArgs(
+    args: UserArgs
+  ): Promise<User[]> {
+    return this.userRepository.findBy(args);
   }
 
-  findOne(id: number) {
-    return \`This action returns a #\${id} user\`;
+  findById(id: string): Promise<User | null> {
+    return this.userRepository.findOneBy({ id });
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return \`This action updates a #\${id} user\`;
+  updateUser(
+    id: string,
+    updateUserInput: UpdateUserInput
+  ): Promise<UpdateResult> {
+    return this.userRepository.update(
+      id,
+      updateUserInput,
+    );
   }
 
-  remove(id: number) {
-    return \`This action removes a #\${id} user\`;
+  removeUser(id: string): Promise<User> {
+    return this.userRepository.softRemove({ id });
   }
 }
 `);
