@@ -1139,6 +1139,7 @@ export class UpdateUserInput extends PartialType(
     it('should generate "UsersResolver" spec file', () => {
       expect(tree.readContent('/users/users.resolver.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 
@@ -1374,6 +1375,7 @@ export class UpdateUserInput extends PartialType(CreateUserInput) {
     it('should generate "UsersResolver" spec file', () => {
       expect(tree.readContent('/users/users.resolver.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 

@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { <%= classify(name) %>Resolver } from './<%= name %>.resolver';
 import { <%= classify(name) %>Service } from './<%= name %>.service';
 
