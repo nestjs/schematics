@@ -1051,7 +1051,7 @@ export class UsersResolver {
     });
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { User } from '@app/db/entity/User.entity'
+        .toEqual(`import { User } from '@app/db/entity/user.entity'
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
@@ -1332,7 +1332,7 @@ export class UsersResolver {
     });
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { User } from '@app/db/entity/User.entity'
+        .toEqual(`import { User } from '@app/db/entity/user.entity'
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
