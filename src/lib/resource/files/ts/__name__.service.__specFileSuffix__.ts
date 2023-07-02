@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { <%= classify(name) %>Service } from './<%= name %>.service';
 
 describe('<%= classify(name) %>Service', () => {

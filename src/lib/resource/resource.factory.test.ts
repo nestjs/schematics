@@ -244,6 +244,7 @@ describe('UsersController', () => {
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -545,6 +546,7 @@ describe('UsersController', () => {
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -844,6 +846,7 @@ describe('UsersGateway', () => {
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -1164,6 +1167,7 @@ describe('UsersResolver', () => {
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -1400,6 +1404,7 @@ describe('UsersResolver', () => {
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
