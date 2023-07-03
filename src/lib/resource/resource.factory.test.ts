@@ -1018,39 +1018,48 @@ export class UsersModule {}
 
     it('should generate "UsersResolver" class', () => {
       expect(tree.readContent('/users/users.resolver.ts'))
-        .toEqual(`import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { UsersService } from './users.service';
-import { UserType } from './type/user.type';
+        .toEqual(`import { Maybe } from '@apollo/federation';
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { UpdateResult } from 'typeorm';
+
+import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
 import { UpdateUserInput } from './input/update-user.input';
+import { UserOutput } from './output/user.output';
+import { UserType } from './type/user.type';
+import { UserService } from './users.service';
 
 @Resolver(() => UserType)
-export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+export class UserResolver {
+  constructor(private readonly userService: UserService) {}
 
   @Mutation(() => UserType)
-  createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return this.usersService.create(createUserInput);
+  async createUser(@Args('input') input: CreateUserInput): Promise<UserOutput> {
+    return this.userService.createUser(input);
   }
 
   @Query(() => [UserType])
-  users() {
-    return this.usersService.findAll();
+  users(@Args() args: UserArgs): Maybe<Promise<UserType[]>> {
+    return this.userService.findByUserArgs(args);
   }
 
   @Query(() => UserType)
-  user(@Args('id', { type: () => Int }) id: number) {
-    return this.usersService.findOne(id);
+  user(@Args('id', { type: () => ID }) id: string): Maybe<Promise<UserType>> {
+    return this.userService.findById(id);
   }
 
   @Mutation(() => UserType)
-  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-    return this.usersService.update(updateUserInput.id, updateUserInput);
+  updateUser(
+    @Args('input') input: UpdateUserInput,
+  ): Maybe<Promise<UpdateResult>> {
+    return this.userService.updateUser(input.id, input);
   }
 
   @Mutation(() => UserType)
-  removeUser(@Args('id', { type: () => Int }) id: number) {
-    return this.usersService.remove(id);
+  removeUser(
+    @Args('id', { type: () => ID }) id: string,
+  ): Maybe<Promise<UserType>> {
+    return this.userService.removeUser(id);
   }
 }
 `);
@@ -1305,13 +1314,14 @@ describe('UsersService', () => {
     it('should generate "UsersResolver" class', () => {
       expect(tree.readContent('/users/users.resolver.ts'))
         .toEqual(`import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { UsersService } from './users.service';
+
 import { CreateUserInput } from './input/create-user.input';
 import { UpdateUserInput } from './input/update-user.input';
+import { UserService } from './users.service';
 
 @Resolver('User')
-export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+export class UserResolver {
+  constructor(private readonly userService: UserService) {}
 
   @Mutation('createUser')
   create(@Args('createUserInput') createUserInput: CreateUserInput) {
