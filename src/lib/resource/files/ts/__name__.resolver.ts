@@ -9,9 +9,9 @@ import { UpdateResult } from 'typeorm';
 import { <%= singular(classify(name)) %>Args } from './args/<%= singular(name) %>.args';
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';
+import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';
 import { <%= singular(classify(name)) %>Output } from './output/<%= singular(name) %>.output';
-import { <%= singular(classify(name)) %>Type } from './type/<%= singular(name) %>.type';
-import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';<% } else if (crud) { %>import { Resolver } from '@nestjs/graphql';
+import { <%= singular(classify(name)) %>Type } from './type/<%= singular(name) %>.type';<% } else if (crud) { %>import { Resolver } from '@nestjs/graphql';
 
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';
@@ -21,34 +21,45 @@ import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';<
 
 <% if (type === 'graphql-code-first' && crud) { %>@Resolver(() => <%= singular(classify(name)) %>Type)<% } else if (type === 'graphql-code-first') {%>@Resolver()<% } else { %>@Resolver('<%= singular(classify(name)) %>')<% } %>
 export class <%= singular(classify(name)) %>Resolver {
-  constructor(private readonly <%= singular(lowercased(name)) %>Service: <%= singular(classify(name)) %>Service) {}<% if (crud && type === 'graphql-code-first') { %>
+  constructor(
+    private readonly <%= singular(lowercased(name)) %>Service: <%= singular(classify(name)) %>Service,
+  ) {}<% if (crud && type === 'graphql-code-first') { %>
 
   @Mutation(() => <%= singular(classify(name)) %>Type)
-  async create<%= singular(classify(name)) %>(@Args('input') input: Create<%= singular(classify(name)) %>Input): Promise<<%= singular(classify(name)) %>Output> {
+  async create<%= singular(classify(name)) %>(
+    @Args('input') input: Create<%= singular(classify(name)) %>Input,
+  ): Promise<<%= singular(classify(name)) %>Output> {
     return this.<%= singular(lowercased(name)) %>Service.create<%= singular(classify(name)) %>(input);
   }
 
   @Query(() => [<%= singular(classify(name)) %>Type])
-  <%= lowercased(plural(classify(name))) %>(@Args() args: <%= singular(classify(name)) %>Args): Maybe<Promise<<%= singular(classify(name)) %>Type[]>> {
+  <%= lowercased(plural(classify(name))) %>(
+    @Args() args: <%= singular(classify(name)) %>Args,
+  ): Promise<Maybe<<%= singular(classify(name)) %>Type[]>> {
     return this.<%= singular(lowercased(name)) %>Service.findBy<%= singular(classify(name)) %>Args(args);
   }
 
   @Query(() => <%= singular(classify(name)) %>Type)
-  <%= lowercased(singular(classify(name))) %>(@Args('id', { type: () => ID }) id: string): Maybe<Promise<<%= singular(classify(name)) %>Type>> {
+  <%= lowercased(singular(classify(name))) %>(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<Maybe<<%= singular(classify(name)) %>Type>> {
     return this.<%= singular(lowercased(name)) %>Service.findById(id);
   }
 
   @Mutation(() => <%= singular(classify(name)) %>Type)
   update<%= singular(classify(name)) %>(
     @Args('input') input: Update<%= singular(classify(name)) %>Input,
-  ): Maybe<Promise<UpdateResult>> {
-    return this.<%= singular(lowercased(name)) %>Service.update<%= singular(classify(name)) %>(input.id, input);
+  ): Promise<Maybe<UpdateResult>> {
+    return this.<%= singular(lowercased(name)) %>Service.update<%= singular(classify(name)) %>(
+      input.id,
+      input,
+    );
   }
 
   @Mutation(() => <%= singular(classify(name)) %>Type)
   remove<%= singular(classify(name)) %>(
     @Args('id', { type: () => ID }) id: string,
-  ): Maybe<Promise<<%= singular(classify(name)) %>Type>> {
+  ): Promise<Maybe<<%= singular(classify(name)) %>Type>> {
     return this.<%= singular(lowercased(name)) %>Service.remove<%= singular(classify(name)) %>(id);
   }<% } else if (crud && type === 'graphql-schema-first') {%>
 
