@@ -1113,6 +1113,9 @@ import { Repository, UpdateResult } from 'typeorm';
 import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
 import { UpdateUserInput } from './input/update-user.input';
+import { CreateUserOutput } from './output/create-user.output';
+import { RemoveUserOutput } from './output/remove-user.output';
+import { UpdateUserOutput } from './output/update-user.output';
 
 @Injectable()
 export class UserService {
@@ -1123,7 +1126,7 @@ export class UserService {
 
   createUser(
     input: CreateUserInput,
-  ): Promise<User> {
+  ): Promise<CreateUserOutput> {
     const user = this.userRepository.create({
       ...input,
     });
@@ -1140,18 +1143,26 @@ export class UserService {
     return this.userRepository.findOneBy({ id });
   }
 
-  updateUser(
+  async updateUser(
     id: string,
     updateUserInput: UpdateUserInput,
-  ): Promise<UpdateResult> {
-    return this.userRepository.update(
+  ): Promise<UpdateUserOutput> {
+    const updateResult = await this.userRepository.update(
       id,
       updateUserInput,
     );
+
+    return {
+      affectedCount: updateResult.affected,
+    };
   }
 
-  removeUser(id: string): Promise<User> {
-    return this.userRepository.softRemove({ id });
+  async removeUser(id: string): Promise<RemoveUserOutput> {
+    return {
+      user: await this.userRepository.softRemove({
+        id,
+      })
+    };
   }
 }
 `);
@@ -1407,6 +1418,9 @@ import { Repository, UpdateResult } from 'typeorm';
 import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
 import { UpdateUserInput } from './input/update-user.input';
+import { CreateUserOutput } from './output/create-user.output';
+import { RemoveUserOutput } from './output/remove-user.output';
+import { UpdateUserOutput } from './output/update-user.output';
 
 @Injectable()
 export class UserService {
@@ -1417,7 +1431,7 @@ export class UserService {
 
   createUser(
     input: CreateUserInput,
-  ): Promise<User> {
+  ): Promise<CreateUserOutput> {
     const user = this.userRepository.create({
       ...input,
     });
@@ -1434,18 +1448,26 @@ export class UserService {
     return this.userRepository.findOneBy({ id });
   }
 
-  updateUser(
+  async updateUser(
     id: string,
     updateUserInput: UpdateUserInput,
-  ): Promise<UpdateResult> {
-    return this.userRepository.update(
+  ): Promise<UpdateUserOutput> {
+    const updateResult = await this.userRepository.update(
       id,
       updateUserInput,
     );
+
+    return {
+      affectedCount: updateResult.affected,
+    };
   }
 
-  removeUser(id: string): Promise<User> {
-    return this.userRepository.softRemove({ id });
+  async removeUser(id: string): Promise<RemoveUserOutput> {
+    return {
+      user: await this.userRepository.softRemove({
+        id,
+      })
+    };
   }
 }
 `);

@@ -7,7 +7,10 @@ import { Repository, UpdateResult } from 'typeorm';
 
 import { <%= singular(classify(name)) %>Args } from './args/<%= singular(name) %>.args';
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
-import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';<% } else { %>import { Injectable } from '@nestjs/common';<% } %>
+import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';
+import { Create<%= singular(classify(name)) %>Output } from './output/create-<%= singular(name) %>.output';
+import { Remove<%= singular(classify(name)) %>Output } from './output/remove-<%= singular(name) %>.output';
+import { Update<%= singular(classify(name)) %>Output } from './output/update-<%= singular(name) %>.output';<% } else { %>import { Injectable } from '@nestjs/common';<% } %>
 
 @Injectable()
 export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'graphql-code-first' && type !== 'graphql-schema-first') { %>
@@ -38,7 +41,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
 
   create<%= singular(classify(name)) %>(
     input: Create<%= singular(classify(name)) %>Input,
-  ): Promise<<%= singular(classify(name)) %>> {
+  ): Promise<Create<%= singular(classify(name)) %>Output> {
     const <%= singular(lowercased(name)) %> = this.<%= singular(lowercased(name)) %>Repository.create({
       ...input,
     });
@@ -55,17 +58,25 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     return this.<%= singular(lowercased(name)) %>Repository.findOneBy({ id });
   }
 
-  update<%= singular(classify(name)) %>(
+  async update<%= singular(classify(name)) %>(
     id: string,
     update<%= singular(classify(name)) %>Input: Update<%= singular(classify(name)) %>Input,
-  ): Promise<UpdateResult> {
-    return this.<%= singular(lowercased(name)) %>Repository.update(
+  ): Promise<Update<%= singular(classify(name)) %>Output> {
+    const updateResult = await this.<%= singular(lowercased(name)) %>Repository.update(
       id,
       update<%= singular(classify(name)) %>Input,
     );
+
+    return {
+      affectedCount: updateResult.affected,
+    };
   }
 
-  remove<%= singular(classify(name)) %>(id: string): Promise<<%= singular(classify(name)) %>> {
-    return this.<%= singular(lowercased(name)) %>Repository.softRemove({ id });
+  async remove<%= singular(classify(name)) %>(id: string): Promise<Remove<%= singular(classify(name)) %>Output> {
+    return {
+      <%= singular(lowercased(name)) %>: await this.<%= singular(lowercased(name)) %>Repository.softRemove({
+        id,
+      })
+    };
   }
 <% } %>}
