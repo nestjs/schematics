@@ -1052,7 +1052,9 @@ import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
 import { UpdateUserInput } from './input/update-user.input';
 import { UserService } from './users.service';
-import { UserOutput } from './output/user.output';
+import { CreateUserOutput } from './output/create-user.output';
+import { RemoveUserOutput } from './output/remove-user.output';
+import { UpdateUserOutput } from './output/update-user.output';
 import { UserType } from './type/user.type';
 
 @Resolver(() => UserType)
@@ -1061,10 +1063,10 @@ export class UserResolver {
     private readonly userService: UserService,
   ) {}
 
-  @Mutation(() => UserType)
+  @Mutation(() => CreateUserOutput)
   async createUser(
     @Args('input') input: CreateUserInput,
-  ): Promise<UserOutput> {
+  ): Promise<CreateUserOutput> {
     return this.userService.createUser(input);
   }
 
@@ -1082,20 +1084,20 @@ export class UserResolver {
     return this.userService.findById(id);
   }
 
-  @Mutation(() => UserType)
+  @Mutation(() => UpdateUserOutput)
   updateUser(
     @Args('input') input: UpdateUserInput,
-  ): Promise<Maybe<UpdateResult>> {
+  ): Promise<Maybe<UpdateUserOutput>> {
     return this.userService.updateUser(
       input.id,
       input,
     );
   }
 
-  @Mutation(() => UserType)
+  @Mutation(() => RemoveUserOutput)
   removeUser(
     @Args('id', { type: () => ID }) id: string,
-  ): Promise<Maybe<UserType>> {
+  ): Promise<Maybe<RemoveUserOutput>> {
     return this.userService.removeUser(id);
   }
 }
