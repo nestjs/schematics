@@ -1046,7 +1046,6 @@ export class UsersModule {}
       expect(tree.readContent('/users/users.resolver.ts'))
         .toEqual(`import { Maybe } from '@apollo/federation';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { UpdateResult } from 'typeorm';
 
 import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
@@ -1108,7 +1107,7 @@ export class UserResolver {
         .toEqual(`import { User } from '@app/db/entity/user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
@@ -1124,13 +1123,13 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  createUser(
+  async createUser(
     input: CreateUserInput,
   ): Promise<CreateUserOutput> {
-    const user = this.userRepository.create({
-      ...input,
-    });
-    return this.userRepository.save(user);
+    const user = await this.userRepository.save(
+      input,
+    );
+    return { user };
   }
 
   findByUserArgs(
@@ -1413,7 +1412,7 @@ export class UserResolver {
         .toEqual(`import { User } from '@app/db/entity/user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
@@ -1429,13 +1428,13 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  createUser(
+  async createUser(
     input: CreateUserInput,
   ): Promise<CreateUserOutput> {
-    const user = this.userRepository.create({
-      ...input,
-    });
-    return this.userRepository.save(user);
+    const user = await this.userRepository.save(
+      input,
+    );
+    return { user };
   }
 
   findByUserArgs(

@@ -3,7 +3,7 @@ import { Create<%= singular(classify(name)) %>Dto } from './input/create-<%= sin
 import { Update<%= singular(classify(name)) %>Dto } from './input/update-<%= singular(name) %>.dto';<% } else if (crud) { %>import { <%= singular(classify(name)) %> } from '@app/db/entity/<%= singular(name) %>.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { <%= singular(classify(name)) %>Args } from './args/<%= singular(name) %>.args';
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
@@ -39,13 +39,13 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     private readonly <%= singular(lowercased(name)) %>Repository: Repository<<%= singular(classify(name)) %>>,
   ) {}
 
-  create<%= singular(classify(name)) %>(
+  async create<%= singular(classify(name)) %>(
     input: Create<%= singular(classify(name)) %>Input,
   ): Promise<Create<%= singular(classify(name)) %>Output> {
-    const <%= singular(lowercased(name)) %> = this.<%= singular(lowercased(name)) %>Repository.create({
-      ...input,
-    });
-    return this.<%= singular(lowercased(name)) %>Repository.save(<%= singular(lowercased(name)) %>);
+    const <%= singular(lowercased(name)) %> = await this.<%= singular(lowercased(name)) %>Repository.save(
+      input,
+    );
+    return { <%= singular(lowercased(name)) %> };
   }
 
   findBy<%= singular(classify(name)) %>Args(
