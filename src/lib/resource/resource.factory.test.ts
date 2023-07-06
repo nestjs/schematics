@@ -29,7 +29,9 @@ describe('Resource Factory', () => {
         '/users/args/user.args.ts',
         '/users/input/create-user.dto.ts',
         '/users/input/update-user.dto.ts',
-        '/users/output/user.output.ts',
+        '/users/output/create-user.output.ts',
+        '/users/output/remove-user.output.ts',
+        '/users/output/update-user.output.ts',
         '/users/type/user.type.ts',
       ]);
     });
@@ -50,7 +52,9 @@ describe('Resource Factory', () => {
         '/_users/args/_user.args.ts',
         '/_users/input/create-_user.dto.ts',
         '/_users/input/update-_user.dto.ts',
-        '/_users/output/_user.output.ts',
+        '/_users/output/create-_user.output.ts',
+        '/_users/output/remove-_user.output.ts',
+        '/_users/output/update-_user.output.ts',
         '/_users/type/_user.type.ts',
       ]);
     });
@@ -71,7 +75,9 @@ describe('Resource Factory', () => {
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
           '/users/args/user.args.ts',
-          '/users/output/user.output.ts',
+          '/users/output/create-user.output.ts',
+          '/users/output/remove-user.output.ts',
+          '/users/output/update-user.output.ts',
         ]);
       });
     });
@@ -91,7 +97,9 @@ describe('Resource Factory', () => {
           '/users/users.module.ts',
           '/users/users.service.ts',
           '/users/args/user.args.ts',
-          '/users/output/user.output.ts',
+          '/users/output/create-user.output.ts',
+          '/users/output/remove-user.output.ts',
+          '/users/output/update-user.output.ts',
         ]);
       });
     });
@@ -349,7 +357,9 @@ export class UsersModule {}
         '/users/args/user.args.ts',
         '/users/input/create-user.dto.ts',
         '/users/input/update-user.dto.ts',
-        '/users/output/user.output.ts',
+        '/users/output/create-user.output.ts',
+        '/users/output/remove-user.output.ts',
+        '/users/output/update-user.output.ts',
         '/users/type/user.type.ts',
       ]);
     });
@@ -371,7 +381,9 @@ export class UsersModule {}
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
           '/users/args/user.args.ts',
-          '/users/output/user.output.ts',
+          '/users/output/create-user.output.ts',
+          '/users/output/remove-user.output.ts',
+          '/users/output/update-user.output.ts',
         ]);
       });
     });
@@ -392,7 +404,9 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.service.ts',
           '/users/args/user.args.ts',
-          '/users/output/user.output.ts',
+          '/users/output/create-user.output.ts',
+          '/users/output/remove-user.output.ts',
+          '/users/output/update-user.output.ts',
         ]);
       });
     });
@@ -654,7 +668,9 @@ export class UsersModule {}
         '/users/args/user.args.ts',
         '/users/input/create-user.dto.ts',
         '/users/input/update-user.dto.ts',
-        '/users/output/user.output.ts',
+        '/users/output/create-user.output.ts',
+        '/users/output/remove-user.output.ts',
+        '/users/output/update-user.output.ts',
         '/users/type/user.type.ts',
       ]);
     });
@@ -676,7 +692,9 @@ export class UsersModule {}
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
           '/users/args/user.args.ts',
-          '/users/output/user.output.ts',
+          '/users/output/create-user.output.ts',
+          '/users/output/remove-user.output.ts',
+          '/users/output/update-user.output.ts',
         ]);
       });
     });
@@ -697,7 +715,9 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.service.ts',
           '/users/args/user.args.ts',
-          '/users/output/user.output.ts',
+          '/users/output/create-user.output.ts',
+          '/users/output/remove-user.output.ts',
+          '/users/output/update-user.output.ts',
         ]);
       });
     });
@@ -955,7 +975,9 @@ export class UsersModule {}
         '/users/args/user.args.ts',
         '/users/input/create-user.input.ts',
         '/users/input/update-user.input.ts',
-        '/users/output/user.output.ts',
+        '/users/output/create-user.output.ts',
+        '/users/output/remove-user.output.ts',
+        '/users/output/update-user.output.ts',
         '/users/type/user.type.ts',
       ]);
     });
@@ -977,7 +999,9 @@ export class UsersModule {}
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
           '/users/args/user.args.ts',
-          '/users/output/user.output.ts',
+          '/users/output/create-user.output.ts',
+          '/users/output/remove-user.output.ts',
+          '/users/output/update-user.output.ts',
         ]);
       });
     });
@@ -998,7 +1022,9 @@ export class UsersModule {}
           '/users/users.resolver.ts',
           '/users/users.service.ts',
           '/users/args/user.args.ts',
-          '/users/output/user.output.ts',
+          '/users/output/create-user.output.ts',
+          '/users/output/remove-user.output.ts',
+          '/users/output/update-user.output.ts',
         ]);
       });
     });
@@ -1262,7 +1288,9 @@ describe('UsersService', () => {
         '/users/args/user.args.ts',
         '/users/input/create-user.input.ts',
         '/users/input/update-user.input.ts',
-        '/users/output/user.output.ts',
+        '/users/output/create-user.output.ts',
+        '/users/output/remove-user.output.ts',
+        '/users/output/update-user.output.ts',
         '/users/type/user.type.ts',
       ]);
     });
@@ -1284,7 +1312,9 @@ describe('UsersService', () => {
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
           '/users/args/user.args.ts',
-          '/users/output/user.output.ts',
+          '/users/output/create-user.output.ts',
+          '/users/output/remove-user.output.ts',
+          '/users/output/update-user.output.ts',
         ]);
       });
     });
@@ -1305,7 +1335,9 @@ describe('UsersService', () => {
           '/users/users.resolver.ts',
           '/users/users.service.ts',
           '/users/args/user.args.ts',
-          '/users/output/user.output.ts',
+          '/users/output/create-user.output.ts',
+          '/users/output/remove-user.output.ts',
+          '/users/output/update-user.output.ts',
         ]);
       });
     });

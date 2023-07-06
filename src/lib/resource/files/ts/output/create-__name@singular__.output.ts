@@ -3,7 +3,7 @@
 import { <%= singular(classify(name)) %>Type } from '../type/<%= singular(name) %>.type';
 
 @ObjectType()
-export class <%= singular(classify(name)) %>Output {
+export class Create<%= singular(classify(name)) %>Output {
   @Field(() => <%= singular(classify(name)) %>Type)
   <%= singular(classify(name)) %>!: <%= singular(classify(name)) %>Type;
 }<% } else { %>export class <%= singular(classify(name)) %>Output {}<% } %>
