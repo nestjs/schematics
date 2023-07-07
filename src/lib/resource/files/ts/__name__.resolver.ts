@@ -2,8 +2,8 @@
 
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';
-import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';<% } %><% else if (crud && type === 'graphql-code-first') { %>import { Maybe } from '@apollo/federation';
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';<% } %><% else if (crud && type === 'graphql-code-first') { %>import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Maybe } from 'graphql/jsutils/Maybe';
 
 import { <%= singular(classify(name)) %>Args } from './args/<%= singular(name) %>.args';
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
