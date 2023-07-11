@@ -1044,8 +1044,8 @@ export class UsersModule {}
 
     it('should generate "UsersResolver" class', () => {
       expect(tree.readContent('/users/users.resolver.ts'))
-        .toEqual(`import { Maybe } from '@apollo/federation';
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+        .toEqual(`import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Maybe } from 'graphql/jsutils/Maybe';
 
 import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
@@ -1169,12 +1169,15 @@ export class UserService {
 
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
-        .toEqual(`import { Module } from '@nestjs/common';
+        .toEqual(`import { Users } from '@app/db/entity/users.entity';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([Users])],
   providers: [UsersResolver, UsersService],
 })
 export class UsersModule {}
@@ -1474,12 +1477,15 @@ export class UserService {
 
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
-        .toEqual(`import { Module } from '@nestjs/common';
+        .toEqual(`import { Users } from '@app/db/entity/users.entity';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([Users])],
   providers: [UsersResolver, UsersService],
 })
 export class UsersModule {}
