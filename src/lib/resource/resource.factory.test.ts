@@ -1097,7 +1097,7 @@ export class UserResolver {
 
   @Mutation(() => RemoveUserOutput)
   removeUser(
-    @Args('input') input: DeleteUserInput,
+    @Args('input') input: RemoveUserInput,
   ): Promise<RemoveUserOutput> {
     return this.userService.removeUser(input.id);
   }
@@ -1162,7 +1162,7 @@ export class UserService {
     }
     const result = await this.userRepository.update(
       id,
-      dao,
+      input,
     );
 
     return {
@@ -1485,7 +1485,7 @@ export class UserService {
     }
     const result = await this.userRepository.update(
       id,
-      dao,
+      input,
     );
 
     return {

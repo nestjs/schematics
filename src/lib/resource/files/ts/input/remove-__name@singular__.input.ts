@@ -3,7 +3,7 @@
 import { Create<%= singular(classify(name)) %>Input } from './create-<%= singular(name) %>.input';
 
 @InputType()
-export class Delete<%= singular(classify(name)) %>Input extends PartialType(
+export class Remove<%= singular(classify(name)) %>Input extends PartialType(
   Create<%= singular(classify(name)) %>Input,
 ) {
   @Field(() => ID)
@@ -11,6 +11,6 @@ export class Delete<%= singular(classify(name)) %>Input extends PartialType(
 }<% } else { %>import { Create<%= singular(classify(name)) %>Input } from './create-<%= singular(name) %>.input';
 import { PartialType } from '@nestjs/mapped-types';
 
-export class Delete<%= singular(classify(name)) %>Input extends PartialType(Create<%= singular(classify(name)) %>Input) {
+export class Remove<%= singular(classify(name)) %>Input extends PartialType(Create<%= singular(classify(name)) %>Input) {
   id: number;
 }<% } %>

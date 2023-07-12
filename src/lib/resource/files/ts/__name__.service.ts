@@ -76,7 +76,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     }
     const result = await this.<%= singular(lowercased(name)) %>Repository.update(
       id,
-      dao,
+      input,
     );
 
     return {

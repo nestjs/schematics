@@ -60,7 +60,7 @@ export class <%= singular(classify(name)) %>Resolver {
 
   @Mutation(() => Remove<%= singular(classify(name)) %>Output)
   remove<%= singular(classify(name)) %>(
-    @Args('input') input: Delete<%= singular(classify(name)) %>Input,
+    @Args('input') input: Remove<%= singular(classify(name)) %>Input,
   ): Promise<Remove<%= singular(classify(name)) %>Output> {
     return this.<%= singular(lowercased(name)) %>Service.remove<%= singular(classify(name)) %>(input.id);
   }<% } else if (crud && type === 'graphql-schema-first') {%>
