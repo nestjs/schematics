@@ -1148,21 +1148,23 @@ export class UserService {
     id: string,
     updateUserInput: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
-    const updateResult = await this.userRepository.update(
+    const result = await this.userRepository.update(
       id,
       updateUserInput,
     );
 
     return {
-      affectedCount: updateResult.affected,
+      affectedCount: result.affected,
     };
   }
 
   async removeUser(id: string): Promise<RemoveUserOutput> {
+    const result = await this.userRepository.softDelete({
+      id,
+    });
+
     return {
-      user: await this.userRepository.softRemove({
-        id,
-      })
+      affectedCount: result.affected,
     };
   }
 }
@@ -1457,21 +1459,23 @@ export class UserService {
     id: string,
     updateUserInput: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
-    const updateResult = await this.userRepository.update(
+    const result = await this.userRepository.update(
       id,
       updateUserInput,
     );
 
     return {
-      affectedCount: updateResult.affected,
+      affectedCount: result.affected,
     };
   }
 
   async removeUser(id: string): Promise<RemoveUserOutput> {
+    const result = await this.userRepository.softDelete({
+      id,
+    });
+
     return {
-      user: await this.userRepository.softRemove({
-        id,
-      })
+      affectedCount: result.affected,
     };
   }
 }

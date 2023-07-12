@@ -62,21 +62,23 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     id: string,
     update<%= singular(classify(name)) %>Input: Update<%= singular(classify(name)) %>Input,
   ): Promise<Update<%= singular(classify(name)) %>Output> {
-    const updateResult = await this.<%= singular(lowercased(name)) %>Repository.update(
+    const result = await this.<%= singular(lowercased(name)) %>Repository.update(
       id,
       update<%= singular(classify(name)) %>Input,
     );
 
     return {
-      affectedCount: updateResult.affected,
+      affectedCount: result.affected,
     };
   }
 
   async remove<%= singular(classify(name)) %>(id: string): Promise<Remove<%= singular(classify(name)) %>Output> {
+    const result = await this.<%= singular(lowercased(name)) %>Repository.softDelete({
+      id,
+    });
+
     return {
-      <%= singular(lowercased(name)) %>: await this.<%= singular(lowercased(name)) %>Repository.softRemove({
-        id,
-      })
+      affectedCount: result.affected,
     };
   }
 <% } %>}
