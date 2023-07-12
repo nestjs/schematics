@@ -1,6 +1,6 @@
 {
   "name": "4itech-schematics",
-  "version": "10.7.1",
+  "version": "10.8.0",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "main": "dist/index.js",
   "files": [
