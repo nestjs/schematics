@@ -974,6 +974,7 @@ export class UsersModule {}
         '/users/users.service.ts',
         '/users/args/user.args.ts',
         '/users/input/create-user.input.ts',
+        '/users/input/remove-user.input.ts',
         '/users/input/update-user.input.ts',
         '/users/output/create-user.output.ts',
         '/users/output/remove-user.output.ts',
@@ -1049,6 +1050,7 @@ import { Maybe } from 'graphql/jsutils/Maybe';
 
 import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
+import { RemoveUserInput } from './input/remove-user.input';
 import { UpdateUserInput } from './input/update-user.input';
 import { UserService } from './users.service';
 import { CreateUserOutput } from './output/create-user.output';
@@ -1095,9 +1097,9 @@ export class UserResolver {
 
   @Mutation(() => RemoveUserOutput)
   removeUser(
-    @Args('id', { type: () => ID }) id: string,
+    @Args('input') input: DeleteUserInput,
   ): Promise<Maybe<RemoveUserOutput>> {
-    return this.userService.removeUser(id);
+    return this.userService.removeUser(input.id);
   }
 }
 `);
@@ -1302,6 +1304,7 @@ describe('UsersService', () => {
         '/users/users.service.ts',
         '/users/args/user.args.ts',
         '/users/input/create-user.input.ts',
+        '/users/input/remove-user.input.ts',
         '/users/input/update-user.input.ts',
         '/users/output/create-user.output.ts',
         '/users/output/remove-user.output.ts',

@@ -7,6 +7,7 @@ import { Maybe } from 'graphql/jsutils/Maybe';
 
 import { <%= singular(classify(name)) %>Args } from './args/<%= singular(name) %>.args';
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
+import { Remove<%= singular(classify(name)) %>Input } from './input/remove-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';
 import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';
 import { Create<%= singular(classify(name)) %>Output } from './output/create-<%= singular(name) %>.output';
@@ -59,9 +60,9 @@ export class <%= singular(classify(name)) %>Resolver {
 
   @Mutation(() => Remove<%= singular(classify(name)) %>Output)
   remove<%= singular(classify(name)) %>(
-    @Args('id', { type: () => ID }) id: string,
+    @Args('input') input: Delete<%= singular(classify(name)) %>Input,
   ): Promise<Maybe<Remove<%= singular(classify(name)) %>Output>> {
-    return this.<%= singular(lowercased(name)) %>Service.remove<%= singular(classify(name)) %>(id);
+    return this.<%= singular(lowercased(name)) %>Service.remove<%= singular(classify(name)) %>(input.id);
   }<% } else if (crud && type === 'graphql-schema-first') {%>
 
   @Mutation('create<%= singular(classify(name)) %>')
