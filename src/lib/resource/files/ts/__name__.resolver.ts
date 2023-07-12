@@ -51,7 +51,7 @@ export class <%= singular(classify(name)) %>Resolver {
   @Mutation(() => Update<%= singular(classify(name)) %>Output)
   update<%= singular(classify(name)) %>(
     @Args('input') input: Update<%= singular(classify(name)) %>Input,
-  ): Promise<Maybe<Update<%= singular(classify(name)) %>Output>> {
+  ): Promise<Update<%= singular(classify(name)) %>Output> {
     return this.<%= singular(lowercased(name)) %>Service.update<%= singular(classify(name)) %>(
       input.id,
       input,
@@ -61,7 +61,7 @@ export class <%= singular(classify(name)) %>Resolver {
   @Mutation(() => Remove<%= singular(classify(name)) %>Output)
   remove<%= singular(classify(name)) %>(
     @Args('input') input: Delete<%= singular(classify(name)) %>Input,
-  ): Promise<Maybe<Remove<%= singular(classify(name)) %>Output>> {
+  ): Promise<Remove<%= singular(classify(name)) %>Output> {
     return this.<%= singular(lowercased(name)) %>Service.remove<%= singular(classify(name)) %>(input.id);
   }<% } else if (crud && type === 'graphql-schema-first') {%>
 

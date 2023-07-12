@@ -1088,7 +1088,7 @@ export class UserResolver {
   @Mutation(() => UpdateUserOutput)
   updateUser(
     @Args('input') input: UpdateUserInput,
-  ): Promise<Maybe<UpdateUserOutput>> {
+  ): Promise<UpdateUserOutput> {
     return this.userService.updateUser(
       input.id,
       input,
@@ -1098,7 +1098,7 @@ export class UserResolver {
   @Mutation(() => RemoveUserOutput)
   removeUser(
     @Args('input') input: DeleteUserInput,
-  ): Promise<Maybe<RemoveUserOutput>> {
+  ): Promise<RemoveUserOutput> {
     return this.userService.removeUser(input.id);
   }
 }
