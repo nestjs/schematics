@@ -1,8 +1,10 @@
 <% if (crud && type !== 'graphql-code-first' && type !== 'graphql-schema-first') { %>import { Injectable } from '@nestjs/common';
 import { Create<%= singular(classify(name)) %>Dto } from './input/create-<%= singular(name) %>.dto';
 import { Update<%= singular(classify(name)) %>Dto } from './input/update-<%= singular(name) %>.dto';<% } else if (crud) { %>import { <%= singular(classify(name)) %> } from '@app/db/entity/<%= singular(name) %>.entity';
+import { ValidatorValidationError } from '@app/graphql-type/error/validator-validation.error';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { validate } from 'class-validator';
 import { Repository } from 'typeorm';
 
 import { <%= singular(classify(name)) %>Args } from './args/<%= singular(name) %>.args';
@@ -42,8 +44,13 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
   async create<%= singular(classify(name)) %>(
     input: Create<%= singular(classify(name)) %>Input,
   ): Promise<Create<%= singular(classify(name)) %>Output> {
+    const dao = this.<%= singular(lowercased(name)) %>Repository.create(input);
+    const errors = await validate(dao);
+    if (errors.length) {
+      throw new ValidatorValidationError(errors);
+    }
     const <%= singular(lowercased(name)) %> = await this.<%= singular(lowercased(name)) %>Repository.save(
-      input,
+      dao,
     );
     return { <%= singular(lowercased(name)) %> };
   }
@@ -60,11 +67,16 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
 
   async update<%= singular(classify(name)) %>(
     id: string,
-    update<%= singular(classify(name)) %>Input: Update<%= singular(classify(name)) %>Input,
+    input: Update<%= singular(classify(name)) %>Input,
   ): Promise<Update<%= singular(classify(name)) %>Output> {
+    const dao = this.<%= singular(lowercased(name)) %>Repository.create(input);
+    const errors = await validate(dao);
+    if (errors.length) {
+      throw new ValidatorValidationError(errors);
+    }
     const result = await this.<%= singular(lowercased(name)) %>Repository.update(
       id,
-      update<%= singular(classify(name)) %>Input,
+      dao,
     );
 
     return {

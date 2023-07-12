@@ -1107,8 +1107,10 @@ export class UserResolver {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { User } from '@app/db/entity/user.entity';
+import { ValidatorValidationError } from '@app/graphql-type/error/validator-validation.error';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { validate } from 'class-validator';
 import { Repository } from 'typeorm';
 
 import { UserArgs } from './args/user.args';
@@ -1128,8 +1130,13 @@ export class UserService {
   async createUser(
     input: CreateUserInput,
   ): Promise<CreateUserOutput> {
+    const dao = this.userRepository.create(input);
+    const errors = await validate(dao);
+    if (errors.length) {
+      throw new ValidatorValidationError(errors);
+    }
     const user = await this.userRepository.save(
-      input,
+      dao,
     );
     return { user };
   }
@@ -1146,11 +1153,16 @@ export class UserService {
 
   async updateUser(
     id: string,
-    updateUserInput: UpdateUserInput,
+    input: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
+    const dao = this.userRepository.create(input);
+    const errors = await validate(dao);
+    if (errors.length) {
+      throw new ValidatorValidationError(errors);
+    }
     const result = await this.userRepository.update(
       id,
-      updateUserInput,
+      dao,
     );
 
     return {
@@ -1418,8 +1430,10 @@ export class UserResolver {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { User } from '@app/db/entity/user.entity';
+import { ValidatorValidationError } from '@app/graphql-type/error/validator-validation.error';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { validate } from 'class-validator';
 import { Repository } from 'typeorm';
 
 import { UserArgs } from './args/user.args';
@@ -1439,8 +1453,13 @@ export class UserService {
   async createUser(
     input: CreateUserInput,
   ): Promise<CreateUserOutput> {
+    const dao = this.userRepository.create(input);
+    const errors = await validate(dao);
+    if (errors.length) {
+      throw new ValidatorValidationError(errors);
+    }
     const user = await this.userRepository.save(
-      input,
+      dao,
     );
     return { user };
   }
@@ -1457,11 +1476,16 @@ export class UserService {
 
   async updateUser(
     id: string,
-    updateUserInput: UpdateUserInput,
+    input: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
+    const dao = this.userRepository.create(input);
+    const errors = await validate(dao);
+    if (errors.length) {
+      throw new ValidatorValidationError(errors);
+    }
     const result = await this.userRepository.update(
       id,
-      updateUserInput,
+      dao,
     );
 
     return {
