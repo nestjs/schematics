@@ -1,7 +1,7 @@
-<% if (type === 'graphql-code-first') { %>import { Field, ID, InputType } from '@nestjs/graphql';
+<% if (type === 'graphql-code-first') { %>import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class Create<%= singular(classify(name)) %>Input {
-  @Field(() => ID, { nullable: true })
-  id?: string;
+  @Field(() => String, { nullable: true })
+  exampleField?: string;
 }<% } else { %>export class Create<%= singular(classify(name)) %>Input {}<% } %>
