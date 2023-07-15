@@ -35,21 +35,21 @@ export class <%= singular(classify(name)) %>Resolver {
   }
 
   @Query(() => [<%= singular(classify(name)) %>Type])
-  <%= lowercased(plural(classify(name))) %>(
+  async <%= lowercased(plural(classify(name))) %>(
     @Args() args: <%= singular(classify(name)) %>Args,
   ): Promise<Maybe<<%= singular(classify(name)) %>Type[]>> {
     return this.<%= singular(lowercased(name)) %>Service.findBy<%= singular(classify(name)) %>Args(args);
   }
 
   @Query(() => <%= singular(classify(name)) %>Type)
-  <%= lowercased(singular(classify(name))) %>(
+  async <%= lowercased(singular(classify(name))) %>(
     @Args('id', { type: () => ID }) id: string,
   ): Promise<Maybe<<%= singular(classify(name)) %>Type>> {
     return this.<%= singular(lowercased(name)) %>Service.findById(id);
   }
 
   @Mutation(() => Update<%= singular(classify(name)) %>Output)
-  update<%= singular(classify(name)) %>(
+  async update<%= singular(classify(name)) %>(
     @Args('input') input: Update<%= singular(classify(name)) %>Input,
   ): Promise<Update<%= singular(classify(name)) %>Output> {
     return this.<%= singular(lowercased(name)) %>Service.update<%= singular(classify(name)) %>(
@@ -59,7 +59,7 @@ export class <%= singular(classify(name)) %>Resolver {
   }
 
   @Mutation(() => Remove<%= singular(classify(name)) %>Output)
-  remove<%= singular(classify(name)) %>(
+  async remove<%= singular(classify(name)) %>(
     @Args('input') input: Remove<%= singular(classify(name)) %>Input,
   ): Promise<Remove<%= singular(classify(name)) %>Output> {
     return this.<%= singular(lowercased(name)) %>Service.remove<%= singular(classify(name)) %>(input.id);

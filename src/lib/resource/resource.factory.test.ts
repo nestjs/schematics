@@ -1072,21 +1072,21 @@ export class UserResolver {
   }
 
   @Query(() => [UserType])
-  users(
+  async users(
     @Args() args: UserArgs,
   ): Promise<Maybe<UserType[]>> {
     return this.userService.findByUserArgs(args);
   }
 
   @Query(() => UserType)
-  user(
+  async user(
     @Args('id', { type: () => ID }) id: string,
   ): Promise<Maybe<UserType>> {
     return this.userService.findById(id);
   }
 
   @Mutation(() => UpdateUserOutput)
-  updateUser(
+  async updateUser(
     @Args('input') input: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
     return this.userService.updateUser(
@@ -1096,7 +1096,7 @@ export class UserResolver {
   }
 
   @Mutation(() => RemoveUserOutput)
-  removeUser(
+  async removeUser(
     @Args('input') input: RemoveUserInput,
   ): Promise<RemoveUserOutput> {
     return this.userService.removeUser(input.id);
@@ -1141,13 +1141,13 @@ export class UserService {
     return { user };
   }
 
-  findByUserArgs(
+  async findByUserArgs(
     args: UserArgs,
   ): Promise<User[]> {
     return this.userRepository.findBy(args);
   }
 
-  findById(id: string): Promise<User | null> {
+  async findById(id: string): Promise<User | null> {
     return this.userRepository.findOneBy({ id });
   }
 
@@ -1463,13 +1463,13 @@ export class UserService {
     return { user };
   }
 
-  findByUserArgs(
+  async findByUserArgs(
     args: UserArgs,
   ): Promise<User[]> {
     return this.userRepository.findBy(args);
   }
 
-  findById(id: string): Promise<User | null> {
+  async findById(id: string): Promise<User | null> {
     return this.userRepository.findOneBy({ id });
   }
 

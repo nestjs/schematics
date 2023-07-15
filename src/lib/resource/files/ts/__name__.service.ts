@@ -55,13 +55,13 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     return { <%= singular(lowercased(name)) %> };
   }
 
-  findBy<%= singular(classify(name)) %>Args(
+  async findBy<%= singular(classify(name)) %>Args(
     args: <%= singular(classify(name)) %>Args,
   ): Promise<<%= singular(classify(name)) %>[]> {
     return this.<%= singular(lowercased(name)) %>Repository.findBy(args);
   }
 
-  findById(id: string): Promise<<%= singular(classify(name)) %> | null> {
+  async findById(id: string): Promise<<%= singular(classify(name)) %> | null> {
     return this.<%= singular(lowercased(name)) %>Repository.findOneBy({ id });
   }
 
