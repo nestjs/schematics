@@ -56,11 +56,11 @@
         "message": "What transport layer do you use?",
         "type": "list",
         "items": [
-          { "value": "rest", "label": "REST API" },
           {
             "value": "graphql-code-first",
             "label": "GraphQL (code first)"
           },
+          { "value": "rest", "label": "REST API" },
           {
             "value": "graphql-schema-first",
             "label": "GraphQL (schema first)"
