@@ -44,10 +44,10 @@
     "type": {
       "type": "string",
       "description": "The transport layer.",
-      "default": "rest",
+      "default": "graphql-code-first",
       "enum": [
-        "rest",
         "graphql-code-first",
+        "rest",
         "graphql-schema-first",
         "microservice",
         "ws"
