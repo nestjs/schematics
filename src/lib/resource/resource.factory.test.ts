@@ -15,6 +15,7 @@ describe('Resource Factory', () => {
     it('should generate appropriate files ', async () => {
       const options: ResourceOptions = {
         name: 'users',
+        type: 'rest',
       };
       const tree = await runner
         .runSchematicAsync('resource', options)
@@ -38,6 +39,7 @@ describe('Resource Factory', () => {
     it("should keep underscores in resource's path and file name", async () => {
       const options: ResourceOptions = {
         name: '_users',
+        type: 'rest',
       };
       const tree = await runner
         .runSchematicAsync('resource', options)
@@ -62,6 +64,7 @@ describe('Resource Factory', () => {
       it('should generate appropriate files (without dtos)', async () => {
         const options: ResourceOptions = {
           name: 'users',
+          type: 'rest',
           crud: false,
         };
         const tree = await runner
@@ -85,6 +88,7 @@ describe('Resource Factory', () => {
       it('should generate appropriate files (without dtos)', async () => {
         const options: ResourceOptions = {
           name: 'users',
+          type: 'rest',
           spec: false,
           crud: false,
         };
@@ -108,6 +112,7 @@ describe('Resource Factory', () => {
   describe('[REST API]', () => {
     const options: ResourceOptions = {
       name: 'users',
+      type: 'rest',
       isSwaggerInstalled: true,
     };
 
@@ -279,6 +284,7 @@ describe('UsersService', () => {
   describe('[REST API - with "crud" disabled]', () => {
     const options: ResourceOptions = {
       name: 'users',
+      type: 'rest',
       crud: false,
       spec: false,
     };
@@ -1630,6 +1636,7 @@ type Mutation {
   it('should create spec files', async () => {
     const options: ResourceOptions = {
       name: 'foo',
+      type: 'rest',
       spec: true,
       flat: true,
     };
@@ -1648,6 +1655,7 @@ type Mutation {
   it('should create spec files with custom file suffix', async () => {
     const options: ResourceOptions = {
       name: 'foo',
+      type: 'rest',
       spec: true,
       specFileSuffix: 'test',
       flat: true,
