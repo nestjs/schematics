@@ -3,6 +3,6 @@ import { NonNegativeIntResolver } from 'graphql-scalars';
 
 @ObjectType()
 export class Remove<%= singular(classify(name)) %>Output {
-  @Field(() => NonNegativeIntResolver, { nullable: true })
-  affectedCount?: number;
+  @Field(() => <%= singular(classify(name)) %>Type)
+  <%= singular(lowercased(name)) %>!: <%= singular(classify(name)) %>Type;
 }<% } else { %>export class <%= singular(classify(name)) %>Output {}<% } %>

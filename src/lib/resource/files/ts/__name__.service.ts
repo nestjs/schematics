@@ -2,11 +2,13 @@
 import { Create<%= singular(classify(name)) %>Dto } from './input/create-<%= singular(name) %>.dto';
 import { Update<%= singular(classify(name)) %>Dto } from './input/update-<%= singular(name) %>.dto';<% } else if (crud) { %>import { <%= singular(classify(name)) %> } from '@app/db/entity/<%= singular(name) %>.entity';
 import { ValidatorValidationError } from '@app/graphql-type/error/validator-validation.error';
+import { DaoIdNotFoundError } from '@app/graphql-type/error/dao-id-not-found.error';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
+import { ServiceMetadata } from '../common/service-metadata.interface';
 import { <%= singular(classify(name)) %>Args } from './args/<%= singular(name) %>.args';
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';
@@ -37,60 +39,120 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
   }
 <% } %><% else if (crud) { %>
   constructor(
+    private readonly dataSource: DataSource,
     @InjectRepository(<%= singular(classify(name)) %>)
-    private readonly <%= singular(lowercased(name)) %>Repository: Repository<<%= singular(classify(name)) %>>,
+    private readonly <%= singular(lowercased(name)) %>Repo: Repository<<%= singular(classify(name)) %>>,
   ) {}
 
   async create<%= singular(classify(name)) %>(
     input: Create<%= singular(classify(name)) %>Input,
+    metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<Create<%= singular(classify(name)) %>Output> {
-    const dao = this.<%= singular(lowercased(name)) %>Repository.create(input);
-    const errors = await validate(dao);
-    if (errors.length) {
-      throw new ValidatorValidationError(errors);
+    const create = async (manager: EntityManager) => {
+      const <%= singular(lowercased(name)) %>Repo = manager.getRepository(<%= singular(classify(name)) %>);
+
+      const <%= singular(lowercased(name)) %> = <%= singular(lowercased(name)) %>Repo.create(input);
+
+      const errors = await validate(<%= singular(lowercased(name)) %>);
+      if (errors.length) {
+        throw new ValidatorValidationError(errors);
+      }
+
+      await <%= singular(lowercased(name)) %>Repo.save(
+        <%= singular(lowercased(name)) %>,
+      );
+
+      return { <%= singular(lowercased(name)) %> };
+    };
+
+    if (metadata?.manager) {
+      return create(metadata.manager);
     }
-    const <%= singular(lowercased(name)) %> = await this.<%= singular(lowercased(name)) %>Repository.save(
-      dao,
-    );
-    return { <%= singular(lowercased(name)) %> };
+
+    return this.dataSource.transaction('READ COMMITTED', create);
   }
 
   async findBy<%= singular(classify(name)) %>Args(
     args: <%= singular(classify(name)) %>Args,
+    metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<<%= singular(classify(name)) %>[]> {
-    return this.<%= singular(lowercased(name)) %>Repository.findBy(args);
+    if (metadata?.manager) {
+      const <%= singular(lowercased(name)) %>Repo = manager.getRepository(<%= singular(classify(name)) %>);
+      return <%= singular(lowercased(name)) %>Repo.findBy(args);
+    }
+
+    return this.<%= singular(lowercased(name)) %>Repo.findBy(args);
   }
 
-  async findById(id: string): Promise<<%= singular(classify(name)) %> | null> {
-    return this.<%= singular(lowercased(name)) %>Repository.findOneBy({ id });
+  async findById(
+    id: string,
+    metadata?: Pick<ServiceMetadata, 'manager'>,
+  ): Promise<<%= singular(classify(name)) %> | null> {
+    if (metadata?.manager) {
+      const <%= singular(lowercased(name)) %>Repo = manager.getRepository(<%= singular(classify(name)) %>);
+      return <%= singular(lowercased(name)) %>Repo.findOneBy({ id });
+    }
+
+    return this.<%= singular(lowercased(name)) %>Repo.findOneBy({ id });
   }
 
   async update<%= singular(classify(name)) %>(
     id: string,
     input: Update<%= singular(classify(name)) %>Input,
+    metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<Update<%= singular(classify(name)) %>Output> {
-    const dao = this.<%= singular(lowercased(name)) %>Repository.create(input);
-    const errors = await validate(dao);
-    if (errors.length) {
-      throw new ValidatorValidationError(errors);
-    }
-    const result = await this.<%= singular(lowercased(name)) %>Repository.update(
-      id,
-      input,
-    );
+    const update = async (manager: EntityManager) => {
+      const <%= singular(lowercased(name)) %>Repo = manager.getRepository(<%= singular(classify(name)) %>);
 
-    return {
-      affectedCount: result.affected,
+      const <%= singular(lowercased(name)) %> = await <%= singular(lowercased(name)) %>Repo.preload({ id, ...input });
+      if (!<%= singular(lowercased(name)) %>) {
+        throw new DaoIdNotFoundError(<%= singular(classify(name)) %>, id);
+      }
+
+      const errors = await validate(<%= singular(lowercased(name)) %>);
+      if (errors.length) {
+        throw new ValidatorValidationError(errors);
+      }
+
+      await <%= singular(lowercased(name)) %>Repo.save(
+        <%= singular(lowercased(name)) %>,
+      );
+
+      return {
+        <%= singular(lowercased(name)) %>,
+      };
     };
+
+    if (metadata?.manager) {
+      return update(metadata.manager);
+    }
+
+    return this.dataSource.transaction('READ COMMITTED', update);
   }
 
-  async remove<%= singular(classify(name)) %>(id: string): Promise<Remove<%= singular(classify(name)) %>Output> {
-    const result = await this.<%= singular(lowercased(name)) %>Repository.softDelete({
-      id,
-    });
+  async remove<%= singular(classify(name)) %>(
+    id: string,
+    metadata?: Pick<ServiceMetadata, 'manager'>,
+  ): Promise<Remove<%= singular(classify(name)) %>Output> {
+    const remove = async (manager: EntityManager) => {
+      const <%= singular(lowercased(name)) %>Repo = manager.getRepository(<%= singular(classify(name)) %>);
 
-    return {
-      affectedCount: result.affected,
+      const <%= singular(lowercased(name)) %> = await <%= singular(lowercased(name)) %>Repo.findOneBy({ id });
+      if (!<%= singular(lowercased(name)) %>) {
+        throw new DaoIdNotFoundError(<%= singular(classify(name)) %>, id);
+      }
+
+      const result = await <%= singular(lowercased(name)) %>Repo.remove(<%= singular(lowercased(name)) %>);
+
+      return {
+        <%= singular(lowercased(name)) %>: result,
+      }
     };
+
+    if (metadata?.manager) {
+      return remove(metadata.manager);
+    }
+
+    return this.dataSource.transaction('READ COMMITTED', remove);
   }
 <% } %>}
