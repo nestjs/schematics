@@ -1,8 +1,8 @@
 <% if (crud && type !== 'graphql-code-first' && type !== 'graphql-schema-first') { %>import { Injectable } from '@nestjs/common';
 import { Create<%= singular(classify(name)) %>Dto } from './input/create-<%= singular(name) %>.dto';
 import { Update<%= singular(classify(name)) %>Dto } from './input/update-<%= singular(name) %>.dto';<% } else if (crud) { %>import { <%= singular(classify(name)) %> } from '@app/db/entity/<%= singular(name) %>.entity';
-import { ValidatorValidationError } from '@app/graphql-type/error/validator-validation.error';
 import { DaoIdNotFoundError } from '@app/graphql-type/error/dao-id-not-found.error';
+import { ValidatorValidationError } from '@app/graphql-type/error/validator-validation.error';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
@@ -104,7 +104,10 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     const update = async (manager: EntityManager) => {
       const <%= singular(lowercased(name)) %>Repo = manager.getRepository(<%= singular(classify(name)) %>);
 
-      const <%= singular(lowercased(name)) %> = await <%= singular(lowercased(name)) %>Repo.preload({ ...input, id });
+      const <%= singular(lowercased(name)) %> = await <%= singular(lowercased(name)) %>Repo.preload({
+        ...input,
+        id,
+      });
       if (!<%= singular(lowercased(name)) %>) {
         throw new DaoIdNotFoundError(<%= singular(classify(name)) %>, id);
       }
@@ -146,7 +149,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
 
       return {
         <%= singular(lowercased(name)) %>: result,
-      }
+      };
     };
 
     if (metadata?.manager) {

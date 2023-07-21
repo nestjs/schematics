@@ -1113,8 +1113,8 @@ export class UserResolver {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { User } from '@app/db/entity/user.entity';
-import { ValidatorValidationError } from '@app/graphql-type/error/validator-validation.error';
 import { DaoIdNotFoundError } from '@app/graphql-type/error/dao-id-not-found.error';
+import { ValidatorValidationError } from '@app/graphql-type/error/validator-validation.error';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
@@ -1196,7 +1196,10 @@ export class UserService {
     const update = async (manager: EntityManager) => {
       const userRepo = manager.getRepository(User);
 
-      const user = await userRepo.preload({ ...input, id });
+      const user = await userRepo.preload({
+        ...input,
+        id,
+      });
       if (!user) {
         throw new DaoIdNotFoundError(User, id);
       }
@@ -1238,7 +1241,7 @@ export class UserService {
 
       return {
         user: result,
-      }
+      };
     };
 
     if (metadata?.manager) {
@@ -1497,8 +1500,8 @@ export class UserResolver {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { User } from '@app/db/entity/user.entity';
-import { ValidatorValidationError } from '@app/graphql-type/error/validator-validation.error';
 import { DaoIdNotFoundError } from '@app/graphql-type/error/dao-id-not-found.error';
+import { ValidatorValidationError } from '@app/graphql-type/error/validator-validation.error';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
@@ -1580,7 +1583,10 @@ export class UserService {
     const update = async (manager: EntityManager) => {
       const userRepo = manager.getRepository(User);
 
-      const user = await userRepo.preload({ ...input, id });
+      const user = await userRepo.preload({
+        ...input,
+        id,
+      });
       if (!user) {
         throw new DaoIdNotFoundError(User, id);
       }
@@ -1622,7 +1628,7 @@ export class UserService {
 
       return {
         user: result,
-      }
+      };
     };
 
     if (metadata?.manager) {
