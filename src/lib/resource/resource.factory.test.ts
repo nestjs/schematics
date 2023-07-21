@@ -1118,7 +1118,7 @@ import { ValidatorValidationError } from '@app/graphql-type/error/validator-vali
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
-import { DataSource, EntityManager, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 
 import { ServiceMetadata } from '../common/service-metadata.interface';
 import { UserArgs } from './args/user.args';
@@ -1131,7 +1131,7 @@ import { UpdateUserOutput } from './output/update-user.output';
 @Injectable()
 export class UserService {
   constructor(
-    private readonly dataSource: DataSource,
+    private readonly manager: EntityManager,
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
   ) {}
@@ -1161,7 +1161,7 @@ export class UserService {
       return create(metadata.manager);
     }
 
-    return this.dataSource.transaction('READ COMMITTED', create);
+    return this.manager.transaction('READ COMMITTED', create);
   }
 
   async findByUserArgs(
@@ -1222,7 +1222,7 @@ export class UserService {
       return update(metadata.manager);
     }
 
-    return this.dataSource.transaction('READ COMMITTED', update);
+    return this.manager.transaction('READ COMMITTED', update);
   }
 
   async removeUser(
@@ -1237,7 +1237,7 @@ export class UserService {
         throw new DaoIdNotFoundError(User, id);
       }
 
-      const result = await userRepo.remove(user);
+      const result = await userRepo.softRemove(user);
 
       return {
         user: result,
@@ -1248,7 +1248,7 @@ export class UserService {
       return remove(metadata.manager);
     }
 
-    return this.dataSource.transaction('READ COMMITTED', remove);
+    return this.manager.transaction('READ COMMITTED', remove);
   }
 }
 `);
@@ -1505,7 +1505,7 @@ import { ValidatorValidationError } from '@app/graphql-type/error/validator-vali
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
-import { DataSource, EntityManager, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 
 import { ServiceMetadata } from '../common/service-metadata.interface';
 import { UserArgs } from './args/user.args';
@@ -1518,7 +1518,7 @@ import { UpdateUserOutput } from './output/update-user.output';
 @Injectable()
 export class UserService {
   constructor(
-    private readonly dataSource: DataSource,
+    private readonly manager: EntityManager,
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
   ) {}
@@ -1548,7 +1548,7 @@ export class UserService {
       return create(metadata.manager);
     }
 
-    return this.dataSource.transaction('READ COMMITTED', create);
+    return this.manager.transaction('READ COMMITTED', create);
   }
 
   async findByUserArgs(
@@ -1609,7 +1609,7 @@ export class UserService {
       return update(metadata.manager);
     }
 
-    return this.dataSource.transaction('READ COMMITTED', update);
+    return this.manager.transaction('READ COMMITTED', update);
   }
 
   async removeUser(
@@ -1624,7 +1624,7 @@ export class UserService {
         throw new DaoIdNotFoundError(User, id);
       }
 
-      const result = await userRepo.remove(user);
+      const result = await userRepo.softRemove(user);
 
       return {
         user: result,
@@ -1635,7 +1635,7 @@ export class UserService {
       return remove(metadata.manager);
     }
 
-    return this.dataSource.transaction('READ COMMITTED', remove);
+    return this.manager.transaction('READ COMMITTED', remove);
   }
 }
 `);

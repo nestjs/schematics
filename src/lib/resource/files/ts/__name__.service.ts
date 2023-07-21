@@ -6,7 +6,7 @@ import { ValidatorValidationError } from '@app/graphql-type/error/validator-vali
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
-import { DataSource, EntityManager, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 
 import { ServiceMetadata } from '../common/service-metadata.interface';
 import { <%= singular(classify(name)) %>Args } from './args/<%= singular(name) %>.args';
@@ -39,7 +39,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
   }
 <% } %><% else if (crud) { %>
   constructor(
-    private readonly dataSource: DataSource,
+    private readonly manager: EntityManager,
     @InjectRepository(<%= singular(classify(name)) %>)
     private readonly <%= singular(lowercased(name)) %>Repo: Repository<<%= singular(classify(name)) %>>,
   ) {}
@@ -69,7 +69,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
       return create(metadata.manager);
     }
 
-    return this.dataSource.transaction('READ COMMITTED', create);
+    return this.manager.transaction('READ COMMITTED', create);
   }
 
   async findBy<%= singular(classify(name)) %>Args(
@@ -130,7 +130,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
       return update(metadata.manager);
     }
 
-    return this.dataSource.transaction('READ COMMITTED', update);
+    return this.manager.transaction('READ COMMITTED', update);
   }
 
   async remove<%= singular(classify(name)) %>(
@@ -145,7 +145,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
         throw new DaoIdNotFoundError(<%= singular(classify(name)) %>, id);
       }
 
-      const result = await <%= singular(lowercased(name)) %>Repo.remove(<%= singular(lowercased(name)) %>);
+      const result = await <%= singular(lowercased(name)) %>Repo.softRemove(<%= singular(lowercased(name)) %>);
 
       return {
         <%= singular(lowercased(name)) %>: result,
@@ -156,6 +156,6 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
       return remove(metadata.manager);
     }
 
-    return this.dataSource.transaction('READ COMMITTED', remove);
+    return this.manager.transaction('READ COMMITTED', remove);
   }
 <% } %>}
