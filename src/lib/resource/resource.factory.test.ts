@@ -1118,7 +1118,7 @@ import { DaoIdNotFoundError } from '@app/graphql-type/error/dao-id-not-found.err
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 
 import { ServiceMetadata } from '../common/service-metadata.interface';
 import { UserArgs } from './args/user.args';
@@ -1169,7 +1169,7 @@ export class UserService {
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<User[]> {
     if (metadata?.manager) {
-      const userRepo = manager.getRepository(User);
+      const userRepo = metadata.manager.getRepository(User);
       return userRepo.findBy(args);
     }
 
@@ -1181,7 +1181,7 @@ export class UserService {
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<User | null> {
     if (metadata?.manager) {
-      const userRepo = manager.getRepository(User);
+      const userRepo = metadata.manager.getRepository(User);
       return userRepo.findOneBy({ id });
     }
 
@@ -1502,7 +1502,7 @@ import { DaoIdNotFoundError } from '@app/graphql-type/error/dao-id-not-found.err
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 
 import { ServiceMetadata } from '../common/service-metadata.interface';
 import { UserArgs } from './args/user.args';
@@ -1553,7 +1553,7 @@ export class UserService {
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<User[]> {
     if (metadata?.manager) {
-      const userRepo = manager.getRepository(User);
+      const userRepo = metadata.manager.getRepository(User);
       return userRepo.findBy(args);
     }
 
@@ -1565,7 +1565,7 @@ export class UserService {
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<User | null> {
     if (metadata?.manager) {
-      const userRepo = manager.getRepository(User);
+      const userRepo = metadata.manager.getRepository(User);
       return userRepo.findOneBy({ id });
     }
 

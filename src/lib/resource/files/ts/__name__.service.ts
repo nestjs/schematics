@@ -6,7 +6,7 @@ import { DaoIdNotFoundError } from '@app/graphql-type/error/dao-id-not-found.err
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 
 import { ServiceMetadata } from '../common/service-metadata.interface';
 import { <%= singular(classify(name)) %>Args } from './args/<%= singular(name) %>.args';
@@ -77,7 +77,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<<%= singular(classify(name)) %>[]> {
     if (metadata?.manager) {
-      const <%= singular(lowercased(name)) %>Repo = manager.getRepository(<%= singular(classify(name)) %>);
+      const <%= singular(lowercased(name)) %>Repo = metadata.manager.getRepository(<%= singular(classify(name)) %>);
       return <%= singular(lowercased(name)) %>Repo.findBy(args);
     }
 
@@ -89,7 +89,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<<%= singular(classify(name)) %> | null> {
     if (metadata?.manager) {
-      const <%= singular(lowercased(name)) %>Repo = manager.getRepository(<%= singular(classify(name)) %>);
+      const <%= singular(lowercased(name)) %>Repo = metadata.manager.getRepository(<%= singular(classify(name)) %>);
       return <%= singular(lowercased(name)) %>Repo.findOneBy({ id });
     }
 
