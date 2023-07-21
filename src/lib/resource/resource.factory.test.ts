@@ -1196,7 +1196,7 @@ export class UserService {
     const update = async (manager: EntityManager) => {
       const userRepo = manager.getRepository(User);
 
-      const user = await userRepo.preload({ id, ...input });
+      const user = await userRepo.preload({ ...input, id });
       if (!user) {
         throw new DaoIdNotFoundError(User, id);
       }
@@ -1580,7 +1580,7 @@ export class UserService {
     const update = async (manager: EntityManager) => {
       const userRepo = manager.getRepository(User);
 
-      const user = await userRepo.preload({ id, ...input });
+      const user = await userRepo.preload({ ...input, id });
       if (!user) {
         throw new DaoIdNotFoundError(User, id);
       }

@@ -104,7 +104,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     const update = async (manager: EntityManager) => {
       const <%= singular(lowercased(name)) %>Repo = manager.getRepository(<%= singular(classify(name)) %>);
 
-      const <%= singular(lowercased(name)) %> = await <%= singular(lowercased(name)) %>Repo.preload({ id, ...input });
+      const <%= singular(lowercased(name)) %> = await <%= singular(lowercased(name)) %>Repo.preload({ ...input, id });
       if (!<%= singular(lowercased(name)) %>) {
         throw new DaoIdNotFoundError(<%= singular(classify(name)) %>, id);
       }
