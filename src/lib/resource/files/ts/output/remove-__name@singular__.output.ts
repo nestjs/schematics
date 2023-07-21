@@ -1,5 +1,6 @@
 <% if (type === 'graphql-code-first') { %>import { Field, ObjectType } from '@nestjs/graphql';
-import { NonNegativeIntResolver } from 'graphql-scalars';
+
+import { <%= singular(classify(name)) %>Type } from '../type/<%= singular(name) %>.type';
 
 @ObjectType()
 export class Remove<%= singular(classify(name)) %>Output {
