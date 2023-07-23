@@ -279,9 +279,8 @@ function moveDirectoryTo(
   tree.getDir(srcDir).visit((filePath: Path, file: Readonly<FileEntry>) => {
     const newFilePath = join(destination as Path, filePath);
     tree.create(newFilePath, file.content);
-    tree.delete(filePath);
+    tree.delete(srcDir);
   });
-  tree.delete(srcDir);
 }
 
 function addAppsToCliOptions(
