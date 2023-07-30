@@ -276,11 +276,15 @@ function moveDirectoryTo(
   destination: string,
   tree: Tree,
 ): void {
+  let srcDirExists = false;
   tree.getDir(srcDir).visit((filePath: Path, file: Readonly<FileEntry>) => {
+    srcDirExists = true;
     const newFilePath = join(destination as Path, filePath);
     tree.create(newFilePath, file.content);
-    tree.delete(srcDir);
   });
+  if (srcDirExists) {
+    tree.delete(srcDir);
+  }
 }
 
 function addAppsToCliOptions(
