@@ -1,4 +1,5 @@
 import { Path } from '@angular-devkit/core';
+import { CaseType } from '../../utils/formatting';
 
 export interface ControllerOptions {
   /**
@@ -46,4 +47,8 @@ export interface ControllerOptions {
    * Flag to indicate if a directory is created.
    */
   flat?: boolean;
+  /**
+   * Case format. Options are 'kebab' | 'snake' | 'camel' | 'pascal' | 'capital'.
+   */
+  caseNaming?: CaseType;
 }

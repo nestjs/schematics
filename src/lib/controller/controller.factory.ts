@@ -13,7 +13,7 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { normalizeToCase, CaseType } from '../../utils/formatting';
 import {
   DeclarationOptions,
   ModuleDeclarator,
@@ -45,14 +45,19 @@ function transform(source: ControllerOptions): ControllerOptions {
   target.metadata = ELEMENT_METADATA;
   target.type = ELEMENT_TYPE;
 
+  console.log({ source })
+
   const location: Location = new NameParser().parse(target);
-  target.name = normalizeToKebabOrSnakeCase(location.name);
-  target.path = normalizeToKebabOrSnakeCase(location.path);
+  const caseType: CaseType = source.caseNaming || 'kebab-or-snake';
+
+  target.name = normalizeToCase(location.name, caseType);
+  target.path = normalizeToCase(location.path, caseType);
   target.language =
     target.language !== undefined ? target.language : DEFAULT_LANGUAGE;
 
-  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+  target.specFileSuffix = normalizeToCase(
     source.specFileSuffix || 'spec',
+    caseType
   );
 
   target.path = target.flat
@@ -64,8 +69,8 @@ function transform(source: ControllerOptions): ControllerOptions {
 function generate(options: ControllerOptions) {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
-      options.spec 
-        ? noop() 
+      options.spec
+        ? noop()
         : filter((path) => {
             const languageExtension = options.language || 'ts';
             const suffix = `.__specFileSuffix__.${languageExtension}`;
