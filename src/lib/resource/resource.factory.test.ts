@@ -1114,10 +1114,8 @@ export class UserResolver {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { User } from '@app/db/entity/user.entity';
 import { DaoIdNotFoundError } from '@app/graphql-type/error/dao-id-not-found.error';
-import { ValidatorValidationError } from '@app/graphql-type/error/validator-validation.error';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { validate } from 'class-validator';
 import { EntityManager, Repository } from 'typeorm';
 
 import { ServiceMetadata } from '../common/service-metadata.interface';
@@ -1145,10 +1143,6 @@ export class UserService {
 
       const user = userRepo.create(input);
 
-      const errors = await validate(user);
-      if (errors.length) {
-        throw new ValidatorValidationError(errors);
-      }
 
       await userRepo.save(
         user,
@@ -1204,10 +1198,6 @@ export class UserService {
         throw new DaoIdNotFoundError(User, id);
       }
 
-      const errors = await validate(user);
-      if (errors.length) {
-        throw new ValidatorValidationError(errors);
-      }
 
       await userRepo.save(
         user,
@@ -1501,10 +1491,8 @@ export class UserResolver {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { User } from '@app/db/entity/user.entity';
 import { DaoIdNotFoundError } from '@app/graphql-type/error/dao-id-not-found.error';
-import { ValidatorValidationError } from '@app/graphql-type/error/validator-validation.error';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { validate } from 'class-validator';
 import { EntityManager, Repository } from 'typeorm';
 
 import { ServiceMetadata } from '../common/service-metadata.interface';
@@ -1532,10 +1520,6 @@ export class UserService {
 
       const user = userRepo.create(input);
 
-      const errors = await validate(user);
-      if (errors.length) {
-        throw new ValidatorValidationError(errors);
-      }
 
       await userRepo.save(
         user,
@@ -1591,10 +1575,6 @@ export class UserService {
         throw new DaoIdNotFoundError(User, id);
       }
 
-      const errors = await validate(user);
-      if (errors.length) {
-        throw new ValidatorValidationError(errors);
-      }
 
       await userRepo.save(
         user,
