@@ -20,7 +20,6 @@ export type CaseType =
  * @param caseType
  * @returns formatted string
  * @description normalizes input to a given case format.
- * Available formats are: 'kebab' | 'snake' | 'camel' | 'pascal' | 'capital'.
  */
 export const normalizeToCase = (
   str: string,
@@ -39,9 +38,8 @@ export const normalizeToCase = (
       return capitalCase(str);
     // For legacy purposes
     case 'kebab-or-snake':
-      return normalizeToKebabOrSnakeCase(str);
     default:
-      throw new Error(`Error! case type ${caseType} is not supported.`);
+      return normalizeToKebabOrSnakeCase(str);
   }
 };
 
