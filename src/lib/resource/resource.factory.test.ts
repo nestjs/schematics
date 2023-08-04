@@ -1051,7 +1051,9 @@ export class UsersModule {}
 
     it('should generate "UsersResolver" class', () => {
       expect(tree.readContent('/users/users.resolver.ts'))
-        .toEqual(`import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+        .toEqual(`import assert from 'assert';
+
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
 import { UserArgs } from './args/user.args';
@@ -1074,6 +1076,7 @@ export class UserResolver {
   async createUser(
     @Args('input') input: CreateUserInput,
   ): Promise<CreateUserOutput> {
+    assert(context.user, 'User is not authenticated');
     return this.userService.createUser(input);
   }
 
@@ -1081,6 +1084,7 @@ export class UserResolver {
   async users(
     @Args() args: UserArgs,
   ): Promise<Maybe<UserType[]>> {
+    assert(context.user, 'User is not authenticated');
     return this.userService.findByUserArgs(args);
   }
 
@@ -1088,6 +1092,7 @@ export class UserResolver {
   async user(
     @Args('id', { type: () => ID }) id: string,
   ): Promise<Maybe<UserType>> {
+    assert(context.user, 'User is not authenticated');
     return this.userService.findById(id);
   }
 
@@ -1095,6 +1100,7 @@ export class UserResolver {
   async updateUser(
     @Args('input') input: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
+    assert(context.user, 'User is not authenticated');
     return this.userService.updateUser(
       input.id,
       input,
@@ -1105,6 +1111,7 @@ export class UserResolver {
   async removeUser(
     @Args('input') input: RemoveUserInput,
   ): Promise<RemoveUserOutput> {
+    assert(context.user, 'User is not authenticated');
     return this.userService.removeUser(input.id);
   }
 }

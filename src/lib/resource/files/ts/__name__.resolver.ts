@@ -2,7 +2,9 @@
 
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';
-import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';<% } %><% else if (crud && type === 'graphql-code-first') { %>import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';<% } %><% else if (crud && type === 'graphql-code-first') { %>import assert from 'assert';
+
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
 import { <%= singular(classify(name)) %>Args } from './args/<%= singular(name) %>.args';
@@ -31,6 +33,7 @@ export class <%= singular(classify(name)) %>Resolver {
   async create<%= singular(classify(name)) %>(
     @Args('input') input: Create<%= singular(classify(name)) %>Input,
   ): Promise<Create<%= singular(classify(name)) %>Output> {
+    assert(context.user, 'User is not authenticated');
     return this.<%= singular(lowercased(name)) %>Service.create<%= singular(classify(name)) %>(input);
   }
 
@@ -38,6 +41,7 @@ export class <%= singular(classify(name)) %>Resolver {
   async <%= lowercased(plural(classify(name))) %>(
     @Args() args: <%= singular(classify(name)) %>Args,
   ): Promise<Maybe<<%= singular(classify(name)) %>Type[]>> {
+    assert(context.user, 'User is not authenticated');
     return this.<%= singular(lowercased(name)) %>Service.findBy<%= singular(classify(name)) %>Args(args);
   }
 
@@ -45,6 +49,7 @@ export class <%= singular(classify(name)) %>Resolver {
   async <%= lowercased(singular(classify(name))) %>(
     @Args('id', { type: () => ID }) id: string,
   ): Promise<Maybe<<%= singular(classify(name)) %>Type>> {
+    assert(context.user, 'User is not authenticated');
     return this.<%= singular(lowercased(name)) %>Service.findById(id);
   }
 
@@ -52,6 +57,7 @@ export class <%= singular(classify(name)) %>Resolver {
   async update<%= singular(classify(name)) %>(
     @Args('input') input: Update<%= singular(classify(name)) %>Input,
   ): Promise<Update<%= singular(classify(name)) %>Output> {
+    assert(context.user, 'User is not authenticated');
     return this.<%= singular(lowercased(name)) %>Service.update<%= singular(classify(name)) %>(
       input.id,
       input,
@@ -62,6 +68,7 @@ export class <%= singular(classify(name)) %>Resolver {
   async remove<%= singular(classify(name)) %>(
     @Args('input') input: Remove<%= singular(classify(name)) %>Input,
   ): Promise<Remove<%= singular(classify(name)) %>Output> {
+    assert(context.user, 'User is not authenticated');
     return this.<%= singular(lowercased(name)) %>Service.remove<%= singular(classify(name)) %>(input.id);
   }<% } else if (crud && type === 'graphql-schema-first') {%>
 
