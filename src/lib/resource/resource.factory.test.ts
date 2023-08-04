@@ -27,6 +27,7 @@ describe('Resource Factory', () => {
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
+        '/users/args/user-page.args.ts',
         '/users/args/user.args.ts',
         '/users/input/create-user.dto.ts',
         '/users/input/update-user.dto.ts',
@@ -34,6 +35,7 @@ describe('Resource Factory', () => {
         '/users/output/remove-user.output.ts',
         '/users/output/update-user.output.ts',
         '/users/type/user.type.ts',
+        '/users/type/user-page.type.ts',
       ]);
     });
     it("should keep underscores in resource's path and file name", async () => {
@@ -51,6 +53,7 @@ describe('Resource Factory', () => {
         '/_users/_users.module.ts',
         '/_users/_users.service.spec.ts',
         '/_users/_users.service.ts',
+        '/_users/args/_user-page.args.ts',
         '/_users/args/_user.args.ts',
         '/_users/input/create-_user.dto.ts',
         '/_users/input/update-_user.dto.ts',
@@ -58,6 +61,7 @@ describe('Resource Factory', () => {
         '/_users/output/remove-_user.output.ts',
         '/_users/output/update-_user.output.ts',
         '/_users/type/_user.type.ts',
+        '/_users/type/_user-page.type.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -77,6 +81,7 @@ describe('Resource Factory', () => {
           '/users/users.module.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/args/user-page.args.ts',
           '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
@@ -100,6 +105,7 @@ describe('Resource Factory', () => {
           '/users/users.controller.ts',
           '/users/users.module.ts',
           '/users/users.service.ts',
+          '/users/args/user-page.args.ts',
           '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
@@ -360,6 +366,7 @@ export class UsersModule {}
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
+        '/users/args/user-page.args.ts',
         '/users/args/user.args.ts',
         '/users/input/create-user.dto.ts',
         '/users/input/update-user.dto.ts',
@@ -367,6 +374,7 @@ export class UsersModule {}
         '/users/output/remove-user.output.ts',
         '/users/output/update-user.output.ts',
         '/users/type/user.type.ts',
+        '/users/type/user-page.type.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -386,6 +394,7 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/args/user-page.args.ts',
           '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
@@ -409,6 +418,7 @@ export class UsersModule {}
           '/users/users.controller.ts',
           '/users/users.module.ts',
           '/users/users.service.ts',
+          '/users/args/user-page.args.ts',
           '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
@@ -671,6 +681,7 @@ export class UsersModule {}
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
+        '/users/args/user-page.args.ts',
         '/users/args/user.args.ts',
         '/users/input/create-user.dto.ts',
         '/users/input/update-user.dto.ts',
@@ -678,6 +689,7 @@ export class UsersModule {}
         '/users/output/remove-user.output.ts',
         '/users/output/update-user.output.ts',
         '/users/type/user.type.ts',
+        '/users/type/user-page.type.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -697,6 +709,7 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/args/user-page.args.ts',
           '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
@@ -720,6 +733,7 @@ export class UsersModule {}
           '/users/users.gateway.ts',
           '/users/users.module.ts',
           '/users/users.service.ts',
+          '/users/args/user-page.args.ts',
           '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
@@ -978,7 +992,9 @@ export class UsersModule {}
         '/users/users.resolver.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
+        '/users/args/user-page.args.ts',
         '/users/args/user.args.ts',
+        '/users/input/user-page-args-order.input.ts',
         '/users/input/create-user.input.ts',
         '/users/input/remove-user.input.ts',
         '/users/input/update-user.input.ts',
@@ -986,6 +1002,7 @@ export class UsersModule {}
         '/users/output/remove-user.output.ts',
         '/users/output/update-user.output.ts',
         '/users/type/user.type.ts',
+        '/users/type/user-page.type.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -1005,6 +1022,7 @@ export class UsersModule {}
           '/users/users.resolver.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/args/user-page.args.ts',
           '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
@@ -1028,6 +1046,7 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.resolver.ts',
           '/users/users.service.ts',
+          '/users/args/user-page.args.ts',
           '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
@@ -1065,6 +1084,7 @@ import { CreateUserOutput } from './output/create-user.output';
 import { RemoveUserOutput } from './output/remove-user.output';
 import { UpdateUserOutput } from './output/update-user.output';
 import { UserType } from './type/user.type';
+import { UserPageType } from './type/user-page.type';
 
 @Resolver(() => UserType)
 export class UserResolver {
@@ -1080,10 +1100,10 @@ export class UserResolver {
     return this.userService.createUser(input);
   }
 
-  @Query(() => [UserType])
-  async users(
-    @Args() args: UserArgs,
-  ): Promise<Maybe<UserType[]>> {
+  @Query(() => UserPageType)
+  async userPage(
+    @Args() args: UserPageArgs,
+  ): Promise<UserPageType> {
     assert(context.user, 'User is not authenticated');
     return this.userService.findByUserArgs(args);
   }
@@ -1266,7 +1286,7 @@ export class UsersModule {}
 `);
     });
 
-    it('should generate "User" class', () => {
+    it('should generate "UserType" class', () => {
       expect(tree.readContent('/users/type/user.type.ts'))
         .toEqual(`import { DaoNode } from '@app/graphql-type/type/dao-node.type';
 import { GraphNode } from '@app/graphql-type/type/graph-node.type';
@@ -1278,6 +1298,68 @@ import { Field, ObjectType } from '@nestjs/graphql';
 export class UserType extends DaoNode {
   @Field(() => String, { nullable: true })
   exampleField?: string;
+}
+`);
+    });
+
+    it('should generate "UserPageType" class', () => {
+      expect(tree.readContent('/users/type/user-page.type.ts'))
+        .toEqual(`import { DaoNodePage } from '@app/graphql-type/type/dao-node-page.type';
+import { Field, ObjectType } from '@nestjs/graphql';
+
+@ObjectType('UserPage', {
+  implements: [DaoNodePage],
+})
+export class UserPageType implements DaoNodePage<UserType> {
+  @Field(() => [UserType], { description: 'Nodes in this page', })
+  nodes!: UserType[];
+}
+`);
+    });
+
+    it('should generate "UserPageArgs" class', () => {
+      expect(tree.readContent('/users/args/user-page.args.ts'))
+        .toEqual(`import { DaoNodePageArgs } from '@app/graphql-type/args/dao-node-page.args';
+import { ArgsType, Field } from '@nestjs/graphql';
+import { NonNegativeIntResolver } from 'graphql-scalars';
+import { Maybe } from 'graphql/jsutils/Maybe';
+
+import { UserPageArgsOrderInput } from '../input/user-page-args-order.input';
+import { UserArgs } from './user.args';
+
+@ArgsType()
+export class UserPageArgs extends UserArgs implements DaoNodePageArgs {
+  @Field(() => NonNegativeIntResolver, {
+    description: 'Maximum amount of nodes in this page',
+    nullable: true,
+  })
+  take: Maybe<number>;
+
+  @Field(() => NonNegativeIntResolver, {
+    description: 'Amount of nodes to skip from the beginning of this page',
+    nullable: true,
+  })
+  skip: Maybe<number>;
+
+  @Field(() => UserPageArgsOrderInput, {
+    description: '排序欄位與方式',
+    defaultValue: UserPageArgsOrderInput.default,
+  })
+  order: Maybe<UserPageArgsOrderInput>;
+}
+`);
+    });
+
+    it('should generate "UserPageArgsOrderInput" class', () => {
+      expect(tree.readContent('/users/input/user-page-args-order.input.ts'))
+        .toEqual(`import { DaoNodePageArgsOrderInput, DaoNodePageArgsOrderValue, } from '@app/graphql-type/input/dao-node-page-args-order.input';
+import { Field, InputType } from '@nestjs/graphql';
+import { Maybe } from 'graphql/jsutils/Maybe';
+
+@InputType()
+export class UserPageArgsOrderInput extends DaoNodePageArgsOrderInput {
+    @Field(() => DaoNodePageArgsOrderValue, { nullable: true })
+    version?: Maybe<DaoNodePageArgsOrderValue>;
 }
 `);
     });
@@ -1381,7 +1463,9 @@ describe('UsersService', () => {
         '/users/users.resolver.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
+        '/users/args/user-page.args.ts',
         '/users/args/user.args.ts',
+        '/users/input/user-page-args-order.input.ts',
         '/users/input/create-user.input.ts',
         '/users/input/remove-user.input.ts',
         '/users/input/update-user.input.ts',
@@ -1389,6 +1473,7 @@ describe('UsersService', () => {
         '/users/output/remove-user.output.ts',
         '/users/output/update-user.output.ts',
         '/users/type/user.type.ts',
+        '/users/type/user-page.type.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -1408,6 +1493,7 @@ describe('UsersService', () => {
           '/users/users.resolver.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/args/user-page.args.ts',
           '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
@@ -1431,6 +1517,7 @@ describe('UsersService', () => {
           '/users/users.module.ts',
           '/users/users.resolver.ts',
           '/users/users.service.ts',
+          '/users/args/user-page.args.ts',
           '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',

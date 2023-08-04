@@ -15,7 +15,8 @@ import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';
 import { Create<%= singular(classify(name)) %>Output } from './output/create-<%= singular(name) %>.output';
 import { Remove<%= singular(classify(name)) %>Output } from './output/remove-<%= singular(name) %>.output';
 import { Update<%= singular(classify(name)) %>Output } from './output/update-<%= singular(name) %>.output';
-import { <%= singular(classify(name)) %>Type } from './type/<%= singular(name) %>.type';<% } else if (crud) { %>import { Resolver } from '@nestjs/graphql';
+import { <%= singular(classify(name)) %>Type } from './type/<%= singular(name) %>.type';
+import { <%= singular(classify(name)) %>PageType } from './type/<%= page(singular(name)) %>.type';<% } else if (crud) { %>import { Resolver } from '@nestjs/graphql';
 
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';
@@ -37,10 +38,10 @@ export class <%= singular(classify(name)) %>Resolver {
     return this.<%= singular(lowercased(name)) %>Service.create<%= singular(classify(name)) %>(input);
   }
 
-  @Query(() => [<%= singular(classify(name)) %>Type])
-  async <%= lowercased(plural(classify(name))) %>(
-    @Args() args: <%= singular(classify(name)) %>Args,
-  ): Promise<Maybe<<%= singular(classify(name)) %>Type[]>> {
+  @Query(() => <%= singular(classify(name)) %>PageType)
+  async <%= lowercased((singular(classify(name)))) %>Page(
+    @Args() args: <%= singular(classify(name)) %>PageArgs,
+  ): Promise<<%= singular(classify(name)) %>PageType> {
     assert(context.user, 'User is not authenticated');
     return this.<%= singular(lowercased(name)) %>Service.findBy<%= singular(classify(name)) %>Args(args);
   }
