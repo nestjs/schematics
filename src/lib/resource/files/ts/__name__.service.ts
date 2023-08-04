@@ -51,7 +51,6 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
 
       const <%= singular(lowercased(name)) %> = <%= singular(lowercased(name)) %>Repo.create(input);
 
-
       await <%= singular(lowercased(name)) %>Repo.save(
         <%= singular(lowercased(name)) %>,
       );
@@ -105,7 +104,6 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
       if (!<%= singular(lowercased(name)) %>) {
         throw new DaoIdNotFoundError(<%= singular(classify(name)) %>, id);
       }
-
 
       await <%= singular(lowercased(name)) %>Repo.save(
         <%= singular(lowercased(name)) %>,

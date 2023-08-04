@@ -1150,7 +1150,6 @@ export class UserService {
 
       const user = userRepo.create(input);
 
-
       await userRepo.save(
         user,
       );
@@ -1204,7 +1203,6 @@ export class UserService {
       if (!user) {
         throw new DaoIdNotFoundError(User, id);
       }
-
 
       await userRepo.save(
         user,
@@ -1527,7 +1525,6 @@ export class UserService {
 
       const user = userRepo.create(input);
 
-
       await userRepo.save(
         user,
       );
@@ -1581,7 +1578,6 @@ export class UserService {
       if (!user) {
         throw new DaoIdNotFoundError(User, id);
       }
-
 
       await userRepo.save(
         user,
