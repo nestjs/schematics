@@ -6,7 +6,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import { ServiceMetadata } from '../common/service-metadata.interface';
+import {
+  AuthedServiceMetadata,
+  ServiceMetadata,
+} from '../common/service-metadata.interface';
 import { <%= singular(classify(name)) %>Args } from './args/<%= singular(name) %>.args';
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';
@@ -44,12 +47,15 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
 
   async create<%= singular(classify(name)) %>(
     input: Create<%= singular(classify(name)) %>Input,
+    { context: { user } }: AuthedServiceMetadata,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<Create<%= singular(classify(name)) %>Output> {
     const create = async (manager: EntityManager) => {
       const <%= singular(lowercased(name)) %>Repo = manager.getRepository(<%= singular(classify(name)) %>);
 
       const <%= singular(lowercased(name)) %> = <%= singular(lowercased(name)) %>Repo.create(input);
+      <%= singular(lowercased(name)) %>.createdBy = user.id;
+      <%= singular(lowercased(name)) %>.updatedBy = user.id;
 
       await <%= singular(lowercased(name)) %>Repo.save(
         <%= singular(lowercased(name)) %>,
@@ -104,6 +110,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
       if (!<%= singular(lowercased(name)) %>) {
         throw new DaoIdNotFoundError(<%= singular(classify(name)) %>, id);
       }
+      <%= singular(lowercased(name)) %>.updatedBy = user.id;
 
       await <%= singular(lowercased(name)) %>Repo.save(
         <%= singular(lowercased(name)) %>,

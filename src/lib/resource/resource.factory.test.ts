@@ -1075,6 +1075,8 @@ export class UsersModule {}
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
+import { AuthedGraphQLContext } from '../common/service-metadata.interface';
+import { IGraphQLContext } from '../graphql-context.service';
 import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
 import { RemoveUserInput } from './input/remove-user.input';
@@ -1095,9 +1097,12 @@ export class UserResolver {
   @Mutation(() => CreateUserOutput)
   async createUser(
     @Args('input') input: CreateUserInput,
+    @Context() context: IGraphQLContext,
   ): Promise<CreateUserOutput> {
     assert(context.user, 'User is not authenticated');
-    return this.userService.createUser(input);
+    return this.userService.createUser(input, {
+      context: context as AuthedGraphQLContext,
+    });
   }
 
   @Query(() => UserPageType)
@@ -1145,7 +1150,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import { ServiceMetadata } from '../common/service-metadata.interface';
+import {
+  AuthedServiceMetadata,
+  ServiceMetadata,
+} from '../common/service-metadata.interface';
 import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
 import { UpdateUserInput } from './input/update-user.input';
@@ -1163,12 +1171,15 @@ export class UserService {
 
   async createUser(
     input: CreateUserInput,
+    { context: { user } }: AuthedServiceMetadata,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<CreateUserOutput> {
     const create = async (manager: EntityManager) => {
       const userRepo = manager.getRepository(User);
 
       const user = userRepo.create(input);
+      user.createdBy = user.id;
+      user.updatedBy = user.id;
 
       await userRepo.save(
         user,
@@ -1223,6 +1234,7 @@ export class UserService {
       if (!user) {
         throw new DaoIdNotFoundError(User, id);
       }
+      user.updatedBy = user.id;
 
       await userRepo.save(
         user,
@@ -1587,7 +1599,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import { ServiceMetadata } from '../common/service-metadata.interface';
+import {
+  AuthedServiceMetadata,
+  ServiceMetadata,
+} from '../common/service-metadata.interface';
 import { UserArgs } from './args/user.args';
 import { CreateUserInput } from './input/create-user.input';
 import { UpdateUserInput } from './input/update-user.input';
@@ -1605,12 +1620,15 @@ export class UserService {
 
   async createUser(
     input: CreateUserInput,
+    { context: { user } }: AuthedServiceMetadata,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<CreateUserOutput> {
     const create = async (manager: EntityManager) => {
       const userRepo = manager.getRepository(User);
 
       const user = userRepo.create(input);
+      user.createdBy = user.id;
+      user.updatedBy = user.id;
 
       await userRepo.save(
         user,
@@ -1665,6 +1683,7 @@ export class UserService {
       if (!user) {
         throw new DaoIdNotFoundError(User, id);
       }
+      user.updatedBy = user.id;
 
       await userRepo.save(
         user,

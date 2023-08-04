@@ -7,6 +7,8 @@ import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';<
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
+import { AuthedGraphQLContext } from '../common/service-metadata.interface';
+import { IGraphQLContext } from '../graphql-context.service';
 import { <%= singular(classify(name)) %>Args } from './args/<%= singular(name) %>.args';
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
 import { Remove<%= singular(classify(name)) %>Input } from './input/remove-<%= singular(name) %>.input';
@@ -33,9 +35,12 @@ export class <%= singular(classify(name)) %>Resolver {
   @Mutation(() => Create<%= singular(classify(name)) %>Output)
   async create<%= singular(classify(name)) %>(
     @Args('input') input: Create<%= singular(classify(name)) %>Input,
+    @Context() context: IGraphQLContext,
   ): Promise<Create<%= singular(classify(name)) %>Output> {
     assert(context.user, 'User is not authenticated');
-    return this.<%= singular(lowercased(name)) %>Service.create<%= singular(classify(name)) %>(input);
+    return this.<%= singular(lowercased(name)) %>Service.create<%= singular(classify(name)) %>(input, {
+      context: context as AuthedGraphQLContext,
+    });
   }
 
   @Query(() => <%= singular(classify(name)) %>PageType)
