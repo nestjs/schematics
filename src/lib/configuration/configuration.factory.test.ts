@@ -10,7 +10,23 @@ describe('Configuration Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
-  it('should manage a default configuation', async () => {
+  it('should support missing project name by using the current working directory instead', async () => {
+    const options: ConfigurationOptions = {
+      project: undefined,
+    };
+    const tree: UnitTestTree = await runner.runSchematicAsync('configuration', options).toPromise();
+    const files: string[] = tree.files;
+    console.log(files)
+    expect(
+      files.find(filename => filename === '/nest-cli.json'),
+    ).not.toBeUndefined();
+    expect(JSON.parse(tree.readContent('/nest-cli.json'))).toEqual({
+      $schema: 'https://json.schemastore.org/nest-cli',
+      collection: '@nestjs/schematics',
+      sourceRoot: 'src',
+    });
+  });
+  it('should manage a default configuration', async () => {
     const options: ConfigurationOptions = {
       project: 'project',
     };
