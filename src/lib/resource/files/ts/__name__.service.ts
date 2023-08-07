@@ -98,6 +98,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
   async update<%= singular(classify(name)) %>(
     id: string,
     input: Update<%= singular(classify(name)) %>Input,
+    { context: { user } }: AuthedServiceMetadata,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<Update<%= singular(classify(name)) %>Output> {
     const update = async (manager: EntityManager) => {

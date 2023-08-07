@@ -1072,12 +1072,12 @@ export class UsersModule {}
       expect(tree.readContent('/users/users.resolver.ts'))
         .toEqual(`import assert from 'assert';
 
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
 import { AuthedGraphQLContext } from '../common/service-metadata.interface';
 import { IGraphQLContext } from '../graphql-context.service';
-import { UserArgs } from './args/user.args';
+import { UserPageArgs } from './args/user-page.args';
 import { CreateUserInput } from './input/create-user.input';
 import { RemoveUserInput } from './input/remove-user.input';
 import { UpdateUserInput } from './input/update-user.input';
@@ -1109,7 +1109,6 @@ export class UserResolver {
   async userPage(
     @Args() args: UserPageArgs,
   ): Promise<UserPageType> {
-    assert(context.user, 'User is not authenticated');
     return this.userService.findByUserArgs(args);
   }
 
@@ -1117,24 +1116,26 @@ export class UserResolver {
   async user(
     @Args('id', { type: () => ID }) id: string,
   ): Promise<Maybe<UserType>> {
-    assert(context.user, 'User is not authenticated');
     return this.userService.findById(id);
   }
 
   @Mutation(() => UpdateUserOutput)
   async updateUser(
     @Args('input') input: UpdateUserInput,
+    @Context() context: IGraphQLContext,
   ): Promise<UpdateUserOutput> {
     assert(context.user, 'User is not authenticated');
     return this.userService.updateUser(
       input.id,
       input,
+      { context: context as AuthedGraphQLContext },
     );
   }
 
   @Mutation(() => RemoveUserOutput)
   async removeUser(
     @Args('input') input: RemoveUserInput,
+    @Context() context: IGraphQLContext,
   ): Promise<RemoveUserOutput> {
     assert(context.user, 'User is not authenticated');
     return this.userService.removeUser(input.id);
@@ -1222,6 +1223,7 @@ export class UserService {
   async updateUser(
     id: string,
     input: UpdateUserInput,
+    { context: { user } }: AuthedServiceMetadata,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<UpdateUserOutput> {
     const update = async (manager: EntityManager) => {
@@ -1319,11 +1321,13 @@ export class UserType extends DaoNode {
         .toEqual(`import { DaoNodePage } from '@app/graphql-type/type/dao-node-page.type';
 import { Field, ObjectType } from '@nestjs/graphql';
 
+import { UserType } from './user.type';
+
 @ObjectType('UserPage', {
   implements: [DaoNodePage],
 })
 export class UserPageType implements DaoNodePage<UserType> {
-  @Field(() => [UserType], { description: 'Nodes in this page', })
+  @Field(() => [UserType], { description: 'Nodes in this page' })
   nodes!: UserType[];
 }
 `);
@@ -1364,14 +1368,17 @@ export class UserPageArgs extends UserArgs implements DaoNodePageArgs {
 
     it('should generate "UserPageArgsOrderInput" class', () => {
       expect(tree.readContent('/users/input/user-page-args-order.input.ts'))
-        .toEqual(`import { DaoNodePageArgsOrderInput, DaoNodePageArgsOrderValue, } from '@app/graphql-type/input/dao-node-page-args-order.input';
+        .toEqual(`import {
+  DaoNodePageArgsOrderInput,
+  DaoNodePageArgsOrderValue,
+} from '@app/graphql-type/input/dao-node-page-args-order.input';
 import { Field, InputType } from '@nestjs/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
 @InputType()
 export class UserPageArgsOrderInput extends DaoNodePageArgsOrderInput {
     @Field(() => DaoNodePageArgsOrderValue, { nullable: true })
-    version?: Maybe<DaoNodePageArgsOrderValue>;
+    exampleField?: Maybe<DaoNodePageArgsOrderValue>;
 }
 `);
     });
@@ -1671,6 +1678,7 @@ export class UserService {
   async updateUser(
     id: string,
     input: UpdateUserInput,
+    { context: { user } }: AuthedServiceMetadata,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<UpdateUserOutput> {
     const update = async (manager: EntityManager) => {
