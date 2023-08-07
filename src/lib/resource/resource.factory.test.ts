@@ -28,7 +28,6 @@ describe('Resource Factory', () => {
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
         '/users/args/user-page.args.ts',
-        '/users/args/user.args.ts',
         '/users/input/create-user.dto.ts',
         '/users/input/update-user.dto.ts',
         '/users/output/create-user.output.ts',
@@ -54,7 +53,6 @@ describe('Resource Factory', () => {
         '/_users/_users.service.spec.ts',
         '/_users/_users.service.ts',
         '/_users/args/_user-page.args.ts',
-        '/_users/args/_user.args.ts',
         '/_users/input/create-_user.dto.ts',
         '/_users/input/update-_user.dto.ts',
         '/_users/output/create-_user.output.ts',
@@ -82,7 +80,6 @@ describe('Resource Factory', () => {
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
           '/users/args/user-page.args.ts',
-          '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
           '/users/output/update-user.output.ts',
@@ -106,7 +103,6 @@ describe('Resource Factory', () => {
           '/users/users.module.ts',
           '/users/users.service.ts',
           '/users/args/user-page.args.ts',
-          '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
           '/users/output/update-user.output.ts',
@@ -367,7 +363,6 @@ export class UsersModule {}
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
         '/users/args/user-page.args.ts',
-        '/users/args/user.args.ts',
         '/users/input/create-user.dto.ts',
         '/users/input/update-user.dto.ts',
         '/users/output/create-user.output.ts',
@@ -395,7 +390,6 @@ export class UsersModule {}
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
           '/users/args/user-page.args.ts',
-          '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
           '/users/output/update-user.output.ts',
@@ -419,7 +413,6 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.service.ts',
           '/users/args/user-page.args.ts',
-          '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
           '/users/output/update-user.output.ts',
@@ -682,7 +675,6 @@ export class UsersModule {}
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
         '/users/args/user-page.args.ts',
-        '/users/args/user.args.ts',
         '/users/input/create-user.dto.ts',
         '/users/input/update-user.dto.ts',
         '/users/output/create-user.output.ts',
@@ -710,7 +702,6 @@ export class UsersModule {}
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
           '/users/args/user-page.args.ts',
-          '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
           '/users/output/update-user.output.ts',
@@ -734,7 +725,6 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.service.ts',
           '/users/args/user-page.args.ts',
-          '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
           '/users/output/update-user.output.ts',
@@ -993,8 +983,8 @@ export class UsersModule {}
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
         '/users/args/user-page.args.ts',
-        '/users/args/user.args.ts',
-        '/users/input/user-page-args-order.input.ts',
+        '/users/input/user-order.input.ts',
+        '/users/input/user-where.input.ts',
         '/users/input/create-user.input.ts',
         '/users/input/remove-user.input.ts',
         '/users/input/update-user.input.ts',
@@ -1023,7 +1013,6 @@ export class UsersModule {}
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
           '/users/args/user-page.args.ts',
-          '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
           '/users/output/update-user.output.ts',
@@ -1047,7 +1036,6 @@ export class UsersModule {}
           '/users/users.resolver.ts',
           '/users/users.service.ts',
           '/users/args/user-page.args.ts',
-          '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
           '/users/output/update-user.output.ts',
@@ -1343,48 +1331,56 @@ export class UserPageType implements DaoNodePage<UserType> {
       expect(tree.readContent('/users/args/user-page.args.ts'))
         .toEqual(`import { DaoNodePageArgs } from '@app/graphql-type/args/dao-node-page.args';
 import { ArgsType, Field } from '@nestjs/graphql';
-import { NonNegativeIntResolver } from 'graphql-scalars';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
 import { UserPageArgsOrderInput } from '../input/user-page-args-order.input';
-import { UserArgs } from './user.args';
+import { UserWhereInput } from '../input/user-where.input';
 
 @ArgsType()
-export class UserPageArgs extends UserArgs implements DaoNodePageArgs {
-  @Field(() => NonNegativeIntResolver, {
-    description: 'Maximum amount of nodes in this page',
-    nullable: true,
-  })
-  take: Maybe<number>;
-
-  @Field(() => NonNegativeIntResolver, {
-    description: 'Amount of nodes to skip from the beginning of this page',
-    nullable: true,
-  })
-  skip: Maybe<number>;
-
+export class UserPageArgs extends DaoNodePageArgs {
   @Field(() => UserPageArgsOrderInput, {
     description: '排序欄位與方式',
     defaultValue: UserPageArgsOrderInput.default,
   })
   order: Maybe<UserPageArgsOrderInput>;
+
+  @Field(() => UserWhereInput, {
+    defaultValue: UserWhereInput.default,
+  })
+  where: Maybe<UserWhereInput>;
 }
 `);
     });
 
-    it('should generate "UserPageArgsOrderInput" class', () => {
-      expect(tree.readContent('/users/input/user-page-args-order.input.ts'))
+    it('should generate "UserOrderInput" class', () => {
+      expect(tree.readContent('/users/input/user-order.input.ts'))
         .toEqual(`import {
-  DaoNodePageArgsOrderInput,
-  DaoNodePageArgsOrderValue,
-} from '@app/graphql-type/input/dao-node-page-args-order.input';
+  DaoNodeOrderInput,
+  DaoNodeOrderValue,
+} from '@app/graphql-type/input/dao-node-order.input';
 import { Field, InputType } from '@nestjs/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
 @InputType()
-export class UserPageArgsOrderInput extends DaoNodePageArgsOrderInput {
-  @Field(() => DaoNodePageArgsOrderValue, { nullable: true })
-  exampleField?: Maybe<DaoNodePageArgsOrderValue>;
+export class UserOrderInput extends DaoNodeOrderInput {
+  @Field(() => DaoNodeOrderValue, { nullable: true })
+  exampleField?: Maybe<DaoNodeOrderValue>;
+}
+`);
+    });
+
+    it('should generate "UserWhereInput" class', () => {
+      expect(tree.readContent('/users/input/user-where.input.ts'))
+        .toEqual(`import { Field, InputType } from '@nestjs/graphql';
+
+@InputType()
+export class UserWhereInput {
+  static default: UserWhereInput = {
+    exampleField: '',
+  };
+
+  @Field(() => String, { defaultValue: '' })
+  exampleField!: string;
 }
 `);
     });
@@ -1489,8 +1485,8 @@ describe('UsersService', () => {
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
         '/users/args/user-page.args.ts',
-        '/users/args/user.args.ts',
-        '/users/input/user-page-args-order.input.ts',
+        '/users/input/user-order.input.ts',
+        '/users/input/user-where.input.ts',
         '/users/input/create-user.input.ts',
         '/users/input/remove-user.input.ts',
         '/users/input/update-user.input.ts',
@@ -1519,7 +1515,6 @@ describe('UsersService', () => {
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
           '/users/args/user-page.args.ts',
-          '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
           '/users/output/update-user.output.ts',
@@ -1543,7 +1538,6 @@ describe('UsersService', () => {
           '/users/users.resolver.ts',
           '/users/users.service.ts',
           '/users/args/user-page.args.ts',
-          '/users/args/user.args.ts',
           '/users/output/create-user.output.ts',
           '/users/output/remove-user.output.ts',
           '/users/output/update-user.output.ts',

@@ -1,28 +1,20 @@
 <% if (type === 'graphql-code-first') { %>import { DaoNodePageArgs } from '@app/graphql-type/args/dao-node-page.args';
 import { ArgsType, Field } from '@nestjs/graphql';
-import { NonNegativeIntResolver } from 'graphql-scalars';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
 import { <%= singular(classify(name)) %>PageArgsOrderInput } from '../input/<%= singular(name) %>-page-args-order.input';
-import { <%= singular(classify(name)) %>Args } from './<%= singular(name) %>.args';
+import { <%= singular(classify(name)) %>WhereInput } from '../input/<%= singular(name) %>-where.input';
 
 @ArgsType()
-export class <%= singular(classify(name)) %>PageArgs extends <%= singular(classify(name)) %>Args implements DaoNodePageArgs {
-  @Field(() => NonNegativeIntResolver, {
-    description: 'Maximum amount of nodes in this page',
-    nullable: true,
-  })
-  take: Maybe<number>;
-
-  @Field(() => NonNegativeIntResolver, {
-    description: 'Amount of nodes to skip from the beginning of this page',
-    nullable: true,
-  })
-  skip: Maybe<number>;
-
+export class <%= singular(classify(name)) %>PageArgs extends DaoNodePageArgs {
   @Field(() => <%= singular(classify(name)) %>PageArgsOrderInput, {
     description: '排序欄位與方式',
     defaultValue: <%= singular(classify(name)) %>PageArgsOrderInput.default,
   })
   order: Maybe<<%= singular(classify(name)) %>PageArgsOrderInput>;
+
+  @Field(() => <%= singular(classify(name)) %>WhereInput, {
+    defaultValue: <%= singular(classify(name)) %>WhereInput.default,
+  })
+  where: Maybe<<%= singular(classify(name)) %>WhereInput>;
 }<% } else { %>export class <%= singular(classify(name)) %>Args {}<% } %>
