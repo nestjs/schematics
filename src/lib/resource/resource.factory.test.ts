@@ -1144,6 +1144,7 @@ export class UserResolver {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { User } from '@app/db/entity/user.entity';
+import { GraphqlTypeService } from '@app/graphql-type';
 import { DaoIdNotFoundError } from '@app/graphql-type/error/dao-id-not-found.error';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -1153,17 +1154,19 @@ import {
   AuthedServiceMetadata,
   ServiceMetadata,
 } from '../common/service-metadata.interface';
-import { UserArgs } from './args/user.args';
+import { UserPageArgs } from './args/user-page.args';
 import { CreateUserInput } from './input/create-user.input';
 import { UpdateUserInput } from './input/update-user.input';
 import { CreateUserOutput } from './output/create-user.output';
 import { RemoveUserOutput } from './output/remove-user.output';
 import { UpdateUserOutput } from './output/update-user.output';
+import { UserPageType } from './type/user-page.type';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly manager: EntityManager,
+    private readonly graphqlTypeService: GraphqlTypeService,
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
   ) {}
@@ -1195,15 +1198,20 @@ export class UserService {
   }
 
   async findByPageArgs(
-    args: UserArgs,
+    args: UserPageArgs,
     metadata?: Pick<ServiceMetadata, 'manager'>,
-  ): Promise<User[]> {
-    if (metadata?.manager) {
-      const userRepo = metadata.manager.getRepository(User);
-      return userRepo.findBy(args);
-    }
+  ): Promise<UserPageType> {
+    const userRepo = metadata?.manager
+      ? metadata.manager.getRepository(User)
+      : this.userRepo;
 
-    return this.userRepo.findBy(args);
+    const { take, skip, order, ...where } = args;
+
+    return this.graphqlTypeService.daoNodePage(
+      userRepo,
+      { take, skip, order },
+      where,
+    );
   }
 
   async findById(
@@ -1599,6 +1607,7 @@ export class UserResolver {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { User } from '@app/db/entity/user.entity';
+import { GraphqlTypeService } from '@app/graphql-type';
 import { DaoIdNotFoundError } from '@app/graphql-type/error/dao-id-not-found.error';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -1608,17 +1617,19 @@ import {
   AuthedServiceMetadata,
   ServiceMetadata,
 } from '../common/service-metadata.interface';
-import { UserArgs } from './args/user.args';
+import { UserPageArgs } from './args/user-page.args';
 import { CreateUserInput } from './input/create-user.input';
 import { UpdateUserInput } from './input/update-user.input';
 import { CreateUserOutput } from './output/create-user.output';
 import { RemoveUserOutput } from './output/remove-user.output';
 import { UpdateUserOutput } from './output/update-user.output';
+import { UserPageType } from './type/user-page.type';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly manager: EntityManager,
+    private readonly graphqlTypeService: GraphqlTypeService,
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
   ) {}
@@ -1650,15 +1661,20 @@ export class UserService {
   }
 
   async findByPageArgs(
-    args: UserArgs,
+    args: UserPageArgs,
     metadata?: Pick<ServiceMetadata, 'manager'>,
-  ): Promise<User[]> {
-    if (metadata?.manager) {
-      const userRepo = metadata.manager.getRepository(User);
-      return userRepo.findBy(args);
-    }
+  ): Promise<UserPageType> {
+    const userRepo = metadata?.manager
+      ? metadata.manager.getRepository(User)
+      : this.userRepo;
 
-    return this.userRepo.findBy(args);
+    const { take, skip, order, ...where } = args;
+
+    return this.graphqlTypeService.daoNodePage(
+      userRepo,
+      { take, skip, order },
+      where,
+    );
   }
 
   async findById(

@@ -1,6 +1,7 @@
 <% if (crud && type !== 'graphql-code-first' && type !== 'graphql-schema-first') { %>import { Injectable } from '@nestjs/common';
 import { Create<%= singular(classify(name)) %>Dto } from './input/create-<%= singular(name) %>.dto';
 import { Update<%= singular(classify(name)) %>Dto } from './input/update-<%= singular(name) %>.dto';<% } else if (crud) { %>import { <%= singular(classify(name)) %> } from '@app/db/entity/<%= singular(name) %>.entity';
+import { GraphqlTypeService } from '@app/graphql-type';
 import { DaoIdNotFoundError } from '@app/graphql-type/error/dao-id-not-found.error';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,12 +11,13 @@ import {
   AuthedServiceMetadata,
   ServiceMetadata,
 } from '../common/service-metadata.interface';
-import { <%= singular(classify(name)) %>Args } from './args/<%= singular(name) %>.args';
+import { <%= singular(classify(name)) %>PageArgs } from './args/<%= singular(name) %>-page.args';
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';
 import { Create<%= singular(classify(name)) %>Output } from './output/create-<%= singular(name) %>.output';
 import { Remove<%= singular(classify(name)) %>Output } from './output/remove-<%= singular(name) %>.output';
-import { Update<%= singular(classify(name)) %>Output } from './output/update-<%= singular(name) %>.output';<% } else { %>import { Injectable } from '@nestjs/common';<% } %>
+import { Update<%= singular(classify(name)) %>Output } from './output/update-<%= singular(name) %>.output';
+import { <%= singular(classify(name)) %>PageType } from './type/<%= singular(name) %>-page.type';<% } else { %>import { Injectable } from '@nestjs/common';<% } %>
 
 @Injectable()
 export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'graphql-code-first' && type !== 'graphql-schema-first') { %>
@@ -41,6 +43,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
 <% } %><% else if (crud) { %>
   constructor(
     private readonly manager: EntityManager,
+    private readonly graphqlTypeService: GraphqlTypeService,
     @InjectRepository(<%= singular(classify(name)) %>)
     private readonly <%= singular(lowercased(name)) %>Repo: Repository<<%= singular(classify(name)) %>>,
   ) {}
@@ -72,15 +75,20 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
   }
 
   async findByPageArgs(
-    args: <%= singular(classify(name)) %>Args,
+    args: <%= singular(classify(name)) %>PageArgs,
     metadata?: Pick<ServiceMetadata, 'manager'>,
-  ): Promise<<%= singular(classify(name)) %>[]> {
-    if (metadata?.manager) {
-      const <%= singular(lowercased(name)) %>Repo = metadata.manager.getRepository(<%= singular(classify(name)) %>);
-      return <%= singular(lowercased(name)) %>Repo.findBy(args);
-    }
+  ): Promise<<%= singular(classify(name)) %>PageType> {
+    const <%= singular(lowercased(name)) %>Repo = metadata?.manager
+      ? metadata.manager.getRepository(User)
+      : this.<%= singular(lowercased(name)) %>Repo;
 
-    return this.<%= singular(lowercased(name)) %>Repo.findBy(args);
+    const { take, skip, order, ...where } = args;
+
+    return this.graphqlTypeService.daoNodePage(
+      <%= singular(lowercased(name)) %>Repo,
+      { take, skip, order },
+      where,
+    );
   }
 
   async findById(
