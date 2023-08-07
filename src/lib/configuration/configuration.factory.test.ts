@@ -16,7 +16,6 @@ describe('Configuration Factory', () => {
     };
     const tree: UnitTestTree = await runner.runSchematicAsync('configuration', options).toPromise();
     const files: string[] = tree.files;
-    console.log(files)
     expect(
       files.find(filename => filename === '/nest-cli.json'),
     ).not.toBeUndefined();
