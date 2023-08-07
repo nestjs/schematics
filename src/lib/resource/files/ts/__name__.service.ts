@@ -45,7 +45,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     private readonly <%= singular(lowercased(name)) %>Repo: Repository<<%= singular(classify(name)) %>>,
   ) {}
 
-  async create<%= singular(classify(name)) %>(
+  async createOne(
     input: Create<%= singular(classify(name)) %>Input,
     { context: { user } }: AuthedServiceMetadata,
     metadata?: Pick<ServiceMetadata, 'manager'>,
@@ -71,7 +71,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     return this.manager.transaction('READ COMMITTED', create);
   }
 
-  async findBy<%= singular(classify(name)) %>Args(
+  async findByPageArgs(
     args: <%= singular(classify(name)) %>Args,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<<%= singular(classify(name)) %>[]> {
@@ -95,7 +95,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     return this.<%= singular(lowercased(name)) %>Repo.findOneBy({ id });
   }
 
-  async update<%= singular(classify(name)) %>(
+  async updateOne(
     id: string,
     input: Update<%= singular(classify(name)) %>Input,
     { context: { user } }: AuthedServiceMetadata,
@@ -129,7 +129,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     return this.manager.transaction('READ COMMITTED', update);
   }
 
-  async remove<%= singular(classify(name)) %>(
+  async removeOne(
     id: string,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<Remove<%= singular(classify(name)) %>Output> {

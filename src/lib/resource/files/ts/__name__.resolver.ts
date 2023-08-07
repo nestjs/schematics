@@ -17,8 +17,8 @@ import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';
 import { Create<%= singular(classify(name)) %>Output } from './output/create-<%= singular(name) %>.output';
 import { Remove<%= singular(classify(name)) %>Output } from './output/remove-<%= singular(name) %>.output';
 import { Update<%= singular(classify(name)) %>Output } from './output/update-<%= singular(name) %>.output';
-import { <%= singular(classify(name)) %>Type } from './type/<%= singular(name) %>.type';
-import { <%= singular(classify(name)) %>PageType } from './type/<%= page(singular(name)) %>.type';<% } else if (crud) { %>import { Resolver } from '@nestjs/graphql';
+import { <%= singular(classify(name)) %>PageType } from './type/<%= page(singular(name)) %>.type';
+import { <%= singular(classify(name)) %>Type } from './type/<%= singular(name) %>.type';<% } else if (crud) { %>import { Resolver } from '@nestjs/graphql';
 
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';
@@ -38,7 +38,7 @@ export class <%= singular(classify(name)) %>Resolver {
     @Context() context: IGraphQLContext,
   ): Promise<Create<%= singular(classify(name)) %>Output> {
     assert(context.user, 'User is not authenticated');
-    return this.<%= singular(lowercased(name)) %>Service.create<%= singular(classify(name)) %>(input, {
+    return this.<%= singular(lowercased(name)) %>Service.createOne(input, {
       context: context as AuthedGraphQLContext,
     });
   }
@@ -47,7 +47,7 @@ export class <%= singular(classify(name)) %>Resolver {
   async <%= lowercased((singular(classify(name)))) %>Page(
     @Args() args: <%= singular(classify(name)) %>PageArgs,
   ): Promise<<%= singular(classify(name)) %>PageType> {
-    return this.<%= singular(lowercased(name)) %>Service.findBy<%= singular(classify(name)) %>Args(args);
+    return this.<%= singular(lowercased(name)) %>Service.findByPageArgs(args);
   }
 
   @Query(() => <%= singular(classify(name)) %>Type)
@@ -63,11 +63,9 @@ export class <%= singular(classify(name)) %>Resolver {
     @Context() context: IGraphQLContext,
   ): Promise<Update<%= singular(classify(name)) %>Output> {
     assert(context.user, 'User is not authenticated');
-    return this.<%= singular(lowercased(name)) %>Service.update<%= singular(classify(name)) %>(
-      input.id,
-      input,
-      { context: context as AuthedGraphQLContext },
-    );
+    return this.<%= singular(lowercased(name)) %>Service.updateOne(input.id, input, {
+      context: context as AuthedGraphQLContext,
+    });
   }
 
   @Mutation(() => Remove<%= singular(classify(name)) %>Output)
@@ -76,7 +74,7 @@ export class <%= singular(classify(name)) %>Resolver {
     @Context() context: IGraphQLContext,
   ): Promise<Remove<%= singular(classify(name)) %>Output> {
     assert(context.user, 'User is not authenticated');
-    return this.<%= singular(lowercased(name)) %>Service.remove<%= singular(classify(name)) %>(input.id);
+    return this.<%= singular(lowercased(name)) %>Service.removeOne(input.id);
   }<% } else if (crud && type === 'graphql-schema-first') {%>
 
   @Mutation('create<%= singular(classify(name)) %>')

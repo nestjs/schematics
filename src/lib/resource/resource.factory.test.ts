@@ -1085,8 +1085,8 @@ import { UserService } from './users.service';
 import { CreateUserOutput } from './output/create-user.output';
 import { RemoveUserOutput } from './output/remove-user.output';
 import { UpdateUserOutput } from './output/update-user.output';
-import { UserType } from './type/user.type';
 import { UserPageType } from './type/user-page.type';
+import { UserType } from './type/user.type';
 
 @Resolver(() => UserType)
 export class UserResolver {
@@ -1100,7 +1100,7 @@ export class UserResolver {
     @Context() context: IGraphQLContext,
   ): Promise<CreateUserOutput> {
     assert(context.user, 'User is not authenticated');
-    return this.userService.createUser(input, {
+    return this.userService.createOne(input, {
       context: context as AuthedGraphQLContext,
     });
   }
@@ -1109,7 +1109,7 @@ export class UserResolver {
   async userPage(
     @Args() args: UserPageArgs,
   ): Promise<UserPageType> {
-    return this.userService.findByUserArgs(args);
+    return this.userService.findByPageArgs(args);
   }
 
   @Query(() => UserType)
@@ -1125,11 +1125,9 @@ export class UserResolver {
     @Context() context: IGraphQLContext,
   ): Promise<UpdateUserOutput> {
     assert(context.user, 'User is not authenticated');
-    return this.userService.updateUser(
-      input.id,
-      input,
-      { context: context as AuthedGraphQLContext },
-    );
+    return this.userService.updateOne(input.id, input, {
+      context: context as AuthedGraphQLContext,
+    });
   }
 
   @Mutation(() => RemoveUserOutput)
@@ -1138,7 +1136,7 @@ export class UserResolver {
     @Context() context: IGraphQLContext,
   ): Promise<RemoveUserOutput> {
     assert(context.user, 'User is not authenticated');
-    return this.userService.removeUser(input.id);
+    return this.userService.removeOne(input.id);
   }
 }
 `);
@@ -1170,7 +1168,7 @@ export class UserService {
     private readonly userRepo: Repository<User>,
   ) {}
 
-  async createUser(
+  async createOne(
     input: CreateUserInput,
     { context: { user } }: AuthedServiceMetadata,
     metadata?: Pick<ServiceMetadata, 'manager'>,
@@ -1196,7 +1194,7 @@ export class UserService {
     return this.manager.transaction('READ COMMITTED', create);
   }
 
-  async findByUserArgs(
+  async findByPageArgs(
     args: UserArgs,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<User[]> {
@@ -1220,7 +1218,7 @@ export class UserService {
     return this.userRepo.findOneBy({ id });
   }
 
-  async updateUser(
+  async updateOne(
     id: string,
     input: UpdateUserInput,
     { context: { user } }: AuthedServiceMetadata,
@@ -1254,7 +1252,7 @@ export class UserService {
     return this.manager.transaction('READ COMMITTED', update);
   }
 
-  async removeUser(
+  async removeOne(
     id: string,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<RemoveUserOutput> {
@@ -1377,8 +1375,8 @@ import { Maybe } from 'graphql/jsutils/Maybe';
 
 @InputType()
 export class UserPageArgsOrderInput extends DaoNodePageArgsOrderInput {
-    @Field(() => DaoNodePageArgsOrderValue, { nullable: true })
-    exampleField?: Maybe<DaoNodePageArgsOrderValue>;
+  @Field(() => DaoNodePageArgsOrderValue, { nullable: true })
+  exampleField?: Maybe<DaoNodePageArgsOrderValue>;
 }
 `);
     });
@@ -1625,7 +1623,7 @@ export class UserService {
     private readonly userRepo: Repository<User>,
   ) {}
 
-  async createUser(
+  async createOne(
     input: CreateUserInput,
     { context: { user } }: AuthedServiceMetadata,
     metadata?: Pick<ServiceMetadata, 'manager'>,
@@ -1651,7 +1649,7 @@ export class UserService {
     return this.manager.transaction('READ COMMITTED', create);
   }
 
-  async findByUserArgs(
+  async findByPageArgs(
     args: UserArgs,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<User[]> {
@@ -1675,7 +1673,7 @@ export class UserService {
     return this.userRepo.findOneBy({ id });
   }
 
-  async updateUser(
+  async updateOne(
     id: string,
     input: UpdateUserInput,
     { context: { user } }: AuthedServiceMetadata,
@@ -1709,7 +1707,7 @@ export class UserService {
     return this.manager.transaction('READ COMMITTED', update);
   }
 
-  async removeUser(
+  async removeOne(
     id: string,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<RemoveUserOutput> {
