@@ -82,12 +82,12 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
       ? metadata.manager.getRepository(<%= singular(classify(name)) %>)
       : this.<%= singular(lowercased(name)) %>Repo;
 
-    const { take, skip, order, ...where } = args;
+    const { take, skip, order, where } = args;
 
     return this.graphqlTypeService.daoNodePage(
       <%= singular(lowercased(name)) %>Repo,
       { take, skip, order },
-      where,
+      where ?? undefined,
     );
   }
 

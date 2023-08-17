@@ -1193,12 +1193,12 @@ export class UserService {
       ? metadata.manager.getRepository(User)
       : this.userRepo;
 
-    const { take, skip, order, ...where } = args;
+    const { take, skip, order, where } = args;
 
     return this.graphqlTypeService.daoNodePage(
       userRepo,
       { take, skip, order },
-      where,
+      where ?? undefined,
     );
   }
 
@@ -1658,12 +1658,12 @@ export class UserService {
       ? metadata.manager.getRepository(User)
       : this.userRepo;
 
-    const { take, skip, order, ...where } = args;
+    const { take, skip, order, where } = args;
 
     return this.graphqlTypeService.daoNodePage(
       userRepo,
       { take, skip, order },
-      where,
+      where ?? undefined,
     );
   }
 
