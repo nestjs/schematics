@@ -2,10 +2,6 @@
 
 @InputType()
 export class <%= singular(classify(name)) %>WhereInput {
-  static default: <%= singular(classify(name)) %>WhereInput = {
-    exampleField: '',
-  };
-
-  @Field(() => String, { defaultValue: '' })
-  exampleField!: string;
+  @Field(() => String, { nullable: true })
+  exampleField?: string;
 }<% } else { %>export class <%= singular(classify(name)) %>Args {}<% } %>

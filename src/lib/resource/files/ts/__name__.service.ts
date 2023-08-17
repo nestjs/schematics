@@ -79,7 +79,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<<%= singular(classify(name)) %>PageType> {
     const <%= singular(lowercased(name)) %>Repo = metadata?.manager
-      ? metadata.manager.getRepository(User)
+      ? metadata.manager.getRepository(<%= singular(classify(name)) %>)
       : this.<%= singular(lowercased(name)) %>Repo;
 
     const { take, skip, order, ...where } = args;

@@ -1333,19 +1333,19 @@ export class UserPageType implements DaoNodePage<UserType> {
 import { ArgsType, Field } from '@nestjs/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
-import { UserPageArgsOrderInput } from '../input/user-page-args-order.input';
+import { UserOrderInput } from '../input/user-order.input';
 import { UserWhereInput } from '../input/user-where.input';
 
 @ArgsType()
 export class UserPageArgs extends DaoNodePageArgs {
-  @Field(() => UserPageArgsOrderInput, {
+  @Field(() => UserOrderInput, {
     description: '排序欄位與方式',
-    defaultValue: UserPageArgsOrderInput.default,
+    defaultValue: new UserOrderInput(),
   })
-  order: Maybe<UserPageArgsOrderInput>;
+  order: Maybe<UserOrderInput>;
 
   @Field(() => UserWhereInput, {
-    defaultValue: UserWhereInput.default,
+    defaultValue: new UserWhereInput(),
   })
   where: Maybe<UserWhereInput>;
 }
@@ -1375,12 +1375,8 @@ export class UserOrderInput extends DaoNodeOrderInput {
 
 @InputType()
 export class UserWhereInput {
-  static default: UserWhereInput = {
-    exampleField: '',
-  };
-
-  @Field(() => String, { defaultValue: '' })
-  exampleField!: string;
+  @Field(() => String, { nullable: true })
+  exampleField?: string;
 }
 `);
     });
