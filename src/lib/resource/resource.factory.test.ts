@@ -1167,7 +1167,7 @@ export class UserService {
     const create = async (manager: EntityManager) => {
       const userRepo = manager.getRepository(User);
 
-      const user = userRepo.create(input);
+      const user = userRepo.create({ ...input });
       user.createdBy = user.id;
       user.updatedBy = user.id;
 
@@ -1632,7 +1632,7 @@ export class UserService {
     const create = async (manager: EntityManager) => {
       const userRepo = manager.getRepository(User);
 
-      const user = userRepo.create(input);
+      const user = userRepo.create({ ...input });
       user.createdBy = user.id;
       user.updatedBy = user.id;
 

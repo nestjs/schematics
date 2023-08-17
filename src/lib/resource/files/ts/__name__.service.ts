@@ -56,7 +56,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     const create = async (manager: EntityManager) => {
       const <%= singular(lowercased(name)) %>Repo = manager.getRepository(<%= singular(classify(name)) %>);
 
-      const <%= singular(lowercased(name)) %> = <%= singular(lowercased(name)) %>Repo.create(input);
+      const <%= singular(lowercased(name)) %> = <%= singular(lowercased(name)) %>Repo.create({ ...input });
       <%= singular(lowercased(name)) %>.createdBy = user.id;
       <%= singular(lowercased(name)) %>.updatedBy = user.id;
 
