@@ -1319,7 +1319,6 @@ export class UserPageType implements DaoNodePage<UserType> {
       expect(tree.readContent('/users/args/user-page.args.ts'))
         .toEqual(`import { DaoNodePageArgs } from '@app/graphql-type/args/dao-node-page.args';
 import { ArgsType, Field } from '@nestjs/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
 
 import { UserOrderInput } from '../input/user-order.input';
 import { UserWhereInput } from '../input/user-where.input';
@@ -1330,12 +1329,13 @@ export class UserPageArgs extends DaoNodePageArgs {
     description: '排序欄位與方式',
     defaultValue: new UserOrderInput(),
   })
-  order: Maybe<UserOrderInput>;
+  order: UserOrderInput = new UserOrderInput();
 
   @Field(() => UserWhereInput, {
+    description: '查詢條件',
     defaultValue: new UserWhereInput(),
   })
-  where: Maybe<UserWhereInput>;
+  where: UserWhereInput = new UserWhereInput();
 }
 `);
     });
