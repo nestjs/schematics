@@ -1371,12 +1371,12 @@ export class UserWhereInput {
 
     it('should generate "CreateUserInput" class', () => {
       expect(tree.readContent('/users/input/create-user.input.ts'))
-        .toEqual(`import { Field, InputType } from '@nestjs/graphql';
+        .toEqual(`import { Field, ID, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateUserInput {
-  @Field(() => String, { nullable: true })
-  exampleField?: string;
+  @Field(() => ID, { description: 'Example field' })
+  id!: string;
 }
 `);
     });
