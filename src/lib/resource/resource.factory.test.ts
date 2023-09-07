@@ -1058,12 +1058,11 @@ export class UsersModule {}
 
     it('should generate "UsersResolver" class', () => {
       expect(tree.readContent('/users/users.resolver.ts'))
-        .toEqual(`import assert from 'assert';
-
-import { Args, Context, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+        .toEqual(`import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
-import { IGraphQLContext } from '../graphql-context.service';
+import { User } from '../auth/user.decorator';
+import { UserType } from '../user/type/user.type';
 import { UserPageArgs } from './args/user-page.args';
 import { CreateUserInput } from './input/create-user.input';
 import { RemoveUserInput } from './input/remove-user.input';
@@ -1129,9 +1128,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import {
-  ServiceMetadata,
-} from '../common/service-metadata.interface';
+import { ServiceMetadata } from '../common/service-metadata.interface';
+import { UserType } from '../user/type/user.type';
 import { UserPageArgs } from './args/user-page.args';
 import { CreateUserInput } from './input/create-user.input';
 import { UpdateUserInput } from './input/update-user.input';
@@ -1593,9 +1591,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import {
-  ServiceMetadata,
-} from '../common/service-metadata.interface';
+import { ServiceMetadata } from '../common/service-metadata.interface';
+import { UserType } from '../user/type/user.type';
 import { UserPageArgs } from './args/user-page.args';
 import { CreateUserInput } from './input/create-user.input';
 import { UpdateUserInput } from './input/update-user.input';

@@ -2,12 +2,11 @@
 
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';
-import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';<% } %><% else if (crud && type === 'graphql-code-first') { %>import assert from 'assert';
-
-import { Args, Context, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';<% } %><% else if (crud && type === 'graphql-code-first') { %>import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
-import { IGraphQLContext } from '../graphql-context.service';
+import { User } from '../auth/user.decorator';
+import { UserType } from '../user/type/user.type';
 import { <%= singular(classify(name)) %>PageArgs } from './args/<%= singular(name) %>-page.args';
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
 import { Remove<%= singular(classify(name)) %>Input } from './input/remove-<%= singular(name) %>.input';

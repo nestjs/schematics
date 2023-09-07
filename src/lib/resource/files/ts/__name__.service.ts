@@ -7,9 +7,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import {
-  ServiceMetadata,
-} from '../common/service-metadata.interface';
+import { ServiceMetadata } from '../common/service-metadata.interface';
+import { UserType } from '../user/type/user.type';
 import { <%= singular(classify(name)) %>PageArgs } from './args/<%= singular(name) %>-page.args';
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './input/update-<%= singular(name) %>.input';
