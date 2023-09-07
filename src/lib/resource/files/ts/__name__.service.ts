@@ -8,7 +8,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
 import {
-  AuthedServiceMetadata,
   ServiceMetadata,
 } from '../common/service-metadata.interface';
 import { <%= singular(classify(name)) %>PageArgs } from './args/<%= singular(name) %>-page.args';
@@ -50,7 +49,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
 
   async createOne(
     input: Create<%= singular(classify(name)) %>Input,
-    { context: { user } }: AuthedServiceMetadata,
+    user: UserType,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<Create<%= singular(classify(name)) %>Output> {
     const create = async (manager: EntityManager) => {
@@ -106,7 +105,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
   async updateOne(
     id: string,
     input: Update<%= singular(classify(name)) %>Input,
-    { context: { user } }: AuthedServiceMetadata,
+    user: UserType,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<Update<%= singular(classify(name)) %>Output> {
     const update = async (manager: EntityManager) => {

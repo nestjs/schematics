@@ -7,7 +7,6 @@ import { <%= singular(classify(name)) %>Service } from './<%= name %>.service';<
 import { Args, Context, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
-import { AuthedGraphQLContext } from '../common/service-metadata.interface';
 import { IGraphQLContext } from '../graphql-context.service';
 import { <%= singular(classify(name)) %>PageArgs } from './args/<%= singular(name) %>-page.args';
 import { Create<%= singular(classify(name)) %>Input } from './input/create-<%= singular(name) %>.input';
@@ -35,12 +34,9 @@ export class <%= singular(classify(name)) %>Resolver {
   @Mutation(() => Create<%= singular(classify(name)) %>Output)
   async create<%= singular(classify(name)) %>(
     @Args('input') input: Create<%= singular(classify(name)) %>Input,
-    @Context() context: IGraphQLContext,
+    @User() user: UserType,
   ): Promise<Create<%= singular(classify(name)) %>Output> {
-    assert(context.user, 'User is not authenticated');
-    return this.<%= singular(lowercased(name)) %>Service.createOne(input, {
-      context: context as AuthedGraphQLContext,
-    });
+    return this.<%= singular(lowercased(name)) %>Service.createOne(input, user);
   }
 
   @Query(() => <%= singular(classify(name)) %>PageType)
@@ -60,20 +56,15 @@ export class <%= singular(classify(name)) %>Resolver {
   @Mutation(() => Update<%= singular(classify(name)) %>Output)
   async update<%= singular(classify(name)) %>(
     @Args('input') input: Update<%= singular(classify(name)) %>Input,
-    @Context() context: IGraphQLContext,
+    @User() user: UserType,
   ): Promise<Update<%= singular(classify(name)) %>Output> {
-    assert(context.user, 'User is not authenticated');
-    return this.<%= singular(lowercased(name)) %>Service.updateOne(input.id, input, {
-      context: context as AuthedGraphQLContext,
-    });
+    return this.<%= singular(lowercased(name)) %>Service.updateOne(input.id, input, user);
   }
 
   @Mutation(() => Remove<%= singular(classify(name)) %>Output)
   async remove<%= singular(classify(name)) %>(
     @Args('input') input: Remove<%= singular(classify(name)) %>Input,
-    @Context() context: IGraphQLContext,
   ): Promise<Remove<%= singular(classify(name)) %>Output> {
-    assert(context.user, 'User is not authenticated');
     return this.<%= singular(lowercased(name)) %>Service.removeOne(input.id);
   }<% } else if (crud && type === 'graphql-schema-first') {%>
 

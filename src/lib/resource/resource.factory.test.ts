@@ -1063,7 +1063,6 @@ export class UsersModule {}
 import { Args, Context, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
-import { AuthedGraphQLContext } from '../common/service-metadata.interface';
 import { IGraphQLContext } from '../graphql-context.service';
 import { UserPageArgs } from './args/user-page.args';
 import { CreateUserInput } from './input/create-user.input';
@@ -1085,12 +1084,9 @@ export class UserResolver {
   @Mutation(() => CreateUserOutput)
   async createUser(
     @Args('input') input: CreateUserInput,
-    @Context() context: IGraphQLContext,
+    @User() user: UserType,
   ): Promise<CreateUserOutput> {
-    assert(context.user, 'User is not authenticated');
-    return this.userService.createOne(input, {
-      context: context as AuthedGraphQLContext,
-    });
+    return this.userService.createOne(input, user);
   }
 
   @Query(() => UserPageType)
@@ -1110,20 +1106,15 @@ export class UserResolver {
   @Mutation(() => UpdateUserOutput)
   async updateUser(
     @Args('input') input: UpdateUserInput,
-    @Context() context: IGraphQLContext,
+    @User() user: UserType,
   ): Promise<UpdateUserOutput> {
-    assert(context.user, 'User is not authenticated');
-    return this.userService.updateOne(input.id, input, {
-      context: context as AuthedGraphQLContext,
-    });
+    return this.userService.updateOne(input.id, input, user);
   }
 
   @Mutation(() => RemoveUserOutput)
   async removeUser(
     @Args('input') input: RemoveUserInput,
-    @Context() context: IGraphQLContext,
   ): Promise<RemoveUserOutput> {
-    assert(context.user, 'User is not authenticated');
     return this.userService.removeOne(input.id);
   }
 }
@@ -1139,7 +1130,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
 import {
-  AuthedServiceMetadata,
   ServiceMetadata,
 } from '../common/service-metadata.interface';
 import { UserPageArgs } from './args/user-page.args';
@@ -1161,7 +1151,7 @@ export class UserService {
 
   async createOne(
     input: CreateUserInput,
-    { context: { user } }: AuthedServiceMetadata,
+    user: UserType,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<CreateUserOutput> {
     const create = async (manager: EntityManager) => {
@@ -1217,7 +1207,7 @@ export class UserService {
   async updateOne(
     id: string,
     input: UpdateUserInput,
-    { context: { user } }: AuthedServiceMetadata,
+    user: UserType,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<UpdateUserOutput> {
     const update = async (manager: EntityManager) => {
@@ -1604,7 +1594,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
 import {
-  AuthedServiceMetadata,
   ServiceMetadata,
 } from '../common/service-metadata.interface';
 import { UserPageArgs } from './args/user-page.args';
@@ -1626,7 +1615,7 @@ export class UserService {
 
   async createOne(
     input: CreateUserInput,
-    { context: { user } }: AuthedServiceMetadata,
+    user: UserType,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<CreateUserOutput> {
     const create = async (manager: EntityManager) => {
@@ -1682,7 +1671,7 @@ export class UserService {
   async updateOne(
     id: string,
     input: UpdateUserInput,
-    { context: { user } }: AuthedServiceMetadata,
+    user: UserType,
     metadata?: Pick<ServiceMetadata, 'manager'>,
   ): Promise<UpdateUserOutput> {
     const update = async (manager: EntityManager) => {
