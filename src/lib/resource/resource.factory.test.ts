@@ -1186,7 +1186,7 @@ export class UserService {
     return this.graphqlTypeService.daoNodePage(
       userRepo,
       { take, skip, order },
-      where ?? undefined,
+      where,
     );
   }
 
@@ -1359,12 +1359,12 @@ export class UserOrderInput extends DaoNodeOrderInput {
 
     it('should generate "UserWhereInput" class', () => {
       expect(tree.readContent('/users/input/user-where.input.ts'))
-        .toEqual(`import { Field, InputType } from '@nestjs/graphql';
+        .toEqual(`import { Field, ID, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class UserWhereInput {
-  @Field(() => String, { nullable: true })
-  exampleField?: string;
+  @Field(() => ID, { description: 'Example field' })
+  id!: string;
 }
 `);
     });
@@ -1649,7 +1649,7 @@ export class UserService {
     return this.graphqlTypeService.daoNodePage(
       userRepo,
       { take, skip, order },
-      where ?? undefined,
+      where,
     );
   }
 

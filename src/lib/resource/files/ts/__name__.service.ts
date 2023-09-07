@@ -85,7 +85,7 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     return this.graphqlTypeService.daoNodePage(
       <%= singular(lowercased(name)) %>Repo,
       { take, skip, order },
-      where ?? undefined,
+      where,
     );
   }
 
