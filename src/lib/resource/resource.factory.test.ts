@@ -1155,9 +1155,11 @@ export class UserService {
     const create = async (manager: EntityManager) => {
       const userRepo = manager.getRepository(User);
 
-      const user = userRepo.create({ ...input });
-      user.createdBy = user.id;
-      user.updatedBy = user.id;
+      const user = userRepo.create({
+        ...input,
+        createdBy: user.id,
+        updatedBy: user.id,
+      });
 
       await userRepo.save(
         user,
@@ -1213,12 +1215,12 @@ export class UserService {
 
       const user = await userRepo.preload({
         ...input,
+        updatedBy: user.id,
         id,
       });
       if (!user) {
         throw new DaoIdNotFoundError(User, id);
       }
-      user.updatedBy = user.id;
 
       await userRepo.save(
         user,
@@ -1618,9 +1620,11 @@ export class UserService {
     const create = async (manager: EntityManager) => {
       const userRepo = manager.getRepository(User);
 
-      const user = userRepo.create({ ...input });
-      user.createdBy = user.id;
-      user.updatedBy = user.id;
+      const user = userRepo.create({
+        ...input,
+        createdBy: user.id,
+        updatedBy: user.id,
+      });
 
       await userRepo.save(
         user,
@@ -1676,12 +1680,12 @@ export class UserService {
 
       const user = await userRepo.preload({
         ...input,
+        updatedBy: user.id,
         id,
       });
       if (!user) {
         throw new DaoIdNotFoundError(User, id);
       }
-      user.updatedBy = user.id;
 
       await userRepo.save(
         user,

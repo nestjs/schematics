@@ -54,9 +54,11 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
     const create = async (manager: EntityManager) => {
       const <%= singular(lowercased(name)) %>Repo = manager.getRepository(<%= singular(classify(name)) %>);
 
-      const <%= singular(lowercased(name)) %> = <%= singular(lowercased(name)) %>Repo.create({ ...input });
-      <%= singular(lowercased(name)) %>.createdBy = user.id;
-      <%= singular(lowercased(name)) %>.updatedBy = user.id;
+      const <%= singular(lowercased(name)) %> = <%= singular(lowercased(name)) %>Repo.create({
+        ...input,
+        createdBy: user.id,
+        updatedBy: user.id,
+      });
 
       await <%= singular(lowercased(name)) %>Repo.save(
         <%= singular(lowercased(name)) %>,
@@ -112,12 +114,12 @@ export class <%= singular(classify(name)) %>Service {<% if (crud && type !== 'gr
 
       const <%= singular(lowercased(name)) %> = await <%= singular(lowercased(name)) %>Repo.preload({
         ...input,
+        updatedBy: user.id,
         id,
       });
       if (!<%= singular(lowercased(name)) %>) {
         throw new DaoIdNotFoundError(<%= singular(classify(name)) %>, id);
       }
-      <%= singular(lowercased(name)) %>.updatedBy = user.id;
 
       await <%= singular(lowercased(name)) %>Repo.save(
         <%= singular(lowercased(name)) %>,
