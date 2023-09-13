@@ -28,6 +28,7 @@ describe('Resource Factory', () => {
         '/users/users.service.ts',
         '/users/dto/user.dto.ts',
         '/users/entities/user.entity.ts',
+        '/users/fakers/user.faker.ts',
       ]);
     });
     it("should keep underscores in resource's path and file name", async () => {
@@ -46,6 +47,7 @@ describe('Resource Factory', () => {
         '/_users/_users.service.ts',
         '/_users/dto/_user.dto.ts',
         '/_users/entities/_user.entity.ts',
+        '/_users/fakers/_user.faker.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -64,6 +66,7 @@ describe('Resource Factory', () => {
           '/users/users.module.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -82,6 +85,7 @@ describe('Resource Factory', () => {
           '/users/users.controller.ts',
           '/users/users.module.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -334,6 +338,48 @@ describe('UsersService', () => {
 });
 `);
     });
+
+    it('should generate "User" faker file', () => {
+      expect(tree.readContent('/users/fakers/user.faker.ts'))
+        .toEqual(`import { faker } from '@faker-js/faker';
+import { merge } from 'lodash';
+import { DataSource } from 'typeorm';
+
+import { getRepository } from '@vori/providers/database';
+
+import { User } from '../entities/user.entity';
+
+export function makeUser(
+  overrides: Partial<User> = {}
+): User {
+  return getRepository(User).create(
+    merge(
+      {
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      overrides
+    )
+  );
+}
+
+export function makeAndSaveUser(
+  dataSource: DataSource,
+  overrides: Partial<User> = {}
+): Promise<User> {
+  // TODO Add constraints, if necessary
+  // const bannerID = overrides.bannerID || overrides.banner?.id;
+  //
+  // if (!bannerID) {
+  //   throw new TypeError('banner or bannerID must be supplied!');
+  // }
+
+  return dataSource
+    .getRepository(User)
+    .save(makeUser(overrides));
+}
+`);
+    });
   });
 
   describe('[REST API - with "crud" disabled]', () => {
@@ -429,6 +475,7 @@ export class UsersModule {}
         '/users/users.service.ts',
         '/users/dto/user.dto.ts',
         '/users/entities/user.entity.ts',
+        '/users/fakers/user.faker.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -448,6 +495,7 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -467,6 +515,7 @@ export class UsersModule {}
           '/users/users.controller.ts',
           '/users/users.module.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -781,6 +830,7 @@ export class UsersModule {}
         '/users/users.service.ts',
         '/users/dto/user.dto.ts',
         '/users/entities/user.entity.ts',
+        '/users/fakers/user.faker.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -800,6 +850,7 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -819,6 +870,7 @@ export class UsersModule {}
           '/users/users.gateway.ts',
           '/users/users.module.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -1128,6 +1180,7 @@ export class UsersModule {}
         '/users/dto/create-user.input.ts',
         '/users/dto/update-user.input.ts',
         '/users/entities/user.entity.ts',
+        '/users/fakers/user.faker.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -1147,6 +1200,7 @@ export class UsersModule {}
           '/users/users.resolver.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -1166,6 +1220,7 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.resolver.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -1411,6 +1466,7 @@ describe('UsersService', () => {
         '/users/dto/create-user.input.ts',
         '/users/dto/update-user.input.ts',
         '/users/entities/user.entity.ts',
+        '/users/fakers/user.faker.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -1430,6 +1486,7 @@ describe('UsersService', () => {
           '/users/users.resolver.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -1449,6 +1506,7 @@ describe('UsersService', () => {
           '/users/users.module.ts',
           '/users/users.resolver.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
