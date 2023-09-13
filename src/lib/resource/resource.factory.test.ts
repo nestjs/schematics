@@ -26,8 +26,7 @@ describe('Resource Factory', () => {
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
-        '/users/dto/create-user.dto.ts',
-        '/users/dto/update-user.dto.ts',
+        '/users/dto/user.dto.ts',
         '/users/entities/user.entity.ts',
       ]);
     });
@@ -45,8 +44,7 @@ describe('Resource Factory', () => {
         '/_users/_users.module.ts',
         '/_users/_users.service.spec.ts',
         '/_users/_users.service.ts',
-        '/_users/dto/create-_user.dto.ts',
-        '/_users/dto/update-_user.dto.ts',
+        '/_users/dto/_user.dto.ts',
         '/_users/entities/_user.entity.ts',
       ]);
     });
@@ -105,8 +103,7 @@ describe('Resource Factory', () => {
       expect(tree.readContent('/users/users.controller.ts'))
         .toEqual(`import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -143,8 +140,7 @@ export class UsersController {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -200,20 +196,25 @@ export class User extends BaseEntity {}
 `);
     });
 
-    it('should generate "CreateUserDto" class', () => {
-      expect(tree.readContent('/users/dto/create-user.dto.ts')).toEqual(
-        `export class CreateUserDto {}
-`,
-      );
-    });
+    it('should generate "CreateUserDto" and "UpdateUserDto" classes', () => {
+      expect(tree.readContent('/users/dto/user.dto.ts')).toEqual(
+        `import { PartialType } from '@nestjs/swagger';
+import { BaseEntityDto } from '@vori/nest/libs/dto';
+import { User } from '../entities/user.entity';
 
-    it('should generate "UpdateUserDto" class', () => {
-      expect(tree.readContent('/users/dto/update-user.dto.ts'))
-        .toEqual(`import { PartialType } from '@nestjs/swagger';
-import { CreateUserDto } from './create-user.dto';
+export class UserDto extends BaseEntityDto {
+  public static from(user: User): UserDto {
+    return {
+      ...BaseEntityDto.from(user),
+    };
+  }
+}
+
+export class CreateUserDto {}
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}
-`);
+`,
+      );
     });
 
     it('should generate "UsersController" spec file', () => {
@@ -346,8 +347,7 @@ export class UsersModule {}
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
-        '/users/dto/create-user.dto.ts',
-        '/users/dto/update-user.dto.ts',
+        '/users/dto/user.dto.ts',
         '/users/entities/user.entity.ts',
       ]);
     });
@@ -409,8 +409,7 @@ export class UsersModule {}
         .toEqual(`import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
 @Controller()
 export class UsersController {
@@ -447,8 +446,7 @@ export class UsersController {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -504,22 +502,25 @@ export class User extends BaseEntity {}
 `);
     });
 
-    it('should generate "CreateUserDto" class', () => {
-      expect(tree.readContent('/users/dto/create-user.dto.ts')).toEqual(
-        `export class CreateUserDto {}
+    it('should generate "CreateUserDto" and "UpdateUserDto" classes', () => {
+      expect(tree.readContent('/users/dto/user.dto.ts')).toEqual(
+        `import { PartialType } from '@nestjs/mapped-types';
+import { BaseEntityDto } from '@vori/nest/libs/dto';
+import { User } from '../entities/user.entity';
+
+export class UserDto extends BaseEntityDto {
+  public static from(user: User): UserDto {
+    return {
+      ...BaseEntityDto.from(user),
+    };
+  }
+}
+
+export class CreateUserDto {}
+
+export class UpdateUserDto extends PartialType(CreateUserDto) {}
 `,
       );
-    });
-
-    it('should generate "UpdateUserDto" class', () => {
-      expect(tree.readContent('/users/dto/update-user.dto.ts'))
-        .toEqual(`import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
-
-export class UpdateUserDto extends PartialType(CreateUserDto) {
-  id: number;
-}
-`);
     });
 
     it('should generate "UsersController" spec file', () => {
@@ -653,8 +654,7 @@ export class UsersModule {}
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
-        '/users/dto/create-user.dto.ts',
-        '/users/dto/update-user.dto.ts',
+        '/users/dto/user.dto.ts',
         '/users/entities/user.entity.ts',
       ]);
     });
@@ -716,8 +716,7 @@ export class UsersModule {}
       expect(tree.readContent('/users/users.gateway.ts'))
         .toEqual(`import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
 @WebSocketGateway()
 export class UsersGateway {
@@ -753,8 +752,7 @@ export class UsersGateway {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -808,22 +806,25 @@ export class User extends BaseEntity {}
 `);
     });
 
-    it('should generate "CreateUserDto" class', () => {
-      expect(tree.readContent('/users/dto/create-user.dto.ts')).toEqual(
-        `export class CreateUserDto {}
+    it('should generate "CreateUserDto" and "UpdateUserDto" classes', () => {
+      expect(tree.readContent('/users/dto/user.dto.ts')).toEqual(
+        `import { PartialType } from '@nestjs/mapped-types';
+import { BaseEntityDto } from '@vori/nest/libs/dto';
+import { User } from '../entities/user.entity';
+
+export class UserDto extends BaseEntityDto {
+  public static from(user: User): UserDto {
+    return {
+      ...BaseEntityDto.from(user),
+    };
+  }
+}
+
+export class CreateUserDto {}
+
+export class UpdateUserDto extends PartialType(CreateUserDto) {}
 `,
       );
-    });
-
-    it('should generate "UpdateUserDto" class', () => {
-      expect(tree.readContent('/users/dto/update-user.dto.ts'))
-        .toEqual(`import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
-
-export class UpdateUserDto extends PartialType(CreateUserDto) {
-  id: number;
-}
-`);
     });
 
     it('should generate "UsersGateway" spec file', () => {
