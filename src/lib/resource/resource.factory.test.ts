@@ -187,7 +187,12 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/entities/user.entity.ts'))
-        .toEqual(`export class User {}
+        .toEqual(`import { Entity } from 'typeorm';
+import { BaseEntity } from '@vori/types/BaseEntity';
+
+// TODO Remember to add your new entity to getDataBaseEntities.
+@Entity('users')
+export class User extends BaseEntity {}
 `);
     });
 
@@ -478,7 +483,12 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/entities/user.entity.ts'))
-        .toEqual(`export class User {}
+        .toEqual(`import { Entity } from 'typeorm';
+import { BaseEntity } from '@vori/types/BaseEntity';
+
+// TODO Remember to add your new entity to getDataBaseEntities.
+@Entity('users')
+export class User extends BaseEntity {}
 `);
     });
 
@@ -770,7 +780,12 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/entities/user.entity.ts'))
-        .toEqual(`export class User {}
+        .toEqual(`import { Entity } from 'typeorm';
+import { BaseEntity } from '@vori/types/BaseEntity';
+
+// TODO Remember to add your new entity to getDataBaseEntities.
+@Entity('users')
+export class User extends BaseEntity {}
 `);
     });
 
@@ -1302,7 +1317,12 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/entities/user.entity.ts'))
-        .toEqual(`export class User {}
+        .toEqual(`import { Entity } from 'typeorm';
+import { BaseEntity } from '@vori/types/BaseEntity';
+
+// TODO Remember to add your new entity to getDataBaseEntities.
+@Entity('users')
+export class User extends BaseEntity {}
 `);
     });
 
