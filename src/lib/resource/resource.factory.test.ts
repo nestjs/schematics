@@ -23,12 +23,14 @@ describe('Resource Factory', () => {
       expect(files).toEqual([
         '/users/users.controller.spec.ts',
         '/users/users.controller.ts',
+        '/users/users.e2e.spec.ts',
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
-        '/users/dto/create-user.dto.ts',
-        '/users/dto/update-user.dto.ts',
+        '/users/dto/user.dto.spec.ts',
+        '/users/dto/user.dto.ts',
         '/users/entities/user.entity.ts',
+        '/users/fakers/user.faker.ts',
       ]);
     });
     it("should keep underscores in resource's path and file name", async () => {
@@ -42,12 +44,14 @@ describe('Resource Factory', () => {
       expect(files).toEqual([
         '/_users/_users.controller.spec.ts',
         '/_users/_users.controller.ts',
+        '/_users/_users.e2e.spec.ts',
         '/_users/_users.module.ts',
         '/_users/_users.service.spec.ts',
         '/_users/_users.service.ts',
-        '/_users/dto/create-_user.dto.ts',
-        '/_users/dto/update-_user.dto.ts',
+        '/_users/dto/_user.dto.spec.ts',
+        '/_users/dto/_user.dto.ts',
         '/_users/entities/_user.entity.ts',
+        '/_users/fakers/_user.faker.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -66,6 +70,7 @@ describe('Resource Factory', () => {
           '/users/users.module.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -84,6 +89,7 @@ describe('Resource Factory', () => {
           '/users/users.controller.ts',
           '/users/users.module.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -103,38 +109,71 @@ describe('Resource Factory', () => {
 
     it('should generate "UsersController" class', () => {
       expect(tree.readContent('/users/users.controller.ts'))
-        .toEqual(`import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+        .toEqual(`import { Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+} from '@nestjs/swagger';
+import { RequestWithBannerUser } from '@vori/nest/libs/auth/types';
+import { ApiEndpoint } from '@vori/nest/libs/decorators';
+import { FindOneParams } from '@vori/nest/params/FindOneParams';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserDto, CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
-@Controller('users')
+// TODO Add tags to group endpoints in Swagger UI
+@ApiEndpoint({ prefix: 'users', tags: [] })
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiOperation({ operationId: 'createUser %>' })
+  @ApiCreatedResponse({ type: UserDto })
+  @ApiBadRequestResponse()
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  public async create(
+    @Req() request: RequestWithBannerUser,
+    @Body() createUserDto: CreateUserDto
+  ): Promise<UserDto> {
+    const user = await this.usersService.create(request.user, createUserDto);
+    return UserDto.from(user);
   }
 
+  @ApiOperation({ operationId: 'listUser' })
+  @ApiOkResponse({ type: UserDto, isArray: true })
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  public async findAll(@Req() request: RequestWithBannerUser): Promise<UserDto[]> {
+    const users = await this.usersService.findAll(request.user);
+    return users.map(UserDto.from);
   }
 
+  @ApiOperation({ operationId: 'getUser' })
+  @ApiNotFoundResponse()
+  @ApiOkResponse({ type: UserDto })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  public async findOne(@Req() request: RequestWithBannerUser, @Param() params: FindOneParams) {
+    const user = await this.usersService.findOne(request.user, params.id);
+    return UserDto.from(user);
   }
 
+  @ApiOperation({ operationId: 'updateUser' })
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse({ type: UserDto })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  public async update(@Req() request: RequestWithBannerUser, @Param() params: FindOneParams, @Body() updateUserDto: UpdateUserDto) {
+    const user = await this.usersService.update(request.user, params.id, updateUserDto);
+    return UserDto.from(user);
   }
 
+  @ApiOperation({ operationId: 'deleteUser' })
+  @ApiNotFoundResponse()
+  @ApiNoContentResponse()
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  public async remove(@Req() request: RequestWithBannerUser, @Param() params: FindOneParams): Promise<void> {
+    await this.usersService.remove(request.user, params.id);
   }
 }
 `);
@@ -142,30 +181,71 @@ export class UsersController {
 
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  private readonly logger = new Logger(UsersService.name);
+
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+
+  public async create(user: BannerMember, dto: CreateUserDto): Promise<User> {
+    const user = this.dtoToModel(dto);
+
+    // TODO Adjust if the data is not associated with a banner
+    // NOTE: Set this only on creation. Banner IDs are not allowed to change.
+      user.bannerID = user.bannerID;
+
+    return this.usersRepository.save(user);
   }
 
-  findAll() {
-    return \`This action returns all users\`;
+  public async findAll(user: BannerMember): Promise<User[]> {
+    // TODO Adjust the query if the data is not associated with a banner
+    return this.usersRepository.find({
+      comment: \`controller='UsersService',action='findAll'\`,
+      where: { bannerID: user.bannerID },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
   }
 
-  findOne(id: number) {
-    return \`This action returns a #\${id} user\`;
+  public async findOne(user: BannerMember, id: string): Promise<User> {
+    // TODO Adjust the query if the data is not associated with a banner
+    return this.usersRepository.findOneOrFail({
+      comment: \`controller='UsersService',action='findOne'\`,
+      where: { id: id.toString(), bannerID: user.bannerID },
+    });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return \`This action updates a #\${id} user\`;
+  public async update(user: BannerMember, id: string, dto: UpdateUserDto): Promise<User> {
+    const user = await this.findOne(user, id);
+    const updates = this.dtoToModel(dto);
+    return this.usersRepository.save(
+      this.usersRepository.merge(user, updates)
+    );
   }
 
-  remove(id: number) {
-    return \`This action removes a #\${id} user\`;
+  public async remove(user: BannerMember, id: string): Promise<void> {
+    const user = await this.findOne(user, id);
+    await this.usersRepository.remove(user);
+  }
+
+  private dtoToModel(
+      dto: CreateUserDto | UpdateUserDto
+  ): User {
+    // TODO Adjust fields as needed
+    return this.usersRepository.create({
+      ...dto,
+    });
   }
 }
 `);
@@ -174,12 +254,16 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}
 `);
@@ -187,37 +271,361 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/entities/user.entity.ts'))
-        .toEqual(`export class User {}
+        .toEqual(`import { Entity } from 'typeorm';
+import { BaseEntity } from '@vori/types/BaseEntity';
+
+// TODO Remember to add your new entity to getDataBaseEntities.
+@Entity('users')
+export class User extends BaseEntity {}
 `);
     });
 
-    it('should generate "CreateUserDto" class', () => {
-      expect(tree.readContent('/users/dto/create-user.dto.ts')).toEqual(
-        `export class CreateUserDto {}
+    it('should generate "CreateUserDto" and "UpdateUserDto" classes', () => {
+      expect(tree.readContent('/users/dto/user.dto.ts')).toEqual(
+        `import { PartialType } from '@nestjs/swagger';
+import { BaseEntityDto } from '@vori/nest/libs/dto';
+import { User } from '../entities/user.entity';
+
+export class UserDto extends BaseEntityDto {
+  public static from(user: User): UserDto {
+    return {
+      ...BaseEntityDto.from(user),
+    };
+  }
+}
+
+export class CreateUserDto {}
+
+export class UpdateUserDto extends PartialType(CreateUserDto) {}
 `,
       );
     });
 
-    it('should generate "UpdateUserDto" class', () => {
-      expect(tree.readContent('/users/dto/update-user.dto.ts'))
-        .toEqual(`import { PartialType } from '@nestjs/swagger';
-import { CreateUserDto } from './create-user.dto';
+    it('should generate "UserDto" spec file', () => {
+      expect(tree.readContent('/users/dto/user.dto.spec.ts')).toEqual(
+        `import { faker } from '@faker-js/faker';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
-`);
+import { getDataSource } from '@vori/providers/database';
+
+import { makeUser } from '../fakers/user.faker';
+import { UserDto } from './user.dto';
+
+describe('UserDto', () => {
+  beforeAll(async () => {
+    await getDataSource();
+  });
+
+  describe('from', () => {
+    it('converts an entity to a DTO', () => {
+      const user = makeUser({
+        id: faker.datatype.number({ min: 1 }).toString(),
+      });
+      const dto = UserDto.from(user);
+
+      expect(dto).toMatchObject({
+        id: user.id,
+        created_at: user.createdAt.toISOString(),
+        updated_at: user.updatedAt.toISOString(),
+      });
+    });
+  });
+});
+`,
+      );
+    });
+
+    it('should generate "Users" e2e spec file', () => {
+      expect(tree.readContent('/users/users.e2e.spec.ts')).toEqual(
+        `import { faker } from '@faker-js/faker';
+import { INestApplication, Injectable } from '@nestjs/common';
+import { instanceToPlain } from 'class-transformer';
+import { orderBy, times } from 'lodash';
+import request from 'supertest';
+import { DataSource } from 'typeorm';
+import { TransactionalTestContext } from 'typeorm-transactional-tests';
+
+import { Banner } from '@vori/types/Banner';
+import { APIBannerUser } from '@vori/types/User';
+
+import { makeAndSaveBanner } from '@vori/utils/VoriRandom/Banner.random';
+
+import { configureApp } from '@vori/nest/bootstrap';
+import { FirebaseAuthStrategy } from '@vori/nest/libs/auth/firebase-auth.strategy';
+import {
+  createAnnotatedUser,
+  createE2ETestingModule,
+  mockTemporalSetupAndShutdown,
+} from '@vori/nest/libs/test_helpers';
+
+// TODO Adjust depending on which service primarily uses the newly-created module.
+import { AppModule } from '../../../../services/graphql-api/src/app.module';
+import {
+  CreateUserDto,
+  UserDto,
+} from './dto/user.dto';
+import { User } from './entities/user.entity';
+import { makeUser, makeAndSaveUser } from './fakers/user.faker';
+import { UsersService } from './users.service';
+
+describe('/v1/users', () => {
+  let app: INestApplication;
+  let db: DataSource;
+  let transactionalContext: TransactionalTestContext;
+  let banner: Banner;
+  let user: APIBannerUser | undefined;
+  let usersService: UsersService;
+
+  @Injectable()
+  class MockFirebaseAuthStrategy extends FirebaseAuthStrategy {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    async validate(token): Promise<APIBannerUser | undefined> {
+      return user;
+    }
+  }
+
+  beforeAll(async () => {
+    mockTemporalSetupAndShutdown();
+
+    const moduleRef = await createE2ETestingModule({
+      // TODO Remember to import UsersModule into AppModule
+      imports: [AppModule],
+    })
+      .overrideProvider(FirebaseAuthStrategy)
+      .useClass(MockFirebaseAuthStrategy)
+      .compile();
+
+    app = moduleRef.createNestApplication();
+    app = configureApp(app);
+    await app.init();
+
+    db = app.get<DataSource>(DataSource);
+    usersService = app.get<UsersService>(
+      UsersService
+    );
+  });
+
+  beforeEach(async () => {
+    transactionalContext = new TransactionalTestContext(db);
+    await transactionalContext.start();
+
+    banner = await makeAndSaveBanner(db);
+    user = <APIBannerUser>await createAnnotatedUser({ db, banner });
+  });
+
+  afterEach(async () => {
+    await transactionalContext.finish();
+  });
+
+  describe('POST /v1/users', () => {
+    it('requires authorization', async () => {
+      user = undefined;
+      await request(app.getHttpServer())
+        .post('/v1/users')
+        .set('Authorization', 'Bearer FAKE')
+        .expect(401);
+    });
+
+    it('creates a new User', async () => {
+      // TODO Add fields
+      const body: CreateUserDto = {};
+
+      const response = await request(app.getHttpServer())
+        .post('/v1/users')
+        .set('Authorization', 'Bearer FAKE')
+        .send(instanceToPlain(body))
+        .expect(201);
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const user = await usersService.findOne(
+        user!,
+        response.body.id
+      );
+      // TODO Assert values stored in database
+
+      expect(response.body).toEqual(
+        instanceToPlain(UserDto.from(user))
+      );
+    });
+  });
+
+  describe('GET /v1/users', () => {
+    // TODO Modify if the entity is not attached to a banner
+    it('returns all Users for the authenticated banner', async () => {
+      // No data exists, so nothing returned
+      let response = await request(app.getHttpServer())
+        .get('/v1/users')
+        .set('Authorization', 'Bearer FAKE')
+        .expect(200);
+      expect(response.body).toEqual([]);
+
+      // Data belonging to other banners should never be returned
+      const otherBanner = await makeAndSaveBanner(db);
+      await makeAndSaveUser(db, { banner: otherBanner });
+      response = await request(app.getHttpServer())
+        .get('/v1/users')
+        .set('Authorization', 'Bearer FAKE')
+        .expect(200);
+      expect(response.body).toEqual([]);
+
+      // Response should include data belonging to this banner
+      const users = await Promise.all(
+        times(3, async () => makeAndSaveUser(db, { banner }))
+      );
+      response = await request(app.getHttpServer())
+        .get('/v1/users')
+        .set('Authorization', 'Bearer FAKE')
+        .expect(200);
+      expect(response.body).toEqual(
+        orderBy(users, 'createdAt', 'desc').map(
+          UserDto.from
+        )
+      );
+    });
+  });
+
+  describe('GET /v1/users/:id', () => {
+    // TODO Update if data is not associated with a banner
+    it('does NOT return data belonging to other banners', async () => {
+      const otherBanner = await makeAndSaveBanner(db);
+      const otherUser = await makeAndSaveUser(
+        db,
+        { banner: otherBanner }
+      );
+
+      await request(app.getHttpServer())
+        .get(\`/v1/users/$\{otherUser.id}\`)
+        .set('Authorization', 'Bearer FAKE')
+        .expect(404);
+    });
+
+    it('returns the User', async () => {
+      const user = await makeAndSaveUser(db, {
+        banner,
+      });
+
+      const response = await request(app.getHttpServer())
+        .get(\`/v1/users/$\{user.id}\`)
+        .set('Authorization', 'Bearer FAKE')
+        .expect(200);
+
+      expect(response.body).toEqual(
+        instanceToPlain(UserDto.from(user))
+      );
+    });
+  });
+
+  describe('PATCH /v1/users/:id', () => {
+    // TODO Update if data is not associated with a banner
+    it('does NOT permit modifying data belonging to other banners', async () => {
+      const otherBanner = await makeAndSaveBanner(db);
+      const otherUser = await makeAndSaveUser(
+        db,
+        { banner: otherBanner }
+      );
+
+      await request(app.getHttpServer())
+        .patch(\`/v1/users/$\{otherUser.id}\`)
+        .set('Authorization', 'Bearer FAKE')
+        .send({
+          // TODO Add a body
+        })
+        .expect(404);
+
+      const reloadedUser = await db
+        .getRepository(User)
+        .findOneOrFail({ where: { id: otherUser.id } });
+      expect(reloadedUser.updatedAt).toEqual(
+        otherUser.updatedAt
+      );
+      // TODO Assert fields are unchanged
+    });
+
+    it('updates the User', async () => {
+      const user = await makeAndSaveUser(db, {
+        banner,
+      });
+
+      // TODO Add a body
+      const body = {};
+      const response = await request(app.getHttpServer())
+        .patch(\`/v1/users/$\{user.id}\`)
+        .set('Authorization', 'Bearer FAKE')
+        .send(body)
+        .expect(200);
+
+      const reloadedUser = await db
+        .getRepository(User)
+        .findOneOrFail({ where: { id: user.id } });
+
+      // TODO Assert database fields updated
+
+      expect(response.body).toEqual(
+        instanceToPlain(
+          UserDto.from(reloadedUser)
+        )
+      );
+    });
+  });
+
+  describe('DELETE /v1/users/:id', () => {
+    // TODO Update if data is not associated with a banner
+    it('does NOT permit modifying data belonging to other banners', async () => {
+      const otherBanner = await makeAndSaveBanner(db);
+      const otherUser = await makeAndSaveUser(
+        db,
+        { banner: otherBanner }
+      );
+
+      await request(app.getHttpServer())
+        .delete(\`/v1/users/$\{otherUser.id}\`)
+        .set('Authorization', 'Bearer FAKE')
+        .expect(404);
+
+      await db
+        .getRepository(User)
+        .findOneOrFail({ where: { id: otherUser.id } });
+    });
+
+    it('deletes the User', async () => {
+      const user = await makeAndSaveUser(db, {
+        banner,
+      });
+
+      await request(app.getHttpServer())
+        .delete(\`/v1/users/$\{user.id}\`)
+        .set('Authorization', 'Bearer FAKE')
+        .expect(200);
+
+      expect(
+        await db
+          .getRepository(User)
+          .exist({ where: { id: user.id } })
+      ).toEqual(false);
+    });
+  });
+});
+`,
+      );
     });
 
     it('should generate "UsersController" spec file', () => {
       expect(tree.readContent('/users/users.controller.spec.ts'))
-        .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+        .toEqual(`import { TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { createTestingModule } from '@vori/nest/libs/test_helpers';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 
 describe('UsersController', () => {
   let controller: UsersController;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await createTestingModule({
+      imports: [
+        TypeOrmModule.forFeature([User]),
+      ],
       controllers: [UsersController],
       providers: [UsersService],
     }).compile();
@@ -234,24 +642,93 @@ describe('UsersController', () => {
 
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
-        .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+        .toEqual(`import { TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { TransactionalTestContext } from 'typeorm-transactional-tests';
+import { createTestingModule } from '@vori/nest/libs/test_helpers';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 
 describe('UsersService', () => {
+  let module: TestingModule;
+  let db: DataSource;
+  let transactionalContext: TransactionalTestContext;
   let service: UsersService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await createTestingModule({
+      imports: [
+        TypeOrmModule.forFeature([User]),
+      ],
       providers: [UsersService],
     }).compile();
 
+    await module.init();
+
+    db = module.get<DataSource>(DataSource);
     service = module.get<UsersService>(UsersService);
+  });
+
+  afterAll(async () => {
+    await module.close();
+  });
+
+  beforeEach(async () => {
+    transactionalContext = new TransactionalTestContext(db);
+    await transactionalContext.start();
+  });
+
+  afterEach(async () => {
+    await transactionalContext.finish();
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 });
+`);
+    });
+
+    it('should generate "User" faker file', () => {
+      expect(tree.readContent('/users/fakers/user.faker.ts'))
+        .toEqual(`import { faker } from '@faker-js/faker';
+import { merge } from 'lodash';
+import { DataSource } from 'typeorm';
+
+import { getRepository } from '@vori/providers/database';
+
+import { User } from '../entities/user.entity';
+
+export function makeUser(
+  overrides: Partial<User> = {}
+): User {
+  return getRepository(User).create(
+    merge(
+      {
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      overrides
+    )
+  );
+}
+
+export function makeAndSaveUser(
+  dataSource: DataSource,
+  overrides: Partial<User> = {}
+): Promise<User> {
+  // TODO Add constraints, if necessary
+  // const bannerID = overrides.bannerID || overrides.banner?.id;
+  //
+  // if (!bannerID) {
+  //   throw new TypeError('banner or bannerID must be supplied!');
+  // }
+
+  return dataSource
+    .getRepository(User)
+    .save(makeUser(overrides));
+}
 `);
     });
   });
@@ -274,7 +751,8 @@ describe('UsersService', () => {
         .toEqual(`import { Controller } from '@nestjs/common';
 import { UsersService } from './users.service';
 
-@Controller('users')
+// TODO Add tags to group endpoints in Swagger UI
+@ApiEndpoint({ prefix: 'users', tags: [] })
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 }
@@ -283,22 +761,37 @@ export class UsersController {
 
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
+import { User } from './entities/user.entity';
 
 @Injectable()
-export class UsersService {}
+export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+}
 `);
     });
 
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}
 `);
@@ -333,9 +826,10 @@ export class UsersModule {}
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
-        '/users/dto/create-user.dto.ts',
-        '/users/dto/update-user.dto.ts',
+        '/users/dto/user.dto.spec.ts',
+        '/users/dto/user.dto.ts',
         '/users/entities/user.entity.ts',
+        '/users/fakers/user.faker.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -355,6 +849,7 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -374,6 +869,7 @@ export class UsersModule {}
           '/users/users.controller.ts',
           '/users/users.module.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -396,8 +892,7 @@ export class UsersModule {}
         .toEqual(`import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserDto, CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
 @Controller()
 export class UsersController {
@@ -433,29 +928,39 @@ export class UsersController {
 
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
+  private readonly logger = new Logger(UsersService.name);
+
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+
+  public async create(user: BannerMember, dto: CreateUserDto): Promise<User> {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  public async findAll(user: BannerMember): Promise<User[]> {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  public async findOne(user: BannerMember, id: string): Promise<User> {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  public async update(user: BannerMember, id: string, dto: UpdateUserDto): Promise<User> {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  public async remove(user: BannerMember, id: string): Promise<void> {
     return \`This action removes a #\${id} user\`;
   }
 }
@@ -465,12 +970,16 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}
 `);
@@ -478,39 +987,53 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/entities/user.entity.ts'))
-        .toEqual(`export class User {}
+        .toEqual(`import { Entity } from 'typeorm';
+import { BaseEntity } from '@vori/types/BaseEntity';
+
+// TODO Remember to add your new entity to getDataBaseEntities.
+@Entity('users')
+export class User extends BaseEntity {}
 `);
     });
 
-    it('should generate "CreateUserDto" class', () => {
-      expect(tree.readContent('/users/dto/create-user.dto.ts')).toEqual(
-        `export class CreateUserDto {}
+    it('should generate "CreateUserDto" and "UpdateUserDto" classes', () => {
+      expect(tree.readContent('/users/dto/user.dto.ts')).toEqual(
+        `import { PartialType } from '@nestjs/mapped-types';
+import { BaseEntityDto } from '@vori/nest/libs/dto';
+import { User } from '../entities/user.entity';
+
+export class UserDto extends BaseEntityDto {
+  public static from(user: User): UserDto {
+    return {
+      ...BaseEntityDto.from(user),
+    };
+  }
+}
+
+export class CreateUserDto {}
+
+export class UpdateUserDto extends PartialType(CreateUserDto) {}
 `,
       );
     });
 
-    it('should generate "UpdateUserDto" class', () => {
-      expect(tree.readContent('/users/dto/update-user.dto.ts'))
-        .toEqual(`import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
-
-export class UpdateUserDto extends PartialType(CreateUserDto) {
-  id: number;
-}
-`);
-    });
-
     it('should generate "UsersController" spec file', () => {
       expect(tree.readContent('/users/users.controller.spec.ts'))
-        .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+        .toEqual(`import { TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { createTestingModule } from '@vori/nest/libs/test_helpers';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 
 describe('UsersController', () => {
   let controller: UsersController;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await createTestingModule({
+      imports: [
+        TypeOrmModule.forFeature([User]),
+      ],
       controllers: [UsersController],
       providers: [UsersService],
     }).compile();
@@ -527,18 +1050,45 @@ describe('UsersController', () => {
 
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
-        .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+        .toEqual(`import { TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { TransactionalTestContext } from 'typeorm-transactional-tests';
+import { createTestingModule } from '@vori/nest/libs/test_helpers';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 
 describe('UsersService', () => {
+  let module: TestingModule;
+  let db: DataSource;
+  let transactionalContext: TransactionalTestContext;
   let service: UsersService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await createTestingModule({
+      imports: [
+        TypeOrmModule.forFeature([User]),
+      ],
       providers: [UsersService],
     }).compile();
 
+    await module.init();
+
+    db = module.get<DataSource>(DataSource);
     service = module.get<UsersService>(UsersService);
+  });
+
+  afterAll(async () => {
+    await module.close();
+  });
+
+  beforeEach(async () => {
+    transactionalContext = new TransactionalTestContext(db);
+    await transactionalContext.start();
+  });
+
+  afterEach(async () => {
+    await transactionalContext.finish();
   });
 
   it('should be defined', () => {
@@ -577,22 +1127,37 @@ export class UsersController {
 
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
+import { User } from './entities/user.entity';
 
 @Injectable()
-export class UsersService {}
+export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+}
 `);
     });
 
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}
 `);
@@ -627,9 +1192,10 @@ export class UsersModule {}
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
-        '/users/dto/create-user.dto.ts',
-        '/users/dto/update-user.dto.ts',
+        '/users/dto/user.dto.spec.ts',
+        '/users/dto/user.dto.ts',
         '/users/entities/user.entity.ts',
+        '/users/fakers/user.faker.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -649,6 +1215,7 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -668,6 +1235,7 @@ export class UsersModule {}
           '/users/users.gateway.ts',
           '/users/users.module.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -690,8 +1258,7 @@ export class UsersModule {}
       expect(tree.readContent('/users/users.gateway.ts'))
         .toEqual(`import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
 @WebSocketGateway()
 export class UsersGateway {
@@ -726,29 +1293,39 @@ export class UsersGateway {
     });
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
+  private readonly logger = new Logger(UsersService.name);
+
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+
+  public async create(user: BannerMember, dto: CreateUserDto): Promise<User> {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  public async findAll(user: BannerMember): Promise<User[]> {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  public async findOne(user: BannerMember, id: string): Promise<User> {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  public async update(user: BannerMember, id: string, dto: UpdateUserDto): Promise<User> {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  public async remove(user: BannerMember, id: string): Promise<void> {
     return \`This action removes a #\${id} user\`;
   }
 }
@@ -758,10 +1335,13 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersGateway } from './users.gateway';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   providers: [UsersGateway, UsersService],
 })
 export class UsersModule {}
@@ -770,26 +1350,34 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/entities/user.entity.ts'))
-        .toEqual(`export class User {}
+        .toEqual(`import { Entity } from 'typeorm';
+import { BaseEntity } from '@vori/types/BaseEntity';
+
+// TODO Remember to add your new entity to getDataBaseEntities.
+@Entity('users')
+export class User extends BaseEntity {}
 `);
     });
 
-    it('should generate "CreateUserDto" class', () => {
-      expect(tree.readContent('/users/dto/create-user.dto.ts')).toEqual(
-        `export class CreateUserDto {}
+    it('should generate "CreateUserDto" and "UpdateUserDto" classes', () => {
+      expect(tree.readContent('/users/dto/user.dto.ts')).toEqual(
+        `import { PartialType } from '@nestjs/mapped-types';
+import { BaseEntityDto } from '@vori/nest/libs/dto';
+import { User } from '../entities/user.entity';
+
+export class UserDto extends BaseEntityDto {
+  public static from(user: User): UserDto {
+    return {
+      ...BaseEntityDto.from(user),
+    };
+  }
+}
+
+export class CreateUserDto {}
+
+export class UpdateUserDto extends PartialType(CreateUserDto) {}
 `,
       );
-    });
-
-    it('should generate "UpdateUserDto" class', () => {
-      expect(tree.readContent('/users/dto/update-user.dto.ts'))
-        .toEqual(`import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
-
-export class UpdateUserDto extends PartialType(CreateUserDto) {
-  id: number;
-}
-`);
     });
 
     it('should generate "UsersGateway" spec file', () => {
@@ -818,18 +1406,45 @@ describe('UsersGateway', () => {
 
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
-        .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+        .toEqual(`import { TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { TransactionalTestContext } from 'typeorm-transactional-tests';
+import { createTestingModule } from '@vori/nest/libs/test_helpers';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 
 describe('UsersService', () => {
+  let module: TestingModule;
+  let db: DataSource;
+  let transactionalContext: TransactionalTestContext;
   let service: UsersService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await createTestingModule({
+      imports: [
+        TypeOrmModule.forFeature([User]),
+      ],
       providers: [UsersService],
     }).compile();
 
+    await module.init();
+
+    db = module.get<DataSource>(DataSource);
     service = module.get<UsersService>(UsersService);
+  });
+
+  afterAll(async () => {
+    await module.close();
+  });
+
+  beforeEach(async () => {
+    transactionalContext = new TransactionalTestContext(db);
+    await transactionalContext.start();
+  });
+
+  afterEach(async () => {
+    await transactionalContext.finish();
   });
 
   it('should be defined', () => {
@@ -867,20 +1482,34 @@ export class UsersGateway {
     });
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
+import { User } from './entities/user.entity';
 
 @Injectable()
-export class UsersService {}
+export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+}
 `);
     });
 
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersGateway } from './users.gateway';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   providers: [UsersGateway, UsersService],
 })
 export class UsersModule {}
@@ -920,6 +1549,7 @@ export class UsersModule {}
         '/users/dto/create-user.input.ts',
         '/users/dto/update-user.input.ts',
         '/users/entities/user.entity.ts',
+        '/users/fakers/user.faker.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -939,6 +1569,7 @@ export class UsersModule {}
           '/users/users.resolver.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -958,6 +1589,7 @@ export class UsersModule {}
           '/users/users.module.ts',
           '/users/users.resolver.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -1016,29 +1648,40 @@ export class UsersResolver {
     });
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserInput: CreateUserInput) {
+  private readonly logger = new Logger(UsersService.name);
+
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+
+  public async create(createUserInput: CreateUserInput): Promise<User> {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  public async findAll(user: BannerMember): Promise<User[]> {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  public async findOne(user: BannerMember, id: string): Promise<User> {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
+  public async update(user: BannerMember, id: string, updateUserInput: UpdateUserInput): Promise<User> {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  public async remove(user: BannerMember, id: string): Promise<void> {
     return \`This action removes a #\${id} user\`;
   }
 }
@@ -1048,10 +1691,13 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   providers: [UsersResolver, UsersService],
 })
 export class UsersModule {}
@@ -1122,18 +1768,45 @@ describe('UsersResolver', () => {
 
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
-        .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+        .toEqual(`import { TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { TransactionalTestContext } from 'typeorm-transactional-tests';
+import { createTestingModule } from '@vori/nest/libs/test_helpers';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 
 describe('UsersService', () => {
+  let module: TestingModule;
+  let db: DataSource;
+  let transactionalContext: TransactionalTestContext;
   let service: UsersService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await createTestingModule({
+      imports: [
+        TypeOrmModule.forFeature([User]),
+      ],
       providers: [UsersService],
     }).compile();
 
+    await module.init();
+
+    db = module.get<DataSource>(DataSource);
     service = module.get<UsersService>(UsersService);
+  });
+
+  afterAll(async () => {
+    await module.close();
+  });
+
+  beforeEach(async () => {
+    transactionalContext = new TransactionalTestContext(db);
+    await transactionalContext.start();
+  });
+
+  afterEach(async () => {
+    await transactionalContext.finish();
   });
 
   it('should be defined', () => {
@@ -1164,6 +1837,7 @@ describe('UsersService', () => {
         '/users/dto/create-user.input.ts',
         '/users/dto/update-user.input.ts',
         '/users/entities/user.entity.ts',
+        '/users/fakers/user.faker.ts',
       ]);
     });
     describe('when "crud" option is not enabled', () => {
@@ -1183,6 +1857,7 @@ describe('UsersService', () => {
           '/users/users.resolver.ts',
           '/users/users.service.spec.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -1202,6 +1877,7 @@ describe('UsersService', () => {
           '/users/users.module.ts',
           '/users/users.resolver.ts',
           '/users/users.service.ts',
+          '/users/fakers/user.faker.ts',
         ]);
       });
     });
@@ -1258,29 +1934,40 @@ export class UsersResolver {
     });
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserInput: CreateUserInput) {
+  private readonly logger = new Logger(UsersService.name);
+
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+
+  public async create(createUserInput: CreateUserInput): Promise<User> {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  public async findAll(user: BannerMember): Promise<User[]> {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  public async findOne(user: BannerMember, id: string): Promise<User> {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
+  public async update(user: BannerMember, id: string, updateUserInput: UpdateUserInput): Promise<User> {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  public async remove(user: BannerMember, id: string): Promise<void> {
     return \`This action removes a #\${id} user\`;
   }
 }
@@ -1290,10 +1977,13 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   providers: [UsersResolver, UsersService],
 })
 export class UsersModule {}
@@ -1302,7 +1992,12 @@ export class UsersModule {}
 
     it('should generate "User" class', () => {
       expect(tree.readContent('/users/entities/user.entity.ts'))
-        .toEqual(`export class User {}
+        .toEqual(`import { Entity } from 'typeorm';
+import { BaseEntity } from '@vori/types/BaseEntity';
+
+// TODO Remember to add your new entity to getDataBaseEntities.
+@Entity('users')
+export class User extends BaseEntity {}
 `);
     });
 
@@ -1350,18 +2045,45 @@ describe('UsersResolver', () => {
 
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
-        .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+        .toEqual(`import { TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { TransactionalTestContext } from 'typeorm-transactional-tests';
+import { createTestingModule } from '@vori/nest/libs/test_helpers';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 
 describe('UsersService', () => {
+  let module: TestingModule;
+  let db: DataSource;
+  let transactionalContext: TransactionalTestContext;
   let service: UsersService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await createTestingModule({
+      imports: [
+        TypeOrmModule.forFeature([User]),
+      ],
       providers: [UsersService],
     }).compile();
 
+    await module.init();
+
+    db = module.get<DataSource>(DataSource);
     service = module.get<UsersService>(UsersService);
+  });
+
+  afterAll(async () => {
+    await module.close();
+  });
+
+  beforeEach(async () => {
+    transactionalContext = new TransactionalTestContext(db);
+    await transactionalContext.start();
+  });
+
+  afterEach(async () => {
+    await transactionalContext.finish();
   });
 
   it('should be defined', () => {
