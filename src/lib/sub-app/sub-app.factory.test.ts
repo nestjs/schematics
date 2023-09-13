@@ -20,7 +20,7 @@ describe('SubApp Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual([
       '/nest-cli.json',
-      '/apps/nestjs-schematics/tsconfig.app.json',
+      '/apps/vori-nest-schematics/tsconfig.app.json',
       '/apps/project/tsconfig.app.json',
       '/apps/project/src/main.ts',
       '/apps/project/src/project.controller.spec.ts',
@@ -41,7 +41,7 @@ describe('SubApp Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual([
       '/nest-cli.json',
-      '/apps/nestjs-schematics/tsconfig.app.json',
+      '/apps/vori-nest-schematics/tsconfig.app.json',
       '/apps/awesome-project/tsconfig.app.json',
       '/apps/awesome-project/src/main.ts',
       '/apps/awesome-project/src/awesome-project.controller.spec.ts',
@@ -62,7 +62,7 @@ describe('SubApp Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual([
       '/nest-cli.json',
-      '/apps/nestjs-schematics/tsconfig.app.json',
+      '/apps/vori-nest-schematics/tsconfig.app.json',
       '/apps/_project/tsconfig.app.json',
       '/apps/_project/src/main.ts',
       '/apps/_project/src/_project.controller.spec.ts',
@@ -84,9 +84,9 @@ describe('SubApp Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual([
       '/nest-cli.json',
-      '/apps/nestjs-schematics/.babelrc',
-      '/apps/nestjs-schematics/index.js',
-      '/apps/nestjs-schematics/jsconfig.json',
+      '/apps/vori-nest-schematics/.babelrc',
+      '/apps/vori-nest-schematics/index.js',
+      '/apps/vori-nest-schematics/jsconfig.json',
       '/apps/project/.babelrc',
       '/apps/project/index.js',
       '/apps/project/jsconfig.json',
@@ -110,7 +110,7 @@ describe('SubApp Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual([
       '/nest-cli.json',
-      '/apps/nestjs-schematics/tsconfig.app.json',
+      '/apps/vori-nest-schematics/tsconfig.app.json',
       '/apps/project/tsconfig.app.json',
       '/apps/project/src/main.ts',
       '/apps/project/src/project.controller.test.ts',
