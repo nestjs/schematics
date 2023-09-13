@@ -181,7 +181,7 @@ export class UsersController {
 
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BannerMember } from '@vori/types/User';
@@ -190,29 +190,62 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>
   ) {}
 
   public async create(user: BannerMember, createUserDto: CreateUserDto): Promise<User> {
-    return 'This action adds a new user';
+    const user = this.dtoToModel(dto);
+
+    // TODO Adjust if the data is not associated with a banner
+    // NOTE: Set this only on creation. Banner IDs are not allowed to change.
+      user.bannerID = user.bannerID;
+
+    return this.usersRepository.save(user);
   }
 
   public async findAll(user: BannerMember): Promise<User[]> {
-    return \`This action returns all users\`;
+    // TODO Adjust the query if the data is not associated with a banner
+    return this.usersRepository.find({
+      comment: \`controller='UsersService',action='findAll'\`,
+      where: { bannerID: user.bannerID },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
   }
 
   public async findOne(user: BannerMember, id: string): Promise<User> {
-    return \`This action returns a #\${id} user\`;
+    // TODO Adjust the query if the data is not associated with a banner
+    return this.usersRepository.findOneOrFail({
+      comment: \`controller='UsersService',action='findOne'\`,
+      where: { id: id.toString(), bannerID: user.bannerID },
+    });
   }
 
   public async update(user: BannerMember, id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    return \`This action updates a #\${id} user\`;
+    const user = await this.findOne(user, id);
+    const updates = this.dtoToModel(dto);
+    return this.usersRepository.save(
+      this.usersRepository.merge(user, updates)
+    );
   }
 
   public async remove(user: BannerMember, id: string): Promise<void> {
-    return \`This action removes a #\${id} user\`;
+    const user = await this.findOne(user, id);
+    await this.usersRepository.remove(user);
+  }
+
+  private dtoToModel(
+      dto: CreateUserDto | UpdateUserDto
+  ): User {
+    // TODO Adjust fields as needed
+    return this.usersRepository.create({
+      ...dto,
+    });
   }
 }
 `);
@@ -722,7 +755,7 @@ export class UsersController {
 
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BannerMember } from '@vori/types/User';
@@ -730,6 +763,8 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>
@@ -887,7 +922,7 @@ export class UsersController {
 
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BannerMember } from '@vori/types/User';
@@ -896,6 +931,8 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>
@@ -1078,7 +1115,7 @@ export class UsersController {
 
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BannerMember } from '@vori/types/User';
@@ -1086,6 +1123,8 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>
@@ -1242,7 +1281,7 @@ export class UsersGateway {
     });
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BannerMember } from '@vori/types/User';
@@ -1251,6 +1290,8 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>
@@ -1429,7 +1470,7 @@ export class UsersGateway {
     });
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BannerMember } from '@vori/types/User';
@@ -1437,6 +1478,8 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>
@@ -1593,7 +1636,7 @@ export class UsersResolver {
     });
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BannerMember } from '@vori/types/User';
@@ -1603,6 +1646,8 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>
@@ -1877,7 +1922,7 @@ export class UsersResolver {
     });
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
-        .toEqual(`import { Injectable } from '@nestjs/common';
+        .toEqual(`import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BannerMember } from '@vori/types/User';
@@ -1887,6 +1932,8 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>
