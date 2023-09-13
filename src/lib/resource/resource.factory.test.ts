@@ -287,18 +287,45 @@ describe('UsersController', () => {
 
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
-        .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+        .toEqual(`import { TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { TransactionalTestContext } from 'typeorm-transactional-tests';
+import { createTestingModule } from '@vori/nest/libs/test_helpers';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 
 describe('UsersService', () => {
+  let module: TestingModule;
+  let db: DataSource;
+  let transactionalContext: TransactionalTestContext;
   let service: UsersService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await createTestingModule({
+      imports: [
+        TypeOrmModule.forFeature([User]),
+      ],
       providers: [UsersService],
     }).compile();
 
+    await module.init();
+
+    db = module.get<DataSource>(DataSource);
     service = module.get<UsersService>(UsersService);
+  });
+
+  afterAll(async () => {
+    await module.close();
+  });
+
+  beforeEach(async () => {
+    transactionalContext = new TransactionalTestContext(db);
+    await transactionalContext.start();
+  });
+
+  afterEach(async () => {
+    await transactionalContext.finish();
   });
 
   it('should be defined', () => {
@@ -612,18 +639,45 @@ describe('UsersController', () => {
 
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
-        .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+        .toEqual(`import { TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { TransactionalTestContext } from 'typeorm-transactional-tests';
+import { createTestingModule } from '@vori/nest/libs/test_helpers';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 
 describe('UsersService', () => {
+  let module: TestingModule;
+  let db: DataSource;
+  let transactionalContext: TransactionalTestContext;
   let service: UsersService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await createTestingModule({
+      imports: [
+        TypeOrmModule.forFeature([User]),
+      ],
       providers: [UsersService],
     }).compile();
 
+    await module.init();
+
+    db = module.get<DataSource>(DataSource);
     service = module.get<UsersService>(UsersService);
+  });
+
+  afterAll(async () => {
+    await module.close();
+  });
+
+  beforeEach(async () => {
+    transactionalContext = new TransactionalTestContext(db);
+    await transactionalContext.start();
+  });
+
+  afterEach(async () => {
+    await transactionalContext.finish();
   });
 
   it('should be defined', () => {
@@ -933,18 +987,45 @@ describe('UsersGateway', () => {
 
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
-        .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+        .toEqual(`import { TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { TransactionalTestContext } from 'typeorm-transactional-tests';
+import { createTestingModule } from '@vori/nest/libs/test_helpers';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 
 describe('UsersService', () => {
+  let module: TestingModule;
+  let db: DataSource;
+  let transactionalContext: TransactionalTestContext;
   let service: UsersService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await createTestingModule({
+      imports: [
+        TypeOrmModule.forFeature([User]),
+      ],
       providers: [UsersService],
     }).compile();
 
+    await module.init();
+
+    db = module.get<DataSource>(DataSource);
     service = module.get<UsersService>(UsersService);
+  });
+
+  afterAll(async () => {
+    await module.close();
+  });
+
+  beforeEach(async () => {
+    transactionalContext = new TransactionalTestContext(db);
+    await transactionalContext.start();
+  });
+
+  afterEach(async () => {
+    await transactionalContext.finish();
   });
 
   it('should be defined', () => {
@@ -1261,18 +1342,45 @@ describe('UsersResolver', () => {
 
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
-        .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+        .toEqual(`import { TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { TransactionalTestContext } from 'typeorm-transactional-tests';
+import { createTestingModule } from '@vori/nest/libs/test_helpers';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 
 describe('UsersService', () => {
+  let module: TestingModule;
+  let db: DataSource;
+  let transactionalContext: TransactionalTestContext;
   let service: UsersService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await createTestingModule({
+      imports: [
+        TypeOrmModule.forFeature([User]),
+      ],
       providers: [UsersService],
     }).compile();
 
+    await module.init();
+
+    db = module.get<DataSource>(DataSource);
     service = module.get<UsersService>(UsersService);
+  });
+
+  afterAll(async () => {
+    await module.close();
+  });
+
+  beforeEach(async () => {
+    transactionalContext = new TransactionalTestContext(db);
+    await transactionalContext.start();
+  });
+
+  afterEach(async () => {
+    await transactionalContext.finish();
   });
 
   it('should be defined', () => {
@@ -1506,18 +1614,45 @@ describe('UsersResolver', () => {
 
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
-        .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+        .toEqual(`import { TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { TransactionalTestContext } from 'typeorm-transactional-tests';
+import { createTestingModule } from '@vori/nest/libs/test_helpers';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
 
 describe('UsersService', () => {
+  let module: TestingModule;
+  let db: DataSource;
+  let transactionalContext: TransactionalTestContext;
   let service: UsersService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await createTestingModule({
+      imports: [
+        TypeOrmModule.forFeature([User]),
+      ],
       providers: [UsersService],
     }).compile();
 
+    await module.init();
+
+    db = module.get<DataSource>(DataSource);
     service = module.get<UsersService>(UsersService);
+  });
+
+  afterAll(async () => {
+    await module.close();
+  });
+
+  beforeEach(async () => {
+    transactionalContext = new TransactionalTestContext(db);
+    await transactionalContext.start();
+  });
+
+  afterEach(async () => {
+    await transactionalContext.finish();
   });
 
   it('should be defined', () => {
