@@ -101,37 +101,71 @@ describe('Resource Factory', () => {
 
     it('should generate "UsersController" class', () => {
       expect(tree.readContent('/users/users.controller.ts'))
-        .toEqual(`import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+        .toEqual(`import { Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+} from '@nestjs/swagger';
+import { RequestWithBannerUser } from '@vori/nest/libs/auth/types';
+import { ApiEndpoint } from '@vori/nest/libs/decorators';
+import { FindOneParams } from '@vori/nest/params/FindOneParams';
 import { UsersService } from './users.service';
-import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { UserDto, CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
-@Controller('users')
+// TODO Add tags to group endpoints in Swagger UI
+@ApiEndpoint({ prefix: 'users', tags: [] })
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiOperation({ operationId: 'createUser %>' })
+  @ApiCreatedResponse({ type: UserDto })
+  @ApiBadRequestResponse()
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  public async create(
+    @Req() request: RequestWithBannerUser,
+    @Body() createUserDto: CreateUserDto
+  ): Promise<UserDto> {
+    const user = await this.usersService.create(request.user, createUserDto);
+    return UserDto.from(user);
   }
 
+  @ApiOperation({ operationId: 'listUser' })
+  @ApiOkResponse({ type: UserDto, isArray: true })
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  public async findAll(@Req() request: RequestWithBannerUser): Promise<UserDto[]> {
+    const users = await this.usersService.findAll(request.user);
+    return users.map(UserDto.from);
   }
 
+  @ApiOperation({ operationId: 'getUser' })
+  @ApiNotFoundResponse()
+  @ApiOkResponse({ type: UserDto })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  public async findOne(@Req() request: RequestWithBannerUser, @Param() params: FindOneParams) {
+    const user = await this.usersService.findOne(request.user, params.id);
+    return UserDto.from(user);
   }
 
+  @ApiOperation({ operationId: 'updateUser' })
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse({ type: UserDto })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  public async update(@Req() request: RequestWithBannerUser, @Param() params: FindOneParams, @Body() updateUserDto: UpdateUserDto) {
+    const user = await this.usersService.update(request.user, params.id, updateUserDto);
+    return UserDto.from(user);
   }
 
+  @ApiOperation({ operationId: 'deleteUser' })
+  @ApiNotFoundResponse()
+  @ApiNoContentResponse()
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  public async remove(@Req() request: RequestWithBannerUser, @Param() params: FindOneParams): Promise<void> {
+    await this.usersService.remove(request.user, params.id);
   }
 }
 `);
@@ -140,27 +174,36 @@ export class UsersController {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+
+  public async create(user: BannerMember, createUserDto: CreateUserDto): Promise<User> {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  public async findAll(user: BannerMember): Promise<User[]> {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  public async findOne(user: BannerMember, id: string): Promise<User> {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  public async update(user: BannerMember, id: string, updateUserDto: UpdateUserDto): Promise<User> {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  public async remove(user: BannerMember, id: string): Promise<void> {
     return \`This action removes a #\${id} user\`;
   }
 }
@@ -284,7 +327,8 @@ describe('UsersService', () => {
         .toEqual(`import { Controller } from '@nestjs/common';
 import { UsersService } from './users.service';
 
-@Controller('users')
+// TODO Add tags to group endpoints in Swagger UI
+@ApiEndpoint({ prefix: 'users', tags: [] })
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 }
@@ -294,9 +338,18 @@ export class UsersController {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
+import { User } from './entities/user.entity';
 
 @Injectable()
-export class UsersService {}
+export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+}
 `);
     });
 
@@ -409,7 +462,7 @@ export class UsersModule {}
         .toEqual(`import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
-import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { UserDto, CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
 @Controller()
 export class UsersController {
@@ -446,27 +499,36 @@ export class UsersController {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+
+  public async create(user: BannerMember, createUserDto: CreateUserDto): Promise<User> {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  public async findAll(user: BannerMember): Promise<User[]> {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  public async findOne(user: BannerMember, id: string): Promise<User> {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  public async update(user: BannerMember, id: string, updateUserDto: UpdateUserDto): Promise<User> {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  public async remove(user: BannerMember, id: string): Promise<void> {
     return \`This action removes a #\${id} user\`;
   }
 }
@@ -601,9 +663,18 @@ export class UsersController {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
+import { User } from './entities/user.entity';
 
 @Injectable()
-export class UsersService {}
+export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+}
 `);
     });
 
@@ -752,27 +823,36 @@ export class UsersGateway {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+
+  public async create(user: BannerMember, createUserDto: CreateUserDto): Promise<User> {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  public async findAll(user: BannerMember): Promise<User[]> {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  public async findOne(user: BannerMember, id: string): Promise<User> {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  public async update(user: BannerMember, id: string, updateUserDto: UpdateUserDto): Promise<User> {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  public async remove(user: BannerMember, id: string): Promise<void> {
     return \`This action removes a #\${id} user\`;
   }
 }
@@ -903,9 +983,18 @@ export class UsersGateway {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
+import { User } from './entities/user.entity';
 
 @Injectable()
-export class UsersService {}
+export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+}
 `);
     });
 
@@ -1055,28 +1144,37 @@ export class UsersResolver {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserInput: CreateUserInput) {
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+
+  public async create(createUserInput: CreateUserInput): Promise<User> {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  public async findAll(user: BannerMember): Promise<User[]> {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  public async findOne(user: BannerMember, id: string): Promise<User> {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
+  public async update(user: BannerMember, id: string, updateUserInput: UpdateUserInput): Promise<User> {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  public async remove(user: BannerMember, id: string): Promise<void> {
     return \`This action removes a #\${id} user\`;
   }
 }
@@ -1300,28 +1398,37 @@ export class UsersResolver {
     it('should generate "UsersService" class', () => {
       expect(tree.readContent('/users/users.service.ts'))
         .toEqual(`import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BannerMember } from '@vori/types/User';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserInput: CreateUserInput) {
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
+  ) {}
+
+  public async create(createUserInput: CreateUserInput): Promise<User> {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  public async findAll(user: BannerMember): Promise<User[]> {
     return \`This action returns all users\`;
   }
 
-  findOne(id: number) {
+  public async findOne(user: BannerMember, id: string): Promise<User> {
     return \`This action returns a #\${id} user\`;
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
+  public async update(user: BannerMember, id: string, updateUserInput: UpdateUserInput): Promise<User> {
     return \`This action updates a #\${id} user\`;
   }
 
-  remove(id: number) {
+  public async remove(user: BannerMember, id: string): Promise<void> {
     return \`This action removes a #\${id} user\`;
   }
 }
