@@ -174,12 +174,16 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}
 `);
@@ -298,12 +302,16 @@ export class UsersService {}
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}
 `);
@@ -470,12 +478,16 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}
 `);
@@ -597,12 +609,16 @@ export class UsersService {}
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}
 `);
@@ -768,10 +784,13 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersGateway } from './users.gateway';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   providers: [UsersGateway, UsersService],
 })
 export class UsersModule {}
@@ -892,10 +911,13 @@ export class UsersService {}
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersGateway } from './users.gateway';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   providers: [UsersGateway, UsersService],
 })
 export class UsersModule {}
@@ -1063,10 +1085,13 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   providers: [UsersResolver, UsersService],
 })
 export class UsersModule {}
@@ -1305,10 +1330,13 @@ export class UsersService {
     it('should generate "UsersModule" class', () => {
       expect(tree.readContent('/users/users.module.ts'))
         .toEqual(`import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   providers: [UsersResolver, UsersService],
 })
 export class UsersModule {}
