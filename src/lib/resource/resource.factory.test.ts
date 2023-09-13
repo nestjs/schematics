@@ -26,6 +26,7 @@ describe('Resource Factory', () => {
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
+        '/users/dto/user.dto.spec.ts',
         '/users/dto/user.dto.ts',
         '/users/entities/user.entity.ts',
         '/users/fakers/user.faker.ts',
@@ -45,6 +46,7 @@ describe('Resource Factory', () => {
         '/_users/_users.module.ts',
         '/_users/_users.service.spec.ts',
         '/_users/_users.service.ts',
+        '/_users/dto/_user.dto.spec.ts',
         '/_users/dto/_user.dto.ts',
         '/_users/entities/_user.entity.ts',
         '/_users/fakers/_user.faker.ts',
@@ -264,6 +266,39 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {}
       );
     });
 
+    it('should generate "UserDto" spec file', () => {
+      expect(tree.readContent('/users/dto/user.dto.spec.ts')).toEqual(
+        `import { faker } from '@faker-js/faker';
+
+import { getDataSource } from '@vori/providers/database';
+
+import { makeUser } from '../fakers/user.faker';
+import { UserDto } from './user.dto'; }
+
+describe('UserDto', () => {
+  beforeAll(async () => {
+    await getDataSource();
+  });
+
+  describe('from', () => {
+    it('converts an entity to a DTO', () => {
+      const user = makeUser({
+        id: faker.datatype.number({ min: 1 }).toString(),
+      });
+      const dto = UserDto.from(user);
+
+      expect(dto).toMatchObject({
+        id: user.id,
+        created_at: user.createdAt.toISOString(),
+        updated_at: user.updatedAt.toISOString(),
+      });
+    });
+  });
+});
+`,
+      );
+    });
+
     it('should generate "UsersController" spec file', () => {
       expect(tree.readContent('/users/users.controller.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
@@ -473,6 +508,7 @@ export class UsersModule {}
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
+        '/users/dto/user.dto.spec.ts',
         '/users/dto/user.dto.ts',
         '/users/entities/user.entity.ts',
         '/users/fakers/user.faker.ts',
@@ -828,6 +864,7 @@ export class UsersModule {}
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
+        '/users/dto/user.dto.spec.ts',
         '/users/dto/user.dto.ts',
         '/users/entities/user.entity.ts',
         '/users/fakers/user.faker.ts',

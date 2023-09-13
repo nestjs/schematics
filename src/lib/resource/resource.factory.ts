@@ -76,7 +76,7 @@ function generate(options: ResourceOptions): Source {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
       filter((path) => {
-        if (path.endsWith('.dto.ts')) {
+        if (path.endsWith('.dto.ts') || path.endsWith('.dto.__specFileSuffix__.ts')) {
           return (
             options.type !== 'graphql-code-first' &&
             options.type !== 'graphql-schema-first' &&
@@ -119,8 +119,8 @@ function generate(options: ResourceOptions): Source {
         }
         return true;
       }),
-      options.spec 
-        ? noop() 
+      options.spec
+        ? noop()
         : filter((path) => {
             const suffix = `.__specFileSuffix__.ts`;
             return !path.endsWith(suffix)
