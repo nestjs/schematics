@@ -23,6 +23,7 @@ describe('Resource Factory', () => {
       expect(files).toEqual([
         '/users/users.controller.spec.ts',
         '/users/users.controller.ts',
+        '/users/users.e2e.spec.ts',
         '/users/users.module.ts',
         '/users/users.service.spec.ts',
         '/users/users.service.ts',
@@ -43,6 +44,7 @@ describe('Resource Factory', () => {
       expect(files).toEqual([
         '/_users/_users.controller.spec.ts',
         '/_users/_users.controller.ts',
+        '/_users/_users.e2e.spec.ts',
         '/_users/_users.module.ts',
         '/_users/_users.service.spec.ts',
         '/_users/_users.service.ts',
@@ -292,6 +294,281 @@ describe('UserDto', () => {
         created_at: user.createdAt.toISOString(),
         updated_at: user.updatedAt.toISOString(),
       });
+    });
+  });
+});
+`,
+      );
+    });
+
+    it('should generate "Users" e2e spec file', () => {
+      expect(tree.readContent('/users/users.e2e.spec.ts')).toEqual(
+        `import { faker } from '@faker-js/faker';
+import { INestApplication, Injectable } from '@nestjs/common';
+import { instanceToPlain } from 'class-transformer';
+import { orderBy, times } from 'lodash';
+import request from 'supertest';
+import { DataSource } from 'typeorm';
+import { TransactionalTestContext } from 'typeorm-transactional-tests';
+
+import { Banner } from '@vori/types/Banner';
+import { APIBannerUser } from '@vori/types/User';
+
+import { makeAndSaveBanner } from '@vori/utils/VoriRandom/Banner.random';
+
+import { configureApp } from '@vori/nest/bootstrap';
+import { FirebaseAuthStrategy } from '@vori/nest/libs/auth/firebase-auth.strategy';
+import {
+  createAnnotatedUser,
+  createE2ETestingModule,
+  mockTemporalSetupAndShutdown,
+} from '@vori/nest/libs/test_helpers';
+
+// TODO Adjust depending on which service primarily uses the newly-created module.
+import { AppModule } from '../../../../services/graphql-api/src/app.module';
+import {
+  CreateUserDto,
+  UserDto,
+} from './dto/user.dto';
+import { User } from './entities/user.entity';
+import { makeUser, makeAndSaveUser } from './fakers/user.faker';
+import { UsersService } from './users.service';
+
+describe('/v1/users', () => {
+  let app: INestApplication;
+  let db: DataSource;
+  let transactionalContext: TransactionalTestContext;
+  let banner: Banner;
+  let user: APIBannerUser | undefined;
+  let usersService: UsersService;
+
+  @Injectable()
+  class MockFirebaseAuthStrategy extends FirebaseAuthStrategy {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    async validate(token): Promise<APIBannerUser | undefined> {
+      return user;
+    }
+  }
+
+  beforeAll(async () => {
+    mockTemporalSetupAndShutdown();
+
+    const moduleRef = await createE2ETestingModule({
+      // TODO Remember to import UsersModule into AppModule
+      imports: [AppModule],
+    })
+      .overrideProvider(FirebaseAuthStrategy)
+      .useClass(MockFirebaseAuthStrategy)
+      .compile();
+
+    app = moduleRef.createNestApplication();
+    app = configureApp(app);
+    await app.init();
+
+    db = app.get<DataSource>(DataSource);
+    usersService = app.get<UsersService>(
+      UsersService
+    );
+  });
+
+  beforeEach(async () => {
+    transactionalContext = new TransactionalTestContext(db);
+    await transactionalContext.start();
+
+    banner = await makeAndSaveBanner(db);
+    user = <APIBannerUser>await createAnnotatedUser({ db, banner });
+  });
+
+  afterEach(async () => {
+    await transactionalContext.finish();
+  });
+
+  describe('POST /v1/users', () => {
+    it('requires authorization', async () => {
+      user = undefined;
+      await request(app.getHttpServer())
+        .post('/v1/users')
+        .set('Authorization', 'Bearer FAKE')
+        .expect(401);
+    });
+
+    it('creates a new User', async () => {
+      // TODO Add fields
+      const body: CreateUserDto = {};
+
+      const response = await request(app.getHttpServer())
+        .post('/v1/users')
+        .set('Authorization', 'Bearer FAKE')
+        .send(instanceToPlain(body))
+        .expect(201);
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const user = await usersService.findOne(
+        user!,
+        response.body.id
+      );
+      // TODO Assert values stored in database
+
+      expect(response.body).toEqual(
+        instanceToPlain(UserDto.from(user))
+      );
+    });
+  });
+
+  describe('GET /v1/users', () => {
+    // TODO Modify if the entity is not attached to a banner
+    it('returns all Users for the authenticated banner', async () => {
+      // No data exists, so nothing returned
+      let response = await request(app.getHttpServer())
+        .get('/v1/users')
+        .set('Authorization', 'Bearer FAKE')
+        .expect(200);
+      expect(response.body).toEqual([]);
+
+      // Data belonging to other banners should never be returned
+      const otherBanner = await makeAndSaveBanner(db);
+      await makeAndSaveUser(db, { banner: otherBanner });
+      response = await request(app.getHttpServer())
+        .get('/v1/users')
+        .set('Authorization', 'Bearer FAKE')
+        .expect(200);
+      expect(response.body).toEqual([]);
+
+      // Response should include data belonging to this banner
+      const users = await Promise.all(
+        times(3, async () => makeAndSaveUser(db, { banner }))
+      );
+      response = await request(app.getHttpServer())
+        .get('/v1/users')
+        .set('Authorization', 'Bearer FAKE')
+        .expect(200);
+      expect(response.body).toEqual(
+        orderBy(users, 'createdAt', 'desc').map(
+          UserDto.from
+        )
+      );
+    });
+  });
+
+  describe('GET /v1/users/:id', () => {
+    // TODO Update if data is not associated with a banner
+    it('does NOT return data belonging to other banners', async () => {
+      const otherBanner = await makeAndSaveBanner(db);
+      const otherUser = await makeAndSaveUser(
+        db,
+        { banner: otherBanner }
+      );
+
+      await request(app.getHttpServer())
+        .get(\`/v1/users/$\{otherUser.id}\`)
+        .set('Authorization', 'Bearer FAKE')
+        .expect(404);
+    });
+
+    it('returns the User', async () => {
+      const user = await makeAndSaveUser(db, {
+        banner,
+      });
+
+      const response = await request(app.getHttpServer())
+        .get(\`/v1/users/$\{user.id}\`)
+        .set('Authorization', 'Bearer FAKE')
+        .expect(200);
+
+      expect(response.body).toEqual(
+        instanceToPlain(UserDto.from(user))
+      );
+    });
+  });
+
+  describe('PATCH /v1/users/:id', () => {
+    // TODO Update if data is not associated with a banner
+    it('does NOT permit modifying data belonging to other banners', async () => {
+      const otherBanner = await makeAndSaveBanner(db);
+      const otherUser = await makeAndSaveUser(
+        db,
+        { banner: otherBanner }
+      );
+
+      await request(app.getHttpServer())
+        .patch(\`/v1/users/$\{otherUser.id}\`)
+        .set('Authorization', 'Bearer FAKE')
+        .send({
+          // TODO Add a body
+        })
+        .expect(404);
+
+      const reloadedUser = await db
+        .getRepository(User)
+        .findOneOrFail({ where: { id: otherUser.id } });
+      expect(reloadedUser.updatedAt).toEqual(
+        otherUser.updatedAt
+      );
+      // TODO Assert fields are unchanged
+    });
+
+    it('updates the User', async () => {
+      const user = await makeAndSaveUser(db, {
+        banner,
+      });
+
+      // TODO Add a body
+      const body = {};
+      const response = await request(app.getHttpServer())
+        .patch(\`/v1/users/$\{user.id}\`)
+        .set('Authorization', 'Bearer FAKE')
+        .send(body)
+        .expect(200);
+
+      const reloadedUser = await db
+        .getRepository(User)
+        .findOneOrFail({ where: { id: user.id } });
+
+      // TODO Assert database fields updated
+
+      expect(response.body).toEqual(
+        instanceToPlain(
+          UserDto.from(reloadedUser)
+        )
+      );
+    });
+  });
+
+  describe('DELETE /v1/users/:id', () => {
+    // TODO Update if data is not associated with a banner
+    it('does NOT permit modifying data belonging to other banners', async () => {
+      const otherBanner = await makeAndSaveBanner(db);
+      const otherUser = await makeAndSaveUser(
+        db,
+        { banner: otherBanner }
+      );
+
+      await request(app.getHttpServer())
+        .delete(\`/v1/users/$\{otherUser.id}\`)
+        .set('Authorization', 'Bearer FAKE')
+        .expect(404);
+
+      await db
+        .getRepository(User)
+        .findOneOrFail({ where: { id: otherUser.id } });
+    });
+
+    it('deletes the User', async () => {
+      const user = await makeAndSaveUser(db, {
+        banner,
+      });
+
+      await request(app.getHttpServer())
+        .delete(\`/v1/users/$\{user.id}\`)
+        .set('Authorization', 'Bearer FAKE')
+        .expect(200);
+
+      expect(
+        await db
+          .getRepository(User)
+          .exist({ where: { id: user.id } })
+      ).toEqual(false);
     });
   });
 });
