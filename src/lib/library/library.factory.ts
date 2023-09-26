@@ -13,6 +13,7 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { parse } from 'jsonc-parser';
+import { readFileSync } from 'fs';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import {
   DEFAULT_LANGUAGE,
@@ -43,6 +44,20 @@ export function main(options: LibraryOptions): Rule {
   ]);
 }
 
+function getDefaultLibraryPrefix(defaultLibraryPrefix = '@app') {
+  try {
+    const nestCliJson = JSON.parse(
+      readFileSync('./nest-cli.json', 'utf-8'),
+    );
+    if (nestCliJson.hasOwnProperty('defaultLibraryPrefix')) {
+      return nestCliJson['defaultLibraryPrefix'];
+    }
+  } catch (e) {
+  }
+  
+  return defaultLibraryPrefix;
+}
+
 function transform(options: LibraryOptions): LibraryOptions {
   const target: LibraryOptions = Object.assign({}, options);
   const defaultSourceRoot =
@@ -58,7 +73,7 @@ function transform(options: LibraryOptions): LibraryOptions {
       ? join(normalize(defaultSourceRoot), target.path)
       : normalize(defaultSourceRoot);
 
-  target.prefix = target.prefix || '@app';
+  target.prefix = target.prefix || getDefaultLibraryPrefix();
   return target;
 }
 

@@ -16,7 +16,7 @@
     "prefix": {
       "type": "string",
       "description": "The prefix of the library.",
-      "x-prompt": "What prefix would you like to use for the library (default: @app)?"
+      "x-prompt": "What prefix would you like to use for the library (default: defaultLibraryPrefix or @app)?"
     },
     "language": {
       "type": "string",
