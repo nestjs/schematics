@@ -44,7 +44,6 @@ function transform(source: ControllerOptions): ControllerOptions {
   const target: ControllerOptions = Object.assign({}, source);
   target.metadata = ELEMENT_METADATA;
   target.type = ELEMENT_TYPE;
-  
   const location: Location = new NameParser().parse(target);
   const caseType: CaseType = source.caseNaming || 'kebab-or-snake';
 
