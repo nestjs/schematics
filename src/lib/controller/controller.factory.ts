@@ -46,6 +46,7 @@ function transform(source: ControllerOptions): ControllerOptions {
   target.type = ELEMENT_TYPE;
   const location: Location = new NameParser().parse(target);
   const caseType: CaseType = source.caseNaming || 'kebab-or-snake';
+  target.caseNaming = caseType;
 
   target.name = normalizeToCase(location.name, caseType);
   target.path = normalizeToCase(location.path, caseType);

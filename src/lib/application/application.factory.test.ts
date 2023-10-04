@@ -13,12 +13,17 @@ describe('Application Factory', () => {
   describe('when only the name is supplied', () => {
     it('should manage basic (ie., cross-platform) name', async () => {
       const options: ApplicationOptions = {
-        name: 'project',
+        name: 'project'
       };
+      console.log({ options})
       const tree: UnitTestTree = await runner
         .runSchematicAsync('application', options)
         .toPromise();
+      console.log({ tree})
+
       const files: string[] = tree.files;
+      console.log({ files })
+
       expect(files).toEqual([
         '/project/.eslintrc.js',
         '/project/.gitignore',

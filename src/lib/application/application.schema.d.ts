@@ -40,4 +40,8 @@ export interface ApplicationOptions {
    * Nest included development dependencies (comma separated values).
    */
   devDependencies?: string;
+  /**
+   * Case format. Options are 'kebab' | 'snake' | 'camel' | 'pascal' | 'capital'.
+   */
+  caseNaming?: string;
 }

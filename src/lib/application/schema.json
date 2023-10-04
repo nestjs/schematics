@@ -55,6 +55,10 @@
     "devDependencies": {
       "type": "string",
       "description": "Nest application development dependencies."
+    },
+    "caseNaming": {
+      "type": "string",
+      "description": "Case format. Options are 'kebab' | 'snake' | 'camel' | 'pascal' | 'capital'"
     }
   },
   "required": ["name"]

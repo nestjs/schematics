@@ -41,6 +41,9 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   target.name = resolvePackageName(target.name.toString());
   target.version = !!target.version ? target.version : DEFAULT_VERSION;
 
+  target.caseNaming = !!target.caseNaming ? target.caseNaming : 'kebab-or-snake';
+
+
   target.packageManager =
     !target.packageManager || target.packageManager === 'undefined'
       ? 'npm'
