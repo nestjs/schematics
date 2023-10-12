@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@nestjs/testing": "^10.0.0",
-    "@babel/core": "7.23.0",
+    "@babel/core": "7.23.2",
     "@babel/node": "7.22.19",
     "@babel/plugin-proposal-decorators": "7.23.2",
     "@babel/plugin-transform-runtime": "7.23.2",
