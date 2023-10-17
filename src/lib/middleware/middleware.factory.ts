@@ -13,7 +13,7 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { normalizeToCase } from '../../utils/formatting';
 import { Location, NameParser } from '../../utils/name.parser';
 import { mergeSourceRoot } from '../../utils/source-root.helpers';
 import { MiddlewareOptions } from './middleware.schema';
@@ -29,11 +29,12 @@ function transform(options: MiddlewareOptions): MiddlewareOptions {
     throw new SchematicsException('Option (name) is required.');
   }
   const location: Location = new NameParser().parse(target);
-  target.name = normalizeToKebabOrSnakeCase(location.name);
-  target.path = normalizeToKebabOrSnakeCase(location.path);
+  target.name = normalizeToCase(location.name, 'kebab');
+  target.path = normalizeToCase(location.path);
   target.language = target.language !== undefined ? target.language : 'ts';
-    target.specFileSuffix = normalizeToKebabOrSnakeCase(
+    target.specFileSuffix = normalizeToCase(
     options.specFileSuffix || 'spec',
+    'kebab'
   );
 
   target.path = target.flat
@@ -45,8 +46,8 @@ function transform(options: MiddlewareOptions): MiddlewareOptions {
 function generate(options: MiddlewareOptions): Source {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
-      options.spec 
-        ? noop() 
+      options.spec
+        ? noop()
         : filter((path) => {
             const languageExtension = options.language || 'ts';
             const suffix = `.__specFileSuffix__.${languageExtension}`;

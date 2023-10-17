@@ -11,7 +11,7 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { normalizeToCase } from '../../utils/formatting';
 import { Location, NameParser } from '../../utils/name.parser';
 import { mergeSourceRoot } from '../../utils/source-root.helpers';
 import { InterfaceOptions } from './interface.schema';
@@ -27,8 +27,8 @@ function transform(options: InterfaceOptions): InterfaceOptions {
     throw new SchematicsException('Option (name) is required.');
   }
   const location: Location = new NameParser().parse(target);
-  target.name = normalizeToKebabOrSnakeCase(location.name);
-  target.path = normalizeToKebabOrSnakeCase(location.path);
+  target.name = normalizeToCase(location.name, 'kebab');
+  target.path = normalizeToCase(location.path, 'kebab');
 
   target.path = target.flat
     ? target.path

@@ -16,7 +16,7 @@ import {
 } from '@angular-devkit/schematics';
 import { existsSync, readFileSync } from 'fs';
 import { parse, stringify } from 'comment-json';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { normalizeToCase } from '../../utils/formatting';
 import {
   DEFAULT_APPS_PATH,
   DEFAULT_APP_NAME,
@@ -92,7 +92,7 @@ function transform(options: SubAppOptions): SubAppOptions {
     target.name = DEFAULT_APP_NAME;
   }
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
-  target.name = normalizeToKebabOrSnakeCase(target.name);
+  target.name = normalizeToCase(target.name, 'kebab');
   target.path =
     target.path !== undefined
       ? join(normalize(defaultSourceRoot), target.path)
