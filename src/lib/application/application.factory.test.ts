@@ -15,14 +15,11 @@ describe('Application Factory', () => {
       const options: ApplicationOptions = {
         name: 'project'
       };
-      console.log({ options})
       const tree: UnitTestTree = await runner
         .runSchematicAsync('application', options)
         .toPromise();
-      console.log({ tree})
 
       const files: string[] = tree.files;
-      console.log({ files })
 
       expect(files).toEqual([
         '/project/.eslintrc.js',
