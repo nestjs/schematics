@@ -9,7 +9,8 @@ export type CaseType =
   | 'camel'
   | 'kebab'
   | 'snake'
-  | 'pascal';
+  | 'pascal'
+  | 'kebab-or-snake';
 
 /**
  *
@@ -31,6 +32,8 @@ export const normalizeToCase = (
       return pascalCase(str);
     case 'snake':
       return snakeCase(str);
+    case 'kebab-or-snake':
+      return normalizeToKebabOrSnakeCase(str);
     default:
       throw new Error(`Case type ${caseType} is not supported.`);
   }
@@ -44,3 +47,19 @@ export const formatString = (str: string) => {
     return `${content}${char}`;
   }, '');
 };
+
+/**
+ *
+ * @param str
+ * @returns formated string
+ * @description normalizes input to supported path and file name format.
+ * Changes camelCase strings to kebab-case, replaces spaces with dash and keeps underscores.
+ */
+export function normalizeToKebabOrSnakeCase(str: string) {
+  const STRING_DASHERIZE_REGEXP = /\s/g;
+  const STRING_DECAMELIZE_REGEXP = /([a-z\d])([A-Z])/g;
+  return str
+    .replace(STRING_DECAMELIZE_REGEXP, '$1-$2')
+    .toLowerCase()
+    .replace(STRING_DASHERIZE_REGEXP, '-');
+}

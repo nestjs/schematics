@@ -19,7 +19,7 @@ import {
 import { ApplicationOptions } from './application.schema';
 
 export function main(options: ApplicationOptions): Rule {
-  options.name = normalizeToCase(options.name.toString(), 'kebab');
+  options.name = normalizeToCase(options.name.toString(), 'kebab-or-snake');
 
   const path =
     !options.directory || options.directory === 'undefined'

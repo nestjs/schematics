@@ -29,12 +29,12 @@ function transform(options: MiddlewareOptions): MiddlewareOptions {
     throw new SchematicsException('Option (name) is required.');
   }
   const location: Location = new NameParser().parse(target);
-  target.name = normalizeToCase(location.name, 'kebab');
-  target.path = normalizeToCase(location.path);
+  target.name = normalizeToCase(location.name, 'kebab-or-snake');
+  target.path = normalizeToCase(location.path, 'kebab-or-snake');
   target.language = target.language !== undefined ? target.language : 'ts';
     target.specFileSuffix = normalizeToCase(
     options.specFileSuffix || 'spec',
-    'kebab'
+    'kebab-or-snake'
   );
 
   target.path = target.flat

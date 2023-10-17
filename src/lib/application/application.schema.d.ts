@@ -41,7 +41,7 @@ export interface ApplicationOptions {
    */
   devDependencies?: string;
   /**
-   * Case format. Options are 'kebab' | 'snake' | 'camel' | 'pascal' | 'capital'.
+   * Case format. Options are 'kebab' | 'snake' | 'camel' | 'pascal'.
    */
   caseNaming?: string;
 }

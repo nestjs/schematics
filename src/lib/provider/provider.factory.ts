@@ -42,21 +42,21 @@ function transform(options: ProviderOptions): ProviderOptions {
   target.metadata = 'providers';
   target.specFileSuffix = normalizeToCase(
     options.specFileSuffix || 'spec',
-    'kebab'
+    'kebab-or-snake'
   );
 
   if (!target.name) {
     throw new SchematicsException('Option (name) is required.');
   }
   const location: Location = new NameParser().parse(target);
-  target.name = normalizeToCase(location.name, 'kebab');
+  target.name = normalizeToCase(location.name, 'kebab-or-snake');
   if (target.name.includes('.')) {
     target.className = strings.classify(target.name).replace('.', '');
   } else {
     target.className = strings.classify(target.name);
   }
 
-  target.path = normalizeToCase(location.path, 'kebab');
+  target.path = normalizeToCase(location.path, 'kebab-or-snake');
   target.language = target.language !== undefined ? target.language : 'ts';
 
   target.path = target.flat

@@ -27,8 +27,8 @@ function transform(options: DecoratorOptions): DecoratorOptions {
     throw new SchematicsException('Option (name) is required.');
   }
   const location: Location = new NameParser().parse(target);
-  target.name = normalizeToCase(location.name, 'kebab');
-  target.path = normalizeToCase(location.path, 'kebab');
+  target.name = normalizeToCase(location.name, 'kebab-or-snake');
+  target.path = normalizeToCase(location.path, 'kebab-or-snake');
   target.language = target.language !== undefined ? target.language : 'ts';
 
   target.path = target.flat

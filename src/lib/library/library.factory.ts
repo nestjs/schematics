@@ -52,7 +52,7 @@ function transform(options: LibraryOptions): LibraryOptions {
     throw new SchematicsException('Option (name) is required.');
   }
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
-  target.name = normalizeToCase(target.name, 'kebab');
+  target.name = normalizeToCase(target.name, 'kebab-or-snake');
   target.path =
     target.path !== undefined
       ? join(normalize(defaultSourceRoot), target.path)

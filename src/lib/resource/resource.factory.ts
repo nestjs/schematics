@@ -52,8 +52,8 @@ function transform(options: ResourceOptions): ResourceOptions {
   target.metadata = 'imports';
 
   const location: Location = new NameParser().parse(target);
-  target.name = normalizeToCase(location.name, 'kebab');
-  target.path = normalizeToCase(location.path, 'kebab');
+  target.name = normalizeToCase(location.name, 'kebab-or-snake');
+  target.path = normalizeToCase(location.path, 'kebab-or-snake');
   target.language = target.language !== undefined ? target.language : 'ts';
   if (target.language === 'js') {
     throw new Error(
@@ -62,7 +62,7 @@ function transform(options: ResourceOptions): ResourceOptions {
   }
   target.specFileSuffix = normalizeToCase(
     options.specFileSuffix || 'spec',
-    'kebab'
+    'kebab-or-snake'
   );
 
   target.path = target.flat

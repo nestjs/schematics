@@ -92,7 +92,7 @@ function transform(options: SubAppOptions): SubAppOptions {
     target.name = DEFAULT_APP_NAME;
   }
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
-  target.name = normalizeToCase(target.name, 'kebab');
+  target.name = normalizeToCase(target.name, 'kebab-or-snake');
   target.path =
     target.path !== undefined
       ? join(normalize(defaultSourceRoot), target.path)
