@@ -33,7 +33,7 @@ export const normalizeToCase = (
     case 'snake':
       return snakeCase(str);
     case 'kebab-or-snake':
-      return normalizeToKebabOrSnakeCase(str);
+      return kebabCase(str, { keep: ['_', '@', '/', '.'] })
     default:
       throw new Error(`Case type ${caseType} is not supported.`);
   }
