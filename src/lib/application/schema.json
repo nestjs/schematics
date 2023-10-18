@@ -58,7 +58,7 @@
     },
     "caseNaming": {
       "type": "string",
-      "description": "Case format. Options are 'kebab' | 'snake' | 'camel' | 'pascal' "
+      "description": "Case format. Options are 'kebab' | 'snake' | 'camel' | 'pascal' | 'kebab-or-snake'"
     }
   },
   "required": ["name"]

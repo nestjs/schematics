@@ -48,7 +48,7 @@ export interface ControllerOptions {
    */
   flat?: boolean;
   /**
-   * Case format. Options are 'kebab' | 'snake' | 'camel' | 'pascal'.
+   * Case format. Options are 'kebab' | 'snake' | 'camel' | 'pascal' | 'kebab-or-snake'.
    */
   caseNaming?: CaseType;
 }
