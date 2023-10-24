@@ -40,4 +40,13 @@ export interface ApplicationOptions {
    * Nest included development dependencies (comma separated values).
    */
   devDependencies?: string;
+  /**
+   * Specifies if a spec file is generated.
+   */
+  spec?: boolean;
+  /**
+   * Specifies the file suffix of spec files.
+   * @default "spec"
+   */
+  specFileSuffix?: string;
 }
