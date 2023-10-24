@@ -53,6 +53,15 @@ function getDefaultLibraryPrefix(defaultLibraryPrefix = '@app') {
       return nestCliJson['defaultLibraryPrefix'];
     }
   } catch (e) {
+    try {
+      const nestJson = JSON.parse(
+        readFileSync('./nest.json', 'utf-8'),
+      );
+      if (nestJson.hasOwnProperty('defaultLibraryPrefix')) {
+        return nestJson['defaultLibraryPrefix'];
+      }
+    } catch (e) {
+    }
   }
   
   return defaultLibraryPrefix;
