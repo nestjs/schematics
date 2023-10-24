@@ -13,7 +13,6 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { parse } from 'jsonc-parser';
-import { readFileSync } from 'fs';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import {
   DEFAULT_LANGUAGE,
@@ -22,6 +21,7 @@ import {
   PROJECT_TYPE,
 } from '../defaults';
 import { LibraryOptions } from './library.schema';
+import { FileSystemReader } from '../readers';
 
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
@@ -45,23 +45,20 @@ export function main(options: LibraryOptions): Rule {
 }
 
 function getDefaultLibraryPrefix(defaultLibraryPrefix = '@app') {
+  const fileSystemReader = new FileSystemReader(process.cwd())
+  const content: string | undefined = fileSystemReader.readSyncAnyOf([
+    'nest-cli.json',
+    '.nestcli.json',
+    '.nest-cli.json',
+    'nest.json',
+  ]);
+  
   try {
-    const nestCliJson = JSON.parse(
-      readFileSync('./nest-cli.json', 'utf-8'),
-    );
-    if (nestCliJson.hasOwnProperty('defaultLibraryPrefix')) {
-      return nestCliJson['defaultLibraryPrefix'];
+    const nestJson = JSON.parse(content || '{}');
+    if (nestJson.hasOwnProperty('defaultLibraryPrefix')) {
+      return nestJson['defaultLibraryPrefix'];
     }
   } catch (e) {
-    try {
-      const nestJson = JSON.parse(
-        readFileSync('./nest.json', 'utf-8'),
-      );
-      if (nestJson.hasOwnProperty('defaultLibraryPrefix')) {
-        return nestJson['defaultLibraryPrefix'];
-      }
-    } catch (e) {
-    }
   }
   
   return defaultLibraryPrefix;
