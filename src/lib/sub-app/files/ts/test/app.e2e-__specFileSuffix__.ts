@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { <%= classify(name)%>Module } from './../src/<%= name %>.module';

@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import { <%= classify(name) %>Gateway } from './<%= name %>.gateway';
 import { <%= classify(name) %>Service } from './<%= name %>.service';
 
