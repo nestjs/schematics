@@ -129,7 +129,7 @@ import { UserDto, CreateUserDto, UpdateUserDto } from './dto/user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiOperation({ operationId: 'createUser %>' })
+  @ApiOperation({ operationId: 'createUser' })
   @ApiCreatedResponse({ type: UserDto })
   @ApiBadRequestResponse()
   @Post()

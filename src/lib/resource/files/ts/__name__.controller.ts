@@ -22,7 +22,7 @@ import { <%= singular(classify(name)) %>Dto, Create<%= singular(classify(name)) 
 export class <%= classify(name) %>Controller {
   constructor(private readonly <%= lowercased(name) %>Service: <%= classify(name) %>Service) {}<% if (type === 'rest' && crud) { %>
 
-  @ApiOperation({ operationId: 'create<%= singular(classify(name)) %> %>' })
+  @ApiOperation({ operationId: 'create<%= singular(classify(name)) %>' })
   @ApiCreatedResponse({ type: <%= singular(classify(name)) %>Dto })
   @ApiBadRequestResponse()
   @Post()
