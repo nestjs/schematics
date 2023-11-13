@@ -17,3 +17,4 @@ jobs:
         with:
           release-type: node
           package-name: schematics
+          token: ${{secrets.RELEASE_TOKEN}}
