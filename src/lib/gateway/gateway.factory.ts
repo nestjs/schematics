@@ -15,7 +15,7 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { normalizeToCase } from '../../utils/formatting';
 import {
   DeclarationOptions,
   ModuleDeclarator,
@@ -46,13 +46,14 @@ function transform(options: GatewayOptions): GatewayOptions {
   }
   target.metadata = 'providers';
   target.type = 'gateway';
-  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+  target.specFileSuffix = normalizeToCase(
     options.specFileSuffix || 'spec',
+    'kebab-or-snake'
   );
 
   const location: Location = new NameParser().parse(target);
-  target.name = normalizeToKebabOrSnakeCase(location.name);
-  target.path = normalizeToKebabOrSnakeCase(location.path);
+  target.name = normalizeToCase(location.name, 'kebab-or-snake');
+  target.path = normalizeToCase(location.path, 'kebab-or-snake');
   target.language = target.language !== undefined ? target.language : 'ts';
 
   target.path = target.flat
@@ -65,8 +66,8 @@ function generate(options: GatewayOptions): Source {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
       options.spec ? noop() : filter((path) => !path.endsWith('.spec.ts')),
-      options.spec 
-        ? noop() 
+      options.spec
+        ? noop()
         : filter((path) => {
             const languageExtension = options.language || 'ts';
             const suffix = `.__specFileSuffix__.${languageExtension}`;

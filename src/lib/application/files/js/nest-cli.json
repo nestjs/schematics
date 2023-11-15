@@ -2,5 +2,8 @@
   "$schema": "https://json.schemastore.org/nest-cli",
   "language": "js",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "src", <% if (caseNaming !== 'undefined') { %>
+  "generateOptions": {
+    "caseNaming": "<%= caseNaming %>"
+  } <% } %>
 }

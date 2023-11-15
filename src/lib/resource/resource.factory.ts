@@ -24,7 +24,7 @@ import {
   getPackageJsonDependency,
   NodeDependencyType,
 } from '../../utils/dependencies.utils';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { normalizeToCase } from '../../utils/formatting';
 import { Location, NameParser } from '../../utils/name.parser';
 import { mergeSourceRoot } from '../../utils/source-root.helpers';
 import { ResourceOptions } from './resource.schema';
@@ -52,16 +52,17 @@ function transform(options: ResourceOptions): ResourceOptions {
   target.metadata = 'imports';
 
   const location: Location = new NameParser().parse(target);
-  target.name = normalizeToKebabOrSnakeCase(location.name);
-  target.path = normalizeToKebabOrSnakeCase(location.path);
+  target.name = normalizeToCase(location.name, 'kebab-or-snake');
+  target.path = normalizeToCase(location.path, 'kebab-or-snake');
   target.language = target.language !== undefined ? target.language : 'ts';
   if (target.language === 'js') {
     throw new Error(
       'The "resource" schematic does not support JavaScript language (only TypeScript is supported).',
     );
   }
-  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+  target.specFileSuffix = normalizeToCase(
     options.specFileSuffix || 'spec',
+    'kebab-or-snake'
   );
 
   target.path = target.flat
@@ -119,8 +120,8 @@ function generate(options: ResourceOptions): Source {
         }
         return true;
       }),
-      options.spec 
-        ? noop() 
+      options.spec
+        ? noop()
         : filter((path) => {
             const suffix = `.__specFileSuffix__.ts`;
             return !path.endsWith(suffix)

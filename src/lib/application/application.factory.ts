@@ -11,7 +11,7 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { basename, parse } from 'path';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { normalizeToCase } from '../../utils/formatting';
 import {
   DEFAULT_AUTHOR,
   DEFAULT_DESCRIPTION,
@@ -21,7 +21,7 @@ import {
 import { ApplicationOptions } from './application.schema';
 
 export function main(options: ApplicationOptions): Rule {
-  options.name = normalizeToKebabOrSnakeCase(options.name.toString());
+  options.name = normalizeToCase(options.name.toString(), 'kebab-or-snake');
 
   const path =
     !options.directory || options.directory === 'undefined'
@@ -42,9 +42,13 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
   target.name = resolvePackageName(target.name.toString());
   target.version = !!target.version ? target.version : DEFAULT_VERSION;
-  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+  target.specFileSuffix = normalizeToCase(
     options.specFileSuffix || 'spec',
+    'kebab-or-snake'
   );
+
+  target.caseNaming = !!target.caseNaming ? target.caseNaming : 'snake';
+
 
   target.packageManager =
     !target.packageManager || target.packageManager === 'undefined'

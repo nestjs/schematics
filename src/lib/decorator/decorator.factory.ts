@@ -11,7 +11,7 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { normalizeToCase } from '../../utils/formatting';
 import { Location, NameParser } from '../../utils/name.parser';
 import { mergeSourceRoot } from '../../utils/source-root.helpers';
 import { DecoratorOptions } from './decorator.schema';
@@ -27,8 +27,8 @@ function transform(options: DecoratorOptions): DecoratorOptions {
     throw new SchematicsException('Option (name) is required.');
   }
   const location: Location = new NameParser().parse(target);
-  target.name = normalizeToKebabOrSnakeCase(location.name);
-  target.path = normalizeToKebabOrSnakeCase(location.path);
+  target.name = normalizeToCase(location.name, 'kebab-or-snake');
+  target.path = normalizeToCase(location.path, 'kebab-or-snake');
   target.language = target.language !== undefined ? target.language : 'ts';
 
   target.path = target.flat

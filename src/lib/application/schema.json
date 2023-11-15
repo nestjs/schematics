@@ -56,6 +56,10 @@
       "type": "string",
       "description": "Nest application development dependencies."
     },
+    "caseNaming": {
+      "type": "string",
+      "description": "Case format. Options are 'kebab' | 'snake' | 'camel' | 'pascal' | 'kebab-or-snake'"
+    },
     "spec": {
       "type": "boolean",
       "default": true,

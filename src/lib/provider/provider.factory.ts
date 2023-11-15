@@ -14,7 +14,7 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { normalizeToCase } from '../../utils/formatting';
 import {
   DeclarationOptions,
   ModuleDeclarator,
@@ -40,22 +40,23 @@ export function main(options: ProviderOptions): Rule {
 function transform(options: ProviderOptions): ProviderOptions {
   const target: ProviderOptions = Object.assign({}, options);
   target.metadata = 'providers';
-  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+  target.specFileSuffix = normalizeToCase(
     options.specFileSuffix || 'spec',
+    'kebab-or-snake'
   );
 
   if (!target.name) {
     throw new SchematicsException('Option (name) is required.');
   }
   const location: Location = new NameParser().parse(target);
-  target.name = normalizeToKebabOrSnakeCase(location.name);
+  target.name = normalizeToCase(location.name, 'kebab-or-snake');
   if (target.name.includes('.')) {
     target.className = strings.classify(target.name).replace('.', '');
   } else {
     target.className = strings.classify(target.name);
   }
 
-  target.path = normalizeToKebabOrSnakeCase(location.path);
+  target.path = normalizeToCase(location.path, 'kebab-or-snake');
   target.language = target.language !== undefined ? target.language : 'ts';
 
   target.path = target.flat
@@ -67,8 +68,8 @@ function transform(options: ProviderOptions): ProviderOptions {
 function generate(options: ProviderOptions) {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
-      options.spec 
-        ? noop() 
+      options.spec
+        ? noop()
         : filter((path) => {
             const languageExtension = options.language || 'ts';
             const suffix = `.__specFileSuffix__.${languageExtension}`;

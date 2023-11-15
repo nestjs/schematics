@@ -13,7 +13,7 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { parse } from 'jsonc-parser';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { normalizeToCase } from '../../utils/formatting';
 import {
   DEFAULT_LANGUAGE,
   DEFAULT_LIB_PATH,
@@ -52,7 +52,7 @@ function transform(options: LibraryOptions): LibraryOptions {
     throw new SchematicsException('Option (name) is required.');
   }
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
-  target.name = normalizeToKebabOrSnakeCase(target.name);
+  target.name = normalizeToCase(target.name, 'kebab-or-snake');
   target.path =
     target.path !== undefined
       ? join(normalize(defaultSourceRoot), target.path)

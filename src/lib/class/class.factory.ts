@@ -13,7 +13,7 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { normalizeToCase } from '../../utils/formatting';
 import { Location, NameParser } from '../../utils/name.parser';
 import { mergeSourceRoot } from '../../utils/source-root.helpers';
 import { DEFAULT_LANGUAGE } from '../defaults';
@@ -31,9 +31,10 @@ function transform(options: ClassOptions): ClassOptions {
   }
   const location: Location = new NameParser().parse(target);
 
-  target.name = normalizeToKebabOrSnakeCase(location.name);
-  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+  target.name = normalizeToCase(location.name, 'kebab-or-snake');
+  target.specFileSuffix = normalizeToCase(
     options.specFileSuffix || 'spec',
+    'kebab-or-snake'
   );
   if (target.name.includes('.')) {
     target.className = strings.classify(target.name).replace('.', '');
@@ -44,7 +45,7 @@ function transform(options: ClassOptions): ClassOptions {
   target.language =
     target.language !== undefined ? target.language : DEFAULT_LANGUAGE;
 
-  target.path = normalizeToKebabOrSnakeCase(location.path);
+  target.path = normalizeToCase(location.path, 'kebab-or-snake');
   target.path = target.flat
     ? target.path
     : join(target.path as Path, target.name);

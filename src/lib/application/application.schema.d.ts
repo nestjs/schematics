@@ -41,6 +41,10 @@ export interface ApplicationOptions {
    */
   devDependencies?: string;
   /**
+   * Case format. Options are 'kebab' | 'snake' | 'camel' | 'pascal'.
+   */
+  caseNaming?: string;
+  /**
    * Specifies if a spec file is generated.
    */
   spec?: boolean;
