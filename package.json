@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/schematics",
-  "version": "10.0.2",
+  "version": "10.0.3",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "main": "dist/index.js",
   "files": [
@@ -41,8 +41,8 @@
   },
   "homepage": "https://github.com/nestjs/schematics#readme",
   "dependencies": {
-    "@angular-devkit/core": "16.2.1",
-    "@angular-devkit/schematics": "16.2.1",
+    "@angular-devkit/core": "16.2.8",
+    "@angular-devkit/schematics": "16.2.8",
     "case-anything": "2.1.13",
     "comment-json": "4.2.3",
     "jsonc-parser": "3.2.0",

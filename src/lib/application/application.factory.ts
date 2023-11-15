@@ -1,8 +1,10 @@
 import { join, Path, strings } from '@angular-devkit/core';
 import {
   apply,
+  filter,
   mergeWith,
   move,
+  noop,
   Rule,
   Source,
   template,
@@ -40,6 +42,9 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
   target.name = resolvePackageName(target.name.toString());
   target.version = !!target.version ? target.version : DEFAULT_VERSION;
+  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+    options.specFileSuffix || 'spec',
+  );
 
   target.caseNaming = !!target.caseNaming ? target.caseNaming : 'snake';
 
@@ -79,6 +84,14 @@ function resolvePackageName(path: string) {
 
 function generate(options: ApplicationOptions, path: string): Source {
   return apply(url(join('./files' as Path, options.language)), [
+    options.spec ? noop() : filter((path) => !path.endsWith('__specFileSuffix__.ts')),
+    options.spec
+      ? noop()
+      : filter((path) => {
+        const languageExtension = options.language || 'ts';
+        const suffix = `__specFileSuffix__.${languageExtension}`;
+        return !path.endsWith(suffix);
+      }),
     template({
       ...strings,
       ...options,

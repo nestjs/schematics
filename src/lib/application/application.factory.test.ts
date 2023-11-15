@@ -13,15 +13,13 @@ describe('Application Factory', () => {
   describe('when only the name is supplied', () => {
     it('should manage basic (ie., cross-platform) name', async () => {
       const options: ApplicationOptions = {
-        name: 'project'
+        name: 'project',
       };
       const tree: UnitTestTree = await runner
         .runSchematicAsync('application', options)
         .toPromise();
-
       const files: string[] = tree.files;
-
-      expect(files).toEqual([
+      expect(files.sort()).toEqual([
         '/project/.eslintrc.js',
         '/project/.gitignore',
         '/project/.prettierrc',
@@ -37,7 +35,7 @@ describe('Application Factory', () => {
         '/project/src/main.ts',
         '/project/test/app.e2e-spec.ts',
         '/project/test/jest-e2e.json',
-      ]);
+      ].sort());
 
       expect(
         JSON.parse(tree.readContent('/project/package.json')),
@@ -53,7 +51,7 @@ describe('Application Factory', () => {
         .runSchematicAsync('application', options)
         .toPromise();
       const files: string[] = tree.files;
-      expect(files).toEqual([
+      expect(files.sort()).toEqual([
         `/project.foo.bar/.eslintrc.js`,
         `/project.foo.bar/.gitignore`,
         `/project.foo.bar/.prettierrc`,
@@ -69,7 +67,7 @@ describe('Application Factory', () => {
         `/project.foo.bar/src/main.ts`,
         `/project.foo.bar/test/app.e2e-spec.ts`,
         `/project.foo.bar/test/jest-e2e.json`,
-      ]);
+      ].sort());
 
       expect(
         JSON.parse(tree.readContent('/project.foo.bar/package.json')),
@@ -85,7 +83,7 @@ describe('Application Factory', () => {
         .runSchematicAsync('application', options)
         .toPromise();
       const files: string[] = tree.files;
-      expect(files).toEqual([
+      expect(files.sort()).toEqual([
         '/awesome-project/.eslintrc.js',
         '/awesome-project/.gitignore',
         '/awesome-project/.prettierrc',
@@ -101,7 +99,7 @@ describe('Application Factory', () => {
         '/awesome-project/src/main.ts',
         '/awesome-project/test/app.e2e-spec.ts',
         '/awesome-project/test/jest-e2e.json',
-      ]);
+      ].sort());
 
       expect(
         JSON.parse(tree.readContent('/awesome-project/package.json')),
@@ -117,7 +115,7 @@ describe('Application Factory', () => {
         .runSchematicAsync('application', options)
         .toPromise();
       const files: string[] = tree.files;
-      expect(files).toEqual([
+      expect(files.sort()).toEqual([
         '/_awesome-project/.eslintrc.js',
         '/_awesome-project/.gitignore',
         '/_awesome-project/.prettierrc',
@@ -133,7 +131,7 @@ describe('Application Factory', () => {
         '/_awesome-project/src/main.ts',
         '/_awesome-project/test/app.e2e-spec.ts',
         '/_awesome-project/test/jest-e2e.json',
-      ]);
+      ].sort());
 
       expect(
         JSON.parse(tree.readContent('/_awesome-project/package.json')),
@@ -149,7 +147,7 @@ describe('Application Factory', () => {
         .runSchematicAsync('application', options)
         .toPromise();
       const files: string[] = tree.files;
-      expect(files).toEqual([
+      expect(files.sort()).toEqual([
         '/@/package/.eslintrc.js',
         '/@/package/.gitignore',
         '/@/package/.prettierrc',
@@ -165,7 +163,7 @@ describe('Application Factory', () => {
         '/@/package/src/main.ts',
         '/@/package/test/app.e2e-spec.ts',
         '/@/package/test/jest-e2e.json',
-      ]);
+      ].sort());
 
       expect(
         JSON.parse(tree.readContent('/@/package/package.json')),
@@ -181,7 +179,7 @@ describe('Application Factory', () => {
         .runSchematicAsync('application', options)
         .toPromise();
       const files: string[] = tree.files;
-      expect(files).toEqual([
+      expect(files.sort()).toEqual([
         '/.eslintrc.js',
         '/.gitignore',
         '/.prettierrc',
@@ -197,7 +195,7 @@ describe('Application Factory', () => {
         '/src/main.ts',
         '/test/app.e2e-spec.ts',
         '/test/jest-e2e.json',
-      ]);
+      ].sort());
 
       expect(JSON.parse(tree.readContent('/package.json'))).toMatchObject({
         name: path.basename(process.cwd()),
@@ -213,7 +211,7 @@ describe('Application Factory', () => {
             .runSchematicAsync('application', options)
             .toPromise();
           const files: string[] = tree.files;
-          expect(files).toEqual([
+          expect(files.sort()).toEqual([
             '/@scope/package/.eslintrc.js',
             '/@scope/package/.gitignore',
             '/@scope/package/.prettierrc',
@@ -229,7 +227,7 @@ describe('Application Factory', () => {
             '/@scope/package/src/main.ts',
             '/@scope/package/test/app.e2e-spec.ts',
             '/@scope/package/test/jest-e2e.json',
-          ]);
+          ].sort());
 
           expect(
             JSON.parse(tree.readContent('/@scope/package/package.json')),
@@ -245,7 +243,7 @@ describe('Application Factory', () => {
             .runSchematicAsync('application', options)
             .toPromise();
           const files: string[] = tree.files;
-          expect(files).toEqual([
+          expect(files.sort()).toEqual([
             '/@-/package/.eslintrc.js',
             '/@-/package/.gitignore',
             '/@-/package/.prettierrc',
@@ -261,7 +259,7 @@ describe('Application Factory', () => {
             '/@-/package/src/main.ts',
             '/@-/package/test/app.e2e-spec.ts',
             '/@-/package/test/jest-e2e.json',
-          ]);
+          ].sort());
 
           expect(
             JSON.parse(tree.readContent('/@-/package/package.json')),
@@ -280,7 +278,7 @@ describe('Application Factory', () => {
       .runSchematicAsync('application', options)
       .toPromise();
     const files: string[] = tree.files;
-    expect(files).toEqual([
+    expect(files.sort()).toEqual([
       '/123/.eslintrc.js',
       '/123/.gitignore',
       '/123/.prettierrc',
@@ -296,7 +294,7 @@ describe('Application Factory', () => {
       '/123/src/main.ts',
       '/123/test/app.e2e-spec.ts',
       '/123/test/jest-e2e.json',
-    ]);
+    ].sort());
 
     expect(
       JSON.parse(tree.readContent('/123/package.json')),
@@ -313,7 +311,7 @@ describe('Application Factory', () => {
       .runSchematicAsync('application', options)
       .toPromise();
     const files: string[] = tree.files;
-    expect(files).toEqual([
+    expect(files.sort()).toEqual([
       '/project/.babelrc',
       '/project/.gitignore',
       '/project/.prettierrc',
@@ -330,7 +328,7 @@ describe('Application Factory', () => {
       '/project/src/main.js',
       '/project/test/app.e2e-spec.js',
       '/project/test/jest-e2e.json',
-    ]);
+    ].sort());
 
     expect(JSON.parse(tree.readContent('/project/package.json'))).toMatchObject(
       {
@@ -347,7 +345,7 @@ describe('Application Factory', () => {
       .runSchematicAsync('application', options)
       .toPromise();
     const files: string[] = tree.files;
-    expect(files).toEqual([
+    expect(files.sort()).toEqual([
       '/app/.eslintrc.js',
       '/app/.gitignore',
       '/app/.prettierrc',
@@ -363,10 +361,94 @@ describe('Application Factory', () => {
       '/app/src/main.ts',
       '/app/test/app.e2e-spec.ts',
       '/app/test/jest-e2e.json',
-    ]);
+    ].sort());
 
     expect(JSON.parse(tree.readContent('/app/package.json'))).toMatchObject({
       name: 'project',
     });
+  });
+  it('should not create a spec file', async () => {
+    const options: ApplicationOptions = {
+      name: 'project',
+      spec: false,
+      language: 'js',
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('application', options)
+      .toPromise();
+    const files: string[] = tree.files;
+    expect(files.sort()).toEqual([
+      '/project/.babelrc',
+      '/project/.gitignore',
+      '/project/.prettierrc',
+      '/project/README.md',
+      '/project/index.js',
+      '/project/jsconfig.json',
+      '/project/nest-cli.json',
+      '/project/nodemon.json',
+      '/project/package.json',
+      '/project/src/app.controller.js',
+      '/project/src/app.module.js',
+      '/project/src/app.service.js',
+      '/project/src/main.js',
+      '/project/test/jest-e2e.json',
+    ].sort());
+  });
+  it('should create a spec file', async () => {
+    const options: ApplicationOptions = {
+      name: 'project',
+      spec: true,
+      language: 'js',
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('application', options)
+      .toPromise();
+    const files: string[] = tree.files;
+    expect(files.sort()).toEqual([
+      '/project/.babelrc',
+      '/project/.gitignore',
+      '/project/.prettierrc',
+      '/project/README.md',
+      '/project/index.js',
+      '/project/jsconfig.json',
+      '/project/nest-cli.json',
+      '/project/nodemon.json',
+      '/project/package.json',
+      '/project/src/app.controller.js',
+      '/project/src/app.controller.spec.js',
+      '/project/src/app.module.js',
+      '/project/src/app.service.js',
+      '/project/src/main.js',
+      '/project/test/app.e2e-spec.js',
+      '/project/test/jest-e2e.json',
+    ].sort());
+  });
+  it('should create a spec file with custom file suffix', async () => {
+    const options: ApplicationOptions = {
+      name: 'project',
+      spec: true,
+      specFileSuffix: 'test',
+    };
+    const tree: UnitTestTree = await runner
+      .runSchematicAsync('application', options)
+      .toPromise();
+    const files: string[] = tree.files;
+    expect(files.sort()).toEqual([
+      '/project/.eslintrc.js',
+      '/project/.gitignore',
+      '/project/.prettierrc',
+      '/project/README.md',
+      '/project/nest-cli.json',
+      '/project/package.json',
+      '/project/tsconfig.build.json',
+      '/project/tsconfig.json',
+      '/project/src/app.controller.test.ts',
+      '/project/src/app.controller.ts',
+      '/project/src/app.module.ts',
+      '/project/src/app.service.ts',
+      '/project/src/main.ts',
+      '/project/test/app.e2e-test.ts',
+      '/project/test/jest-e2e.json',
+    ].sort());
   });
 });

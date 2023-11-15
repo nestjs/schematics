@@ -44,4 +44,13 @@ export interface ApplicationOptions {
    * Case format. Options are 'kebab' | 'snake' | 'camel' | 'pascal'.
    */
   caseNaming?: string;
+  /**
+   * Specifies if a spec file is generated.
+   */
+  spec?: boolean;
+  /**
+   * Specifies the file suffix of spec files.
+   * @default "spec"
+   */
+  specFileSuffix?: string;
 }
