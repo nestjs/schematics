@@ -42,8 +42,9 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
   target.name = resolvePackageName(target.name.toString());
   target.version = !!target.version ? target.version : DEFAULT_VERSION;
-  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+  target.specFileSuffix = normalizeToCase(
     options.specFileSuffix || 'spec',
+    'kebab-or-snake'
   );
 
   target.caseNaming = !!target.caseNaming ? target.caseNaming : 'snake';
