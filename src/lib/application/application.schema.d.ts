@@ -49,4 +49,17 @@ export interface ApplicationOptions {
    * @default "spec"
    */
   specFileSuffix?: string;
+
+ 
+  /**
+   * the underlying http platform
+   * @default "express"
+   */
+  platform?: 'fastify' | 'express';
+
+  /**
+   * wether to install the dependencies
+   * @default true
+   */
+  install?: 'true' | 'false'
 }
