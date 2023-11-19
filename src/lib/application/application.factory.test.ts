@@ -5,16 +5,22 @@ import {
 import * as path from 'path';
 import { ApplicationOptions } from './application.schema';
 
+let runner: SchematicTestRunner;
+
+beforeAll(()=>{
+ runner = new SchematicTestRunner(
+  '.',
+  path.join(process.cwd(), 'src/collection.json')
+);
+})
+
 describe('Application Factory', () => {
-  const runner: SchematicTestRunner = new SchematicTestRunner(
-    '.',
-    path.join(process.cwd(), 'src/collection.json'),
-  );
   describe('when only the name is supplied', () => {
     it('should manage basic (ie., cross-platform) name', async () => {
       const options: ApplicationOptions = {
-        name: 'project',
-      };
+        name: 'project'
+      }
+
       const tree: UnitTestTree = await runner
         .runSchematicAsync('application', options)
         .toPromise();
@@ -452,3 +458,31 @@ describe('Application Factory', () => {
     ].sort());
   });
 });
+
+
+describe('providing the platform option',() =>{
+  test('should contain the nessasery fastifay adaptors',(done)=>{
+    const options: ApplicationOptions = {
+      name: 'project',
+      platform: 'fastify',
+      install: 'false'
+    };
+     runner.runSchematic('application', options).then(tree=>{
+
+      // add FastifyAdapter() to NestFactory.create()
+      expect(tree.read('/project/src/main.ts')?.toString('utf8'))
+      .toMatch(/NestFactory.create<\s*NestFastifyApplication\s*>\s*\(\s*AppModule\s*,\s*new\s+FastifyAdapter\(\s*\)\s*\)/)
+  
+       // import from '@nestjs/platform-fastify'
+      expect(tree.read('/project/src/main.ts')?.toString('utf8'))
+       .toMatch(/import\s*{\s*FastifyAdapter\s*,\s*NestFastifyApplication\s*}\s*from\s*['"]@nestjs\/platform-fastify['"]/)
+        
+      // add fastify dependencies to package.json 
+       expect(tree.read('/project/package.json')?.toString()).toContain('"@nestjs/platform-fastify"');
+       expect(tree.read('/project/package.json')?.toString()).not.toContain('"@nestjs/platform-express"');
+  
+       done();
+      })  
+      .catch((error) => done(error));   
+  })  
+})
