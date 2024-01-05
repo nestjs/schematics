@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/voriteam/nest-schematics.git"
   },
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "main": "dist/index.js",
   "files": [

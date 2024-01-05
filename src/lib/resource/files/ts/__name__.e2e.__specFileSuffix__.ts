@@ -1,5 +1,4 @@
-import { faker } from '@faker-js/faker';
-import { INestApplication, Injectable } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { instanceToPlain } from 'class-transformer';
 import { orderBy, times } from 'lodash';
 import request from 'supertest';
@@ -12,7 +11,6 @@ import { APIBannerUser } from '@vori/types/User';
 import { makeAndSaveBanner } from '@vori/utils/VoriRandom/Banner.random';
 
 import { configureApp } from '@vori/nest/bootstrap';
-import { FirebaseAuthStrategy } from '@vori/nest/libs/auth/firebase-auth.strategy';
 import {
   createAnnotatedUser,
   createE2ETestingModule,
@@ -37,15 +35,6 @@ describe('/v1/<%= dasherize(name) %>', () => {
   let user: APIBannerUser | undefined;
   let <%= lowercased(name) %>Service: <%= classify(name) %>Service;
 
-  @Injectable()
-  class MockFirebaseAuthStrategy extends FirebaseAuthStrategy {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    async validate(token): Promise<APIBannerUser | undefined> {
-      return user;
-    }
-  }
-
   beforeAll(async () => {
     mockTemporalSetupAndShutdown();
 
@@ -53,8 +42,7 @@ describe('/v1/<%= dasherize(name) %>', () => {
       // TODO Remember to import <%= classify(name) %>Module into AppModule
       imports: [AppModule],
     })
-      .overrideProvider(FirebaseAuthStrategy)
-      .useClass(MockFirebaseAuthStrategy)
+      .mockAuthentication(() => user)
       .compile();
 
     app = moduleRef.createNestApplication();
