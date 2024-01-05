@@ -336,8 +336,7 @@ describe('UserDto', () => {
 
     it('should generate "Users" e2e spec file', () => {
       expect(tree.readContent('/users/users.e2e.spec.ts')).toEqual(
-        `import { faker } from '@faker-js/faker';
-import { INestApplication, Injectable } from '@nestjs/common';
+        `import { INestApplication } from '@nestjs/common';
 import { instanceToPlain } from 'class-transformer';
 import { orderBy, times } from 'lodash';
 import request from 'supertest';
@@ -350,7 +349,6 @@ import { APIBannerUser } from '@vori/types/User';
 import { makeAndSaveBanner } from '@vori/utils/VoriRandom/Banner.random';
 
 import { configureApp } from '@vori/nest/bootstrap';
-import { FirebaseAuthStrategy } from '@vori/nest/libs/auth/firebase-auth.strategy';
 import {
   createAnnotatedUser,
   createE2ETestingModule,
@@ -375,15 +373,6 @@ describe('/v1/users', () => {
   let user: APIBannerUser | undefined;
   let usersService: UsersService;
 
-  @Injectable()
-  class MockFirebaseAuthStrategy extends FirebaseAuthStrategy {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    async validate(token): Promise<APIBannerUser | undefined> {
-      return user;
-    }
-  }
-
   beforeAll(async () => {
     mockTemporalSetupAndShutdown();
 
@@ -391,8 +380,7 @@ describe('/v1/users', () => {
       // TODO Remember to import UsersModule into AppModule
       imports: [AppModule],
     })
-      .overrideProvider(FirebaseAuthStrategy)
-      .useClass(MockFirebaseAuthStrategy)
+      .mockAuthentication(() => user)
       .compile();
 
     app = moduleRef.createNestApplication();
