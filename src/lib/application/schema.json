@@ -65,6 +65,19 @@
       "type": "string",
       "default": "spec",
       "description": "Specifies the file suffix of spec files."
+    },
+    "platform": {
+      "type": "string",      
+      "description": "The underlying Http platform",
+      "enum":["fastify", "express"],
+      "default": "fastify",
+      "x-prompt":"platform?"
+    },
+    "install": {
+      "type": "string", 
+      "enum": ["true", "false"],     
+      "description": "wether to install the dependencies",
+      "default": "true"
     }
   },
   "required": ["name"]

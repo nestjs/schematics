@@ -24,7 +24,8 @@
     "test:dev": "NODE_ENV=test npm run -s test -- --watchAll",
     "prerelease": "npm run build",
     "release": "release-it",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "create-app":"npm run build && schematics .:application my-project --directory=dist/my-project --dry-run=false"
   },
   "repository": {
     "type": "git",
@@ -43,6 +44,7 @@
   "dependencies": {
     "@angular-devkit/core": "16.2.8",
     "@angular-devkit/schematics": "16.2.8",
+    "@schematics/angular": "^17.0.1",
     "comment-json": "4.2.3",
     "jsonc-parser": "3.2.0",
     "pluralize": "8.0.0"

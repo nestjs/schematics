@@ -9,6 +9,8 @@ import {
   Source,
   template,
   url,
+  chain,
+  SchematicContext
 } from '@angular-devkit/schematics';
 import { basename, parse } from 'path';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
@@ -19,6 +21,11 @@ import {
   DEFAULT_VERSION,
 } from '../defaults';
 import { ApplicationOptions } from './application.schema';
+import { addPackageJsonDependency, NodeDependencyType } from '../../utils/dependencies.utils';
+import {
+  removePackageJsonDependency,
+} from '@schematics/angular/utility/dependencies';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 export function main(options: ApplicationOptions): Rule {
   options.name = normalizeToKebabOrSnakeCase(options.name.toString());
@@ -27,9 +34,43 @@ export function main(options: ApplicationOptions): Rule {
     !options.directory || options.directory === 'undefined'
       ? options.name
       : options.directory;
+      options.platform = <'fastify' | 'express'>options.platform?.toLowerCase() || "express"
 
-  options = transform(options);
-  return mergeWith(generate(options, path));
+      return chain([
+      ()=>{
+          options = transform(options);
+          return mergeWith(generate(options, path));
+        },
+        (tree)=>{
+          if(options.platform.toLowerCase()==='fastify'){
+            const pkgPath = `${path}/package.json`;
+            ['@nestjs/platform-fastify', 'fastify'].map((el) =>
+            addPackageJsonDependency(
+              tree,
+              {
+                type: NodeDependencyType.Default,
+                name: el,
+                // todo: add compatible versions
+                version: '',
+                overwrite: false,
+              },
+              pkgPath
+            )
+          );
+  
+          ['@nestjs/platform-express', '@types/express'].map((el) =>
+            removePackageJsonDependency(tree, el, pkgPath)
+          );
+          }         
+          return tree
+        },
+        (tree, ctx:SchematicContext)=>{
+          options.install!=="false" && ctx.addTask(new NodePackageInstallTask());
+        }
+     
+      ])
+
+
 }
 
 function transform(options: ApplicationOptions): ApplicationOptions {
