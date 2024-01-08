@@ -21,6 +21,7 @@ import {
   PROJECT_TYPE,
 } from '../defaults';
 import { LibraryOptions } from './library.schema';
+import { FileSystemReader } from '../readers';
 
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
@@ -43,6 +44,26 @@ export function main(options: LibraryOptions): Rule {
   ]);
 }
 
+function getDefaultLibraryPrefix(defaultLibraryPrefix = '@app') {
+  const fileSystemReader = new FileSystemReader(process.cwd())
+  const content: string | undefined = fileSystemReader.readSyncAnyOf([
+    'nest-cli.json',
+    '.nestcli.json',
+    '.nest-cli.json',
+    'nest.json',
+  ]);
+  
+  try {
+    const nestJson = JSON.parse(content || '{}');
+    if (nestJson.hasOwnProperty('defaultLibraryPrefix')) {
+      return nestJson['defaultLibraryPrefix'];
+    }
+  } catch (e) {
+  }
+  
+  return defaultLibraryPrefix;
+}
+
 function transform(options: LibraryOptions): LibraryOptions {
   const target: LibraryOptions = Object.assign({}, options);
   const defaultSourceRoot =
@@ -58,7 +79,7 @@ function transform(options: LibraryOptions): LibraryOptions {
       ? join(normalize(defaultSourceRoot), target.path)
       : normalize(defaultSourceRoot);
 
-  target.prefix = target.prefix || '@app';
+  target.prefix = target.prefix || getDefaultLibraryPrefix();
   return target;
 }
 
