@@ -15,9 +15,8 @@ describe('Filter Factory', () => {
     const options: FilterOptions = {
       name: 'foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('filter', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('filter', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo.filter.ts'),
@@ -36,9 +35,8 @@ describe('Filter Factory', () => {
     const options: FilterOptions = {
       name: 'bar/foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('filter', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('filter', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar/foo.filter.ts'),
@@ -58,9 +56,8 @@ describe('Filter Factory', () => {
       name: 'foo',
       path: 'baz',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('filter', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('filter', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/baz/foo.filter.ts'),
@@ -79,9 +76,8 @@ describe('Filter Factory', () => {
     const options: FilterOptions = {
       name: 'fooBar',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('filter', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('filter', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo-bar.filter.ts'),
@@ -100,9 +96,8 @@ describe('Filter Factory', () => {
     const options: FilterOptions = {
       name: '_foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('filter', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('filter', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/_foo.filter.ts'),
@@ -121,9 +116,8 @@ describe('Filter Factory', () => {
     const options: FilterOptions = {
       name: 'barBaz/foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('filter', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('filter', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar-baz/foo.filter.ts'),
@@ -143,9 +137,8 @@ describe('Filter Factory', () => {
       name: 'foo',
       language: 'js',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('filter', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('filter', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo.filter.js'),
@@ -165,10 +158,11 @@ describe('Filter Factory', () => {
       name: 'foo',
       language: 'js',
     };
-    let tree: UnitTestTree = await runner
-      .runSchematicAsync('application', { name: '' })
-      .toPromise();
-    tree = await runner.runSchematicAsync('filter', options, tree).toPromise();
+    let tree: UnitTestTree = await runner.runSchematic('application', {
+      name: '',
+    });
+
+    tree = await runner.runSchematic('filter', options, tree);
 
     const files: string[] = tree.files;
     expect(
@@ -183,15 +177,14 @@ describe('Filter Factory', () => {
         '}\n',
     );
   });
-    it('should create a spec file', async () => {
+  it('should create a spec file', async () => {
     const options: FilterOptions = {
       name: 'foo',
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('filter', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('filter', options);
+
     const files: string[] = tree.files;
 
     expect(
@@ -205,9 +198,8 @@ describe('Filter Factory', () => {
       specFileSuffix: 'test',
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('filter', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('filter', options);
+
     const files: string[] = tree.files;
 
     expect(

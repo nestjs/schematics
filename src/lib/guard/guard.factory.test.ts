@@ -15,9 +15,8 @@ describe('Guard Factory', () => {
     const options: GuardOptions = {
       name: 'foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('guard', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('guard', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo.guard.ts'),
@@ -41,9 +40,8 @@ describe('Guard Factory', () => {
     const options: GuardOptions = {
       name: 'bar/foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('guard', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('guard', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar/foo.guard.ts'),
@@ -68,9 +66,8 @@ describe('Guard Factory', () => {
       name: 'foo',
       path: 'baz',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('guard', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('guard', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/baz/foo.guard.ts'),
@@ -94,9 +91,8 @@ describe('Guard Factory', () => {
     const options: GuardOptions = {
       name: 'fooBar',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('guard', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('guard', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo-bar.guard.ts'),
@@ -120,9 +116,8 @@ describe('Guard Factory', () => {
     const options: GuardOptions = {
       name: 'barBaz/foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('guard', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('guard', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar-baz/foo.guard.ts'),
@@ -146,9 +141,8 @@ describe('Guard Factory', () => {
     const options: GuardOptions = {
       name: '_foo/_bar',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('guard', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('guard', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/_foo/_bar.guard.ts'),
@@ -173,9 +167,8 @@ describe('Guard Factory', () => {
       name: 'foo',
       language: 'js',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('guard', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('guard', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo.guard.js'),
@@ -197,9 +190,8 @@ describe('Guard Factory', () => {
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('guard', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('guard', options);
+
     const files: string[] = tree.files;
 
     expect(
@@ -213,9 +205,8 @@ describe('Guard Factory', () => {
       specFileSuffix: 'test',
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('guard', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('guard', options);
+
     const files: string[] = tree.files;
 
     expect(

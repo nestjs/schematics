@@ -15,9 +15,8 @@ describe('Library Factory', () => {
       name: 'project',
       prefix: 'app',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('library', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('library', options);
+
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/nest-cli.json',
@@ -33,9 +32,8 @@ describe('Library Factory', () => {
       name: 'awesomeProject',
       prefix: 'app',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('library', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('library', options);
+
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/nest-cli.json',
@@ -51,9 +49,8 @@ describe('Library Factory', () => {
       name: '_project',
       prefix: 'app',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('library', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('library', options);
+
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/nest-cli.json',
@@ -70,9 +67,8 @@ describe('Library Factory', () => {
       language: 'js',
       prefix: 'app',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('library', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('library', options);
+
     const files: string[] = tree.files;
     expect(files).toEqual([
       '/nest-cli.json',

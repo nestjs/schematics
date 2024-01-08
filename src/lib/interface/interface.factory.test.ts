@@ -15,9 +15,8 @@ describe('Interface Factory', () => {
     const options: InterfaceOptions = {
       name: 'foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interface', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('interface', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo.interface.ts'),
@@ -31,9 +30,8 @@ describe('Interface Factory', () => {
     const options: InterfaceOptions = {
       name: 'bar/foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interface', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('interface', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar/foo.interface.ts'),
@@ -48,9 +46,8 @@ describe('Interface Factory', () => {
       name: 'foo',
       path: 'baz',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interface', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('interface', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/baz/foo.interface.ts'),
@@ -64,9 +61,8 @@ describe('Interface Factory', () => {
     const options: InterfaceOptions = {
       name: 'fooBar',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interface', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('interface', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo-bar.interface.ts'),
@@ -80,9 +76,8 @@ describe('Interface Factory', () => {
     const options: InterfaceOptions = {
       name: 'barBaz/foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interface', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('interface', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar-baz/foo.interface.ts'),
@@ -96,9 +91,8 @@ describe('Interface Factory', () => {
     const options: InterfaceOptions = {
       name: '_bar/_foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interface', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('interface', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/_bar/_foo.interface.ts'),

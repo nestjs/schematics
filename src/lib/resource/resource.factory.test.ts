@@ -16,9 +16,7 @@ describe('Resource Factory', () => {
       const options: ResourceOptions = {
         name: 'users',
       };
-      const tree = await runner
-        .runSchematicAsync('resource', options)
-        .toPromise();
+      const tree = await runner.runSchematic('resource', options);
       const files = tree.files;
       expect(files).toEqual([
         '/users/users.controller.spec.ts',
@@ -35,9 +33,7 @@ describe('Resource Factory', () => {
       const options: ResourceOptions = {
         name: '_users',
       };
-      const tree = await runner
-        .runSchematicAsync('resource', options)
-        .toPromise();
+      const tree = await runner.runSchematic('resource', options);
       const files = tree.files;
       expect(files).toEqual([
         '/_users/_users.controller.spec.ts',
@@ -56,9 +52,7 @@ describe('Resource Factory', () => {
           name: 'users',
           crud: false,
         };
-        const tree = await runner
-          .runSchematicAsync('resource', options)
-          .toPromise();
+        const tree = await runner.runSchematic('resource', options);
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.controller.spec.ts',
@@ -76,9 +70,7 @@ describe('Resource Factory', () => {
           spec: false,
           crud: false,
         };
-        const tree = await runner
-          .runSchematicAsync('resource', options)
-          .toPromise();
+        const tree = await runner.runSchematic('resource', options);
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.controller.ts',
@@ -98,7 +90,7 @@ describe('Resource Factory', () => {
     let tree: UnitTestTree;
 
     beforeAll(async () => {
-      tree = await runner.runSchematicAsync('resource', options).toPromise();
+      tree = await runner.runSchematic('resource', options);
     });
 
     it('should generate "UsersController" class', () => {
@@ -266,7 +258,7 @@ describe('UsersService', () => {
     let tree: UnitTestTree;
 
     beforeAll(async () => {
-      tree = await runner.runSchematicAsync('resource', options).toPromise();
+      tree = await runner.runSchematic('resource', options);
     });
 
     it('should generate "UsersController" class', () => {
@@ -323,9 +315,7 @@ export class UsersModule {}
         name: 'users',
         type: 'microservice',
       };
-      const tree = await runner
-        .runSchematicAsync('resource', options)
-        .toPromise();
+      const tree = await runner.runSchematic('resource', options);
       const files = tree.files;
       expect(files).toEqual([
         '/users/users.controller.spec.ts',
@@ -345,9 +335,7 @@ export class UsersModule {}
           crud: false,
           type: 'microservice',
         };
-        const tree = await runner
-          .runSchematicAsync('resource', options)
-          .toPromise();
+        const tree = await runner.runSchematic('resource', options);
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.controller.spec.ts',
@@ -366,9 +354,7 @@ export class UsersModule {}
           crud: false,
           type: 'microservice',
         };
-        const tree = await runner
-          .runSchematicAsync('resource', options)
-          .toPromise();
+        const tree = await runner.runSchematic('resource', options);
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.controller.ts',
@@ -388,7 +374,7 @@ export class UsersModule {}
     let tree: UnitTestTree;
 
     beforeAll(async () => {
-      tree = await runner.runSchematicAsync('resource', options).toPromise();
+      tree = await runner.runSchematic('resource', options);
     });
 
     it('should generate "UsersController" class', () => {
@@ -560,7 +546,7 @@ describe('UsersService', () => {
     let tree: UnitTestTree;
 
     beforeAll(async () => {
-      tree = await runner.runSchematicAsync('resource', options).toPromise();
+      tree = await runner.runSchematic('resource', options);
     });
 
     it('should generate "UsersController" class', () => {
@@ -617,9 +603,7 @@ export class UsersModule {}
         name: 'users',
         type: 'ws',
       };
-      const tree = await runner
-        .runSchematicAsync('resource', options)
-        .toPromise();
+      const tree = await runner.runSchematic('resource', options);
       const files = tree.files;
       expect(files).toEqual([
         '/users/users.gateway.spec.ts',
@@ -639,9 +623,7 @@ export class UsersModule {}
           crud: false,
           type: 'ws',
         };
-        const tree = await runner
-          .runSchematicAsync('resource', options)
-          .toPromise();
+        const tree = await runner.runSchematic('resource', options);
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.gateway.spec.ts',
@@ -660,9 +642,7 @@ export class UsersModule {}
           crud: false,
           type: 'ws',
         };
-        const tree = await runner
-          .runSchematicAsync('resource', options)
-          .toPromise();
+        const tree = await runner.runSchematic('resource', options);
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.gateway.ts',
@@ -683,7 +663,7 @@ export class UsersModule {}
     let tree: UnitTestTree;
 
     beforeAll(async () => {
-      tree = await runner.runSchematicAsync('resource', options).toPromise();
+      tree = await runner.runSchematic('resource', options);
     });
 
     it('should generate "UsersGateway" class', () => {
@@ -851,7 +831,7 @@ describe('UsersService', () => {
     let tree: UnitTestTree;
 
     beforeAll(async () => {
-      tree = await runner.runSchematicAsync('resource', options).toPromise();
+      tree = await runner.runSchematic('resource', options);
     });
 
     it('should generate "UsersGateway" class', () => {
@@ -907,9 +887,7 @@ export class UsersModule {}
         crud: true,
         type: 'graphql-code-first',
       };
-      const tree = await runner
-        .runSchematicAsync('resource', options)
-        .toPromise();
+      const tree = await runner.runSchematic('resource', options);
       const files = tree.files;
       expect(files).toEqual([
         '/users/users.module.ts',
@@ -929,9 +907,7 @@ export class UsersModule {}
           crud: false,
           type: 'graphql-code-first',
         };
-        const tree = await runner
-          .runSchematicAsync('resource', options)
-          .toPromise();
+        const tree = await runner.runSchematic('resource', options);
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.module.ts',
@@ -950,9 +926,7 @@ export class UsersModule {}
           crud: false,
           type: 'graphql-code-first',
         };
-        const tree = await runner
-          .runSchematicAsync('resource', options)
-          .toPromise();
+        const tree = await runner.runSchematic('resource', options);
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.module.ts',
@@ -972,7 +946,7 @@ export class UsersModule {}
     let tree: UnitTestTree;
 
     beforeAll(async () => {
-      tree = await runner.runSchematicAsync('resource', options).toPromise();
+      tree = await runner.runSchematic('resource', options);
     });
 
     it('should generate "UsersResolver" class', () => {
@@ -1150,9 +1124,7 @@ describe('UsersService', () => {
         name: 'users',
         type: 'graphql-schema-first',
       };
-      const tree = await runner
-        .runSchematicAsync('resource', options)
-        .toPromise();
+      const tree = await runner.runSchematic('resource', options);
       const files = tree.files;
       expect(files).toEqual([
         '/users/users.graphql',
@@ -1173,9 +1145,7 @@ describe('UsersService', () => {
           crud: false,
           type: 'graphql-schema-first',
         };
-        const tree = await runner
-          .runSchematicAsync('resource', options)
-          .toPromise();
+        const tree = await runner.runSchematic('resource', options);
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.module.ts',
@@ -1194,9 +1164,7 @@ describe('UsersService', () => {
           crud: false,
           type: 'graphql-schema-first',
         };
-        const tree = await runner
-          .runSchematicAsync('resource', options)
-          .toPromise();
+        const tree = await runner.runSchematic('resource', options);
         const files = tree.files;
         expect(files).toEqual([
           '/users/users.module.ts',
@@ -1215,7 +1183,7 @@ describe('UsersService', () => {
     let tree: UnitTestTree;
 
     beforeAll(async () => {
-      tree = await runner.runSchematicAsync('resource', options).toPromise();
+      tree = await runner.runSchematic('resource', options);
     });
 
     it('should generate "UsersResolver" class', () => {
@@ -1405,9 +1373,8 @@ type Mutation {
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('resource', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('resource', options);
+
     const files: string[] = tree.files;
 
     expect(
@@ -1424,9 +1391,8 @@ type Mutation {
       specFileSuffix: 'test',
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('resource', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('resource', options);
+
     const files: string[] = tree.files;
 
     expect(

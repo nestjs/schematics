@@ -15,9 +15,8 @@ describe('Middleware Factory', () => {
       name: 'foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('middleware', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('middleware', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo/foo.middleware.ts'),
@@ -38,9 +37,8 @@ describe('Middleware Factory', () => {
       name: 'bar/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('middleware', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('middleware', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar/foo/foo.middleware.ts'),
@@ -62,9 +60,8 @@ describe('Middleware Factory', () => {
       path: 'baz',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('middleware', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('middleware', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/baz/foo/foo.middleware.ts'),
@@ -85,9 +82,8 @@ describe('Middleware Factory', () => {
       name: 'fooBar',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('middleware', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('middleware', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo-bar/foo-bar.middleware.ts'),
@@ -108,9 +104,8 @@ describe('Middleware Factory', () => {
       name: 'barBaz/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('middleware', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('middleware', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar-baz/foo/foo.middleware.ts'),
@@ -131,9 +126,8 @@ describe('Middleware Factory', () => {
       name: '_bar/_foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('middleware', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('middleware', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/_bar/_foo/_foo.middleware.ts'),
@@ -155,9 +149,8 @@ describe('Middleware Factory', () => {
       language: 'js',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('middleware', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('middleware', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo/foo.middleware.js'),
@@ -179,9 +172,8 @@ describe('Middleware Factory', () => {
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('middleware', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('middleware', options);
+
     const files: string[] = tree.files;
 
     expect(
@@ -195,9 +187,8 @@ describe('Middleware Factory', () => {
       specFileSuffix: 'test',
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('middleware', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('middleware', options);
+
     const files: string[] = tree.files;
 
     expect(

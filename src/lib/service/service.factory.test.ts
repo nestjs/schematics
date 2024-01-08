@@ -19,9 +19,8 @@ describe('Service Factory', () => {
       skipImport: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('service', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('service', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo.service.ts'),
@@ -42,9 +41,8 @@ describe('Service Factory', () => {
       skipImport: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('service', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('service', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar/foo.service.ts'),
@@ -66,9 +64,8 @@ describe('Service Factory', () => {
       skipImport: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('service', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('service', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar/foo.service.ts'),
@@ -89,9 +86,8 @@ describe('Service Factory', () => {
       skipImport: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('service', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('service', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo-bar.service.ts'),
@@ -109,9 +105,8 @@ describe('Service Factory', () => {
       skipImport: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('service', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('service', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar-baz/foo.service.ts'),
@@ -132,9 +127,8 @@ describe('Service Factory', () => {
       skipImport: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('service', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('service', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/_bar/_foo.service.ts'),
@@ -156,9 +150,8 @@ describe('Service Factory', () => {
       language: 'js',
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('service', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('service', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo.service.js'),
@@ -177,14 +170,13 @@ describe('Service Factory', () => {
     const app: ApplicationOptions = {
       name: '',
     };
-    let tree: UnitTestTree = await runner
-      .runSchematicAsync('application', app)
-      .toPromise();
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
     const options: ServiceOptions = {
       name: 'foo',
       flat: true,
     };
-    tree = await runner.runSchematicAsync('service', options, tree).toPromise();
+    tree = await runner.runSchematic('service', options, tree);
     expect(tree.readContent(normalize('/src/app.module.ts'))).toEqual(
       "import { Module } from '@nestjs/common';\n" +
         "import { AppController } from './app.controller';\n" +
@@ -203,19 +195,18 @@ describe('Service Factory', () => {
     const app: ApplicationOptions = {
       name: '',
     };
-    let tree: UnitTestTree = await runner
-      .runSchematicAsync('application', app)
-      .toPromise();
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
     const module: ModuleOptions = {
       name: 'foo',
     };
-    tree = await runner.runSchematicAsync('module', module, tree).toPromise();
+    tree = await runner.runSchematic('module', module, tree);
     const options: ServiceOptions = {
       name: 'foo',
       path: 'foo',
       flat: true,
     };
-    tree = await runner.runSchematicAsync('service', options, tree).toPromise();
+    tree = await runner.runSchematic('service', options, tree);
     expect(tree.readContent(normalize('/src/foo/foo.module.ts'))).toEqual(
       "import { Module } from '@nestjs/common';\n" +
         "import { FooService } from './foo.service';\n" +
@@ -232,9 +223,8 @@ describe('Service Factory', () => {
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('service', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('service', options);
+
     const files: string[] = tree.files;
 
     expect(
@@ -248,9 +238,8 @@ describe('Service Factory', () => {
       specFileSuffix: 'test',
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('service', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('service', options);
+
     const files: string[] = tree.files;
 
     expect(

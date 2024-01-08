@@ -15,9 +15,8 @@ describe('Resolver Factory', () => {
       name: 'foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('resolver', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('resolver', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo/foo.resolver.ts'),
@@ -34,9 +33,8 @@ describe('Resolver Factory', () => {
       name: 'bar/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('resolver', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('resolver', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar/foo/foo.resolver.ts'),
@@ -54,9 +52,8 @@ describe('Resolver Factory', () => {
       path: 'baz',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('resolver', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('resolver', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/baz/foo/foo.resolver.ts'),
@@ -73,9 +70,8 @@ describe('Resolver Factory', () => {
       name: 'fooBar',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('resolver', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('resolver', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo-bar/foo-bar.resolver.ts'),
@@ -92,9 +88,8 @@ describe('Resolver Factory', () => {
       name: 'barBaz/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('resolver', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('resolver', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar-baz/foo/foo.resolver.ts'),
@@ -111,9 +106,8 @@ describe('Resolver Factory', () => {
       name: '_bar/_foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('resolver', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('resolver', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/_bar/_foo/_foo.resolver.ts'),
@@ -131,9 +125,8 @@ describe('Resolver Factory', () => {
       language: 'js',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('resolver', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('resolver', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo/foo.resolver.js'),
@@ -151,9 +144,8 @@ describe('Resolver Factory', () => {
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('resolver', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('resolver', options);
+
     const files: string[] = tree.files;
 
     expect(
@@ -167,9 +159,8 @@ describe('Resolver Factory', () => {
       specFileSuffix: 'test',
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('resolver', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('resolver', options);
+
     const files: string[] = tree.files;
 
     expect(

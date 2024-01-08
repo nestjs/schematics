@@ -15,9 +15,8 @@ describe('Decorator Factory', () => {
       name: 'foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('decorator', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('decorator', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo/foo.decorator.ts'),
@@ -33,9 +32,8 @@ describe('Decorator Factory', () => {
       name: 'bar/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('decorator', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('decorator', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar/foo/foo.decorator.ts'),
@@ -52,9 +50,8 @@ describe('Decorator Factory', () => {
       path: 'baz',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('decorator', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('decorator', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/baz/foo/foo.decorator.ts'),
@@ -70,9 +67,8 @@ describe('Decorator Factory', () => {
       name: 'fooBar',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('decorator', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('decorator', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo-bar/foo-bar.decorator.ts'),
@@ -88,9 +84,8 @@ describe('Decorator Factory', () => {
       name: 'barBaz/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('decorator', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('decorator', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar-baz/foo/foo.decorator.ts'),
@@ -106,9 +101,8 @@ describe('Decorator Factory', () => {
       name: '_bar/_foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('decorator', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('decorator', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/_bar/_foo/_foo.decorator.ts'),
@@ -125,9 +119,8 @@ describe('Decorator Factory', () => {
       language: 'js',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('decorator', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('decorator', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo/foo.decorator.js'),

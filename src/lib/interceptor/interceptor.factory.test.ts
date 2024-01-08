@@ -15,9 +15,11 @@ describe('Interceptor Factory', () => {
     const options: InterceptorOptions = {
       name: 'foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interceptor', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic(
+      'interceptor',
+      options,
+    );
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo.interceptor.ts'),
@@ -39,9 +41,11 @@ describe('Interceptor Factory', () => {
     const options: InterceptorOptions = {
       name: 'bar/foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interceptor', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic(
+      'interceptor',
+      options,
+    );
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar/foo.interceptor.ts'),
@@ -64,9 +68,11 @@ describe('Interceptor Factory', () => {
       name: 'foo',
       path: 'baz',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interceptor', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic(
+      'interceptor',
+      options,
+    );
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/baz/foo.interceptor.ts'),
@@ -88,9 +94,11 @@ describe('Interceptor Factory', () => {
     const options: InterceptorOptions = {
       name: 'fooBar',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interceptor', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic(
+      'interceptor',
+      options,
+    );
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo-bar.interceptor.ts'),
@@ -112,9 +120,11 @@ describe('Interceptor Factory', () => {
     const options: InterceptorOptions = {
       name: '_bar/_foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interceptor', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic(
+      'interceptor',
+      options,
+    );
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/_bar/_foo.interceptor.ts'),
@@ -136,9 +146,11 @@ describe('Interceptor Factory', () => {
     const options: InterceptorOptions = {
       name: 'barBaz/foo',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interceptor', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic(
+      'interceptor',
+      options,
+    );
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar-baz/foo.interceptor.ts'),
@@ -161,9 +173,11 @@ describe('Interceptor Factory', () => {
       name: 'foo',
       language: 'js',
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interceptor', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic(
+      'interceptor',
+      options,
+    );
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo.interceptor.js'),
@@ -185,9 +199,11 @@ describe('Interceptor Factory', () => {
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interceptor', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic(
+      'interceptor',
+      options,
+    );
+
     const files: string[] = tree.files;
 
     expect(
@@ -201,9 +217,11 @@ describe('Interceptor Factory', () => {
       specFileSuffix: 'test',
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('interceptor', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic(
+      'interceptor',
+      options,
+    );
+
     const files: string[] = tree.files;
 
     expect(

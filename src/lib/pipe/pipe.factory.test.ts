@@ -15,9 +15,8 @@ describe('Pipe Factory', () => {
       name: 'foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('pipe', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('pipe', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo/foo.pipe.ts'),
@@ -38,9 +37,8 @@ describe('Pipe Factory', () => {
       name: 'bar/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('pipe', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('pipe', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar/foo/foo.pipe.ts'),
@@ -62,9 +60,8 @@ describe('Pipe Factory', () => {
       path: 'baz',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('pipe', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('pipe', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/baz/foo/foo.pipe.ts'),
@@ -85,9 +82,8 @@ describe('Pipe Factory', () => {
       name: 'fooBar',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('pipe', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('pipe', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo-bar/foo-bar.pipe.ts'),
@@ -108,9 +104,8 @@ describe('Pipe Factory', () => {
       name: 'barBaz/foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('pipe', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('pipe', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar-baz/foo/foo.pipe.ts'),
@@ -132,9 +127,8 @@ describe('Pipe Factory', () => {
       name: '_bar/_foo',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('pipe', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('pipe', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/_bar/_foo/_foo.pipe.ts'),
@@ -157,9 +151,8 @@ describe('Pipe Factory', () => {
       language: 'js',
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('pipe', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('pipe', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo/foo.pipe.js'),
@@ -181,9 +174,8 @@ describe('Pipe Factory', () => {
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('pipe', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('pipe', options);
+
     const files: string[] = tree.files;
 
     expect(
@@ -197,9 +189,8 @@ describe('Pipe Factory', () => {
       specFileSuffix: 'test',
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('pipe', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('pipe', options);
+
     const files: string[] = tree.files;
 
     expect(

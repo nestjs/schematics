@@ -16,9 +16,8 @@ describe('Class Factory', () => {
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('class', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('class', options);
+
     const files: string[] = tree.files;
 
     expect(
@@ -32,9 +31,8 @@ describe('Class Factory', () => {
       flat: false,
       spec: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('class', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('class', options);
+
     const files: string[] = tree.files;
 
     expect(
@@ -51,9 +49,8 @@ describe('Class Factory', () => {
       flat: false,
       spec: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('class', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('class', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/baz/foo/foo.ts'),
@@ -68,9 +65,8 @@ describe('Class Factory', () => {
       flat: false,
       spec: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('class', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('class', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/_foo-bar/_foo-bar.ts'),
@@ -85,9 +81,8 @@ describe('Class Factory', () => {
       spec: false,
       flat: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('class', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('class', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/bar-baz/_foo/_foo.ts'),
@@ -103,9 +98,8 @@ describe('Class Factory', () => {
       flat: false,
       spec: false,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('class', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('class', options);
+
     const files: string[] = tree.files;
     expect(
       files.find((filename) => filename === '/foo/foo.js'),
@@ -118,9 +112,8 @@ describe('Class Factory', () => {
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('class', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('class', options);
+
     const files: string[] = tree.files;
 
     expect(
@@ -136,9 +129,8 @@ describe('Class Factory', () => {
       spec: true,
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('class', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('class', options);
+
     const files: string[] = tree.files;
 
     expect(
@@ -152,16 +144,13 @@ describe('Class Factory', () => {
       specFileSuffix: 'test',
       flat: true,
     };
-    const tree: UnitTestTree = await runner
-      .runSchematicAsync('class', options)
-      .toPromise();
+    const tree: UnitTestTree = await runner.runSchematic('class', options);
+
     const files: string[] = tree.files;
 
     expect(
       files.find((filename) => filename === '/foo.spec.ts'),
     ).toBeUndefined();
-    expect(
-      files.find((filename) => filename === '/foo.test.ts'),
-    ).toBeDefined();
+    expect(files.find((filename) => filename === '/foo.test.ts')).toBeDefined();
   });
 });
