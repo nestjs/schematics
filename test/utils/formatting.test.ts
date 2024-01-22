@@ -30,4 +30,16 @@ describe('normalizeToKebabOrSnakeCase', () => {
     const output = normalizeToKebabOrSnakeCase(input);
     expect(output).toBe('leading-and-trailing-spaces');
   });
+
+  it('should handle nil value', () => {
+    const input = null;
+    const output = normalizeToKebabOrSnakeCase(input);
+    expect(output).toBe(undefined);
+  });
+
+  it('should handle undefined value', () => {
+    const input = undefined;
+    const output = normalizeToKebabOrSnakeCase(input);
+    expect(output).toBe(undefined);
+  });
 });
