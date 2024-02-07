@@ -44,7 +44,7 @@
     "@angular-devkit/core": "17.1.2",
     "@angular-devkit/schematics": "17.1.2",
     "comment-json": "4.2.3",
-    "jsonc-parser": "3.2.0",
+    "jsonc-parser": "3.2.1",
     "pluralize": "8.0.0"
   },
   "devDependencies": {
