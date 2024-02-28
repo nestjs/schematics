@@ -51,7 +51,7 @@
     "@commitlint/cli": "19.0.1",
     "@commitlint/config-angular": "19.0.0",
     "@types/jest": "29.5.12",
-    "@types/node": "20.11.20",
+    "@types/node": "20.11.21",
     "@typescript-eslint/eslint-plugin": "7.1.0",
     "@typescript-eslint/parser": "7.1.0",
     "cpx2": "7.0.1",
