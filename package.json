@@ -48,8 +48,8 @@
     "pluralize": "8.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "19.0.3",
-    "@commitlint/config-angular": "19.0.3",
+    "@commitlint/cli": "19.1.0",
+    "@commitlint/config-angular": "19.1.0",
     "@types/jest": "29.5.12",
     "@types/node": "20.11.26",
     "@typescript-eslint/eslint-plugin": "7.2.0",
