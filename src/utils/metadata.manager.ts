@@ -30,7 +30,7 @@ export class MetadataManager {
       this.content,
       ScriptTarget.ES2017,
     );
-    const decoratorNodes: Node[] = this.getDecoratorMetadata(source, '@Module');
+    const decoratorNodes: Node[] = this.getDecoratorMetadata(source, 'Module');
     const node: Node = decoratorNodes[0];
     // If there is no occurrence of `@Module` decorator, nothing will be inserted
     if (!node) {
@@ -84,7 +84,6 @@ export class MetadataManager {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private getDecoratorMetadata(source: SourceFile, identifier: string): Node[] {
     return this.getSourceNodes(source)
       .filter(
@@ -93,11 +92,25 @@ export class MetadataManager {
           (node as Decorator).expression.kind === SyntaxKind.CallExpression,
       )
       .map((node) => (node as Decorator).expression as CallExpression)
-      .filter(
-        (expr) =>
+      .filter((expr) => {
+        const isExpectedExpression =
           expr.arguments[0] &&
-          expr.arguments[0].kind === SyntaxKind.ObjectLiteralExpression,
-      )
+          expr.arguments[0].kind === SyntaxKind.ObjectLiteralExpression;
+
+        if (!isExpectedExpression) {
+          return false;
+        }
+
+        if (expr.expression.kind === SyntaxKind.Identifier) {
+          const escapedText = (expr.expression as Identifier).escapedText;
+          const isIdentifier = escapedText
+            ? escapedText.toLowerCase() === identifier.toLowerCase()
+            : true;
+          return isIdentifier;
+        }
+
+        return true;
+      })
       .map((expr) => expr.arguments[0] as ObjectLiteralExpression);
   }
 
@@ -193,11 +206,9 @@ export class MetadataManager {
       toInsert = staticOptions ? this.addBlankLines(symbol) : `${symbol}`;
     } else {
       const text = (node as Node).getFullText(source);
-      const itemSeparator = ( 
-        text.match(/^\r?\n(\r?)\s+/) ||
+      const itemSeparator = (text.match(/^\r?\n(\r?)\s+/) ||
         text.match(/^\r?\n/) ||
-        ' '
-      )[0];
+        ' ')[0];
       toInsert = `,${itemSeparator}${symbol}`;
     }
     return this.content.split('').reduce((content, char, index) => {
