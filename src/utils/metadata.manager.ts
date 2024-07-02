@@ -30,34 +30,35 @@ export class MetadataManager {
       this.content,
       ScriptTarget.ES2017,
     );
-    const decoratorNodes: Node[] = this.getDecoratorMetadata(source, '@Module');
-    const node: Node = decoratorNodes[0];
+    const moduleDecoratorNode = this.findFirstDecoratorMetadata(
+      source,
+      'Module',
+    );
     // If there is no occurrence of `@Module` decorator, nothing will be inserted
-    if (!node) {
+    if (!moduleDecoratorNode) {
       return;
     }
-    const matchingProperties: ObjectLiteralElement[] = (
-      node as ObjectLiteralExpression
-    ).properties
-      .filter((prop) => prop.kind === SyntaxKind.PropertyAssignment)
-      .filter((prop: PropertyAssignment) => {
-        const name = prop.name;
-        switch (name.kind) {
-          case SyntaxKind.Identifier:
-            return (name as Identifier).getText(source) === metadata;
-          case SyntaxKind.StringLiteral:
-            return (name as StringLiteral).text === metadata;
-          default:
-            return false;
-        }
-      });
+    const matchingProperties: ObjectLiteralElement[] =
+      moduleDecoratorNode.properties
+        .filter((prop) => prop.kind === SyntaxKind.PropertyAssignment)
+        .filter((prop: PropertyAssignment) => {
+          const name = prop.name;
+          switch (name.kind) {
+            case SyntaxKind.Identifier:
+              return (name as Identifier).getText(source) === metadata;
+            case SyntaxKind.StringLiteral:
+              return (name as StringLiteral).text === metadata;
+            default:
+              return false;
+          }
+        });
 
     symbol = this.mergeSymbolAndExpr(symbol, staticOptions);
     const addBlankLinesIfDynamic = () => {
       symbol = staticOptions ? this.addBlankLines(symbol) : symbol;
     };
     if (matchingProperties.length === 0) {
-      const expr = node as ObjectLiteralExpression;
+      const expr = moduleDecoratorNode as ObjectLiteralExpression;
       if (expr.properties.length === 0) {
         addBlankLinesIfDynamic();
         return this.insertMetadataToEmptyModuleDecorator(
@@ -84,21 +85,32 @@ export class MetadataManager {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private getDecoratorMetadata(source: SourceFile, identifier: string): Node[] {
-    return this.getSourceNodes(source)
-      .filter(
-        (node) =>
-          node.kind === SyntaxKind.Decorator &&
-          (node as Decorator).expression.kind === SyntaxKind.CallExpression,
-      )
-      .map((node) => (node as Decorator).expression as CallExpression)
-      .filter(
-        (expr) =>
-          expr.arguments[0] &&
-          expr.arguments[0].kind === SyntaxKind.ObjectLiteralExpression,
-      )
-      .map((expr) => expr.arguments[0] as ObjectLiteralExpression);
+  private findFirstDecoratorMetadata(
+    source: SourceFile,
+    identifier: string,
+  ): ObjectLiteralExpression | undefined {
+    for (const node of this.getSourceNodes(source)) {
+      const isDecoratorFactoryNode =
+        node.kind === SyntaxKind.Decorator &&
+        (node as Decorator).expression.kind === SyntaxKind.CallExpression;
+      if (!isDecoratorFactoryNode) continue;
+
+      const expr = (node as Decorator).expression as CallExpression;
+
+      const isExpectedExpression =
+        expr.arguments[0]?.kind === SyntaxKind.ObjectLiteralExpression;
+      if (!isExpectedExpression) continue;
+
+      if (expr.expression.kind === SyntaxKind.Identifier) {
+        const escapedText = (expr.expression as Identifier).escapedText;
+        const isTargetIdentifier = escapedText
+          ? escapedText.toLowerCase() === identifier.toLowerCase()
+          : true;
+        if (isTargetIdentifier) {
+          return expr.arguments[0] as ObjectLiteralExpression;
+        }
+      }
+    }
   }
 
   private getSourceNodes(sourceFile: SourceFile): Node[] {
@@ -193,11 +205,9 @@ export class MetadataManager {
       toInsert = staticOptions ? this.addBlankLines(symbol) : `${symbol}`;
     } else {
       const text = (node as Node).getFullText(source);
-      const itemSeparator = ( 
-        text.match(/^\r?\n(\r?)\s+/) ||
+      const itemSeparator = (text.match(/^\r?\n(\r?)\s+/) ||
         text.match(/^\r?\n/) ||
-        ' '
-      )[0];
+        ' ')[0];
       toInsert = `,${itemSeparator}${symbol}`;
     }
     return this.content.split('').reduce((content, char, index) => {
