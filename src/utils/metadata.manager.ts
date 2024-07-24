@@ -121,7 +121,7 @@ export class MetadataManager {
       if (node) {
         result.push(node);
         if (node.getChildCount(sourceFile) >= 0) {
-          nodes.unshift(...node.getChildren());
+          nodes.unshift(...node.getChildren(sourceFile));
         }
       }
     }
