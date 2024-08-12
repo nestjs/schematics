@@ -32,10 +32,7 @@ import { Project } from 'ts-morph';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const prismaClientPath = path.resolve(
-  process.cwd(),
-  'node_modules/@prisma/client/index.d.ts',
-);
+const prismaClientPath = require.resolve('@prisma/client/index.d.ts');
 
 const project = new Project({
   tsConfigFilePath: 'tsconfig.json',
