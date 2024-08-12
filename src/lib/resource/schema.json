@@ -82,9 +82,15 @@
       "default": false
     },
     "crud": {
+
       "type": "string",
       "description": "When true, CRUD entry points are generated.",
-      "default": true,
+      "default": "yes",
+      "enum": [
+        "yes",
+        "no",
+        "prisma"
+      ],
       "x-prompt": {
         "message": "Would you like to generate CRUD entry points?",
         "items": [
