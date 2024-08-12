@@ -82,7 +82,7 @@
       "default": false
     },
     "crud": {
-      "type": "boolean",
+      "type": "string",
       "description": "When true, CRUD entry points are generated.",
       "default": true,
       "x-prompt": {
