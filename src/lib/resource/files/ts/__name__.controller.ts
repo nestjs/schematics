@@ -12,8 +12,8 @@ export class <%= classify(name) %>Controller {
   constructor(private readonly <%= lowercased(name) %>Service: <%= classify(name) %>Service) {}<% if (type === 'rest' && crud) { %>
 
   @Post()
-  create(@Body() create<%= singular(classify(name)) %>Dto: Create<%= singular(classify(name)) %>Dto) {
-    return this.<%= lowercased(name) %>Service.create(create<%= singular(classify(name)) %>Dto);
+  create(@Body() input: Create<%= singular(classify(name)) %>Dto) {
+    return this.<%= lowercased(name) %>Service.create(input);
   }
 
   @Get()
@@ -27,8 +27,8 @@ export class <%= classify(name) %>Controller {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() update<%= singular(classify(name)) %>Dto: Update<%= singular(classify(name)) %>Dto) {
-    return this.<%= lowercased(name) %>Service.update(+id, update<%= singular(classify(name)) %>Dto);
+  update(@Param('id') id: string, @Body() input: Update<%= singular(classify(name)) %>Dto) {
+    return this.<%= lowercased(name) %>Service.update(+id, input);
   }
 
   @Delete(':id')
@@ -52,8 +52,8 @@ export class <%= classify(name) %>Controller {
   }
 
   @MessagePattern('update<%= singular(classify(name)) %>')
-  update(@Payload() update<%= singular(classify(name)) %>Dto: Update<%= singular(classify(name)) %>Dto) {
-    return this.<%= lowercased(name) %>Service.update(update<%= singular(classify(name)) %>Dto.id, update<%= singular(classify(name)) %>Dto);
+  update(@Payload() input: Update<%= singular(classify(name)) %>Dto) {
+    return this.<%= lowercased(name) %>Service.update(input.id, input);
   }
 
   @MessagePattern('remove<%= singular(classify(name)) %>')

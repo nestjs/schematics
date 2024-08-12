@@ -28,6 +28,22 @@ import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import { Location, NameParser } from '../../utils/name.parser';
 import { mergeSourceRoot } from '../../utils/source-root.helpers';
 import { ResourceOptions } from './resource.schema';
+import { Project } from 'ts-morph';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const prismaClientPath = path.resolve(
+  __dirname,
+  'node_modules/@prisma/client/index.d.ts',
+);
+
+const project = new Project({
+  tsConfigFilePath: 'tsconfig.json',
+});
+
+project.addSourceFileAtPath(prismaClientPath);
+
+const sourceFile = project.getSourceFile('index.d.ts');
 
 export function main(options: ResourceOptions): Rule {
   options = transform(options);
@@ -135,6 +151,7 @@ function generate(options: ResourceOptions): Source {
       template({
         ...strings,
         ...options,
+        prismaFields: getModelFields(options.name),
         lowercased: (name: string) => {
           const classifiedName = classify(name);
           return (
@@ -206,3 +223,60 @@ function addMappedTypesDependencyIfApplies(options: ResourceOptions): Rule {
     }
   };
 }
+
+// Function to get Prisma model fields
+function getModelFields(modelName: string) {
+  const modelInterface = sourceFile
+    .getInterfaceOrThrow(`Prisma.${modelName}`)
+    .getType();
+
+  return modelInterface.getProperties().map((prop) => {
+    const name = prop.getName();
+    const type = prop.getValueDeclarationOrThrow().getType().getText();
+
+    return {
+      name,
+      type,
+    };
+  });
+}
+
+// Function to map Prisma types to class-validator decorators
+function getValidationDecorator(type: string) {
+  switch (type) {
+    case 'string':
+      return '@IsString()';
+    case 'number':
+      return '@IsNumber()';
+    case 'boolean':
+      return '@IsBoolean()';
+    case 'Date':
+      return '@IsDate()';
+    default:
+      return '';
+  }
+}
+
+// Function to generate DTO content
+function generateDtoContent(
+  modelName: string,
+  fields: { name: string; type: string }[],
+) {
+  let dtoContent = `import { IsString, IsInt, IsBoolean, IsDate, IsNumber, IsOptional } from 'class-validator';\n\n`;
+  dtoContent += `export class Create${modelName}Dto {\n`;
+
+  fields.forEach(({ name, type }) => {
+    const validationDecorator = getValidationDecorator(type);
+    dtoContent += `  ${validationDecorator}\n`;
+    dtoContent += `  readonly ${name}: ${type};\n\n`;
+  });
+
+  dtoContent += `}`;
+
+  return dtoContent;
+}
+
+// Example usage to generate DTOs for the 'User' model
+const modelName = 'User';
+const fields = getModelFields(modelName);
+const dtoContent = generateDtoContent(modelName, fields);
