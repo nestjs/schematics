@@ -33,7 +33,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const prismaClientPath = path.resolve(
-  __dirname,
+  process.cwd(),
   'node_modules/@prisma/client/index.d.ts',
 );
 
