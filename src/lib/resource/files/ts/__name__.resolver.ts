@@ -1,12 +1,12 @@
-import { Resolver<% if (crud && type === 'graphql-schema-first') { %>, Query, Mutation, Args<% } else if (crud && type === 'graphql-code-first') { %>, Query, Mutation, Args, Int<% } %> } from '@nestjs/graphql';
-import { <%= classify(name) %>Service } from './<%= name %>.service';<% if (crud && type === 'graphql-code-first') { %>
-import { <%= singular(classify(name)) %> } from './entities/<%= singular(name) %>.entity';<% } %><% if (crud) { %>
+import { Resolver<% if (crud === 'yes' && type === 'graphql-schema-first') { %>, Query, Mutation, Args<% } else if (crud === 'yes' && type === 'graphql-code-first') { %>, Query, Mutation, Args, Int<% } %> } from '@nestjs/graphql';
+import { <%= classify(name) %>Service } from './<%= name %>.service';<% if (crud === 'yes' && type === 'graphql-code-first') { %>
+import { <%= singular(classify(name)) %> } from './entities/<%= singular(name) %>.entity';<% } %><% if (crud === 'yes') { %>
 import { Create<%= singular(classify(name)) %>Input } from './dto/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './dto/update-<%= singular(name) %>.input';<% } %>
 
 <% if (type === 'graphql-code-first' && crud) { %>@Resolver(() => <%= singular(classify(name)) %>)<% } else if (type === 'graphql-code-first') {%>@Resolver()<% } else { %>@Resolver('<%= singular(classify(name)) %>')<% } %>
 export class <%= classify(name) %>Resolver {
-  constructor(private readonly <%= lowercased(name) %>Service: <%= classify(name) %>Service) {}<% if (crud && type === 'graphql-code-first') { %>
+  constructor(private readonly <%= lowercased(name) %>Service: <%= classify(name) %>Service) {}<% if (crud === 'yes' && type === 'graphql-code-first') { %>
 
   @Mutation(() => <%= singular(classify(name)) %>)
   create<%= singular(classify(name)) %>(@Args('create<%= singular(classify(name)) %>Input') create<%= singular(classify(name)) %>Input: Create<%= singular(classify(name)) %>Input) {
@@ -31,7 +31,7 @@ export class <%= classify(name) %>Resolver {
   @Mutation(() => <%= singular(classify(name)) %>)
   remove<%= singular(classify(name)) %>(@Args('id', { type: () => Int }) id: number) {
     return this.<%= lowercased(name) %>Service.remove(id);
-  }<% } else if (crud && type === 'graphql-schema-first') {%>
+  }<% } else if (crud === 'yes' && type === 'graphql-schema-first') {%>
 
   @Mutation('create<%= singular(classify(name)) %>')
   create(@Args('create<%= singular(classify(name)) %>Input') create<%= singular(classify(name)) %>Input: Create<%= singular(classify(name)) %>Input) {

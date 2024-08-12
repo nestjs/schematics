@@ -1,9 +1,9 @@
-<% if (crud && type === 'rest') { %>import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';<%
-} else if (crud && type === 'microservice') { %>import { Controller } from '@nestjs/common';
+<% if (crud === 'yes' && type === 'rest') { %>import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';<%
+} else if (crud === 'yes' && type === 'microservice') { %>import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';<%
 } else { %>import { Controller } from '@nestjs/common';<%
 } %>
-import { <%= classify(name) %>Service } from './<%= name %>.service';<% if (crud) { %>
+import { <%= classify(name) %>Service } from './<%= name %>.service';<% if (crud === 'yes') { %>
 import { Create<%= singular(classify(name)) %>Dto } from './dto/create-<%= singular(name) %>.dto';
 import { Update<%= singular(classify(name)) %>Dto } from './dto/update-<%= singular(name) %>.dto';<% } %>
 
