@@ -87,7 +87,11 @@
       "default": true,
       "x-prompt": {
         "message": "Would you like to generate CRUD entry points?",
-        "type": "confirmation"
+        "items": [
+          { "value": "yes", "label": "Default empty crud" },
+          { "value": "no", "label": "No CRUD" },
+          {"value":"prisma", "label": "Prisma CRUD"}
+        ]
       }
     }
   },
