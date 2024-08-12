@@ -4,7 +4,7 @@ import { Update<%= singular(classify(name)) %>Dto } from './dto/update-<%= singu
 import { Create<%= singular(classify(name)) %>Input } from './dto/create-<%= singular(name) %>.input';
 import { Update<%= singular(classify(name)) %>Input } from './dto/update-<%= singular(name) %>.input';<% } %>
 <% if (crud === 'yes' || crud === 'prisma')  { %>
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '<%= prismaSource %>prisma.service';
 import { Prisma, <%= classify(name) %> } from '@prisma/client';
 <% } %>
 @Injectable()

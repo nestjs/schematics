@@ -82,7 +82,6 @@
       "default": false
     },
     "crud": {
-
       "type": "string",
       "description": "When true, CRUD entry points are generated.",
       "default": "yes",
@@ -94,12 +93,19 @@
       "x-prompt": {
         "message": "Would you like to generate CRUD entry points?",
         "items": [
-          { "value": "yes", "label": "Default empty crud" },
+          { "value": "yes", "label": "Default empty CRUD" },
           { "value": "no", "label": "No CRUD" },
           {"value":"prisma", "label": "Prisma CRUD"}
         ]
       }
+    },
+    "prismaSource": {
+      "type": "string",
+      "description": "Specify the path to the Prisma resource (e.g., 'src/prisma/').",
+      "default": "src/prisma/",
+      "x-prompt": "You selected Prisma CRUD. Please specify the path to the Prisma resource (default is 'src/prisma/')."
     }
+    
   },
   "required": ["name"]
 }
