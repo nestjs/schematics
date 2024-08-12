@@ -76,18 +76,19 @@ function generate(options: ResourceOptions): Source {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
       filter((path) => {
+        const possibleCrud = ['yes', 'prisma'];
         if (path.endsWith('.dto.ts')) {
           return (
             options.type !== 'graphql-code-first' &&
             options.type !== 'graphql-schema-first' &&
-            options.crud
+            possibleCrud.includes(options.crud)
           );
         }
         if (path.endsWith('.input.ts')) {
           return (
             (options.type === 'graphql-code-first' ||
               options.type === 'graphql-schema-first') &&
-            options.crud
+            possibleCrud.includes(options.crud)
           );
         }
         if (
@@ -100,7 +101,10 @@ function generate(options: ResourceOptions): Source {
           );
         }
         if (path.endsWith('.graphql')) {
-          return options.type === 'graphql-schema-first' && options.crud;
+          return (
+            options.type === 'graphql-schema-first' &&
+            possibleCrud.includes(options.crud)
+          );
         }
         if (
           path.endsWith('controller.ts') ||
@@ -108,23 +112,26 @@ function generate(options: ResourceOptions): Source {
         ) {
           return options.type === 'microservice' || options.type === 'rest';
         }
-        if (path.endsWith('.gateway.ts') || path.endsWith('.gateway.__specFileSuffix__.ts')) {
+        if (
+          path.endsWith('.gateway.ts') ||
+          path.endsWith('.gateway.__specFileSuffix__.ts')
+        ) {
           return options.type === 'ws';
         }
         if (path.includes('@ent')) {
           // Entity class file workaround
           // When an invalid glob path for entities has been specified (on the application part)
           // TypeORM was trying to load a template class
-          return options.crud;
+          return possibleCrud.includes(options.crud);
         }
         return true;
       }),
-      options.spec 
-        ? noop() 
+      options.spec
+        ? noop()
         : filter((path) => {
             const suffix = `.__specFileSuffix__.ts`;
-            return !path.endsWith(suffix)
-        }),
+            return !path.endsWith(suffix);
+          }),
       template({
         ...strings,
         ...options,
