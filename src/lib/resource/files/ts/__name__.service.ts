@@ -5,13 +5,13 @@ import { Create<%= singular(classify(name)) %>Input } from './dto/create-<%= sin
 import { Update<%= singular(classify(name)) %>Input } from './dto/update-<%= singular(name) %>.input';<% } %>
 <% if (crud === 'yes' || crud === 'prisma')  { %>
 import { PrismaService } from '<%= prismaSource %>prisma.service';
-import { Prisma, <%= classify(name) %> } from '@prisma/client';
+import { <%= classify(name) %> } from '@prisma/client';
 <% } %>
 @Injectable()
 export class <%= classify(name) %>Service {<% if (crud  === 'prisma') { %>
       constructor(private readonly prisma: PrismaService) {}
     
-      create(data: Prisma.<%= classify(name) %>CreateInput): Promise<<%= classify(name) %>> {
+      create(data:Create<%= singular(classify(name)) %>Dto ): Promise<<%= classify(name) %>> {
         return this.prisma.<%= lowercased(name) %>.create({
           data,
         });
@@ -27,7 +27,7 @@ export class <%= classify(name) %>Service {<% if (crud  === 'prisma') { %>
         });
       }
     
-      update(id: number, data: Prisma.<%= classify(name) %>UpdateInput): Promise<<%= classify(name) %>> {
+      update(id: number, data: Update<%= singular(classify(name)) %>Dto): Promise<<%= classify(name) %>> {
         return this.prisma.<%= lowercased(name) %>.update({
           where: { id },
           data,

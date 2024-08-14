@@ -101,11 +101,35 @@
     },
     "prismaSource": {
       "type": "string",
-      "description": "Specify the path to the Prisma resource (e.g., 'src/prisma/').",
-      "default": "src/prisma/",
-      "x-prompt": "You selected Prisma CRUD. Please specify the path to the Prisma resource (default is 'src/prisma/')."
+      "description": "Specify the path to the Prisma resource (e.g., 'src/api/prisma/').",
+      "default": "src/api/prisma/",
+      "x-showIf": {
+        "crud": "prisma"
+      },
+      "x-prompt": "Please specify the path to the Prisma resource (default is 'src/api/prisma/')."
+    },
+    "dtoValidation":{
+      "type": "string",
+      "description": "When true, CRUD entry points are generated.",
+      "default": "prisma",
+      "enum": [
+        "class-validator",
+        "zod",
+        "no"
+      ],
+      "x-showIf": {
+        "crud": "prisma"
+      },
+      "x-prompt": {
+        "message": "Would you like to generate DTO validation?",
+        "default": "class-validator",
+        "items": [
+          { "value": "class-validator", "label": "Class Validator" },
+          { "value":"zod", "label": "Zod"},
+          { "value": "no", "label": "No DTO validation" }
+        ]
+      }
     }
-    
   },
   "required": ["name"]
 }

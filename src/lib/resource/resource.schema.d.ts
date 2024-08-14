@@ -59,4 +59,8 @@ export interface ResourceOptions {
    * When true, "@nestjs/swagger" dependency is installed in the project.
    */
   isSwaggerInstalled?: boolean;
+  /**
+   * validation method
+   */
+  dtoValidation?: 'class-validator' | 'zod' | 'no';
 }
