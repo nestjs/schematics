@@ -9,7 +9,7 @@ import { Update<%= singular(classify(name)) %>Dto } from './dto/update-<%= singu
 
 <% if (type === 'rest') { %>@Controller('<%= dasherize(name) %>')<% } else { %>@Controller()<% } %>
 export class <%= classify(name) %>Controller {
-  constructor(private readonly <%= lowercased(name) %>Service: <%= classify(name) %>Service) {}<% if (type === 'rest' && crud) { %>
+  constructor(private readonly <%= lowercased(name) %>Service: <%= classify(name) %>Service) {}<% if (type === 'rest' && (crud === 'yes' || crud === 'prisma')) { %>
 
   @Post()
   create(@Body() input: Create<%= singular(classify(name)) %>Dto) {
@@ -34,7 +34,7 @@ export class <%= classify(name) %>Controller {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.<%= lowercased(name) %>Service.remove(+id);
-  }<% } else if (type === 'microservice' && crud) { %>
+  }<% } else if (type === 'microservice' && crud === 'yes' || crud === 'prisma') { %>
 
   @MessagePattern('create<%= singular(classify(name)) %>')
   create(@Payload() create<%= singular(classify(name)) %>Dto: Create<%= singular(classify(name)) %>Dto) {

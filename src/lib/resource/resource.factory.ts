@@ -30,14 +30,27 @@ import { mergeSourceRoot } from '../../utils/source-root.helpers';
 import { ResourceOptions } from './resource.schema';
 import { prismaGenerateFields } from './prisma.utils';
 
+import { confirm } from '@inquirer/prompts';
+
 export function main(options: ResourceOptions): Rule {
-  options = transform(options);
-  const prismaOptions = prismaGenerateFields(
-    capitalize(options.name),
-    options.dtoValidation,
-  );
-  options = { ...options, ...prismaOptions };
-  return (tree: Tree, context: SchematicContext) => {
+  return async (tree: Tree, context: SchematicContext) => {
+    if (options.crud === 'prisma') {
+      const questions = [
+        {
+          message: 'What is your name?',
+        },
+      ];
+
+      const potatoLove = await confirm({ message: 'Do you like potatoes?' });
+      console.log(potatoLove);
+    }
+    options = transform(options);
+    const prismaOptions = prismaGenerateFields(
+      capitalize(options.name),
+      options.dtoValidation,
+    );
+    options = { ...options, ...prismaOptions };
+
     return branchAndMerge(
       chain([
         addMappedTypesDependencyIfApplies(options),
@@ -45,7 +58,7 @@ export function main(options: ResourceOptions): Rule {
         addDeclarationToModule(options),
         mergeWith(generate(options)),
       ]),
-    )(tree, context);
+    )(tree, context) as Rule;
   };
 }
 

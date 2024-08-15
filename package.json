@@ -1,6 +1,6 @@
 {
   "name": "@mahdi_komaiha/nest-schematics-prisma",
-  "version": "10.1.54",
+  "version": "10.1.60",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "main": "dist/index.js",
   "files": [
@@ -44,7 +44,9 @@
   "dependencies": {
     "@angular-devkit/core": "17.3.8",
     "@angular-devkit/schematics": "17.3.8",
+    "@inquirer/prompts": "^5.3.8",
     "comment-json": "4.2.3",
+    "inquirer": "^10.1.8",
     "jsonc-parser": "3.3.1",
     "pluralize": "8.0.0",
     "ts-morph": "^23.0.0"
@@ -52,6 +54,7 @@
   "devDependencies": {
     "@commitlint/cli": "19.4.0",
     "@commitlint/config-angular": "19.3.0",
+    "@types/inquirer": "^9.0.7",
     "@types/jest": "29.5.12",
     "@types/node": "20.14.15",
     "@typescript-eslint/eslint-plugin": "8.0.1",
