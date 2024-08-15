@@ -50,6 +50,10 @@ export const prismaGenerateFields = (
         const isArray = prop.getTypeAtLocation(interfaceALias!).isArray();
         const isEmail = name.toLowerCase().includes('email');
         const enumValue = type.split('$Enums.')?.[1];
+        const isDecimal = type.toLowerCase().includes('decimal');
+        const isJson = type.toLowerCase().includes('jsonobject');
+        if (isJson) type = 'any';
+        if (isDecimal) type = 'number';
         type = enumValue || type;
         if (isArray) type = type.replace(/\[\]$/, '');
 

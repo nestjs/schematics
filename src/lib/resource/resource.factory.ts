@@ -30,23 +30,33 @@ import { mergeSourceRoot } from '../../utils/source-root.helpers';
 import { ResourceOptions } from './resource.schema';
 import { prismaGenerateFields } from './prisma.utils';
 
-import { confirm } from '@inquirer/prompts';
+import { input, select } from '@inquirer/prompts';
 
 export function main(options: ResourceOptions): Rule {
   return async (tree: Tree, context: SchematicContext) => {
     if (options.crud === 'prisma') {
-      const questions = [
-        {
-          message: 'What is your name?',
-        },
-      ];
+      const prismaSource = await input({
+        message:
+          'Please specify the path to the Prisma resource (default is src/api/prisma/).',
+        default: 'src/api/prisma/',
+      });
 
-      const potatoLove = await confirm({ message: 'Do you like potatoes?' });
-      console.log(potatoLove);
+      const dtoValidation = await select({
+        message: 'Would you like to generate DTO validation?',
+        default: 'class-validator',
+        choices: [
+          { value: 'class-validator', name: 'Class Validator' },
+          { value: 'zod', name: 'Zod' },
+          { value: 'no', name: 'No DTO validation' },
+        ],
+      });
+
+      options.prismaSource = prismaSource;
+      options.dtoValidation = dtoValidation as 'class-validator' | 'zod' | 'no';
     }
     options = transform(options);
     const prismaOptions = prismaGenerateFields(
-      capitalize(options.name),
+      classify(options.name),
       options.dtoValidation,
     );
     options = { ...options, ...prismaOptions };

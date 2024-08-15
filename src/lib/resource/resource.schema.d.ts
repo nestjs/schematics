@@ -59,6 +59,12 @@ export interface ResourceOptions {
    * When true, "@nestjs/swagger" dependency is installed in the project.
    */
   isSwaggerInstalled?: boolean;
+
+  /**
+   * The path to the Prisma file module.
+   */
+  prismaSource?: string;
+
   /**
    * validation method
    */
