@@ -22,7 +22,6 @@ This package was created by **Mahdi Al Komaiha** based on the original package m
 
 - **Prisma Support**: Seamless integration of Prisma for handling database operations.
 - **Validation**: Choose between Zod or class-transformer for validating your entities.
-- **Customizable**: Works with Nest CLI via the `nest-cli.json` file or using the `--collection` flag.
 
 ## Installation
 
@@ -32,19 +31,31 @@ $ npm install -g nest-schematics-prisma
 
 ## Usage
 
-In your `nest-cli.json`, set the `collection` attribute to `nest-schematics-prisma`:
+- install Prisma and have an already made schema
+- create the model that you want to generate prisma crud for using
+  `npx prisma generate`
+- create a service for prisma that is called PrismaService (needed for importing inside the service)
+- In your `nest-cli.json`, set the `collection` attribute to `nest-schematics-prisma`:
 
-````json
+```json
 {
   "collection": "nest-schematics-prisma"
 }
- ```
+```
+
 Alternatively, use the --collection flag when running the Nest CLI commands:
- ```bash
- $ nest g resource user --collection nest-schematics-prisma
- ```
+
+```bash
+$ nest g resource user --collection nest-schematics-prisma
+```
+
+- follow the questions to generate the crud you want!
 
 for the full documentation on the original schematics go to the [official documentation](https://docs.nestjs.com/).
+
+### Notes
+
+Currently only Rest Api is supported, graphql support is coming next stay tuned!
 
 ## Stay in touch
 
@@ -54,4 +65,3 @@ for the full documentation on the original schematics go to the [official docume
 ## License
 
 Nest is [MIT licensed](LICENSE).
-````
