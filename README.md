@@ -2,37 +2,56 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/schematics.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/schematics.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/schematics.svg" alt="NPM Downloads" /></a>
-  <a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+
+<p align="center">
+<a href="https://www.npmjs.com/package/nest-schematics-prisma"><img src="https://img.shields.io/npm/v/nest-schematics-prisma.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/package/nest-schematics-prisma"><img src="https://img.shields.io/npm/l/nest-schematics-prisma.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/package/nest-schematics-prisma"><img src="https://img.shields.io/npm/dm/nest-schematics-prisma.svg" alt="NPM Downloads" /></a>
+<a href="https://coveralls.io/github/mahdi-ko/nest-schematics-prisma?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/mahdi-ko/nest-schematics-prisma/badge.svg?branch=master#9" alt="Coverage" /></a>
 <a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
 
 ## Description
 
-The Nest CLI is a command-line interface tool that helps you to initialize, develop, and maintain your Nest applications. It assists in multiple ways, including scaffolding the project, serving it in development mode, and building and bundling the application for production distribution. It embodies best-practice architectural patterns to encourage well-structured apps. Read more [here](https://docs.nestjs.com/cli/overview).
+`nest-schematics-prisma` extends the NestJS CLI with support for Prisma, adding CRUD operations and validation using either [Zod](https://github.com/colinhacks/zod) or [class-transformer](https://github.com/typestack/class-transformer). This package simplifies the setup of Prisma in NestJS projects and provides robust validation options out of the box.
+
+This package was created by **Mahdi Al Komaiha** based on the original package made by Nest team and tested by **Abed Al Ghani**.
+
+## Features
+
+- **Prisma Support**: Seamless integration of Prisma for handling database operations.
+- **Validation**: Choose between Zod or class-transformer for validating your entities.
+- **Customizable**: Works with Nest CLI via the `nest-cli.json` file or using the `--collection` flag.
 
 ## Installation
 
 ```bash
-$ npm install -g @nestjs/schematics
+$ npm install -g nest-schematics-prisma
 ```
 
 ## Usage
 
-Learn more in the [official documentation](https://docs.nestjs.com/).
+In your `nest-cli.json`, set the `collection` attribute to `nest-schematics-prisma`:
+
+````json
+{
+  "collection": "nest-schematics-prisma"
+}
+ ```
+Alternatively, use the --collection flag when running the Nest CLI commands:
+ ```bash
+ $ nest g resource user --collection nest-schematics-prisma
+ ```
+
+for the full documentation on the original schematics go to the [official documentation](https://docs.nestjs.com/).
 
 ## Stay in touch
 
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- GitHub - [nest-schematics-prisma](https://github.com/mahdi-ko/nest-schematics-prisma)
+- NPM - [nest-schematics-prisma](https://www.npmjs.com/package/nest-schematics-prisma)
 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+````
