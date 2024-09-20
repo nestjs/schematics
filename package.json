@@ -1,6 +1,6 @@
 {
-  "name": "@mahdi_komaiha/nest-schematics-prisma",
-  "version": "0.1.1",
+  "name": "nest-schematics-prisma",
+  "version": "1.0.0",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "main": "dist/index.js",
   "files": [
