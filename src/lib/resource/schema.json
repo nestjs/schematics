@@ -82,12 +82,21 @@
       "default": false
     },
     "crud": {
-      "type": "boolean",
+      "type": "string",
       "description": "When true, CRUD entry points are generated.",
-      "default": true,
+      "default": "prisma",
+      "enum": [
+        "prisma",
+        "yes",
+        "no"
+      ],
       "x-prompt": {
         "message": "Would you like to generate CRUD entry points?",
-        "type": "confirmation"
+        "items": [
+          {"value":"prisma", "label": "Prisma CRUD"},
+          { "value": "yes", "label": "Default empty CRUD" },
+          { "value": "no", "label": "No CRUD" }
+        ]
       }
     }
   },

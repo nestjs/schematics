@@ -50,7 +50,7 @@ export interface ResourceOptions {
   /**
    * When true, CRUD entry points are generated.
    */
-  crud?: boolean;
+  crud?: string;
   /**
    * Flag to indicate if a directory is created.
    */
@@ -59,4 +59,14 @@ export interface ResourceOptions {
    * When true, "@nestjs/swagger" dependency is installed in the project.
    */
   isSwaggerInstalled?: boolean;
+
+  /**
+   * The path to the Prisma file module.
+   */
+  prismaSource?: string;
+
+  /**
+   * validation method
+   */
+  dtoValidation?: 'class-validator' | 'zod' | 'no';
 }

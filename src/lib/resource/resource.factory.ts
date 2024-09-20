@@ -1,5 +1,5 @@
 import { join, Path, strings } from '@angular-devkit/core';
-import { classify } from '@angular-devkit/core/src/utils/strings';
+import { capitalize, classify } from '@angular-devkit/core/src/utils/strings';
 import {
   apply,
   branchAndMerge,
@@ -28,11 +28,39 @@ import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import { Location, NameParser } from '../../utils/name.parser';
 import { mergeSourceRoot } from '../../utils/source-root.helpers';
 import { ResourceOptions } from './resource.schema';
+import { prismaGenerateFields } from './prisma.utils';
+
+import { input, select } from '@inquirer/prompts';
 
 export function main(options: ResourceOptions): Rule {
-  options = transform(options);
+  return async (tree: Tree, context: SchematicContext) => {
+    if (options.crud === 'prisma') {
+      const prismaSource = await input({
+        message:
+          'Please specify the path to the Prisma resource (default is src/api/prisma/).',
+        default: 'src/api/prisma/',
+      });
 
-  return (tree: Tree, context: SchematicContext) => {
+      const dtoValidation = await select({
+        message: 'Would you like to generate DTO validation?',
+        default: 'class-validator',
+        choices: [
+          { value: 'class-validator', name: 'Class Validator' },
+          { value: 'zod', name: 'Zod' },
+          { value: 'no', name: 'No DTO validation' },
+        ],
+      });
+
+      options.prismaSource = prismaSource;
+      options.dtoValidation = dtoValidation as 'class-validator' | 'zod' | 'no';
+    }
+    options = transform(options);
+    const prismaOptions = prismaGenerateFields(
+      classify(options.name),
+      options.dtoValidation,
+    );
+    options = { ...options, ...prismaOptions };
+
     return branchAndMerge(
       chain([
         addMappedTypesDependencyIfApplies(options),
@@ -40,7 +68,7 @@ export function main(options: ResourceOptions): Rule {
         addDeclarationToModule(options),
         mergeWith(generate(options)),
       ]),
-    )(tree, context);
+    )(tree, context) as Rule;
   };
 }
 
@@ -76,18 +104,19 @@ function generate(options: ResourceOptions): Source {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
       filter((path) => {
+        const possibleCrud = ['yes', 'prisma'];
         if (path.endsWith('.dto.ts')) {
           return (
             options.type !== 'graphql-code-first' &&
             options.type !== 'graphql-schema-first' &&
-            options.crud
+            possibleCrud.includes(options.crud)
           );
         }
         if (path.endsWith('.input.ts')) {
           return (
             (options.type === 'graphql-code-first' ||
               options.type === 'graphql-schema-first') &&
-            options.crud
+            possibleCrud.includes(options.crud)
           );
         }
         if (
@@ -100,7 +129,10 @@ function generate(options: ResourceOptions): Source {
           );
         }
         if (path.endsWith('.graphql')) {
-          return options.type === 'graphql-schema-first' && options.crud;
+          return (
+            options.type === 'graphql-schema-first' &&
+            possibleCrud.includes(options.crud)
+          );
         }
         if (
           path.endsWith('controller.ts') ||
@@ -108,23 +140,26 @@ function generate(options: ResourceOptions): Source {
         ) {
           return options.type === 'microservice' || options.type === 'rest';
         }
-        if (path.endsWith('.gateway.ts') || path.endsWith('.gateway.__specFileSuffix__.ts')) {
+        if (
+          path.endsWith('.gateway.ts') ||
+          path.endsWith('.gateway.__specFileSuffix__.ts')
+        ) {
           return options.type === 'ws';
         }
         if (path.includes('@ent')) {
           // Entity class file workaround
           // When an invalid glob path for entities has been specified (on the application part)
           // TypeORM was trying to load a template class
-          return options.crud;
+          return possibleCrud.includes(options.crud);
         }
         return true;
       }),
-      options.spec 
-        ? noop() 
+      options.spec
+        ? noop()
         : filter((path) => {
             const suffix = `.__specFileSuffix__.ts`;
-            return !path.endsWith(suffix)
-        }),
+            return !path.endsWith(suffix);
+          }),
       template({
         ...strings,
         ...options,

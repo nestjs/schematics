@@ -1,11 +1,11 @@
-import { WebSocketGateway<% if (crud) { %>, SubscribeMessage, MessageBody<% } %> } from '@nestjs/websockets';
-import { <%= classify(name) %>Service } from './<%= name %>.service';<% if (crud) { %>
+import { WebSocketGateway<% if ((crud === 'yes' || crud === 'prisma')) { %>, SubscribeMessage, MessageBody<% } %> } from '@nestjs/websockets';
+import { <%= classify(name) %>Service } from './<%= name %>.service';<% if ((crud === 'yes' || crud === 'prisma')) { %>
 import { Create<%= singular(classify(name)) %>Dto } from './dto/create-<%= singular(name) %>.dto';
 import { Update<%= singular(classify(name)) %>Dto } from './dto/update-<%= singular(name) %>.dto';<% } %>
 
 @WebSocketGateway()
 export class <%= classify(name) %>Gateway {
-  constructor(private readonly <%= lowercased(name) %>Service: <%= classify(name) %>Service) {}<% if (crud) { %>
+  constructor(private readonly <%= lowercased(name) %>Service: <%= classify(name) %>Service) {}<% if ((crud === 'yes' || crud === 'prisma')) { %>
 
   @SubscribeMessage('create<%= singular(classify(name)) %>')
   create(@MessageBody() create<%= singular(classify(name)) %>Dto: Create<%= singular(classify(name)) %>Dto) {

@@ -1,19 +1,19 @@
-<% if (crud && type === 'rest') { %>import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';<%
-} else if (crud && type === 'microservice') { %>import { Controller } from '@nestjs/common';
+<% if ((crud === 'yes' || crud === 'prisma') && type === 'rest') { %>import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';<%
+} else if ((crud === 'yes' || crud === 'prisma') && type === 'microservice') { %>import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';<%
 } else { %>import { Controller } from '@nestjs/common';<%
 } %>
-import { <%= classify(name) %>Service } from './<%= name %>.service';<% if (crud) { %>
+import { <%= classify(name) %>Service } from './<%= name %>.service';<% if ((crud === 'yes' || crud === 'prisma')) { %>
 import { Create<%= singular(classify(name)) %>Dto } from './dto/create-<%= singular(name) %>.dto';
 import { Update<%= singular(classify(name)) %>Dto } from './dto/update-<%= singular(name) %>.dto';<% } %>
 
 <% if (type === 'rest') { %>@Controller('<%= dasherize(name) %>')<% } else { %>@Controller()<% } %>
 export class <%= classify(name) %>Controller {
-  constructor(private readonly <%= lowercased(name) %>Service: <%= classify(name) %>Service) {}<% if (type === 'rest' && crud) { %>
+  constructor(private readonly <%= lowercased(name) %>Service: <%= classify(name) %>Service) {}<% if (type === 'rest' && (crud === 'yes' || crud === 'prisma')) { %>
 
   @Post()
-  create(@Body() create<%= singular(classify(name)) %>Dto: Create<%= singular(classify(name)) %>Dto) {
-    return this.<%= lowercased(name) %>Service.create(create<%= singular(classify(name)) %>Dto);
+  create(@Body() input: Create<%= singular(classify(name)) %>Dto) {
+    return this.<%= lowercased(name) %>Service.create(input);
   }
 
   @Get()
@@ -27,14 +27,14 @@ export class <%= classify(name) %>Controller {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() update<%= singular(classify(name)) %>Dto: Update<%= singular(classify(name)) %>Dto) {
-    return this.<%= lowercased(name) %>Service.update(+id, update<%= singular(classify(name)) %>Dto);
+  update(@Param('id') id: string, @Body() input: Update<%= singular(classify(name)) %>Dto) {
+    return this.<%= lowercased(name) %>Service.update(+id, input);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.<%= lowercased(name) %>Service.remove(+id);
-  }<% } else if (type === 'microservice' && crud) { %>
+  }<% } else if (type === 'microservice' && crud === 'yes' || crud === 'prisma') { %>
 
   @MessagePattern('create<%= singular(classify(name)) %>')
   create(@Payload() create<%= singular(classify(name)) %>Dto: Create<%= singular(classify(name)) %>Dto) {
@@ -52,8 +52,8 @@ export class <%= classify(name) %>Controller {
   }
 
   @MessagePattern('update<%= singular(classify(name)) %>')
-  update(@Payload() update<%= singular(classify(name)) %>Dto: Update<%= singular(classify(name)) %>Dto) {
-    return this.<%= lowercased(name) %>Service.update(update<%= singular(classify(name)) %>Dto.id, update<%= singular(classify(name)) %>Dto);
+  update(@Payload() input: Update<%= singular(classify(name)) %>Dto) {
+    return this.<%= lowercased(name) %>Service.update(input.id, input);
   }
 
   @MessagePattern('remove<%= singular(classify(name)) %>')
