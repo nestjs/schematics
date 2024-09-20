@@ -28,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nestjs/schematics.git"
+    "url": "git+https://github.com/mahdi-ko/nest-schematics-prisma.git"
   },
   "contributors": [
     "ThomRick",
@@ -38,9 +38,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nestjs/schematics/issues"
+    "url": "https://github.com/mahdi-ko/nest-schematics-prisma/issues"
   },
-  "homepage": "https://github.com/nestjs/schematics#readme",
+  "homepage": "https://github.com/mahdi-ko/nest-schematics-prisma#readme",
   "dependencies": {
     "@angular-devkit/core": "17.3.8",
     "@angular-devkit/schematics": "17.3.8",
