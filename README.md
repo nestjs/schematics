@@ -1,22 +1,18 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+<img src="./assets/hero.png" width="100%" alt="Nest Logo" />
 
-<p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+<p align="center">An innovative version of <a href="https://www.npmjs.com/package/@nestjs/schematics">@nestjs/schematics</a> built by <a href="https://github.com/mahdi-ko">Mahdi KO</a> and contributed by the <a href="https://poyesis.fr/en/team">Poyesis Team</a>.</p>
 
 <p align="center">
 <a href="https://www.npmjs.com/package/nest-schematics-prisma"><img src="https://img.shields.io/npm/v/nest-schematics-prisma.svg" alt="NPM Version" /></a>
 <a href="https://www.npmjs.com/package/nest-schematics-prisma"><img src="https://img.shields.io/npm/l/nest-schematics-prisma.svg" alt="Package License" /></a>
 <a href="https://www.npmjs.com/package/nest-schematics-prisma"><img src="https://img.shields.io/npm/dm/nest-schematics-prisma.svg" alt="NPM Downloads" /></a>
-<a href="https://coveralls.io/github/mahdi-ko/nest-schematics-prisma?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/mahdi-ko/nest-schematics-prisma/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
 </p>
 
 ## Description
 
 `nest-schematics-prisma` extends the NestJS CLI with support for Prisma, adding CRUD operations and validation using either [Zod](https://github.com/colinhacks/zod) or [class-transformer](https://github.com/typestack/class-transformer). This package simplifies the setup of Prisma in NestJS projects and provides robust validation options out of the box.
 
-This package was created by **Mahdi Al Komaiha** based on the original package made by Nest team and tested by **Abed Al Ghani**.
+This package was created by **Mahdi Al Komaiha** based on the original package made by Nest team and tested by [**Abed Al Ghani Shaaban**](https://github.com/abedshaaban).
 
 ## Features
 
@@ -26,7 +22,19 @@ This package was created by **Mahdi Al Komaiha** based on the original package m
 ## Installation
 
 ```bash
-$ npm install -g nest-schematics-prisma
+npm install --save-dev nest-schematics-prisma
+```
+
+```bash
+yarn add --dev nest-schematics-prisma
+```
+
+```bash
+pnpm add --save-dev nest-schematics-prisma
+```
+
+```bash
+bun add --dev nest-schematics-prisma
 ```
 
 ## Usage
@@ -46,7 +54,7 @@ $ npm install -g nest-schematics-prisma
 Alternatively, use the --collection flag when running the Nest CLI commands:
 
 ```bash
-$ nest g resource user --collection nest-schematics-prisma
+nest g resource user --collection nest-schematics-prisma
 ```
 
 - follow the questions to generate the crud you want!
