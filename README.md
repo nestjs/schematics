@@ -55,7 +55,8 @@ for the full documentation on the original schematics go to the [official docume
 
 ### Notes
 
-Currently only Rest Api is supported, graphql support is coming next stay tuned!
+this package is synced to the version 10.1.4 of [@nestjs/schematics](https://www.npmjs.com/package/@nestjs/schematics)
+Currently Prisma crud is only supported for Rest Api, graphql support is coming next stay tuned!
 
 ## Stay in touch
 
