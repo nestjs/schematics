@@ -14,7 +14,6 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import { isNullOrUndefined } from 'util';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import {
   DeclarationOptions,
@@ -24,6 +23,10 @@ import { ModuleFinder } from '../../utils/module.finder';
 import { Location, NameParser } from '../../utils/name.parser';
 import { mergeSourceRoot } from '../../utils/source-root.helpers';
 import { ServiceOptions } from './service.schema';
+
+function isNullOrUndefined(value: any): value is null | undefined {
+  return value === null || value === undefined;
+}
 
 export function main(options: ServiceOptions): Rule {
   options = transform(options);
@@ -63,8 +66,8 @@ function transform(source: ServiceOptions): ServiceOptions {
 function generate(options: ServiceOptions) {
   return (context: SchematicContext) =>
     apply(url(join('./files' as Path, options.language)), [
-      options.spec 
-        ? noop() 
+      options.spec
+        ? noop()
         : filter((path) => {
             const languageExtension = options.language || 'ts';
             const suffix = `.__specFileSuffix__.${languageExtension}`;
