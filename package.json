@@ -24,7 +24,7 @@
     "test:dev": "NODE_ENV=test npm run -s test -- --watchAll",
     "prerelease": "npm run build",
     "release": "release-it",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
