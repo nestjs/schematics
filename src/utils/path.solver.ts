@@ -1,6 +1,13 @@
 import { basename, dirname, Path, relative } from '@angular-devkit/core';
 
 export class PathSolver {
+  /**
+   * Computes the relative path between two paths.
+   *
+   * @param from - The source path.
+   * @param to - The target path.
+   * @returns The relative path between the two paths.
+   */
   public relative(from: Path, to: Path): string {
     const placeholder = '/placeholder';
     const relativeDir = relative(

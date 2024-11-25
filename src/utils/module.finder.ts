@@ -10,6 +10,12 @@ export interface FindOptions {
 export class ModuleFinder {
   constructor(private tree: Tree) {}
 
+  /**
+   * Finds the module file in the given path.
+   *
+   * @param options - The options for finding the module, including the path.
+   * @returns The path to the module file, or null if not found.
+   */
   public find(options: FindOptions): Path | null {
     const generatedDirectoryPath: Path = options.path;
     const generatedDirectory: DirEntry = this.tree.getDir(
@@ -18,6 +24,12 @@ export class ModuleFinder {
     return this.findIn(generatedDirectory);
   }
 
+  /**
+   * Recursively searches for the module file in the given directory.
+   *
+   * @param directory - The directory to search in.
+   * @returns The path to the module file, or null if not found.
+   */
   private findIn(directory: DirEntry): Path | null {
     if (!directory) {
       return null;
