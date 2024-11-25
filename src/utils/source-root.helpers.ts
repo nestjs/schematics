@@ -7,11 +7,11 @@ export function isInRootDirectory(
   extraFiles: string[] = [],
 ): boolean {
   const files = ['nest-cli.json', 'nest.json'].concat(extraFiles || []);
-  return files.map(file => host.exists(file)).some(isPresent => isPresent);
+  return files.map((file) => host.exists(file)).some((isPresent) => isPresent);
 }
 
 export function mergeSourceRoot<
-  T extends { sourceRoot?: string; path?: string } = any
+  T extends { sourceRoot?: string; path?: string } = any,
 >(options: T): Rule {
   return (host: Tree) => {
     const isInRoot = isInRootDirectory(host, ['tsconfig.json', 'package.json']);

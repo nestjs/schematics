@@ -93,10 +93,10 @@ function addDeclarationToModule(options: AngularOptions): Rule {
         rootPath,
       },
     };
-    const declarationOptions = ({
+    const declarationOptions = {
       ...options,
       staticOptions,
-    } as unknown) as DeclarationOptions;
+    } as unknown as DeclarationOptions;
     tree.overwrite(
       options.module,
       declarator.declare(content, declarationOptions),
@@ -112,7 +112,7 @@ function addGlobalPrefix(): Rule {
     if (!fileRef) {
       return tree;
     }
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+
     const ts = require('ts-morph');
     const tsProject = new ts.Project({
       manipulationSettings: {
@@ -121,11 +121,13 @@ function addGlobalPrefix(): Rule {
     });
     const tsFile = tsProject.addSourceFileAtPath(mainFilePath);
     const bootstrapFunction = tsFile.getFunction('bootstrap');
-    const listenStatement = bootstrapFunction.getStatement(node =>
-      node.getText().includes('listen'),
+    const listenStatement = bootstrapFunction.getStatement(
+      (node: { getText: () => string | string[] }) =>
+        node.getText().includes('listen'),
     );
-    const setPrefixStatement = bootstrapFunction.getStatement(node =>
-      node.getText().includes('setGlobalPrefix'),
+    const setPrefixStatement = bootstrapFunction.getStatement(
+      (node: { getText: () => string | string[] }) =>
+        node.getText().includes('setGlobalPrefix'),
     );
     if (!listenStatement || setPrefixStatement) {
       return tree;
@@ -135,7 +137,7 @@ function addGlobalPrefix(): Rule {
       listenExprIndex,
       `app.setGlobalPrefix('api');`,
     );
-    tree.overwrite(mainFilePath, tsFile.getFullText());
+    tree.overwrite(mainFilePath, tsFile.getFullText() as string);
     return tree;
   };
 }

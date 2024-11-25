@@ -12,7 +12,6 @@ import {
   PropertyAssignment,
   ScriptTarget,
   SourceFile,
-  StringLiteral,
   SyntaxKind,
 } from 'typescript';
 import { DeclarationOptions } from './module.declarator';
@@ -45,9 +44,9 @@ export class MetadataManager {
           const name = prop.name;
           switch (name.kind) {
             case SyntaxKind.Identifier:
-              return (name as Identifier).getText(source) === metadata;
+              return name.getText(source) === metadata;
             case SyntaxKind.StringLiteral:
-              return (name as StringLiteral).text === metadata;
+              return name.text === metadata;
             default:
               return false;
           }
@@ -58,7 +57,7 @@ export class MetadataManager {
       symbol = staticOptions ? this.addBlankLines(symbol) : symbol;
     };
     if (matchingProperties.length === 0) {
-      const expr = moduleDecoratorNode as ObjectLiteralExpression;
+      const expr = moduleDecoratorNode;
       if (expr.properties.length === 0) {
         addBlankLinesIfDynamic();
         return this.insertMetadataToEmptyModuleDecorator(
@@ -115,7 +114,7 @@ export class MetadataManager {
 
   private getSourceNodes(sourceFile: SourceFile): Node[] {
     const nodes: Node[] = [sourceFile];
-    const result = [];
+    const result: Node[] = [];
     while (nodes.length > 0) {
       const node = nodes.shift();
       if (node) {
@@ -228,8 +227,8 @@ export class MetadataManager {
     }
     const spacing = 6;
     let options = JSON.stringify(staticOptions.value, null, spacing);
-    options = options.replace(/\"([^(\")"]+)\":/g, '$1:');
-    options = options.replace(/\"/g, `'`);
+    options = options.replace(/"([^(")"]+)":/g, '$1:');
+    options = options.replace(/"/g, `'`);
     options = options.slice(0, options.length - 1) + '    }';
     symbol += `.${staticOptions.name}(${options})`;
     return symbol;

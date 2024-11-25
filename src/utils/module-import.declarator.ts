@@ -15,7 +15,7 @@ export class ModuleImportDeclarator {
 
   private findImportsEndpoint(contentLines: string[]): number {
     const reversedContent = Array.from(contentLines).reverse();
-    const reverseImports = reversedContent.filter(line =>
+    const reverseImports = reversedContent.filter((line) =>
       line.match(/\} from ('|")/),
     );
     if (reverseImports.length <= 0) {
