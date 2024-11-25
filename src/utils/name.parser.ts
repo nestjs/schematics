@@ -11,6 +11,12 @@ export interface Location {
 }
 
 export class NameParser {
+  /**
+   * Parses the provided options to extract the name and path.
+   *
+   * @param options - The options containing the name and path.
+   * @returns An object containing the parsed name and normalized path.
+   */
   public parse(options: ParseOptions): Location {
     const nameWithoutPath: string = basename(options.name as Path);
     const namePath: string = dirname(

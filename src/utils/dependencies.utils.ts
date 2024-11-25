@@ -32,6 +32,13 @@ const ALL_DEPENDENCY_TYPE = [
   NodeDependencyType.Peer,
 ];
 
+/**
+ * Adds a dependency to the package.json file.
+ *
+ * @param tree - The file tree representing the project.
+ * @param dependency - The dependency to add, including type, name, and version.
+ * @param pkgJsonPath - The path to the package.json file. Defaults to PKG_JSON_PATH.
+ */
 export function addPackageJsonDependency(
   tree: Tree,
   dependency: NodeDependency,
@@ -46,6 +53,14 @@ export function addPackageJsonDependency(
   }
 }
 
+/**
+ * Retrieves the dependency information from the package.json file.
+ *
+ * @param tree - The file tree to read from.
+ * @param name - The name of the dependency to find.
+ * @param pkgJsonPath - The path to the package.json file (optional, defaults to PKG_JSON_PATH).
+ * @returns The dependency information if found, otherwise null.
+ */
 export function getPackageJsonDependency(
   tree: Tree,
   name: string,

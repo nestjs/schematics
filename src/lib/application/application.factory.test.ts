@@ -23,7 +23,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/project/.eslintrc.js',
+          '/project/eslint.config.mjs',
           '/project/.gitignore',
           '/project/.prettierrc',
           '/project/README.md',
@@ -58,7 +58,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          `/project.foo.bar/.eslintrc.js`,
+          `/project.foo.bar/eslint.config.mjs`,
           `/project.foo.bar/.gitignore`,
           `/project.foo.bar/.prettierrc`,
           `/project.foo.bar/README.md`,
@@ -93,7 +93,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/awesome-project/.eslintrc.js',
+          '/awesome-project/eslint.config.mjs',
           '/awesome-project/.gitignore',
           '/awesome-project/.prettierrc',
           '/awesome-project/README.md',
@@ -128,7 +128,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/_awesome-project/.eslintrc.js',
+          '/_awesome-project/eslint.config.mjs',
           '/_awesome-project/.gitignore',
           '/_awesome-project/.prettierrc',
           '/_awesome-project/README.md',
@@ -163,7 +163,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/@/package/.eslintrc.js',
+          '/@/package/eslint.config.mjs',
           '/@/package/.gitignore',
           '/@/package/.prettierrc',
           '/@/package/README.md',
@@ -198,7 +198,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/.eslintrc.js',
+          '/eslint.config.mjs',
           '/.gitignore',
           '/.prettierrc',
           '/README.md',
@@ -233,7 +233,7 @@ describe('Application Factory', () => {
           const files: string[] = tree.files;
           expect(files.sort()).toEqual(
             [
-              '/@scope/package/.eslintrc.js',
+              '/@scope/package/eslint.config.mjs',
               '/@scope/package/.gitignore',
               '/@scope/package/.prettierrc',
               '/@scope/package/README.md',
@@ -268,7 +268,7 @@ describe('Application Factory', () => {
           const files: string[] = tree.files;
           expect(files.sort()).toEqual(
             [
-              '/@-/package/.eslintrc.js',
+              '/@-/package/eslint.config.mjs',
               '/@-/package/.gitignore',
               '/@-/package/.prettierrc',
               '/@-/package/README.md',
@@ -307,7 +307,7 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/123/.eslintrc.js',
+        '/123/eslint.config.mjs',
         '/123/.gitignore',
         '/123/.prettierrc',
         '/123/README.md',
@@ -380,7 +380,7 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/app/.eslintrc.js',
+        '/app/eslint.config.mjs',
         '/app/.gitignore',
         '/app/.prettierrc',
         '/app/README.md',
@@ -480,7 +480,7 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/project/.eslintrc.js',
+        '/project/eslint.config.mjs',
         '/project/.gitignore',
         '/project/.prettierrc',
         '/project/README.md',
