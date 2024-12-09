@@ -16,7 +16,7 @@ import {
 } from '@angular-devkit/schematics';
 import { existsSync, readFileSync } from 'fs';
 import { parse, stringify } from 'comment-json';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { inPlaceSortByKeys, normalizeToKebabOrSnakeCase } from '../../utils';
 import {
   DEFAULT_APPS_PATH,
   DEFAULT_APP_NAME,
@@ -150,6 +150,8 @@ function updateTsConfig() {
         if (!tsconfig.compilerOptions.paths) {
           tsconfig.compilerOptions.paths = {};
         }
+
+        inPlaceSortByKeys(tsconfig.compilerOptions.paths);
       },
     );
   };
@@ -324,6 +326,8 @@ function addAppsToCliOptions(
           );
         }
         optionsFile.projects[projectName] = project;
+
+        inPlaceSortByKeys(optionsFile.projects);
       },
     );
   };
