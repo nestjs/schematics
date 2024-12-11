@@ -1,3 +1,4 @@
+import { EmptyTree, Tree } from '@angular-devkit/schematics';
 import {
   SchematicTestRunner,
   UnitTestTree,
@@ -79,5 +80,56 @@ describe('Library Factory', () => {
       '/libs/project/src/project.service.js',
       '/libs/project/src/project.service.spec.js',
     ]);
+  });
+
+  it('should sort library names in nest-cli.json, package.json and tsconfig.json', async () => {
+    const options: LibraryOptions[] = [
+      {
+        name: 'c',
+        language: 'ts',
+        prefix: 'app',
+      },
+      {
+        name: 'a',
+        language: 'ts',
+        prefix: 'app',
+      },
+      {
+        name: 'b',
+        language: 'ts',
+        prefix: 'app',
+      }
+    ];
+
+    let tree: Tree = new EmptyTree();
+    tree.create('/package.json', `{"name": "my-pacakge","version": "1.0.0","jest": {}}`);
+    tree.create('/tsconfig.json', `{compilerOptions: {}}`);
+
+
+    for (const o of options) {
+      tree = await runner.runSchematic('library', o, tree);
+    }
+
+    const packageJson = tree.readJson('/package.json');
+    const moduleNameMapper = packageJson['jest']['moduleNameMapper'];
+    expect(Object.keys(moduleNameMapper)).toEqual([
+      '^app/a(|/.*)$',
+      '^app/b(|/.*)$',
+      '^app/c(|/.*)$'
+    ]); // Sorted jest.moduleNameMapper by keys
+
+    const tsConfigJson = tree.readJson('/tsconfig.json');
+    const paths = tsConfigJson['compilerOptions']['paths'];
+    expect(Object.keys(paths)).toEqual([
+      'app/a',
+      'app/a/*',
+      'app/b',
+      'app/b/*',
+      'app/c',
+      'app/c/*'
+    ]); // Sorted compilerOptions.paths by keys
+
+    const config = tree.readJson('/nest-cli.json');
+    expect(Object.keys(config['projects'])).toEqual(['a', 'b', 'c']); // Sorted
   });
 });
