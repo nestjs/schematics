@@ -12,14 +12,28 @@ import {
   PropertyAssignment,
   ScriptTarget,
   SourceFile,
-  StringLiteral,
   SyntaxKind,
 } from 'typescript';
 import { DeclarationOptions } from './module.declarator';
 
+/**
+ * The `MetadataManager` class provides utilities for managing metadata entries
+ * within a `@Module` decorator in a TypeScript source file. It allows for the
+ * insertion of new metadata entries, merging symbols with static options, and
+ * handling various scenarios such as empty module decorators or existing metadata
+ * properties.
+ */
 export class MetadataManager {
   constructor(private content: string) {}
 
+  /**
+   * Inserts a new metadata entry into the `@Module` decorator.
+   *
+   * @param metadata - The metadata key to insert.
+   * @param symbol - The symbol to insert.
+   * @param staticOptions - The static options to insert.
+   * @returns The new content string.
+   */
   public insert(
     metadata: string,
     symbol: string,
@@ -45,9 +59,9 @@ export class MetadataManager {
           const name = prop.name;
           switch (name.kind) {
             case SyntaxKind.Identifier:
-              return (name as Identifier).getText(source) === metadata;
+              return name.getText(source) === metadata;
             case SyntaxKind.StringLiteral:
-              return (name as StringLiteral).text === metadata;
+              return name.text === metadata;
             default:
               return false;
           }
@@ -58,7 +72,7 @@ export class MetadataManager {
       symbol = staticOptions ? this.addBlankLines(symbol) : symbol;
     };
     if (matchingProperties.length === 0) {
-      const expr = moduleDecoratorNode as ObjectLiteralExpression;
+      const expr = moduleDecoratorNode;
       if (expr.properties.length === 0) {
         addBlankLinesIfDynamic();
         return this.insertMetadataToEmptyModuleDecorator(
@@ -85,6 +99,13 @@ export class MetadataManager {
     }
   }
 
+  /**
+   * Finds the first `@Module` decorator metadata in the source file.
+   *
+   * @param source - The source file to search.
+   * @param identifier - The identifier to match.
+   * @returns The first matching `ObjectLiteralExpression` or undefined.
+   */
   private findFirstDecoratorMetadata(
     source: SourceFile,
     identifier: string,
@@ -113,9 +134,12 @@ export class MetadataManager {
     }
   }
 
+  /**
+   * Returns an array of all nodes in the source file.
+   */
   private getSourceNodes(sourceFile: SourceFile): Node[] {
     const nodes: Node[] = [sourceFile];
-    const result = [];
+    const result: Node[] = [];
     while (nodes.length > 0) {
       const node = nodes.shift();
       if (node) {
@@ -128,6 +152,15 @@ export class MetadataManager {
     return result;
   }
 
+  /**
+   * Inserts a new metadata entry into an empty `@Module` decorator.
+   * This method is called when the `@Module` decorator has no properties.
+   * It inserts the metadata and symbol into the decorator.
+   * @param expr - The `@Module` decorator node.
+   * @param metadata - The metadata key to insert.
+   * @param symbol - The symbol to insert.
+   * @returns The new content string.
+   */
   private insertMetadataToEmptyModuleDecorator(
     expr: ObjectLiteralExpression,
     metadata: string,
@@ -144,6 +177,16 @@ export class MetadataManager {
     }, '');
   }
 
+  /**
+   * Inserts a new symbol into an existing metadata property in the `@Module` decorator.
+   * This method is called when the metadata property already exists in the decorator.
+   * It inserts the symbol into the existing metadata property.
+   * @param source - The source file.
+   * @param matchingProperties - The matching metadata properties.
+   * @param symbol - The symbol to insert.
+   * @param staticOptions - The static options to insert.
+   * @returns The new content string.
+   */
   private insertNewMetadataToDecorator(
     expr: ObjectLiteralExpression,
     source: SourceFile,
@@ -169,6 +212,16 @@ export class MetadataManager {
     }, '');
   }
 
+  /**
+   * Inserts a new symbol into an existing metadata property in the `@Module` decorator.
+   * This method is called when the metadata property already exists in the decorator.
+   * It inserts the symbol into the existing metadata property.
+   * @param source - The source file.
+   * @param matchingProperties - The matching metadata properties.
+   * @param symbol - The symbol to insert.
+   * @param staticOptions - The static options to insert.
+   * @returns The new content string.
+   */
   private insertSymbolToMetadata(
     source: SourceFile,
     matchingProperties: ObjectLiteralElement[],
@@ -219,6 +272,12 @@ export class MetadataManager {
     }, '');
   }
 
+  /**
+   * Merges a symbol with static options into a single string.
+   * @param symbol - The symbol to merge.
+   * @param staticOptions - The static options to merge.
+   * @returns The merged string.
+   */
   private mergeSymbolAndExpr(
     symbol: string,
     staticOptions?: DeclarationOptions['staticOptions'],
@@ -228,13 +287,16 @@ export class MetadataManager {
     }
     const spacing = 6;
     let options = JSON.stringify(staticOptions.value, null, spacing);
-    options = options.replace(/\"([^(\")"]+)\":/g, '$1:');
-    options = options.replace(/\"/g, `'`);
+    options = options.replace(/"([^(")"]+)":/g, '$1:');
+    options = options.replace(/"/g, `'`);
     options = options.slice(0, options.length - 1) + '    }';
     symbol += `.${staticOptions.name}(${options})`;
     return symbol;
   }
 
+  /**
+   * Adds blank lines around an expression.
+   */
   private addBlankLines(expr: string): string {
     return `\n    ${expr}\n  `;
   }
