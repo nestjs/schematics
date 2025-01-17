@@ -13,7 +13,7 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { parse } from 'jsonc-parser';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { inPlaceSortByKeys, normalizeToKebabOrSnakeCase } from '../../utils';
 import {
   DEFAULT_LANGUAGE,
   DEFAULT_LIB_PATH,
@@ -136,6 +136,8 @@ function updateJestConfig(
   const packageKeyRegex = '^' + packageKey + '(|/.*)$';
   const packageRoot = join('<rootDir>' as Path, distRoot);
   jestOptions.moduleNameMapper[packageKeyRegex] = join(packageRoot, '$1');
+
+  inPlaceSortByKeys(jestOptions.moduleNameMapper);
 }
 
 function updateNpmScripts(
@@ -183,6 +185,8 @@ function updateJestEndToEnd(options: LibraryOptions) {
         const packageRoot = '<rootDir>/../' + distRoot;
         jestOptions.moduleNameMapper[deepPackagePath] = packageRoot + '/$1';
         jestOptions.moduleNameMapper[packageKey] = packageRoot;
+
+        inPlaceSortByKeys(jestOptions.moduleNameMapper);
       },
     );
   };
@@ -240,6 +244,8 @@ function updateTsConfig(
           tsconfig.compilerOptions.paths[deepPackagePath] = [];
         }
         tsconfig.compilerOptions.paths[deepPackagePath].push(distRoot + '/*');
+
+        inPlaceSortByKeys(tsconfig.compilerOptions.paths);
       },
     );
   };
@@ -286,6 +292,8 @@ function addLibraryToCliOptions(
           );
         }
         optionsFile.projects[projectName] = project;
+
+        inPlaceSortByKeys(optionsFile.projects);
       },
     );
   };

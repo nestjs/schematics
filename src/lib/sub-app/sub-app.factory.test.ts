@@ -1,8 +1,10 @@
+import { EmptyTree, Tree } from '@angular-devkit/schematics';
 import {
   SchematicTestRunner,
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
+import { LibraryOptions } from '../library/library.schema';
 import { SubAppOptions } from './sub-app.schema';
 
 describe('SubApp Factory', () => {
@@ -125,5 +127,32 @@ describe('SubApp Factory', () => {
         '/apps/project/test/app.e2e-test.ts',
       ].sort(),
     );
+  });
+
+  it('should sort sub-app names in nest-cli.json', async () => {
+    const options: SubAppOptions[] = [
+      {
+        name: 'c',
+        language: 'ts',
+      },
+      {
+        name: 'a',
+        language: 'ts',
+      },
+      {
+        name: 'b',
+        language: 'ts',
+      }
+    ];
+
+    let tree: Tree = new EmptyTree();
+    tree.create('/nest-cli.json', `{"monorepo": true, "projects": {}}`);
+
+    for (const o of options) {
+      tree = await runner.runSchematic('sub-app', o, tree);
+    }
+
+    const config = tree.readJson('/nest-cli.json');
+    expect(Object.keys(config['projects'])).toEqual(['a', 'b', 'c']); // Sorted
   });
 });
