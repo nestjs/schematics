@@ -108,7 +108,10 @@ function generate(options: ResourceOptions): Source {
         ) {
           return options.type === 'microservice' || options.type === 'rest';
         }
-        if (path.endsWith('.gateway.ts') || path.endsWith('.gateway.__specFileSuffix__.ts')) {
+        if (
+          path.endsWith('.gateway.ts') ||
+          path.endsWith('.gateway.__specFileSuffix__.ts')
+        ) {
           return options.type === 'ws';
         }
         if (path.includes('@ent')) {
@@ -119,12 +122,12 @@ function generate(options: ResourceOptions): Source {
         }
         return true;
       }),
-      options.spec 
-        ? noop() 
+      options.spec
+        ? noop()
         : filter((path) => {
             const suffix = `.__specFileSuffix__.ts`;
-            return !path.endsWith(suffix)
-        }),
+            return !path.endsWith(suffix);
+          }),
       template({
         ...strings,
         ...options,
@@ -134,7 +137,7 @@ function generate(options: ResourceOptions): Source {
             classifiedName.charAt(0).toLowerCase() + classifiedName.slice(1)
           );
         },
-        singular: (name: string) => pluralize.singular(name),
+        singular: (name: string) => pluralize.singular(name) as string,
         ent: (name: string) => name + '.entity',
       }),
       move(options.path),
@@ -194,7 +197,7 @@ function addMappedTypesDependencyIfApplies(options: ResourceOptions): Rule {
         });
         context.addTask(new NodePackageInstallTask());
       }
-    } catch (err) {
+    } catch {
       // ignore if "package.json" not found
     }
   };

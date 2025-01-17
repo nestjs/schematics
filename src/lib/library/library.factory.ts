@@ -45,22 +45,25 @@ export function main(options: LibraryOptions): Rule {
 }
 
 function getDefaultLibraryPrefix(defaultLibraryPrefix = '@app') {
-  const fileSystemReader = new FileSystemReader(process.cwd())
+  const fileSystemReader = new FileSystemReader(process.cwd());
   const content: string | undefined = fileSystemReader.readSyncAnyOf([
     'nest-cli.json',
     '.nestcli.json',
     '.nest-cli.json',
     'nest.json',
   ]);
-  
+
   try {
     const nestJson = JSON.parse(content || '{}');
-    if (nestJson.hasOwnProperty('defaultLibraryPrefix')) {
-      return nestJson['defaultLibraryPrefix'];
+    if (
+      Object.prototype.hasOwnProperty.call(nestJson, 'defaultLibraryPrefix')
+    ) {
+      return nestJson['defaultLibraryPrefix'] as string;
     }
-  } catch (e) {
+  } catch {
+    return defaultLibraryPrefix;
   }
-  
+
   return defaultLibraryPrefix;
 }
 
@@ -72,7 +75,7 @@ function transform(options: LibraryOptions): LibraryOptions {
   if (!target.name) {
     throw new SchematicsException('Option (name) is required.');
   }
-  target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
+  target.language = target.language ? target.language : DEFAULT_LANGUAGE;
   target.name = normalizeToKebabOrSnakeCase(target.name);
   target.path =
     target.path !== undefined
@@ -96,7 +99,7 @@ function updatePackageJson(options: LibraryOptions) {
     return updateJsonFile(
       host,
       'package.json',
-      (packageJson: Record<string, any>) => {
+      (packageJson: Record<string, Record<string, any>>) => {
         updateNpmScripts(packageJson.scripts, options);
         updateJestConfig(packageJson.jest, options, packageKey, distRoot);
       },
@@ -153,9 +156,8 @@ function updateNpmScripts(
   ) {
     const defaultSourceRoot =
       options.rootDir !== undefined ? options.rootDir : DEFAULT_LIB_PATH;
-    scripts[
-      defaultFormatScriptName
-    ] = `prettier --write "src/**/*.ts" "test/**/*.ts" "${defaultSourceRoot}/**/*.ts"`;
+    scripts[defaultFormatScriptName] =
+      `prettier --write "src/**/*.ts" "test/**/*.ts" "${defaultSourceRoot}/**/*.ts"`;
   }
 }
 

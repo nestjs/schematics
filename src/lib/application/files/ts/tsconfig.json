@@ -12,10 +12,10 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": <%= strict %>,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
     "noImplicitAny": <%= strict %>,
     "strictBindCallApply": <%= strict %>,
-    "forceConsistentCasingInFileNames": <%= strict %>,
     "noFallthroughCasesInSwitch": <%= strict %>
   }
 }

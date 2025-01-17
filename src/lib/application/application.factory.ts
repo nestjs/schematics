@@ -35,13 +35,13 @@ export function main(options: ApplicationOptions): Rule {
 function transform(options: ApplicationOptions): ApplicationOptions {
   const target: ApplicationOptions = Object.assign({}, options);
 
-  target.author = !!target.author ? target.author : DEFAULT_AUTHOR;
-  target.description = !!target.description
+  target.author = target.author ? target.author : DEFAULT_AUTHOR;
+  target.description = target.description
     ? target.description
     : DEFAULT_DESCRIPTION;
-  target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
+  target.language = target.language ? target.language : DEFAULT_LANGUAGE;
   target.name = resolvePackageName(target.name.toString());
-  target.version = !!target.version ? target.version : DEFAULT_VERSION;
+  target.version = target.version ? target.version : DEFAULT_VERSION;
   target.specFileSuffix = normalizeToKebabOrSnakeCase(
     options.specFileSuffix || 'spec',
   );
@@ -50,10 +50,8 @@ function transform(options: ApplicationOptions): ApplicationOptions {
     !target.packageManager || target.packageManager === 'undefined'
       ? 'npm'
       : target.packageManager;
-  target.dependencies = !!target.dependencies ? target.dependencies : '';
-  target.devDependencies = !!target.devDependencies
-    ? target.devDependencies
-    : '';
+  target.dependencies = target.dependencies ? target.dependencies : '';
+  target.devDependencies = target.devDependencies ? target.devDependencies : '';
   return target;
 }
 
@@ -81,14 +79,16 @@ function resolvePackageName(path: string) {
 
 function generate(options: ApplicationOptions, path: string): Source {
   return apply(url(join('./files' as Path, options.language)), [
-    options.spec ? noop() : filter((path) => !path.endsWith('__specFileSuffix__.ts')),
+    options.spec
+      ? noop()
+      : filter((path) => !path.endsWith('__specFileSuffix__.ts')),
     options.spec
       ? noop()
       : filter((path) => {
-        const languageExtension = options.language || 'ts';
-        const suffix = `__specFileSuffix__.${languageExtension}`;
-        return !path.endsWith(suffix);
-      }),
+          const languageExtension = options.language || 'ts';
+          const suffix = `__specFileSuffix__.${languageExtension}`;
+          return !path.endsWith(suffix);
+        }),
     template({
       ...strings,
       ...options,
