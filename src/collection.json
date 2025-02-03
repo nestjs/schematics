@@ -77,6 +77,12 @@
       "schema": "./lib/pipe/schema.json",
       "aliases": ["pi"]
     },
+    "joi-validation-pipe": {
+      "factory": "./lib/joi-validation-pipe/joi-validation-pipe.factory#main",
+      "description": "Create a Nest joi validation pipe.",
+      "schema": "./lib/joi-validation-pipe/schema.json",
+      "aliases": ["joi-pi"]
+    },
     "provider": {
       "factory": "./lib/provider/provider.factory#main",
       "description": "Create a Nest provider.",
@@ -117,6 +123,12 @@
       "description": "Create a Nest resource.",
       "schema": "./lib/resource/schema.json",
       "aliases": ["res"]
+    },
+    "full-resource": {
+      "factory": "./lib/full-resource/full-resource.factory#main",
+      "description": "Create a Nest Full resource.",
+      "schema": "./lib/full-resource/schema.json",
+      "aliases": ["full-res"]
     }
   }
 }

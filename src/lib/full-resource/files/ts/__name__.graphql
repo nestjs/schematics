@@ -1,0 +1,24 @@
+type <%= singular(classify(name)) %> {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input Create<%= singular(classify(name)) %>Input {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input Update<%= singular(classify(name)) %>Input {
+  id: Int!
+}
+
+type Query {
+  <%= lowercased(classify(name)) %>: [<%= singular(classify(name)) %>]!
+  <%= lowercased(singular(classify(name))) %>(id: Int!): <%= singular(classify(name)) %>
+}
+
+type Mutation {
+  create<%= singular(classify(name)) %>(create<%= singular(classify(name)) %>Input: Create<%= singular(classify(name)) %>Input!): <%= singular(classify(name)) %>!
+  update<%= singular(classify(name)) %>(update<%= singular(classify(name)) %>Input: Update<%= singular(classify(name)) %>Input!): <%= singular(classify(name)) %>!
+  remove<%= singular(classify(name)) %>(id: Int!): <%= singular(classify(name)) %>
+}

@@ -1,5 +1,5 @@
 {
-  "name": "@nestjs/schematics",
+  "name": "extended-nestjs-schematics",
   "version": "11.0.0",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "main": "dist/index.js",
@@ -27,19 +27,16 @@
     "prepare": "husky"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nestjs/schematics.git"
+    "url": "https://github.com/AhmedAdelFahim/extented-nestjs-schematics"
   },
   "contributors": [
-    "ThomRick",
-    "Kamil Mysliwiec",
-    "John Biundo"
+    "Ahmed Adel"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nestjs/schematics/issues"
+    "url": "https://github.com/AhmedAdelFahim/extented-nestjs-schematics/issues"
   },
-  "homepage": "https://github.com/nestjs/schematics#readme",
+  "homepage": "https://github.com/AhmedAdelFahim/extented-nestjs-schematics#readme",
   "dependencies": {
     "@angular-devkit/core": "19.0.1",
     "@angular-devkit/schematics": "19.0.1",
