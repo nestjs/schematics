@@ -12,7 +12,7 @@
     "noImplicitThis": true,
     "noEmitOnError": true,
     "noImplicitAny": false,
-    "target": "ES2021",
+    "target": "ES2023",
     "types": [
       "node"
     ],
