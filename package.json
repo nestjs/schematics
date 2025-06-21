@@ -59,7 +59,7 @@
     "cpx2": "8.0.0",
     "eslint": "9.29.0",
     "eslint-config-prettier": "10.1.5",
-    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-import": "2.32.0",
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "16.2.0",
     "gulp": "5.0.1",
