@@ -13,7 +13,7 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { parse } from 'jsonc-parser';
-import { inPlaceSortByKeys, normalizeToKebabOrSnakeCase } from '../../utils';
+import { createModuleNameMapper, inPlaceSortByKeys, normalizeToKebabOrSnakeCase } from '../../utils';
 import {
   DEFAULT_LANGUAGE,
   DEFAULT_LIB_PATH,
@@ -133,9 +133,9 @@ function updateJestConfig(
   if (!jestOptions.moduleNameMapper) {
     jestOptions.moduleNameMapper = {};
   }
-  const packageKeyRegex = '^' + packageKey + '(|/.*)$';
   const packageRoot = join('<rootDir>' as Path, distRoot);
-  jestOptions.moduleNameMapper[packageKeyRegex] = join(packageRoot, '$1');
+  const newMapper = createModuleNameMapper(packageKey, packageRoot);
+  Object.assign(jestOptions.moduleNameMapper, newMapper);
 
   inPlaceSortByKeys(jestOptions.moduleNameMapper);
 }
@@ -181,10 +181,9 @@ function updateJestEndToEnd(options: LibraryOptions) {
         if (!jestOptions.moduleNameMapper) {
           jestOptions.moduleNameMapper = {};
         }
-        const deepPackagePath = packageKey + '/(.*)';
         const packageRoot = '<rootDir>/../' + distRoot;
-        jestOptions.moduleNameMapper[deepPackagePath] = packageRoot + '/$1';
-        jestOptions.moduleNameMapper[packageKey] = packageRoot;
+        const newMapper = createModuleNameMapper(packageKey, packageRoot);
+        Object.assign(jestOptions.moduleNameMapper, newMapper);
 
         inPlaceSortByKeys(jestOptions.moduleNameMapper);
       },
