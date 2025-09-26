@@ -104,7 +104,7 @@ describe('Library Factory', () => {
     let tree: Tree = new EmptyTree();
     tree.create('/package.json', `{"name": "my-pacakge","version": "1.0.0","jest": {}}`);
     tree.create('/tsconfig.json', `{compilerOptions: {}}`);
-
+    tree.create('/test/jest-e2e.json', `{}`);
 
     for (const o of options) {
       tree = await runner.runSchematic('library', o, tree);
@@ -117,6 +117,24 @@ describe('Library Factory', () => {
       '^app/b(|/.*)$',
       '^app/c(|/.*)$'
     ]); // Sorted jest.moduleNameMapper by keys
+    expect(moduleNameMapper).toEqual({
+      '^app/a(|/.*)$': '<rootDir>/libs/a/src/$1',
+      '^app/b(|/.*)$': '<rootDir>/libs/b/src/$1',
+      '^app/c(|/.*)$': '<rootDir>/libs/c/src/$1'
+    }); // Check package.json moduleNameMapper values
+
+    const jestE2EJson = tree.readJson('/test/jest-e2e.json');
+    const e2eModuleNameMapper = jestE2EJson['moduleNameMapper'];
+    expect(Object.keys(e2eModuleNameMapper)).toEqual([
+      '^app/a(|/.*)$',
+      '^app/b(|/.*)$',
+      '^app/c(|/.*)$'
+    ]); // Sorted jest-e2e.json moduleNameMapper by keys
+    expect(e2eModuleNameMapper).toEqual({
+      '^app/a(|/.*)$': '<rootDir>/../libs/a/src/$1',
+      '^app/b(|/.*)$': '<rootDir>/../libs/b/src/$1',
+      '^app/c(|/.*)$': '<rootDir>/../libs/c/src/$1'
+    }); // Check jest-e2e.json moduleNameMapper values with different root path
 
     const tsConfigJson = tree.readJson('/tsconfig.json');
     const paths = tsConfigJson['compilerOptions']['paths'];
