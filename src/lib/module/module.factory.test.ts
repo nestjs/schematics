@@ -4,8 +4,8 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { ApplicationOptions } from '../application/application.schema';
-import { ModuleOptions } from './module.schema';
+import type { ApplicationOptions } from '../application/application.schema.js';
+import type { ModuleOptions } from './module.schema.js';
 
 describe('Module Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

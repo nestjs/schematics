@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "declaration": false,
     "outDir": "../../dist/apps/<%= name %>"
   },

@@ -4,9 +4,9 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { ApplicationOptions } from '../application/application.schema';
-import { ModuleOptions } from '../module/module.schema';
-import { ProviderOptions } from './provider.schema';
+import type { ApplicationOptions } from '../application/application.schema.js';
+import type { ModuleOptions } from '../module/module.schema.js';
+import type { ProviderOptions } from './provider.schema.js';
 
 describe('Provider Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

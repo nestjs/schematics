@@ -29,6 +29,11 @@ export interface ApplicationOptions {
    */
   language?: string;
   /**
+   * Module type (CJS or ESM).
+   * @default "cjs"
+   */
+  type?: 'cjs' | 'esm';
+  /**
    * The used package manager.
    */
   packageManager?: 'npm' | 'yarn' | 'pnpm' | 'undefined';

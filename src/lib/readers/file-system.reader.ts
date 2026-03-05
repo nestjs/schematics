@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Reader } from './reader';
+import { Reader } from './reader.js';
 
 export class FileSystemReader implements Reader {
   constructor(private readonly directory: string) {}

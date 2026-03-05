@@ -18,16 +18,20 @@ import {
 } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import * as pluralize from 'pluralize';
-import { DeclarationOptions, ModuleDeclarator, ModuleFinder } from '../..';
+import {
+  DeclarationOptions,
+  ModuleDeclarator,
+  ModuleFinder,
+} from '../../index.js';
 import {
   addPackageJsonDependency,
   getPackageJsonDependency,
   NodeDependencyType,
-} from '../../utils/dependencies.utils';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
-import { Location, NameParser } from '../../utils/name.parser';
-import { mergeSourceRoot } from '../../utils/source-root.helpers';
-import { ResourceOptions } from './resource.schema';
+} from '../../utils/dependencies.utils.js';
+import { normalizeToKebabOrSnakeCase } from '../../utils/formatting.js';
+import { Location, NameParser } from '../../utils/name.parser.js';
+import { mergeSourceRoot } from '../../utils/source-root.helpers.js';
+import type { ResourceOptions } from './resource.schema.js';
 
 export function main(options: ResourceOptions): Rule {
   options = transform(options);

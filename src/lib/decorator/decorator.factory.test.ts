@@ -3,7 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { DecoratorOptions } from './decorator.schema';
+import type { DecoratorOptions } from './decorator.schema.js';
 
 describe('Decorator Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

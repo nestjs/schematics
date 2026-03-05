@@ -1,6 +1,6 @@
 import { normalize, Path } from '@angular-devkit/core';
-import { DeclarationOptions } from './module.declarator';
-import { PathSolver } from './path.solver';
+import { DeclarationOptions } from './module.declarator.js';
+import { PathSolver } from './path.solver.js';
 
 /**
  * The `ModuleImportDeclarator` class is responsible for declaring module imports

@@ -3,7 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { ApplicationOptions } from './application.schema';
+import type { ApplicationOptions } from './application.schema.js';
 
 describe('Application Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
@@ -497,5 +497,125 @@ describe('Application Factory', () => {
         '/project/test/jest-e2e.json',
       ].sort(),
     );
+  });
+  describe('when type is "esm"', () => {
+    it('should generate ESM project files with vitest', async () => {
+      const options: ApplicationOptions = {
+        name: 'project',
+        type: 'esm',
+      };
+      const tree: UnitTestTree = await runner.runSchematic(
+        'application',
+        options,
+      );
+
+      const files: string[] = tree.files;
+      expect(files.sort()).toEqual(
+        [
+          '/project/eslint.config.mjs',
+          '/project/.gitignore',
+          '/project/.prettierrc',
+          '/project/README.md',
+          '/project/nest-cli.json',
+          '/project/package.json',
+          '/project/tsconfig.build.json',
+          '/project/tsconfig.json',
+          '/project/src/app.controller.spec.ts',
+          '/project/src/app.controller.ts',
+          '/project/src/app.module.ts',
+          '/project/src/app.service.ts',
+          '/project/src/main.ts',
+          '/project/test/app.e2e-spec.ts',
+          '/project/vitest.config.ts',
+          '/project/vitest.config.e2e.ts',
+        ].sort(),
+      );
+    });
+
+    it('should generate ESM package.json with type module and vitest', async () => {
+      const options: ApplicationOptions = {
+        name: 'project',
+        type: 'esm',
+      };
+      const tree: UnitTestTree = await runner.runSchematic(
+        'application',
+        options,
+      );
+
+      const packageJson = JSON.parse(
+        tree.readContent('/project/package.json'),
+      );
+      expect(packageJson.type).toBe('module');
+      expect(packageJson.devDependencies).toHaveProperty('vitest');
+      expect(packageJson.devDependencies).not.toHaveProperty('unplugin-swc');
+      expect(packageJson.devDependencies).not.toHaveProperty('@swc/core');
+      expect(packageJson.devDependencies).not.toHaveProperty('jest');
+      expect(packageJson.devDependencies).not.toHaveProperty('ts-jest');
+      expect(packageJson.devDependencies).not.toHaveProperty('@types/jest');
+      expect(packageJson.devDependencies).not.toHaveProperty('ts-node');
+      expect(packageJson.devDependencies).not.toHaveProperty('tsconfig-paths');
+      expect(packageJson.scripts.test).toBe('vitest run');
+      expect(packageJson.scripts['test:e2e']).toBe(
+        'vitest run --config ./vitest.config.e2e.ts',
+      );
+    });
+
+    it('should generate ESM source files with .js import extensions', async () => {
+      const options: ApplicationOptions = {
+        name: 'project',
+        type: 'esm',
+      };
+      const tree: UnitTestTree = await runner.runSchematic(
+        'application',
+        options,
+      );
+
+      const mainContent = tree.readContent('/project/src/main.ts');
+      expect(mainContent).toContain("from './app.module.js'");
+
+      const moduleContent = tree.readContent('/project/src/app.module.ts');
+      expect(moduleContent).toContain("from './app.controller.js'");
+      expect(moduleContent).toContain("from './app.service.js'");
+
+      const controllerContent = tree.readContent(
+        '/project/src/app.controller.ts',
+      );
+      expect(controllerContent).toContain("from './app.service.js'");
+    });
+
+    it('should generate ESM eslint config with sourceType module', async () => {
+      const options: ApplicationOptions = {
+        name: 'project',
+        type: 'esm',
+      };
+      const tree: UnitTestTree = await runner.runSchematic(
+        'application',
+        options,
+      );
+
+      const eslintContent = tree.readContent('/project/eslint.config.mjs');
+      expect(eslintContent).toContain("sourceType: 'module'");
+      expect(eslintContent).not.toContain('globals.jest');
+    });
+
+    it('should default to CJS when type is not specified', async () => {
+      const options: ApplicationOptions = {
+        name: 'project',
+      };
+      const tree: UnitTestTree = await runner.runSchematic(
+        'application',
+        options,
+      );
+
+      const files: string[] = tree.files;
+      expect(files).toContain('/project/test/jest-e2e.json');
+      expect(files).not.toContain('/project/vitest.config.ts');
+
+      const packageJson = JSON.parse(
+        tree.readContent('/project/package.json'),
+      );
+      expect(packageJson.type).toBeUndefined();
+      expect(packageJson.devDependencies).toHaveProperty('jest');
+    });
   });
 });

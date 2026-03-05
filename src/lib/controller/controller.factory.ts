@@ -13,16 +13,16 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { normalizeToKebabOrSnakeCase } from '../../utils/formatting.js';
 import {
   DeclarationOptions,
   ModuleDeclarator,
-} from '../../utils/module.declarator';
-import { ModuleFinder } from '../../utils/module.finder';
-import { Location, NameParser } from '../../utils/name.parser';
-import { mergeSourceRoot } from '../../utils/source-root.helpers';
-import { DEFAULT_LANGUAGE } from '../defaults';
-import { ControllerOptions } from './controller.schema';
+} from '../../utils/module.declarator.js';
+import { ModuleFinder } from '../../utils/module.finder.js';
+import { Location, NameParser } from '../../utils/name.parser.js';
+import { mergeSourceRoot } from '../../utils/source-root.helpers.js';
+import { DEFAULT_LANGUAGE } from '../defaults.js';
+import type { ControllerOptions } from './controller.schema.js';
 
 const ELEMENT_METADATA = 'controllers';
 const ELEMENT_TYPE = 'controller';

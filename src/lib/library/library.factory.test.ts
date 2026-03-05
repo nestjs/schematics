@@ -4,7 +4,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { LibraryOptions } from './library.schema';
+import type { LibraryOptions } from './library.schema.js';
 
 describe('Library Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
@@ -82,6 +82,37 @@ describe('Library Factory', () => {
     ]);
   });
 
+  it('should set rspack as default builder in nest-cli.json', async () => {
+    const options: LibraryOptions = {
+      name: 'project',
+      prefix: 'app',
+    };
+    const tree: UnitTestTree = await runner.runSchematic('library', options);
+
+    const config = tree.readJson('/nest-cli.json');
+    expect(config['compilerOptions']['builder']).toEqual('rspack');
+  });
+
+  it('should not overwrite existing builder in nest-cli.json', async () => {
+    const options: LibraryOptions = {
+      name: 'project',
+      prefix: 'app',
+    };
+
+    let tree: Tree = new EmptyTree();
+    tree.create(
+      '/nest-cli.json',
+      JSON.stringify({ compilerOptions: { builder: 'webpack' } }),
+    );
+    tree.create('/package.json', `{"name": "test", "version": "1.0.0"}`);
+    tree.create('/tsconfig.json', `{"compilerOptions": {}}`);
+
+    tree = await runner.runSchematic('library', options, tree);
+
+    const config = tree.readJson('/nest-cli.json');
+    expect(config['compilerOptions']['builder']).toEqual('webpack');
+  });
+
   it('should sort library names in nest-cli.json, package.json and tsconfig.json', async () => {
     const options: LibraryOptions[] = [
       {
@@ -103,7 +134,7 @@ describe('Library Factory', () => {
 
     let tree: Tree = new EmptyTree();
     tree.create('/package.json', `{"name": "my-pacakge","version": "1.0.0","jest": {}}`);
-    tree.create('/tsconfig.json', `{compilerOptions: {}}`);
+    tree.create('/tsconfig.json', `{"compilerOptions": {}}`);
     tree.create('/test/jest-e2e.json', `{}`);
 
     for (const o of options) {
@@ -137,15 +168,14 @@ describe('Library Factory', () => {
     }); // Check jest-e2e.json moduleNameMapper values with different root path
 
     const tsConfigJson = tree.readJson('/tsconfig.json');
-    const paths = tsConfigJson['compilerOptions']['paths'];
-    expect(Object.keys(paths)).toEqual([
-      'app/a',
-      'app/a/*',
-      'app/b',
-      'app/b/*',
-      'app/c',
-      'app/c/*'
-    ]); // Sorted compilerOptions.paths by keys
+    const references = tsConfigJson['references'];
+    expect(references).toEqual([
+      { path: './libs/c/tsconfig.lib.json' },
+      { path: './libs/a/tsconfig.lib.json' },
+      { path: './libs/b/tsconfig.lib.json' },
+    ]); // References added in order of creation
+    expect(tsConfigJson['compilerOptions']['baseUrl']).toBeUndefined();
+    expect(tsConfigJson['compilerOptions']['paths']).toBeUndefined();
 
     const config = tree.readJson('/nest-cli.json');
     expect(Object.keys(config['projects'])).toEqual(['a', 'b', 'c']); // Sorted

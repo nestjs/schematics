@@ -3,7 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { GatewayOptions } from './gateway.schema';
+import type { GatewayOptions } from './gateway.schema.js';
 
 describe('Gateway Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

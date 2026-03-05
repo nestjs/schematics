@@ -8,7 +8,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import { Tree } from '@angular-devkit/schematics';
-import { JSONFile } from './json-file.util';
+import { JSONFile } from './json-file.util.js';
 
 const PKG_JSON_PATH = '/package.json';
 export enum NodeDependencyType {

@@ -3,7 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { ResolverOptions } from './resolver.schema';
+import type { ResolverOptions } from './resolver.schema.js';
 
 describe('Resolver Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

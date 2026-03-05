@@ -1,4 +1,4 @@
-import { normalizeToKebabOrSnakeCase } from '../../src/utils';
+import { normalizeToKebabOrSnakeCase } from '../../src/utils/index.js';
 
 describe('normalizeToKebabOrSnakeCase', () => {
   it('should convert camelCase to kebab-case', () => {

@@ -40,6 +40,20 @@
       "description": "Nest application version.",
       "default": "0.0.1"
     },
+    "type": {
+      "type": "string",
+      "description": "Nest application module type (CJS or ESM).",
+      "enum": ["cjs", "esm"],
+      "default": "cjs",
+      "x-prompt": {
+        "message": "Which module system would you like to use?",
+        "type": "list",
+        "items": [
+          { "value": "cjs", "label": "CJS (CommonJS)" },
+          { "value": "esm", "label": "ESM (ES Modules)" }
+        ]
+      }
+    },
     "language": {
       "type": "string",
       "description": "Nest application language."

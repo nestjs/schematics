@@ -11,14 +11,14 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { basename, parse } from 'path';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { normalizeToKebabOrSnakeCase } from '../../utils/formatting.js';
 import {
   DEFAULT_AUTHOR,
   DEFAULT_DESCRIPTION,
   DEFAULT_LANGUAGE,
   DEFAULT_VERSION,
-} from '../defaults';
-import { ApplicationOptions } from './application.schema';
+} from '../defaults.js';
+import type { ApplicationOptions } from './application.schema.js';
 
 export function main(options: ApplicationOptions): Rule {
   options.name = normalizeToKebabOrSnakeCase(options.name.toString());
@@ -42,6 +42,7 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   target.language = target.language ? target.language : DEFAULT_LANGUAGE;
   target.name = resolvePackageName(target.name.toString());
   target.version = target.version ? target.version : DEFAULT_VERSION;
+  target.type = target.type ?? 'cjs';
   target.specFileSuffix = normalizeToKebabOrSnakeCase(
     options.specFileSuffix || 'spec',
   );
@@ -78,7 +79,12 @@ function resolvePackageName(path: string) {
 }
 
 function generate(options: ApplicationOptions, path: string): Source {
-  return apply(url(join('./files' as Path, options.language)), [
+  const templateDir =
+    options.type === 'esm' && options.language === 'ts'
+      ? 'ts-esm'
+      : options.language;
+
+  return apply(url(join('./files' as Path, templateDir)), [
     options.spec
       ? noop()
       : filter((path) => !path.endsWith('__specFileSuffix__.ts')),

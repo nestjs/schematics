@@ -3,7 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { ResourceOptions } from './resource.schema';
+import type { ResourceOptions } from './resource.schema.js';
 
 describe('Resource Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

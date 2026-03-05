@@ -3,7 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { PipeOptions } from './pipe.schema';
+import type { PipeOptions } from './pipe.schema.js';
 
 describe('Pipe Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

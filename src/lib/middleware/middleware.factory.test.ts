@@ -3,7 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { MiddlewareOptions } from './middleware.schema';
+import type { MiddlewareOptions } from './middleware.schema.js';
 
 describe('Middleware Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

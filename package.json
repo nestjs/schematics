@@ -2,6 +2,7 @@
   "name": "@nestjs/schematics",
   "version": "11.0.9",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
+  "type": "module",
   "main": "dist/index.js",
   "files": [
     "dist/**/*"
@@ -11,8 +12,8 @@
   },
   "scripts": {
     "postbuild": "npm run copy:collection && npm run copy:lib",
-    "build": "rm -rf dist && tsc --project tsconfig.lib.json",
-    "clean": "gulp clean:src",
+    "build": "rm -rf dist && tsc -b tsconfig.lib.json",
+    "clean": "find src -type f \\( -name '*.js' -o -name '*.d.ts' -o -name '*.js.map' -o -name '*.d.ts.map' \\) -not -path '*/files/*' -not -path '*/workspace/*' -not -name '*.schema.d.ts' -delete",
     "copy:collection": "cpx src/collection.json dist && cpx 'src/lib/**/schema.json' dist/lib",
     "copy:lib": "cpx 'src/lib/**/{files,workspace}/**/*.*' dist/lib && cpx 'src/lib/**/{files,workspace}/**/.!(gitignore)' dist/lib",
     "lint": "eslint '{src,test}/**/*.ts' --fix",
@@ -20,8 +21,8 @@
     "publish:next": "npm publish --access public --tag next",
     "prepublish:npm": "npm run build",
     "publish:npm": "npm publish --access public",
-    "test": "npm run clean && NODE_ENV=test jest -w 1 --no-cache --config jest.json",
-    "test:dev": "NODE_ENV=test npm run -s test -- --watchAll",
+    "test": "npm run clean && NODE_ENV=test NODE_OPTIONS=\"--require tsx/cjs\" vitest run",
+    "test:dev": "NODE_ENV=test NODE_OPTIONS=\"--require tsx/cjs\" vitest",
     "prerelease": "npm run build",
     "release": "release-it",
     "prepare": "husky"
@@ -41,8 +42,8 @@
   },
   "homepage": "https://github.com/nestjs/schematics#readme",
   "dependencies": {
-    "@angular-devkit/core": "19.2.17",
-    "@angular-devkit/schematics": "19.2.17",
+    "@angular-devkit/core": "21.2.0",
+    "@angular-devkit/schematics": "21.2.0",
     "comment-json": "4.4.1",
     "jsonc-parser": "3.3.1",
     "pluralize": "8.0.0"
@@ -50,55 +51,26 @@
   "devDependencies": {
     "@commitlint/cli": "20.4.3",
     "@commitlint/config-angular": "20.4.3",
-    "@eslint/eslintrc": "3.3.4",
-    "@eslint/js": "9.39.3",
-    "@types/jest": "30.0.0",
+    "@eslint/js": "10.0.1",
     "@types/node": "24.11.0",
-    "@typescript-eslint/eslint-plugin": "8.56.1",
-    "@typescript-eslint/parser": "8.56.1",
     "cpx2": "8.0.0",
-    "eslint": "9.39.3",
+    "eslint": "10.0.2",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-import": "2.32.0",
-    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-prettier": "5.5.5",
     "globals": "17.4.0",
-    "gulp": "5.0.1",
-    "gulp-clean": "0.4.0",
     "husky": "9.1.7",
-    "jest": "30.2.0",
-    "nyc": "18.0.0",
+    "jiti": "2.4.2",
     "prettier": "3.8.1",
     "release-it": "19.2.4",
-    "ts-jest": "29.4.6",
-    "ts-node": "10.9.2",
     "typescript": "5.9.3",
-    "typescript-eslint": "^8.15.0"
+    "typescript-eslint": "8.56.1",
+    "tsx": "^4.19.0",
+    "vitest": "^3.2.1"
   },
   "peerDependencies": {
     "typescript": ">=4.8.2"
   },
   "schematics": "./dist/collection.json",
-  "nyc": {
-    "include": [
-      "src"
-    ],
-    "exclude": [
-      "node_modules",
-      "test"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ],
-    "reporter": [
-      "text-summary",
-      "html"
-    ],
-    "sourceMap": true,
-    "instrument": true
-  },
   "lint-staged": {
     "**/*.{ts,json}": []
   }

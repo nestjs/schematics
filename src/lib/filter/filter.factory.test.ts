@@ -3,7 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { FilterOptions } from './filter.schema';
+import type { FilterOptions } from './filter.schema.js';
 
 describe('Filter Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

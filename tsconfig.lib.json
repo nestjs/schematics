@@ -1,13 +1,9 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "ES2023",
-    "typeRoots": ["node_modules/@types"],
+    "composite": true,
     "outDir": "dist",
-    "declaration": true,
-    "removeComments": true,
-    "sourceMap": false,
-    "skipLibCheck": true
+    "types": ["node"]
   },
   "include": ["src/lib", "src/utils", "src/index.ts"],
   "exclude": ["node_modules", "src/**/*.test.ts", "src/**/files/**"]

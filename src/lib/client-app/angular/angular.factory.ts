@@ -18,12 +18,12 @@ import { Path } from 'typescript';
 import {
   DeclarationOptions,
   ModuleDeclarator,
-} from '../../../utils/module.declarator';
-import { ModuleFinder } from '../../../utils/module.finder';
-import { Location, NameParser } from '../../../utils/name.parser';
-import { mergeSourceRoot } from '../../../utils/source-root.helpers';
-import { ModuleOptions } from '../../module/module.schema';
-import { AngularOptions } from './angular.schema';
+} from '../../../utils/module.declarator.js';
+import { ModuleFinder } from '../../../utils/module.finder.js';
+import { Location, NameParser } from '../../../utils/name.parser.js';
+import { mergeSourceRoot } from '../../../utils/source-root.helpers.js';
+import type { ModuleOptions } from '../../module/module.schema.js';
+import type { AngularOptions } from './angular.schema.js';
 
 export function main(options: AngularOptions): Rule {
   options = transform(options);

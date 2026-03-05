@@ -13,24 +13,27 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { parse } from 'jsonc-parser';
-import { createModuleNameMapper, inPlaceSortByKeys, normalizeToKebabOrSnakeCase } from '../../utils';
+import {
+  createModuleNameMapper,
+  inPlaceSortByKeys,
+  normalizeToKebabOrSnakeCase,
+} from '../../utils/index.js';
 import {
   DEFAULT_LANGUAGE,
   DEFAULT_LIB_PATH,
   DEFAULT_PATH_NAME,
   PROJECT_TYPE,
-} from '../defaults';
-import { LibraryOptions } from './library.schema';
-import { FileSystemReader } from '../readers';
+} from '../defaults.js';
+import type { LibraryOptions } from './library.schema.js';
+import { FileSystemReader } from '../readers/index.js';
 
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
-  compilerOptions: {
-    baseUrl: string;
-    paths: {
-      [key: string]: string[];
-    };
-  };
+  compilerOptions?: Record<string, any>;
+  files?: string[];
+  include?: string[];
+  exclude?: string[];
+  references?: Array<{ path: string }>;
 }
 
 export function main(options: LibraryOptions): Rule {
@@ -208,43 +211,33 @@ function updateJsonFile<T>(
 
 function updateTsConfig(
   packageName: string,
-  packagePrefix: string,
+  _packagePrefix: string,
   root: string,
 ) {
   return (host: Tree) => {
     if (!host.exists('tsconfig.json')) {
       return host;
     }
-    const distRoot = join(root as Path, packageName, 'src');
-    const packageKey = packagePrefix
-      ? packagePrefix + '/' + packageName
-      : packageName;
+    const refPath = `./${join(root as Path, packageName, 'tsconfig.lib.json')}`;
 
     return updateJsonFile(
       host,
       'tsconfig.json',
       (tsconfig: TsConfigPartialType) => {
         if (!tsconfig.compilerOptions) {
-          tsconfig.compilerOptions = {} as any;
+          tsconfig.compilerOptions = {};
         }
-        if (!tsconfig.compilerOptions.baseUrl) {
-          tsconfig.compilerOptions.baseUrl = './';
-        }
-        if (!tsconfig.compilerOptions.paths) {
-          tsconfig.compilerOptions.paths = {};
-        }
-        if (!tsconfig.compilerOptions.paths[packageKey]) {
-          tsconfig.compilerOptions.paths[packageKey] = [];
-        }
-        tsconfig.compilerOptions.paths[packageKey].push(distRoot);
+        // Remove deprecated baseUrl and paths
+        delete tsconfig.compilerOptions.baseUrl;
+        delete tsconfig.compilerOptions.paths;
 
-        const deepPackagePath = packageKey + '/*';
-        if (!tsconfig.compilerOptions.paths[deepPackagePath]) {
-          tsconfig.compilerOptions.paths[deepPackagePath] = [];
+        if (!tsconfig.references) {
+          tsconfig.references = [];
         }
-        tsconfig.compilerOptions.paths[deepPackagePath].push(distRoot + '/*');
-
-        inPlaceSortByKeys(tsconfig.compilerOptions.paths);
+        const hasRef = tsconfig.references.some((ref) => ref.path === refPath);
+        if (!hasRef) {
+          tsconfig.references.push({ path: refPath });
+        }
       },
     );
   };
@@ -282,8 +275,8 @@ function addLibraryToCliOptions(
         if (!optionsFile.compilerOptions) {
           optionsFile.compilerOptions = {};
         }
-        if (optionsFile.compilerOptions.webpack === undefined) {
-          optionsFile.compilerOptions.webpack = true;
+        if (optionsFile.compilerOptions.builder === undefined) {
+          optionsFile.compilerOptions.builder = 'rspack';
         }
         if (optionsFile.projects[projectName]) {
           throw new SchematicsException(

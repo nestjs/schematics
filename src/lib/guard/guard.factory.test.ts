@@ -3,7 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { GuardOptions } from './guard.schema';
+import type { GuardOptions } from './guard.schema.js';
 
 describe('Guard Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

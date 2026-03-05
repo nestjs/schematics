@@ -8,8 +8,8 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import { DEFAULT_LANGUAGE } from '../defaults';
-import { ConfigurationOptions } from './configuration.schema';
+import { DEFAULT_LANGUAGE } from '../defaults.js';
+import type { ConfigurationOptions } from './configuration.schema.js';
 
 export function main(options: ConfigurationOptions): Rule {
   return mergeWith(generate(transform(options)));

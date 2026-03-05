@@ -1,6 +1,6 @@
 import { normalize } from '@angular-devkit/core';
 import { EmptyTree } from '@angular-devkit/schematics';
-import { FindOptions, ModuleFinder } from '../../src/utils/module.finder';
+import { FindOptions, ModuleFinder } from '../../src/utils/module.finder.js';
 
 describe('Module Finder', () => {
   it('should return the app module path', () => {

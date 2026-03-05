@@ -4,8 +4,8 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { LibraryOptions } from '../library/library.schema';
-import { SubAppOptions } from './sub-app.schema';
+import type { LibraryOptions } from '../library/library.schema.js';
+import type { SubAppOptions } from './sub-app.schema.js';
 
 describe('SubApp Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
@@ -127,6 +127,84 @@ describe('SubApp Factory', () => {
         '/apps/project/test/app.e2e-test.ts',
       ].sort(),
     );
+  });
+
+  it('should set rspack as default builder in nest-cli.json', async () => {
+    const options: SubAppOptions = {
+      name: 'project',
+    };
+    const tree: UnitTestTree = await runner.runSchematic('sub-app', options);
+
+    const config = tree.readJson('/nest-cli.json');
+    expect(config['compilerOptions']['builder']).toEqual('rspack');
+  });
+
+  it('should convert tsconfig.json to solution-style with project references', async () => {
+    const options: SubAppOptions = {
+      name: 'project',
+    };
+
+    let tree: Tree = new EmptyTree();
+    tree.create(
+      '/tsconfig.json',
+      JSON.stringify({
+        compilerOptions: {
+          baseUrl: './',
+          paths: { '@app/*': ['src/*'] },
+          target: 'ES2023',
+        },
+        include: ['src'],
+      }),
+    );
+
+    tree = await runner.runSchematic('sub-app', options, tree);
+
+    const tsconfig = tree.readJson('/tsconfig.json');
+    // Should be converted to solution-style
+    expect(tsconfig['files']).toEqual([]);
+    expect(tsconfig['include']).toBeUndefined();
+    expect(tsconfig['exclude']).toBeUndefined();
+    // baseUrl and paths should be removed
+    expect(tsconfig['compilerOptions']['baseUrl']).toBeUndefined();
+    expect(tsconfig['compilerOptions']['paths']).toBeUndefined();
+    // Other compiler options should be preserved
+    expect(tsconfig['compilerOptions']['target']).toEqual('ES2023');
+    // Should have references to both apps
+    expect(tsconfig['references']).toEqual([
+      { path: './apps/nestjs-schematics/tsconfig.app.json' },
+      { path: './apps/project/tsconfig.app.json' },
+    ]);
+  });
+
+  it('should add project reference when adding sub-app to existing monorepo', async () => {
+    let tree: Tree = new EmptyTree();
+    tree.create(
+      '/nest-cli.json',
+      JSON.stringify({ monorepo: true, projects: {} }),
+    );
+    tree.create(
+      '/tsconfig.json',
+      JSON.stringify({
+        compilerOptions: {},
+        files: [],
+        references: [
+          { path: './apps/existing-app/tsconfig.app.json' },
+        ],
+      }),
+    );
+
+    tree = await runner.runSchematic(
+      'sub-app',
+      { name: 'new-app' } as SubAppOptions,
+      tree,
+    );
+
+    const tsconfig = tree.readJson('/tsconfig.json');
+    expect(tsconfig['references']).toEqual([
+      { path: './apps/existing-app/tsconfig.app.json' },
+      { path: './apps/nestjs-schematics/tsconfig.app.json' },
+      { path: './apps/new-app/tsconfig.app.json' },
+    ]);
   });
 
   it('should sort sub-app names in nest-cli.json', async () => {
