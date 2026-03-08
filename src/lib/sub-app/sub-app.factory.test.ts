@@ -187,9 +187,7 @@ describe('SubApp Factory', () => {
       JSON.stringify({
         compilerOptions: {},
         files: [],
-        references: [
-          { path: './apps/existing-app/tsconfig.app.json' },
-        ],
+        references: [{ path: './apps/existing-app/tsconfig.app.json' }],
       }),
     );
 
@@ -220,7 +218,7 @@ describe('SubApp Factory', () => {
       {
         name: 'b',
         language: 'ts',
-      }
+      },
     ];
 
     let tree: Tree = new EmptyTree();
@@ -232,5 +230,51 @@ describe('SubApp Factory', () => {
 
     const config = tree.readJson('/nest-cli.json');
     expect(Object.keys(config['projects'])).toEqual(['a', 'b', 'c']); // Sorted
+  });
+
+  it('should generate files with .js imports for ESM projects', async () => {
+    let tree: Tree = new EmptyTree();
+    tree.create(
+      '/package.json',
+      JSON.stringify({ name: 'test', type: 'module' }),
+    );
+    tree.create('/tsconfig.json', JSON.stringify({ compilerOptions: {} }));
+
+    const options: SubAppOptions = { name: 'project' };
+    tree = await runner.runSchematic('sub-app', options, tree);
+
+    // Spec file should have .js imports
+    const specContent = tree.readContent(
+      '/apps/project/src/project.controller.spec.ts',
+    );
+    expect(specContent).toContain(
+      "import { ProjectController } from './project.controller.js'",
+    );
+    expect(specContent).toContain(
+      "import { ProjectService } from './project.service.js'",
+    );
+
+    // Non-spec files should have .js imports
+    const moduleContent = tree.readContent(
+      '/apps/project/src/project.module.ts',
+    );
+    expect(moduleContent).toContain(
+      "import { ProjectController } from './project.controller.js'",
+    );
+    expect(moduleContent).toContain(
+      "import { ProjectService } from './project.service.js'",
+    );
+
+    const controllerContent = tree.readContent(
+      '/apps/project/src/project.controller.ts',
+    );
+    expect(controllerContent).toContain(
+      "import { ProjectService } from './project.service.js'",
+    );
+
+    const mainContent = tree.readContent('/apps/project/src/main.ts');
+    expect(mainContent).toContain(
+      "import { ProjectModule } from './project.module.js'",
+    );
   });
 });

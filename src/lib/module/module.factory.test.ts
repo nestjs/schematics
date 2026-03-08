@@ -226,4 +226,29 @@ describe('Module Factory', () => {
         'export class BarModule {}\n',
     );
   });
+  it('should manage declaration in app module with .js extension for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: ModuleOptions = {
+      name: 'foo',
+    };
+    tree = await runner.runSchematic('module', options, tree);
+    expect(tree.readContent(normalize('/src/app.module.ts'))).toEqual(
+      "import { Module } from '@nestjs/common';\n" +
+        "import { AppController } from './app.controller.js';\n" +
+        "import { AppService } from './app.service.js';\n" +
+        "import { FooModule } from './foo/foo.module.js';\n" +
+        '\n' +
+        '@Module({\n' +
+        '  imports: [FooModule],\n' +
+        '  controllers: [AppController],\n' +
+        '  providers: [AppService],\n' +
+        '})\n' +
+        'export class AppModule {}\n',
+    );
+  });
 });

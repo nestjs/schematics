@@ -1,8 +1,10 @@
+import { normalize } from '@angular-devkit/core';
 import {
   SchematicTestRunner,
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
+import type { ApplicationOptions } from '../application/application.schema.js';
 import type { GatewayOptions } from './gateway.schema.js';
 
 describe('Gateway Factory', () => {
@@ -204,5 +206,64 @@ describe('Gateway Factory', () => {
     expect(
       files.find((filename) => filename === '/foo.gateway.test.ts'),
     ).toBeDefined();
+  });
+  it('should manage declaration in app module with .js extension for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: GatewayOptions = {
+      name: 'foo',
+    };
+    tree = await runner.runSchematic('gateway', options, tree);
+    expect(tree.readContent(normalize('/src/app.module.ts'))).toEqual(
+      "import { Module } from '@nestjs/common';\n" +
+        "import { AppController } from './app.controller.js';\n" +
+        "import { AppService } from './app.service.js';\n" +
+        "import { FooGateway } from './foo.gateway.js';\n" +
+        '\n' +
+        '@Module({\n' +
+        '  imports: [],\n' +
+        '  controllers: [AppController],\n' +
+        '  providers: [AppService, FooGateway],\n' +
+        '})\n' +
+        'export class AppModule {}\n',
+    );
+  });
+  it('should generate spec file with .js import for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: GatewayOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    tree = await runner.runSchematic('gateway', options, tree);
+    expect(tree.readContent('/src/foo.gateway.spec.ts')).toEqual(
+      "import { Test, TestingModule } from '@nestjs/testing';\n" +
+        "import { FooGateway } from './foo.gateway.js';\n" +
+        '\n' +
+        "describe('FooGateway', () => {\n" +
+        '  let gateway: FooGateway;\n' +
+        '\n' +
+        '  beforeEach(async () => {\n' +
+        '    const module: TestingModule = await Test.createTestingModule({\n' +
+        '      providers: [FooGateway],\n' +
+        '    }).compile();\n' +
+        '\n' +
+        '    gateway = module.get<FooGateway>(FooGateway);\n' +
+        '  });\n' +
+        '\n' +
+        "  it('should be defined', () => {\n" +
+        '    expect(gateway).toBeDefined();\n' +
+        '  });\n' +
+        '});\n',
+    );
   });
 });

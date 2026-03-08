@@ -15,12 +15,22 @@ import {
 } from '@angular-devkit/schematics';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting.js';
 import { Location, NameParser } from '../../utils/name.parser.js';
-import { mergeSourceRoot } from '../../utils/source-root.helpers.js';
+import {
+  isEsmProject,
+  mergeSourceRoot,
+} from '../../utils/source-root.helpers.js';
 import type { PipeOptions } from './pipe.schema.js';
 
 export function main(options: PipeOptions): Rule {
   options = transform(options);
-  return chain([mergeSourceRoot(options), mergeWith(generate(options))]);
+  return chain([
+    mergeSourceRoot(options),
+    (tree) => {
+      (options as any).isEsm = isEsmProject(tree);
+      return tree;
+    },
+    mergeWith(generate(options)),
+  ]);
 }
 
 function transform(options: PipeOptions): PipeOptions {

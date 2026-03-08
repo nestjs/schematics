@@ -3,6 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
+import type { ApplicationOptions } from '../application/application.schema.js';
 import type { InterceptorOptions } from './interceptor.schema.js';
 
 describe('Interceptor Factory', () => {
@@ -230,5 +231,28 @@ describe('Interceptor Factory', () => {
     expect(
       files.find((filename) => filename === '/foo.interceptor.test.ts'),
     ).not.toBeUndefined();
+  });
+  it('should generate spec file with .js import for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: InterceptorOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    tree = await runner.runSchematic('interceptor', options, tree);
+    expect(tree.readContent('/src/foo.interceptor.spec.ts')).toEqual(
+      "import { FooInterceptor } from './foo.interceptor.js';\n" +
+        '\n' +
+        "describe('FooInterceptor', () => {\n" +
+        "  it('should be defined', () => {\n" +
+        '    expect(new FooInterceptor()).toBeDefined();\n' +
+        '  });\n' +
+        '});\n',
+    );
   });
 });

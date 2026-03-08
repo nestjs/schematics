@@ -21,4 +21,9 @@ export interface LibraryOptions {
    * The libraries root directory
    */
   rootDir?: string | Path;
+  /**
+   * Specifies the file suffix of spec files.
+   * @default "spec"
+   */
+  specFileSuffix?: string;
 }

@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/schematics",
-  "version": "11.0.9",
+  "version": "12.0.0-alpha.6",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "type": "module",
   "main": "dist/index.js",
@@ -12,7 +12,7 @@
   },
   "scripts": {
     "postbuild": "npm run copy:collection && npm run copy:lib",
-    "build": "rm -rf dist && tsc -b tsconfig.lib.json",
+    "build": "rm -rf dist *.tsbuildinfo && tsc -b tsconfig.lib.json",
     "clean": "find src -type f \\( -name '*.js' -o -name '*.d.ts' -o -name '*.js.map' -o -name '*.d.ts.map' \\) -not -path '*/files/*' -not -path '*/workspace/*' -not -name '*.schema.d.ts' -delete",
     "copy:collection": "cpx src/collection.json dist && cpx 'src/lib/**/schema.json' dist/lib",
     "copy:lib": "cpx 'src/lib/**/{files,workspace}/**/*.*' dist/lib && cpx 'src/lib/**/{files,workspace}/**/.!(gitignore)' dist/lib",

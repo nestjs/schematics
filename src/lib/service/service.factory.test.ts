@@ -249,4 +249,64 @@ describe('Service Factory', () => {
       files.find((filename) => filename === '/foo.service.test.ts'),
     ).not.toBeUndefined();
   });
+  it('should manage declaration in app module with .js extension for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: ServiceOptions = {
+      name: 'foo',
+      flat: true,
+    };
+    tree = await runner.runSchematic('service', options, tree);
+    expect(tree.readContent(normalize('/src/app.module.ts'))).toEqual(
+      "import { Module } from '@nestjs/common';\n" +
+        "import { AppController } from './app.controller.js';\n" +
+        "import { AppService } from './app.service.js';\n" +
+        "import { FooService } from './foo.service.js';\n" +
+        '\n' +
+        '@Module({\n' +
+        '  imports: [],\n' +
+        '  controllers: [AppController],\n' +
+        '  providers: [AppService, FooService],\n' +
+        '})\n' +
+        'export class AppModule {}\n',
+    );
+  });
+  it('should generate spec file with .js import for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: ServiceOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    tree = await runner.runSchematic('service', options, tree);
+    expect(tree.readContent('/src/foo.service.spec.ts')).toEqual(
+      "import { Test, TestingModule } from '@nestjs/testing';\n" +
+        "import { FooService } from './foo.service.js';\n" +
+        '\n' +
+        "describe('FooService', () => {\n" +
+        '  let service: FooService;\n' +
+        '\n' +
+        '  beforeEach(async () => {\n' +
+        '    const module: TestingModule = await Test.createTestingModule({\n' +
+        '      providers: [FooService],\n' +
+        '    }).compile();\n' +
+        '\n' +
+        '    service = module.get<FooService>(FooService);\n' +
+        '  });\n' +
+        '\n' +
+        "  it('should be defined', () => {\n" +
+        '    expect(service).toBeDefined();\n' +
+        '  });\n' +
+        '});\n',
+    );
+  });
 });

@@ -249,4 +249,88 @@ describe('Controller Factory', () => {
       files.find((filename) => filename === '/foo.controller.test.ts'),
     ).not.toBeUndefined();
   });
+  it('should manage declaration in app module with .js extension for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: ControllerOptions = {
+      name: 'foo',
+    };
+    tree = await runner.runSchematic('controller', options, tree);
+    expect(tree.readContent(normalize('/src/app.module.ts'))).toEqual(
+      "import { Module } from '@nestjs/common';\n" +
+        "import { AppController } from './app.controller.js';\n" +
+        "import { AppService } from './app.service.js';\n" +
+        "import { FooController } from './foo/foo.controller.js';\n" +
+        '\n' +
+        '@Module({\n' +
+        '  imports: [],\n' +
+        '  controllers: [AppController, FooController],\n' +
+        '  providers: [AppService],\n' +
+        '})\n' +
+        'export class AppModule {}\n',
+    );
+  });
+  it('should manage declaration in foo module with .js extension for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const module: ModuleOptions = {
+      name: 'foo',
+    };
+    tree = await runner.runSchematic('module', module, tree);
+    const options: ControllerOptions = {
+      name: 'foo',
+    };
+    tree = await runner.runSchematic('controller', options, tree);
+    expect(tree.readContent(normalize('/src/foo/foo.module.ts'))).toEqual(
+      "import { Module } from '@nestjs/common';\n" +
+        "import { FooController } from './foo.controller.js';\n" +
+        '\n' +
+        '@Module({\n' +
+        '  controllers: [FooController]\n' +
+        '})\n' +
+        'export class FooModule {}\n',
+    );
+  });
+  it('should generate spec file with .js import for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: ControllerOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    tree = await runner.runSchematic('controller', options, tree);
+    expect(tree.readContent('/src/foo.controller.spec.ts')).toEqual(
+      "import { Test, TestingModule } from '@nestjs/testing';\n" +
+        "import { FooController } from './foo.controller.js';\n" +
+        '\n' +
+        "describe('FooController', () => {\n" +
+        '  let controller: FooController;\n' +
+        '\n' +
+        '  beforeEach(async () => {\n' +
+        '    const module: TestingModule = await Test.createTestingModule({\n' +
+        '      controllers: [FooController],\n' +
+        '    }).compile();\n' +
+        '\n' +
+        '    controller = module.get<FooController>(FooController);\n' +
+        '  });\n' +
+        '\n' +
+        "  it('should be defined', () => {\n" +
+        '    expect(controller).toBeDefined();\n' +
+        '  });\n' +
+        '});\n',
+    );
+  });
 });

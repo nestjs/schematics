@@ -11,6 +11,7 @@ export interface DeclarationOptions {
   path: Path;
   module: Path;
   symbol?: string;
+  isEsm?: boolean;
   staticOptions?: {
     name: string;
     value: Record<string, any>;

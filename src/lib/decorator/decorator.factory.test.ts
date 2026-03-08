@@ -22,9 +22,9 @@ describe('Decorator Factory', () => {
       files.find((filename) => filename === '/foo/foo.decorator.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo/foo.decorator.ts')).toEqual(
-      "import { SetMetadata } from '@nestjs/common';\n" +
+      "import { Reflector } from '@nestjs/core';\n" +
         '\n' +
-        "export const Foo = (...args: string[]) => SetMetadata('foo', args);\n",
+        'export const Foo = Reflector.createDecorator<string[]>();\n',
     );
   });
   it('should manage name as a path', async () => {
@@ -39,9 +39,9 @@ describe('Decorator Factory', () => {
       files.find((filename) => filename === '/bar/foo/foo.decorator.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar/foo/foo.decorator.ts')).toEqual(
-      "import { SetMetadata } from '@nestjs/common';\n" +
+      "import { Reflector } from '@nestjs/core';\n" +
         '\n' +
-        "export const Foo = (...args: string[]) => SetMetadata('foo', args);\n",
+        'export const Foo = Reflector.createDecorator<string[]>();\n',
     );
   });
   it('should manage name and path', async () => {
@@ -57,9 +57,9 @@ describe('Decorator Factory', () => {
       files.find((filename) => filename === '/baz/foo/foo.decorator.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/baz/foo/foo.decorator.ts')).toEqual(
-      "import { SetMetadata } from '@nestjs/common';\n" +
+      "import { Reflector } from '@nestjs/core';\n" +
         '\n' +
-        "export const Foo = (...args: string[]) => SetMetadata('foo', args);\n",
+        'export const Foo = Reflector.createDecorator<string[]>();\n',
     );
   });
   it('should manage name to normalize', async () => {
@@ -74,9 +74,9 @@ describe('Decorator Factory', () => {
       files.find((filename) => filename === '/foo-bar/foo-bar.decorator.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo-bar/foo-bar.decorator.ts')).toEqual(
-      "import { SetMetadata } from '@nestjs/common';\n" +
+      "import { Reflector } from '@nestjs/core';\n" +
         '\n' +
-        "export const FooBar = (...args: string[]) => SetMetadata('foo-bar', args);\n",
+        'export const FooBar = Reflector.createDecorator<string[]>();\n',
     );
   });
   it('should manage path to normalize', async () => {
@@ -91,9 +91,9 @@ describe('Decorator Factory', () => {
       files.find((filename) => filename === '/bar-baz/foo/foo.decorator.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/bar-baz/foo/foo.decorator.ts')).toEqual(
-      "import { SetMetadata } from '@nestjs/common';\n" +
+      "import { Reflector } from '@nestjs/core';\n" +
         '\n' +
-        "export const Foo = (...args: string[]) => SetMetadata('foo', args);\n",
+        'export const Foo = Reflector.createDecorator<string[]>();\n',
     );
   });
   it("should keep underscores on application's name", async () => {
@@ -108,9 +108,9 @@ describe('Decorator Factory', () => {
       files.find((filename) => filename === '/_bar/_foo/_foo.decorator.ts'),
     ).not.toBeUndefined();
     expect(tree.readContent('/_bar/_foo/_foo.decorator.ts')).toEqual(
-      "import { SetMetadata } from '@nestjs/common';\n" +
+      "import { Reflector } from '@nestjs/core';\n" +
         '\n' +
-        "export const Foo = (...args: string[]) => SetMetadata('_foo', args);\n",
+        'export const Foo = Reflector.createDecorator<string[]>();\n',
     );
   });
   it('should manage javascript file', async () => {
@@ -126,9 +126,9 @@ describe('Decorator Factory', () => {
       files.find((filename) => filename === '/foo/foo.decorator.js'),
     ).not.toBeUndefined();
     expect(tree.readContent('/foo/foo.decorator.js')).toEqual(
-      "import { SetMetadata } from '@nestjs/common';\n" +
+      "import { Reflector } from '@nestjs/core';\n" +
         '\n' +
-        "export const Foo = (...args) => SetMetadata('foo', args);\n",
+        'export const Foo = Reflector.createDecorator();\n',
     );
   });
 });

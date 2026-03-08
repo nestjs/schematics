@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { <%= classify(name) %>Gateway } from './<%= name %>.gateway';
-import { <%= classify(name) %>Service } from './<%= name %>.service';
+import { <%= classify(name) %>Gateway } from './<%= name %>.gateway<%= isEsm ? '.js' : '' %>';
+import { <%= classify(name) %>Service } from './<%= name %>.service<%= isEsm ? '.js' : '' %>';
 
 describe('<%= classify(name) %>Gateway', () => {
   let gateway: <%= classify(name) %>Gateway;

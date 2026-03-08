@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { <%= classify(name) %>Resolver } from './<%= name %>.resolver';
+import { <%= classify(name) %>Resolver } from './<%= name %>.resolver<%= isEsm ? '.js' : '' %>';
 
 describe('<%= classify(name) %>Resolver', () => {
   let resolver: <%= classify(name) %>Resolver;

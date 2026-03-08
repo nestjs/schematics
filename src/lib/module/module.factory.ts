@@ -18,7 +18,10 @@ import {
 } from '../../utils/module.declarator.js';
 import { ModuleFinder } from '../../utils/module.finder.js';
 import { Location, NameParser } from '../../utils/name.parser.js';
-import { mergeSourceRoot } from '../../utils/source-root.helpers.js';
+import {
+  isEsmProject,
+  mergeSourceRoot,
+} from '../../utils/source-root.helpers.js';
 import type { ModuleOptions } from './module.schema.js';
 
 export function main(options: ModuleOptions): Rule {
@@ -77,7 +80,10 @@ function addDeclarationToModule(options: ModuleOptions): Rule {
     const declarator: ModuleDeclarator = new ModuleDeclarator();
     tree.overwrite(
       options.module,
-      declarator.declare(content, options as DeclarationOptions),
+      declarator.declare(content, {
+        ...options,
+        isEsm: isEsmProject(tree),
+      } as DeclarationOptions),
     );
     return tree;
   };

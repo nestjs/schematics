@@ -221,4 +221,63 @@ export class FooEntity {}\n`);
     ).toBeUndefined();
     expect(files.find((filename) => filename === '/foo.test.ts')).toBeDefined();
   });
+  it('should manage declaration in app module with .js extension for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: ProviderOptions = {
+      name: 'foo',
+    };
+    tree = await runner.runSchematic('provider', options, tree);
+    expect(tree.readContent(normalize('/src/app.module.ts'))).toEqual(
+      "import { Module } from '@nestjs/common';\n" +
+        "import { AppController } from './app.controller.js';\n" +
+        "import { AppService } from './app.service.js';\n" +
+        "import { Foo } from './foo.js';\n" +
+        '\n' +
+        '@Module({\n' +
+        '  imports: [],\n' +
+        '  controllers: [AppController],\n' +
+        '  providers: [AppService, Foo],\n' +
+        '})\n' +
+        'export class AppModule {}\n',
+    );
+  });
+  it('should generate spec file with .js import for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: ProviderOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    tree = await runner.runSchematic('provider', options, tree);
+    expect(tree.readContent('/src/foo.spec.ts')).toEqual(
+      "import { Test, TestingModule } from '@nestjs/testing';\n" +
+        "import { Foo } from './foo.js';\n" +
+        '\n' +
+        "describe('Foo', () => {\n" +
+        '  let provider: Foo;\n' +
+        '\n' +
+        '  beforeEach(async () => {\n' +
+        '    const module: TestingModule = await Test.createTestingModule({\n' +
+        '      providers: [Foo],\n' +
+        '    }).compile();\n' +
+        '\n' +
+        '    provider = module.get<Foo>(Foo);\n' +
+        '  });\n' +
+        '\n' +
+        "  it('should be defined', () => {\n" +
+        '    expect(provider).toBeDefined();\n' +
+        '  });\n' +
+        '});\n',
+    );
+  });
 });

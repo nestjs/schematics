@@ -3,6 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
+import type { ApplicationOptions } from '../application/application.schema.js';
 import type { ResourceOptions } from './resource.schema.js';
 
 describe('Resource Factory', () => {
@@ -1408,5 +1409,24 @@ type Mutation {
     expect(
       files.find((filename) => filename === '/foo.service.test.ts'),
     ).toBeDefined();
+  });
+  it('should generate spec files with .js imports for ESM projects', async () => {
+    const app: ApplicationOptions = { name: '', type: 'esm' };
+    let tree = await runner.runSchematic('application', app);
+    const options: ResourceOptions = {
+      name: 'users',
+      spec: true,
+      flat: true,
+    };
+    tree = await runner.runSchematic('resource', options, tree);
+    expect(tree.readContent('/src/users.controller.spec.ts')).toContain(
+      "import { UsersController } from './users.controller.js'",
+    );
+    expect(tree.readContent('/src/users.controller.spec.ts')).toContain(
+      "import { UsersService } from './users.service.js'",
+    );
+    expect(tree.readContent('/src/users.service.spec.ts')).toContain(
+      "import { UsersService } from './users.service.js'",
+    );
   });
 });

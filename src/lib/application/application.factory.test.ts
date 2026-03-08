@@ -542,9 +542,7 @@ describe('Application Factory', () => {
         options,
       );
 
-      const packageJson = JSON.parse(
-        tree.readContent('/project/package.json'),
-      );
+      const packageJson = JSON.parse(tree.readContent('/project/package.json'));
       expect(packageJson.type).toBe('module');
       expect(packageJson.devDependencies).toHaveProperty('vitest');
       expect(packageJson.devDependencies).not.toHaveProperty('unplugin-swc');
@@ -554,6 +552,9 @@ describe('Application Factory', () => {
       expect(packageJson.devDependencies).not.toHaveProperty('@types/jest');
       expect(packageJson.devDependencies).not.toHaveProperty('ts-node');
       expect(packageJson.devDependencies).not.toHaveProperty('tsconfig-paths');
+      expect(packageJson.devDependencies).not.toHaveProperty(
+        '@eslint/eslintrc',
+      );
       expect(packageJson.scripts.test).toBe('vitest run');
       expect(packageJson.scripts['test:e2e']).toBe(
         'vitest run --config ./vitest.config.e2e.ts',
@@ -596,6 +597,8 @@ describe('Application Factory', () => {
       const eslintContent = tree.readContent('/project/eslint.config.mjs');
       expect(eslintContent).toContain("sourceType: 'module'");
       expect(eslintContent).not.toContain('globals.jest');
+      expect(eslintContent).not.toContain('tseslint.config(');
+      expect(eslintContent).toContain('export default [');
     });
 
     it('should default to CJS when type is not specified', async () => {
@@ -611,11 +614,12 @@ describe('Application Factory', () => {
       expect(files).toContain('/project/test/jest-e2e.json');
       expect(files).not.toContain('/project/vitest.config.ts');
 
-      const packageJson = JSON.parse(
-        tree.readContent('/project/package.json'),
-      );
+      const packageJson = JSON.parse(tree.readContent('/project/package.json'));
       expect(packageJson.type).toBeUndefined();
       expect(packageJson.devDependencies).toHaveProperty('jest');
+      expect(packageJson.devDependencies).not.toHaveProperty(
+        '@eslint/eslintrc',
+      );
     });
   });
 });

@@ -1,8 +1,10 @@
+import { normalize } from '@angular-devkit/core';
 import {
   SchematicTestRunner,
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
+import type { ApplicationOptions } from '../application/application.schema.js';
 import type { ResolverOptions } from './resolver.schema.js';
 
 describe('Resolver Factory', () => {
@@ -169,5 +171,64 @@ describe('Resolver Factory', () => {
     expect(
       files.find((filename) => filename === '/foo.resolver.test.ts'),
     ).not.toBeUndefined();
+  });
+  it('should manage declaration in app module with .js extension for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: ResolverOptions = {
+      name: 'foo',
+    };
+    tree = await runner.runSchematic('resolver', options, tree);
+    expect(tree.readContent(normalize('/src/app.module.ts'))).toEqual(
+      "import { Module } from '@nestjs/common';\n" +
+        "import { AppController } from './app.controller.js';\n" +
+        "import { AppService } from './app.service.js';\n" +
+        "import { FooResolver } from './foo/foo.resolver.js';\n" +
+        '\n' +
+        '@Module({\n' +
+        '  imports: [],\n' +
+        '  controllers: [AppController],\n' +
+        '  providers: [AppService, FooResolver],\n' +
+        '})\n' +
+        'export class AppModule {}\n',
+    );
+  });
+  it('should generate spec file with .js import for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: ResolverOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    tree = await runner.runSchematic('resolver', options, tree);
+    expect(tree.readContent('/src/foo.resolver.spec.ts')).toEqual(
+      "import { Test, TestingModule } from '@nestjs/testing';\n" +
+        "import { FooResolver } from './foo.resolver.js';\n" +
+        '\n' +
+        "describe('FooResolver', () => {\n" +
+        '  let resolver: FooResolver;\n' +
+        '\n' +
+        '  beforeEach(async () => {\n' +
+        '    const module: TestingModule = await Test.createTestingModule({\n' +
+        '      providers: [FooResolver],\n' +
+        '    }).compile();\n' +
+        '\n' +
+        '    resolver = module.get<FooResolver>(FooResolver);\n' +
+        '  });\n' +
+        '\n' +
+        "  it('should be defined', () => {\n" +
+        '    expect(resolver).toBeDefined();\n' +
+        '  });\n' +
+        '});\n',
+    );
   });
 });

@@ -3,6 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
+import type { ApplicationOptions } from '../application/application.schema.js';
 import type { MiddlewareOptions } from './middleware.schema.js';
 
 describe('Middleware Factory', () => {
@@ -197,5 +198,28 @@ describe('Middleware Factory', () => {
     expect(
       files.find((filename) => filename === '/foo.middleware.test.ts'),
     ).not.toBeUndefined();
+  });
+  it('should generate spec file with .js import for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: MiddlewareOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    tree = await runner.runSchematic('middleware', options, tree);
+    expect(tree.readContent('/src/foo.middleware.spec.ts')).toEqual(
+      "import { FooMiddleware } from './foo.middleware.js';\n" +
+        '\n' +
+        "describe('FooMiddleware', () => {\n" +
+        "  it('should be defined', () => {\n" +
+        '    expect(new FooMiddleware()).toBeDefined();\n' +
+        '  });\n' +
+        '});\n',
+    );
   });
 });

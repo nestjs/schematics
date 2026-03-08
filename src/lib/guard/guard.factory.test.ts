@@ -3,6 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
+import type { ApplicationOptions } from '../application/application.schema.js';
 import type { GuardOptions } from './guard.schema.js';
 
 describe('Guard Factory', () => {
@@ -215,5 +216,28 @@ describe('Guard Factory', () => {
     expect(
       files.find((filename) => filename === '/foo.guard.test.ts'),
     ).not.toBeUndefined();
+  });
+  it('should generate spec file with .js import for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: GuardOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    tree = await runner.runSchematic('guard', options, tree);
+    expect(tree.readContent('/src/foo.guard.spec.ts')).toEqual(
+      "import { FooGuard } from './foo.guard.js';\n" +
+        '\n' +
+        "describe('FooGuard', () => {\n" +
+        "  it('should be defined', () => {\n" +
+        '    expect(new FooGuard()).toBeDefined();\n' +
+        '  });\n' +
+        '});\n',
+    );
   });
 });

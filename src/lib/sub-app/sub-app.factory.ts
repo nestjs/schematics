@@ -8,6 +8,7 @@ import {
   move,
   noop,
   Rule,
+  SchematicContext,
   SchematicsException,
   Source,
   template,
@@ -31,6 +32,7 @@ import {
   TEST_ENV,
 } from '../defaults.js';
 import type { SubAppOptions } from './sub-app.schema.js';
+import { isEsmProject } from '../../utils/source-root.helpers.js';
 
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
@@ -56,6 +58,10 @@ export function main(options: SubAppOptions): Rule {
           ])(tree, context),
     addAppsToCliOptions(options.path, options.name, appName),
     addTsConfigReference(options.path, options.name),
+    (tree) => {
+      (options as any).isEsm = isEsmProject(tree);
+      return tree;
+    },
     branchAndMerge(mergeWith(generate(options))),
   ]);
 }
@@ -181,10 +187,7 @@ function updateTsConfig(projectRoot: string, appName: string) {
   };
 }
 
-function addTsConfigReference(
-  projectRoot: string,
-  projectName: string,
-): Rule {
+function addTsConfigReference(projectRoot: string, projectName: string): Rule {
   return (host: Tree) => {
     if (!host.exists('tsconfig.json')) {
       return host;
@@ -375,7 +378,7 @@ function addAppsToCliOptions(
         }
         optionsFile.projects[projectName] = project;
 
-        inPlaceSortByKeys(optionsFile.projects);
+        inPlaceSortByKeys(optionsFile.projects as Record<string, any>);
       },
     );
   };
@@ -432,12 +435,14 @@ function generateWorkspace(options: SubAppOptions, appName: string): Source {
 }
 
 function generate(options: SubAppOptions): Source {
-  const path = join(options.path as Path, options.name);
-  return apply(url(join('./files' as Path, options.language)), [
-    template({
-      ...strings,
-      ...options,
-    }),
-    move(path),
-  ]);
+  return (context: SchematicContext) => {
+    const path = join(options.path as Path, options.name);
+    return apply(url(join('./files' as Path, options.language)), [
+      template({
+        ...strings,
+        ...options,
+      }),
+      move(path),
+    ])(context);
+  };
 }

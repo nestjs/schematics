@@ -3,6 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
+import type { ApplicationOptions } from '../application/application.schema.js';
 import type { FilterOptions } from './filter.schema.js';
 
 describe('Filter Factory', () => {
@@ -208,5 +209,28 @@ describe('Filter Factory', () => {
     expect(
       files.find((filename) => filename === '/foo.filter.test.ts'),
     ).toBeDefined();
+  });
+  it('should generate spec file with .js import for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: FilterOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    tree = await runner.runSchematic('filter', options, tree);
+    expect(tree.readContent('/src/foo.filter.spec.ts')).toEqual(
+      "import { FooFilter } from './foo.filter.js';\n" +
+        '\n' +
+        "describe('FooFilter', () => {\n" +
+        "  it('should be defined', () => {\n" +
+        '    expect(new FooFilter()).toBeDefined();\n' +
+        '  });\n' +
+        '});\n',
+    );
   });
 });

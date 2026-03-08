@@ -6,6 +6,7 @@ import {
   mergeWith,
   move,
   Rule,
+  SchematicContext,
   SchematicsException,
   Source,
   template,
@@ -26,14 +27,16 @@ import {
 } from '../defaults.js';
 import type { LibraryOptions } from './library.schema.js';
 import { FileSystemReader } from '../readers/index.js';
+import { isEsmProject } from '../../utils/source-root.helpers.js';
 
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
-  compilerOptions?: Record<string, any>;
-  files?: string[];
-  include?: string[];
-  exclude?: string[];
-  references?: Array<{ path: string }>;
+  compilerOptions: {
+    baseUrl?: string;
+    paths: {
+      [key: string]: string[];
+    };
+  };
 }
 
 export function main(options: LibraryOptions): Rule {
@@ -43,6 +46,10 @@ export function main(options: LibraryOptions): Rule {
     updatePackageJson(options),
     updateJestEndToEnd(options),
     updateTsConfig(options.name, options.prefix, options.path),
+    (tree) => {
+      (options as any).isEsm = isEsmProject(tree);
+      return tree;
+    },
     branchAndMerge(mergeWith(generate(options))),
   ]);
 }
@@ -86,6 +93,9 @@ function transform(options: LibraryOptions): LibraryOptions {
       : normalize(defaultSourceRoot);
 
   target.prefix = target.prefix || getDefaultLibraryPrefix();
+  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+    target.specFileSuffix ?? 'spec',
+  );
   return target;
 }
 
@@ -140,7 +150,7 @@ function updateJestConfig(
   const newMapper = createModuleNameMapper(packageKey, packageRoot);
   Object.assign(jestOptions.moduleNameMapper, newMapper);
 
-  inPlaceSortByKeys(jestOptions.moduleNameMapper);
+  inPlaceSortByKeys(jestOptions.moduleNameMapper as Record<string, any>);
 }
 
 function updateNpmScripts(
@@ -188,7 +198,7 @@ function updateJestEndToEnd(options: LibraryOptions) {
         const newMapper = createModuleNameMapper(packageKey, packageRoot);
         Object.assign(jestOptions.moduleNameMapper, newMapper);
 
-        inPlaceSortByKeys(jestOptions.moduleNameMapper);
+        inPlaceSortByKeys(jestOptions.moduleNameMapper as Record<string, any>);
       },
     );
   };
@@ -211,33 +221,43 @@ function updateJsonFile<T>(
 
 function updateTsConfig(
   packageName: string,
-  _packagePrefix: string,
+  packagePrefix: string,
   root: string,
 ) {
   return (host: Tree) => {
     if (!host.exists('tsconfig.json')) {
       return host;
     }
-    const refPath = `./${join(root as Path, packageName, 'tsconfig.lib.json')}`;
+    const distRoot = join(root as Path, packageName, 'src');
+    const packageKey = packagePrefix
+      ? packagePrefix + '/' + packageName
+      : packageName;
 
     return updateJsonFile(
       host,
       'tsconfig.json',
       (tsconfig: TsConfigPartialType) => {
         if (!tsconfig.compilerOptions) {
-          tsconfig.compilerOptions = {};
+          tsconfig.compilerOptions = {} as any;
         }
-        // Remove deprecated baseUrl and paths
         delete tsconfig.compilerOptions.baseUrl;
-        delete tsconfig.compilerOptions.paths;
+        if (!tsconfig.compilerOptions.paths) {
+          tsconfig.compilerOptions.paths = {};
+        }
+        if (!tsconfig.compilerOptions.paths[packageKey]) {
+          tsconfig.compilerOptions.paths[packageKey] = [];
+        }
+        tsconfig.compilerOptions.paths[packageKey].push('./' + distRoot);
 
-        if (!tsconfig.references) {
-          tsconfig.references = [];
+        const deepPackagePath = packageKey + '/*';
+        if (!tsconfig.compilerOptions.paths[deepPackagePath]) {
+          tsconfig.compilerOptions.paths[deepPackagePath] = [];
         }
-        const hasRef = tsconfig.references.some((ref) => ref.path === refPath);
-        if (!hasRef) {
-          tsconfig.references.push({ path: refPath });
-        }
+        tsconfig.compilerOptions.paths[deepPackagePath].push(
+          './' + distRoot + '/*',
+        );
+
+        inPlaceSortByKeys(tsconfig.compilerOptions.paths);
       },
     );
   };
@@ -285,20 +305,21 @@ function addLibraryToCliOptions(
         }
         optionsFile.projects[projectName] = project;
 
-        inPlaceSortByKeys(optionsFile.projects);
+        inPlaceSortByKeys(optionsFile.projects as Record<string, any>);
       },
     );
   };
 }
 
 function generate(options: LibraryOptions): Source {
-  const path = join(options.path as Path, options.name);
-
-  return apply(url(join('./files' as Path, options.language)), [
-    template({
-      ...strings,
-      ...options,
-    }),
-    move(path),
-  ]);
+  return (context: SchematicContext) => {
+    const path = join(options.path as Path, options.name);
+    return apply(url(join('./files' as Path, options.language)), [
+      template({
+        ...strings,
+        ...options,
+      }),
+      move(path),
+    ])(context);
+  };
 }

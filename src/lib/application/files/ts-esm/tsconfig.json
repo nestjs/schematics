@@ -15,10 +15,8 @@
     "outDir": "./dist",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": <%= strict %>,
-    "strictBindCallApply": <%= strict %>,
-    "noFallthroughCasesInSwitch": <%= strict %>
+    "strict": <%= strict %>,
+    "strictPropertyInitialization": false,
+    "types": ["vitest/globals", "node"]
   }
 }

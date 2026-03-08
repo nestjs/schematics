@@ -3,6 +3,26 @@ import { Rule, Tree } from '@angular-devkit/schematics';
 import { DEFAULT_PATH_NAME } from '../lib/defaults.js';
 
 /**
+ * Checks if the project uses ESM by looking for "type": "module" in package.json.
+ *
+ * @param host - The file tree representing the project.
+ * @returns True if the project uses ESM, otherwise false.
+ */
+export function isEsmProject(host: Tree): boolean {
+  const packageJsonPath = 'package.json';
+  const buffer = host.read(packageJsonPath);
+  if (!buffer) {
+    return false;
+  }
+  try {
+    const packageJson = JSON.parse(buffer.toString());
+    return packageJson.type === 'module';
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Checks if the current directory is the root directory.
  *
  * @param host - The file tree representing the project.

@@ -69,6 +69,7 @@ export class ModuleImportDeclarator {
     } else {
       importModulePath = normalize(`/${options.path}/${options.name}`);
     }
-    return this.solver.relative(options.module, importModulePath);
+    const relativePath = this.solver.relative(options.module, importModulePath);
+    return options.isEsm ? `${relativePath}.js` : relativePath;
   }
 }

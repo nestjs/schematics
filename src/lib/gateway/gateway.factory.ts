@@ -22,13 +22,17 @@ import {
 } from '../../utils/module.declarator.js';
 import { ModuleFinder } from '../../utils/module.finder.js';
 import { Location, NameParser } from '../../utils/name.parser.js';
-import { mergeSourceRoot } from '../../utils/source-root.helpers.js';
+import {
+  isEsmProject,
+  mergeSourceRoot,
+} from '../../utils/source-root.helpers.js';
 import type { ProviderOptions } from '../provider/provider.schema.js';
 import type { GatewayOptions } from './gateway.schema.js';
 
 export function main(options: GatewayOptions): Rule {
   options = transform(options);
   return (tree: Tree, context: SchematicContext) => {
+    (options as any).isEsm = isEsmProject(tree);
     return branchAndMerge(
       chain([
         mergeSourceRoot(options),
@@ -96,7 +100,10 @@ function addDeclarationToModule(options: ProviderOptions): Rule {
     const declarator: ModuleDeclarator = new ModuleDeclarator();
     tree.overwrite(
       options.module,
-      declarator.declare(content, options as DeclarationOptions),
+      declarator.declare(content, {
+        ...options,
+        isEsm: isEsmProject(tree),
+      } as DeclarationOptions),
     );
     return tree;
   };
