@@ -14,6 +14,7 @@ describe('Application Factory', () => {
     it('should manage basic (ie., cross-platform) name', async () => {
       const options: ApplicationOptions = {
         name: 'project',
+        type: 'cjs',
       };
       const tree: UnitTestTree = await runner.runSchematic(
         'application',
@@ -50,6 +51,7 @@ describe('Application Factory', () => {
     it('should manage name with dots in it', async () => {
       const options: ApplicationOptions = {
         name: 'project.foo.bar',
+        type: 'cjs',
       };
       const tree: UnitTestTree = await runner.runSchematic(
         'application',
@@ -85,6 +87,7 @@ describe('Application Factory', () => {
     it('should manage name to normalize from camel case name', async () => {
       const options: ApplicationOptions = {
         name: 'awesomeProject',
+        type: 'cjs',
       };
       const tree: UnitTestTree = await runner.runSchematic(
         'application',
@@ -120,6 +123,7 @@ describe('Application Factory', () => {
     it('should keep underscores', async () => {
       const options: ApplicationOptions = {
         name: '_awesomeProject',
+        type: 'cjs',
       };
       const tree: UnitTestTree = await runner.runSchematic(
         'application',
@@ -155,6 +159,7 @@ describe('Application Factory', () => {
     it('should manage basic name that has no scope name in it but starts with "@"', async () => {
       const options: ApplicationOptions = {
         name: '@/package',
+        type: 'cjs',
       };
       const tree: UnitTestTree = await runner.runSchematic(
         'application',
@@ -190,6 +195,7 @@ describe('Application Factory', () => {
     it('should manage the name "." (ie., current working directory)', async () => {
       const options: ApplicationOptions = {
         name: '.',
+        type: 'cjs',
       };
       const tree: UnitTestTree = await runner.runSchematic(
         'application',
@@ -225,6 +231,7 @@ describe('Application Factory', () => {
         it('should manage basic name', async () => {
           const options: ApplicationOptions = {
             name: '@scope/package',
+            type: 'cjs',
           };
           const tree: UnitTestTree = await runner.runSchematic(
             'application',
@@ -260,6 +267,7 @@ describe('Application Factory', () => {
         it('should manage name with blank space right after the "@" symbol', async () => {
           const options: ApplicationOptions = {
             name: '@ /package',
+            type: 'cjs',
           };
           const tree: UnitTestTree = await runner.runSchematic(
             'application',
@@ -298,6 +306,7 @@ describe('Application Factory', () => {
   it('should manage name as number', async () => {
     const options: ApplicationOptions = {
       name: 123,
+      type: 'cjs',
     };
     const tree: UnitTestTree = await runner.runSchematic(
       'application',
@@ -371,6 +380,7 @@ describe('Application Factory', () => {
     const options: ApplicationOptions = {
       name: 'project',
       directory: 'app',
+      type: 'cjs',
     };
     const tree: UnitTestTree = await runner.runSchematic(
       'application',
@@ -471,6 +481,7 @@ describe('Application Factory', () => {
       name: 'project',
       spec: true,
       specFileSuffix: 'test',
+      type: 'cjs',
     };
     const tree: UnitTestTree = await runner.runSchematic(
       'application',
@@ -601,9 +612,10 @@ describe('Application Factory', () => {
       expect(eslintContent).toContain('export default [');
     });
 
-    it('should default to CJS when type is not specified', async () => {
+    it('should generate CJS project files with jest', async () => {
       const options: ApplicationOptions = {
         name: 'project',
+        type: 'cjs',
       };
       const tree: UnitTestTree = await runner.runSchematic(
         'application',

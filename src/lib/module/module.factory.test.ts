@@ -181,6 +181,7 @@ describe('Module Factory', () => {
   it('should manage declaration in app module', async () => {
     const app: ApplicationOptions = {
       name: '',
+      type: 'cjs',
     };
     let tree: UnitTestTree = await runner.runSchematic('application', app);
 
@@ -205,6 +206,7 @@ describe('Module Factory', () => {
   it('should manage declaration in bar module', async () => {
     const app: ApplicationOptions = {
       name: '',
+      type: 'cjs',
     };
     let tree: UnitTestTree = await runner.runSchematic('application', app);
 
