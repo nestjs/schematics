@@ -42,7 +42,7 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   target.language = target.language ? target.language : DEFAULT_LANGUAGE;
   target.name = resolvePackageName(target.name.toString());
   target.version = target.version ? target.version : DEFAULT_VERSION;
-  target.type = target.type ?? 'cjs';
+  target.type = target.type ?? 'esm';
   target.specFileSuffix = normalizeToKebabOrSnakeCase(
     options.specFileSuffix || 'spec',
   );
