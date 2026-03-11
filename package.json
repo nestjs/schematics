@@ -13,7 +13,7 @@
   "scripts": {
     "postbuild": "npm run copy:collection && npm run copy:lib",
     "build": "rm -rf dist *.tsbuildinfo && tsc -b tsconfig.lib.json",
-    "clean": "find src -type f \\( -name '*.js' -o -name '*.d.ts' -o -name '*.js.map' -o -name '*.d.ts.map' \\) -not -path '*/files/*' -not -path '*/workspace/*' -not -name '*.schema.d.ts' -delete",
+    "clean": "del 'src/**/*.{js,d.ts,js.map,d.ts.map}' '!src/**/files/**' '!src/**/workspace/**' '!src/**/*.schema.d.ts'",
     "copy:collection": "cpx src/collection.json dist && cpx 'src/lib/**/schema.json' dist/lib",
     "copy:lib": "cpx 'src/lib/**/{files,workspace}/**/*.*' dist/lib && cpx 'src/lib/**/{files,workspace}/**/.!(gitignore)' dist/lib",
     "lint": "eslint '{src,test}/**/*.ts' --fix",
@@ -54,6 +54,7 @@
     "@eslint/js": "10.0.1",
     "@types/node": "25.3.5",
     "cpx2": "8.0.0",
+    "del-cli": "^7.0.0",
     "eslint": "10.0.3",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.5",
@@ -62,9 +63,9 @@
     "jiti": "2.6.1",
     "prettier": "3.8.1",
     "release-it": "19.2.4",
+    "tsx": "4.21.0",
     "typescript": "5.9.3",
     "typescript-eslint": "8.56.1",
-    "tsx": "4.21.0",
     "vitest": "4.0.18"
   },
   "peerDependencies": {
