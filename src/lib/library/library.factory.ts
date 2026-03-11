@@ -240,7 +240,7 @@ function updateTsConfig(
         if (!tsconfig.compilerOptions) {
           tsconfig.compilerOptions = {} as any;
         }
-        delete tsconfig.compilerOptions.baseUrl;
+        tsconfig.compilerOptions.baseUrl = './';
         if (!tsconfig.compilerOptions.paths) {
           tsconfig.compilerOptions.paths = {};
         }

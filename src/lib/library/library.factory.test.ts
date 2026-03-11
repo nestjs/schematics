@@ -154,7 +154,7 @@ describe('Library Factory', () => {
     tree = await runner.runSchematic('library', options, tree);
 
     const tsconfig = tree.readJson('/tsconfig.json');
-    expect(tsconfig['compilerOptions']['baseUrl']).toBeUndefined();
+    expect(tsconfig['compilerOptions']['baseUrl']).toEqual('./');
     expect(tsconfig['compilerOptions']['paths']['app/project']).toEqual([
       './libs/project/src',
     ]);
@@ -186,7 +186,7 @@ describe('Library Factory', () => {
     );
 
     const tsconfig = tree.readJson('/tsconfig.json');
-    expect(tsconfig['compilerOptions']['baseUrl']).toBeUndefined();
+    expect(tsconfig['compilerOptions']['baseUrl']).toEqual('./');
     expect(tsconfig['compilerOptions']['paths']['app/my-lib']).toEqual([
       './libs/my-lib/src',
     ]);
