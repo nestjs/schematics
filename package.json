@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/schematics",
-  "version": "12.0.0-alpha.6",
+  "version": "12.0.0-alpha.7",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "type": "module",
   "main": "dist/index.js",
