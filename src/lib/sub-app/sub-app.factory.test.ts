@@ -4,7 +4,6 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import type { LibraryOptions } from '../library/library.schema.js';
 import type { SubAppOptions } from './sub-app.schema.js';
 
 describe('SubApp Factory', () => {

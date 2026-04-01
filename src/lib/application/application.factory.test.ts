@@ -24,7 +24,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/project/eslint.config.mjs',
+          '/project/oxlint.json',
           '/project/.gitignore',
           '/project/.prettierrc',
           '/project/README.md',
@@ -61,7 +61,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          `/project.foo.bar/eslint.config.mjs`,
+          `/project.foo.bar/oxlint.json`,
           `/project.foo.bar/.gitignore`,
           `/project.foo.bar/.prettierrc`,
           `/project.foo.bar/README.md`,
@@ -98,7 +98,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/awesome-project/eslint.config.mjs',
+          '/awesome-project/oxlint.json',
           '/awesome-project/.gitignore',
           '/awesome-project/.prettierrc',
           '/awesome-project/README.md',
@@ -135,7 +135,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/_awesome-project/eslint.config.mjs',
+          '/_awesome-project/oxlint.json',
           '/_awesome-project/.gitignore',
           '/_awesome-project/.prettierrc',
           '/_awesome-project/README.md',
@@ -172,7 +172,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/@/package/eslint.config.mjs',
+          '/@/package/oxlint.json',
           '/@/package/.gitignore',
           '/@/package/.prettierrc',
           '/@/package/README.md',
@@ -209,7 +209,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/eslint.config.mjs',
+          '/oxlint.json',
           '/.gitignore',
           '/.prettierrc',
           '/README.md',
@@ -246,7 +246,7 @@ describe('Application Factory', () => {
           const files: string[] = tree.files;
           expect(files.sort()).toEqual(
             [
-              '/@scope/package/eslint.config.mjs',
+              '/@scope/package/oxlint.json',
               '/@scope/package/.gitignore',
               '/@scope/package/.prettierrc',
               '/@scope/package/README.md',
@@ -283,7 +283,7 @@ describe('Application Factory', () => {
           const files: string[] = tree.files;
           expect(files.sort()).toEqual(
             [
-              '/@-/package/eslint.config.mjs',
+              '/@-/package/oxlint.json',
               '/@-/package/.gitignore',
               '/@-/package/.prettierrc',
               '/@-/package/README.md',
@@ -324,7 +324,7 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/123/eslint.config.mjs',
+        '/123/oxlint.json',
         '/123/.gitignore',
         '/123/.prettierrc',
         '/123/README.md',
@@ -400,7 +400,7 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/app/eslint.config.mjs',
+        '/app/oxlint.json',
         '/app/.gitignore',
         '/app/.prettierrc',
         '/app/README.md',
@@ -504,7 +504,7 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/project/eslint.config.mjs',
+        '/project/oxlint.json',
         '/project/.gitignore',
         '/project/.prettierrc',
         '/project/README.md',
@@ -537,7 +537,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/project/eslint.config.mjs',
+          '/project/oxlint.json',
           '/project/.gitignore',
           '/project/.prettierrc',
           '/project/README.md',
@@ -577,9 +577,8 @@ describe('Application Factory', () => {
       expect(packageJson.devDependencies).not.toHaveProperty('@types/jest');
       expect(packageJson.devDependencies).not.toHaveProperty('ts-node');
       expect(packageJson.devDependencies).not.toHaveProperty('tsconfig-paths');
-      expect(packageJson.devDependencies).not.toHaveProperty(
-        '@eslint/eslintrc',
-      );
+      expect(packageJson.devDependencies).toHaveProperty('oxlint');
+      expect(packageJson.devDependencies).not.toHaveProperty('eslint');
       expect(packageJson.scripts.test).toBe('vitest run');
       expect(packageJson.scripts['test:e2e']).toBe(
         'vitest run --config ./vitest.config.e2e.ts',
@@ -609,7 +608,7 @@ describe('Application Factory', () => {
       expect(controllerContent).toContain("from './app.service.js'");
     });
 
-    it('should generate ESM eslint config with sourceType module', async () => {
+    it('should generate oxlint.json config', async () => {
       const options: ApplicationOptions = {
         name: 'project',
         type: 'esm',
@@ -619,11 +618,9 @@ describe('Application Factory', () => {
         options,
       );
 
-      const eslintContent = tree.readContent('/project/eslint.config.mjs');
-      expect(eslintContent).toContain("sourceType: 'module'");
-      expect(eslintContent).not.toContain('globals.jest');
-      expect(eslintContent).not.toContain('tseslint.config(');
-      expect(eslintContent).toContain('export default [');
+      const oxlintContent = tree.readContent('/project/oxlint.json');
+      const oxlintConfig = JSON.parse(oxlintContent);
+      expect(oxlintConfig.rules).toBeDefined();
     });
 
     it('should generate CJS project files with jest', async () => {
@@ -644,9 +641,8 @@ describe('Application Factory', () => {
       const packageJson = JSON.parse(tree.readContent('/project/package.json'));
       expect(packageJson.type).toBeUndefined();
       expect(packageJson.devDependencies).toHaveProperty('jest');
-      expect(packageJson.devDependencies).not.toHaveProperty(
-        '@eslint/eslintrc',
-      );
+      expect(packageJson.devDependencies).toHaveProperty('oxlint');
+      expect(packageJson.devDependencies).not.toHaveProperty('eslint');
     });
   });
 });

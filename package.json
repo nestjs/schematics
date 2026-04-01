@@ -16,7 +16,7 @@
     "clean": "del 'src/**/*.{js,d.ts,js.map,d.ts.map}' '!src/**/files/**' '!src/**/workspace/**' '!src/**/*.schema.d.ts'",
     "copy:collection": "cpx src/collection.json dist && cpx 'src/lib/**/schema.json' dist/lib",
     "copy:lib": "cpx 'src/lib/**/{files,workspace}/**/*.*' dist/lib && cpx 'src/lib/**/{files,workspace}/**/.!(gitignore)' dist/lib",
-    "lint": "eslint '{src,test}/**/*.ts' --fix",
+    "lint": "oxlint --ignore-pattern 'src/**/files/**' --ignore-pattern 'src/**/workspace/**' src/ test/",
     "prepublish:next": "npm run build",
     "publish:next": "npm publish --access public --tag next",
     "prepublish:npm": "npm run build",
@@ -51,25 +51,20 @@
   "devDependencies": {
     "@commitlint/cli": "20.4.3",
     "@commitlint/config-angular": "20.4.3",
-    "@eslint/js": "10.0.1",
     "@types/node": "25.3.5",
     "cpx2": "8.0.0",
     "del-cli": "^7.0.0",
-    "eslint": "10.0.3",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "5.5.5",
-    "globals": "17.4.0",
     "husky": "9.1.7",
     "jiti": "2.6.1",
+    "oxlint": "1.58.0",
     "prettier": "3.8.1",
     "release-it": "19.2.4",
     "tsx": "4.21.0",
-    "typescript": "5.9.3",
-    "typescript-eslint": "8.56.1",
+    "typescript": "^6.0.2",
     "vitest": "4.0.18"
   },
   "peerDependencies": {
-    "typescript": ">=5.9.3"
+    "typescript": ">=6.0.0"
   },
   "schematics": "./dist/collection.json",
   "lint-staged": {
