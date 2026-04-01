@@ -82,7 +82,7 @@ function generate(options: ApplicationOptions, path: string): Source {
   const templateDir =
     options.type === 'esm' && options.language === 'ts'
       ? 'ts-esm'
-      : options.language;
+      : options.language!;
 
   return apply(url(join('./files' as Path, templateDir)), [
     options.spec

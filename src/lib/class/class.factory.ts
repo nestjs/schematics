@@ -64,7 +64,7 @@ function transform(options: ClassOptions): ClassOptions {
 
 function generate(options: ClassOptions): Source {
   return (context: SchematicContext) =>
-    apply(url(join('./files' as Path, options.language)), [
+    apply(url(join('./files' as Path, options.language!)), [
       options.spec
         ? noop()
         : filter((path) => {
@@ -76,6 +76,6 @@ function generate(options: ClassOptions): Source {
         ...strings,
         ...options,
       }),
-      move(options.path),
+      move(options.path!),
     ])(context);
 }

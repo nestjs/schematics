@@ -70,7 +70,7 @@ function transform(options: ProviderOptions): ProviderOptions {
 
 function generate(options: ProviderOptions) {
   return (context: SchematicContext) =>
-    apply(url(join('./files' as Path, options.language)), [
+    apply(url(join('./files' as Path, options.language!)), [
       options.spec
         ? noop()
         : filter((path) => {
@@ -82,7 +82,7 @@ function generate(options: ProviderOptions) {
         ...strings,
         ...options,
       }),
-      move(options.path),
+      move(options.path!),
     ])(context);
 }
 
@@ -91,14 +91,15 @@ function addDeclarationToModule(options: ProviderOptions): Rule {
     if (options.skipImport !== undefined && options.skipImport) {
       return tree;
     }
-    options.module = new ModuleFinder(tree).find({
-      name: options.name,
-      path: options.path as Path,
-    });
+    options.module =
+      new ModuleFinder(tree).find({
+        name: options.name,
+        path: options.path as Path,
+      }) ?? undefined;
     if (!options.module) {
       return tree;
     }
-    const content = tree.read(options.module).toString();
+    const content = tree.read(options.module)!.toString();
     const declarator: ModuleDeclarator = new ModuleDeclarator();
     tree.overwrite(
       options.module,

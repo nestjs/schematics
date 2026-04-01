@@ -26,7 +26,7 @@ function transform(options: ConfigurationOptions): ConfigurationOptions {
 
 function generate(options: ConfigurationOptions): Source {
   const projectOrPath = options.project ?? '.';
-  return apply(url(join('./files' as Path, options.language)), [
+  return apply(url(join('./files' as Path, options.language!)), [
     template({
       ...strings,
       ...options,

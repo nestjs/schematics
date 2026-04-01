@@ -43,6 +43,6 @@ function generate(options: InterfaceOptions): Source {
         ...strings,
         ...options,
       }),
-      move(options.path),
+      move(options.path!),
     ])(context);
 }

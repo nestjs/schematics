@@ -30,12 +30,12 @@ export class ModuleFinder {
    * @param directory - The directory to search in.
    * @returns The path to the module file, or null if not found.
    */
-  private findIn(directory: DirEntry): Path | null {
+  private findIn(directory: DirEntry | null): Path | null {
     if (!directory) {
       return null;
     }
-    const moduleFilename: PathFragment = directory.subfiles.find((filename) =>
-      /\.module\.(t|j)s$/.test(filename),
+    const moduleFilename: PathFragment | undefined = directory.subfiles.find(
+      (filename) => /\.module\.(t|j)s$/.test(filename),
     );
     return moduleFilename !== undefined
       ? join(directory.path, moduleFilename.valueOf())

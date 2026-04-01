@@ -82,20 +82,20 @@ function transform(options: ResourceOptions): ResourceOptions {
 
 function generate(options: ResourceOptions): Source {
   return (context: SchematicContext) =>
-    apply(url(join('./files' as Path, options.language)), [
+    apply(url(join('./files' as Path, options.language!)), [
       filter((path) => {
         if (path.endsWith('.dto.ts')) {
           return (
             options.type !== 'graphql-code-first' &&
             options.type !== 'graphql-schema-first' &&
-            options.crud
+            !!options.crud
           );
         }
         if (path.endsWith('.input.ts')) {
           return (
             (options.type === 'graphql-code-first' ||
               options.type === 'graphql-schema-first') &&
-            options.crud
+            !!options.crud
           );
         }
         if (
@@ -108,7 +108,7 @@ function generate(options: ResourceOptions): Source {
           );
         }
         if (path.endsWith('.graphql')) {
-          return options.type === 'graphql-schema-first' && options.crud;
+          return options.type === 'graphql-schema-first' && !!options.crud;
         }
         if (
           path.endsWith('controller.ts') ||
@@ -126,7 +126,7 @@ function generate(options: ResourceOptions): Source {
           // Entity class file workaround
           // When an invalid glob path for entities has been specified (on the application part)
           // TypeORM was trying to load a template class
-          return options.crud;
+          return !!options.crud;
         }
         return true;
       }),
@@ -148,7 +148,7 @@ function generate(options: ResourceOptions): Source {
         singular: (name: string) => pluralize.singular(name) as string,
         ent: (name: string) => name + '.entity',
       }),
-      move(options.path),
+      move(options.path!),
     ])(context);
 }
 
@@ -157,14 +157,15 @@ function addDeclarationToModule(options: ResourceOptions): Rule {
     if (options.skipImport !== undefined && options.skipImport) {
       return tree;
     }
-    options.module = new ModuleFinder(tree).find({
-      name: options.name,
-      path: options.path as Path,
-    });
+    options.module =
+      new ModuleFinder(tree).find({
+        name: options.name,
+        path: options.path as Path,
+      }) ?? undefined;
     if (!options.module) {
       return tree;
     }
-    const content = tree.read(options.module).toString();
+    const content = tree.read(options.module)!.toString();
     const declarator: ModuleDeclarator = new ModuleDeclarator();
     tree.overwrite(
       options.module,

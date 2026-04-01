@@ -54,7 +54,7 @@ function transform(options: PipeOptions): PipeOptions {
 
 function generate(options: PipeOptions): Source {
   return (context: SchematicContext) =>
-    apply(url(join('./files' as Path, options.language)), [
+    apply(url(join('./files' as Path, options.language!)), [
       options.spec ? noop() : filter((path) => !path.endsWith('.spec.ts')),
       options.spec
         ? noop()
@@ -67,6 +67,6 @@ function generate(options: PipeOptions): Source {
         ...strings,
         ...options,
       }),
-      move(options.path),
+      move(options.path!),
     ])(context);
 }

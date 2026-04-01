@@ -54,7 +54,7 @@ function transform(options: MiddlewareOptions): MiddlewareOptions {
 
 function generate(options: MiddlewareOptions): Source {
   return (context: SchematicContext) =>
-    apply(url(join('./files' as Path, options.language)), [
+    apply(url(join('./files' as Path, options.language!)), [
       options.spec
         ? noop()
         : filter((path) => {
@@ -66,6 +66,6 @@ function generate(options: MiddlewareOptions): Source {
         ...strings,
         ...options,
       }),
-      move(options.path),
+      move(options.path!),
     ])(context);
 }

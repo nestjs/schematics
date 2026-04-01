@@ -47,17 +47,17 @@ export function main(options: SubAppOptions): Rule {
   const appName = getAppNameFromPackageJson();
   options = transform(options);
   return chain([
-    updateTsConfig(options.path, appName),
+    updateTsConfig(options.path!, appName),
     updatePackageJson(options, appName),
     (tree, context) =>
       isMonorepo(tree)
         ? noop()(tree, context)
         : chain([
             branchAndMerge(mergeWith(generateWorkspace(options, appName))),
-            moveDefaultAppToApps(options.path, appName, options.sourceRoot),
+            moveDefaultAppToApps(options.path!, appName, options.sourceRoot),
           ])(tree, context),
-    addAppsToCliOptions(options.path, options.name, appName),
-    addTsConfigReference(options.path, options.name),
+    addAppsToCliOptions(options.path!, options.name, appName),
+    addTsConfigReference(options.path!, options.name),
     (tree) => {
       (options as any).isEsm = isEsmProject(tree);
       return tree;
@@ -330,11 +330,14 @@ function moveDirectoryTo(
   tree: Tree,
 ): void {
   let srcDirExists = false;
-  tree.getDir(srcDir).visit((filePath: Path, file: Readonly<FileEntry>) => {
-    srcDirExists = true;
-    const newFilePath = join(destination as Path, filePath);
-    tree.create(newFilePath, file.content);
-  });
+  tree
+    .getDir(srcDir)
+    .visit((filePath: Path, file: Readonly<FileEntry> | null | undefined) => {
+      if (!file) return;
+      srcDirExists = true;
+      const newFilePath = join(destination as Path, filePath);
+      tree.create(newFilePath, file.content);
+    });
   if (srcDirExists) {
     tree.delete(srcDir);
   }
@@ -424,7 +427,7 @@ function updateMainAppOptions(
 
 function generateWorkspace(options: SubAppOptions, appName: string): Source {
   const path = join(options.path as Path, appName);
-  return apply(url(join('./workspace' as Path, options.language)), [
+  return apply(url(join('./workspace' as Path, options.language!)), [
     template({
       ...strings,
       ...options,
@@ -437,7 +440,7 @@ function generateWorkspace(options: SubAppOptions, appName: string): Source {
 function generate(options: SubAppOptions): Source {
   return (context: SchematicContext) => {
     const path = join(options.path as Path, options.name);
-    return apply(url(join('./files' as Path, options.language)), [
+    return apply(url(join('./files' as Path, options.language!)), [
       template({
         ...strings,
         ...options,

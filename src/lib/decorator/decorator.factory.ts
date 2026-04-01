@@ -39,11 +39,11 @@ function transform(options: DecoratorOptions): DecoratorOptions {
 
 function generate(options: DecoratorOptions): Source {
   return (context: SchematicContext) =>
-    apply(url(join('./files' as Path, options.language)), [
+    apply(url(join('./files' as Path, options.language!)), [
       template({
         ...strings,
         ...options,
       }),
-      move(options.path),
+      move(options.path!),
     ])(context);
 }

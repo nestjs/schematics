@@ -42,10 +42,10 @@ interface TsConfigPartialType {
 export function main(options: LibraryOptions): Rule {
   options = transform(options);
   return chain([
-    addLibraryToCliOptions(options.path, options.name),
+    addLibraryToCliOptions(options.path!, options.name),
     updatePackageJson(options),
     updateJestEndToEnd(options),
-    updateTsConfig(options.name, options.prefix, options.path),
+    updateTsConfig(options.name, options.prefix!, options.path!),
     (tree) => {
       (options as any).isEsm = isEsmProject(tree);
       return tree;
@@ -314,7 +314,7 @@ function addLibraryToCliOptions(
 function generate(options: LibraryOptions): Source {
   return (context: SchematicContext) => {
     const path = join(options.path as Path, options.name);
-    return apply(url(join('./files' as Path, options.language)), [
+    return apply(url(join('./files' as Path, options.language!)), [
       template({
         ...strings,
         ...options,

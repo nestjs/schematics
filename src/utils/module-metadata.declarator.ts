@@ -18,7 +18,7 @@ export class ModuleMetadataDeclarator {
     const manager = new MetadataManager(content);
     const inserted = manager.insert(
       options.metadata,
-      options.symbol,
+      options.symbol!,
       options.staticOptions,
     );
     return inserted ?? content;
