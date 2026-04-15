@@ -13,6 +13,7 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
+import { formatFiles } from '../../utils/format-files.rule';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import {
   DeclarationOptions,
@@ -35,6 +36,7 @@ export function main(options: ControllerOptions): Rule {
         mergeSourceRoot(options),
         mergeWith(generate(options)),
         addDeclarationToModule(options),
+        options.format === true ? formatFiles() : noop(),
       ]),
     )(tree, context);
   };
