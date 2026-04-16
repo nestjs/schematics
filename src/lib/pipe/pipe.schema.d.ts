@@ -34,5 +34,4 @@ export interface PipeOptions {
    * Format generated files using Prettier if available.
    */
   format?: boolean;
-
 }
