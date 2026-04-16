@@ -21,5 +21,4 @@ export interface InterfaceOptions {
    * Format generated files using Prettier if available.
    */
   format?: boolean;
-
 }
