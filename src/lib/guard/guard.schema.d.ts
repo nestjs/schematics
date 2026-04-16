@@ -34,5 +34,4 @@ export interface GuardOptions {
    * Format generated files using Prettier if available.
    */
   format?: boolean;
-
 }
