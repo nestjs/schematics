@@ -1,6 +1,7 @@
 import { join, Path, strings } from '@angular-devkit/core';
 import {
   apply,
+  chain,
   filter,
   mergeWith,
   move,
@@ -11,6 +12,7 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { basename, parse } from 'path';
+import { formatFiles } from '../../utils/format-files.rule';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import {
   DEFAULT_AUTHOR,
@@ -29,7 +31,10 @@ export function main(options: ApplicationOptions): Rule {
       : options.directory;
 
   options = transform(options);
-  return mergeWith(generate(options, path));
+  return chain([
+    mergeWith(generate(options, path)),
+    options.format === true ? formatFiles() : noop(),
+  ]);
 }
 
 function transform(options: ApplicationOptions): ApplicationOptions {

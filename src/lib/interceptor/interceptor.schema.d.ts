@@ -30,4 +30,9 @@ export interface InterceptorOptions {
    * Flag to indicate if a directory is created.
    */
   flat?: boolean;
+  /**
+   * Format generated files using Prettier if available.
+   */
+  format?: boolean;
+
 }

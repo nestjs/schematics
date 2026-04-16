@@ -50,4 +50,9 @@ export interface ProviderOptions {
    * Class name to be used internally.
    */
   className?: string;
+  /**
+   * Format generated files using Prettier if available.
+   */
+  format?: boolean;
+
 }

@@ -31,6 +31,11 @@
       "type": "string",
       "format": "path",
       "description": "The libraries root directory."
+    },
+    "format": {
+      "type": "boolean",
+      "default": false,
+      "description": "Format generated files using Prettier if available."
     }
   },
   "required": ["name", "prefix"]

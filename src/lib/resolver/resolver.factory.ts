@@ -15,6 +15,7 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
+import { formatFiles } from '../../utils/format-files.rule';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import {
   DeclarationOptions,
@@ -34,6 +35,7 @@ export function main(options: ResolverOptions): Rule {
         mergeSourceRoot(options),
         addDeclarationToModule(options),
         mergeWith(generate(options)),
+        options.format === true ? formatFiles() : noop(),
       ]),
     )(tree, context);
   };

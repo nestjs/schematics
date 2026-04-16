@@ -38,4 +38,9 @@ export interface GatewayOptions {
    * Nest element type name
    */
   type?: string;
+  /**
+   * Format generated files using Prettier if available.
+   */
+  format?: boolean;
+
 }

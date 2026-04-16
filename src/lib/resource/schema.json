@@ -89,6 +89,11 @@
         "message": "Would you like to generate CRUD entry points?",
         "type": "confirmation"
       }
+    },
+    "format": {
+      "type": "boolean",
+      "default": false,
+      "description": "Format generated files using Prettier if available."
     }
   },
   "required": ["name"]
