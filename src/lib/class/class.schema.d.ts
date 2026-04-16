@@ -34,4 +34,8 @@ export interface ClassOptions {
    * Class name to be used internally.
    */
   className?: string;
+  /**
+   * Format generated files using Prettier if available.
+   */
+  format?: boolean;
 }

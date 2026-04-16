@@ -59,4 +59,8 @@ export interface ResourceOptions {
    * When true, "@nestjs/swagger" dependency is installed in the project.
    */
   isSwaggerInstalled?: boolean;
+  /**
+   * Format generated files using Prettier if available.
+   */
+  format?: boolean;
 }

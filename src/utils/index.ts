@@ -1,3 +1,4 @@
+export * from './format-files.rule';
 export * from './metadata.manager';
 export * from './module-import.declarator';
 export * from './module-metadata.declarator';

@@ -40,6 +40,11 @@
       "type": "string",
       "default": "spec",
       "description": "Specifies the file suffix of spec files."
+    },
+    "format": {
+      "type": "boolean",
+      "default": false,
+      "description": "Format generated files using Prettier if available."
     }
   },
   "required": ["name"]

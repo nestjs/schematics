@@ -5,6 +5,7 @@ import {
   chain,
   mergeWith,
   move,
+  noop,
   Rule,
   SchematicsException,
   Source,
@@ -13,6 +14,7 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { parse } from 'jsonc-parser';
+import { formatFiles } from '../../utils/format-files.rule';
 import { createModuleNameMapper, inPlaceSortByKeys, normalizeToKebabOrSnakeCase } from '../../utils';
 import {
   DEFAULT_LANGUAGE,
@@ -41,6 +43,7 @@ export function main(options: LibraryOptions): Rule {
     updateJestEndToEnd(options),
     updateTsConfig(options.name, options.prefix, options.path),
     branchAndMerge(mergeWith(generate(options))),
+    options.format === true ? formatFiles() : noop(),
   ]);
 }
 

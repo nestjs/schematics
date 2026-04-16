@@ -13,6 +13,7 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
+import { formatFiles } from '../../utils/format-files.rule';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import { Location, NameParser } from '../../utils/name.parser';
 import { mergeSourceRoot } from '../../utils/source-root.helpers';
@@ -21,7 +22,11 @@ import { ClassOptions } from './class.schema';
 
 export function main(options: ClassOptions): Rule {
   options = transform(options);
-  return chain([mergeSourceRoot(options), mergeWith(generate(options))]);
+  return chain([
+    mergeSourceRoot(options),
+    mergeWith(generate(options)),
+    options.format === true ? formatFiles() : noop(),
+  ]);
 }
 
 function transform(options: ClassOptions): ClassOptions {

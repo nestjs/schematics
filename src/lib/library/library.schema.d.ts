@@ -21,4 +21,8 @@ export interface LibraryOptions {
    * The libraries root directory
    */
   rootDir?: string | Path;
+  /**
+   * Format generated files using Prettier if available.
+   */
+  format?: boolean;
 }

@@ -24,6 +24,7 @@ import {
   getPackageJsonDependency,
   NodeDependencyType,
 } from '../../utils/dependencies.utils';
+import { formatFiles } from '../../utils/format-files.rule';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import { Location, NameParser } from '../../utils/name.parser';
 import { mergeSourceRoot } from '../../utils/source-root.helpers';
@@ -39,6 +40,7 @@ export function main(options: ResourceOptions): Rule {
         mergeSourceRoot(options),
         addDeclarationToModule(options),
         mergeWith(generate(options)),
+        options.format === true ? formatFiles() : noop(),
       ]),
     )(tree, context);
   };

@@ -17,6 +17,7 @@ import {
 import { existsSync, readFileSync } from 'fs';
 import { parse, stringify } from 'comment-json';
 import { inPlaceSortByKeys, normalizeToKebabOrSnakeCase } from '../../utils';
+import { formatFiles } from '../../utils/format-files.rule';
 import {
   DEFAULT_APPS_PATH,
   DEFAULT_APP_NAME,
@@ -54,6 +55,7 @@ export function main(options: SubAppOptions): Rule {
           ])(tree, context),
     addAppsToCliOptions(options.path, options.name, appName),
     branchAndMerge(mergeWith(generate(options))),
+    options.format === true ? formatFiles() : noop(),
   ]);
 }
 
