@@ -4,6 +4,7 @@ import {
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { InterceptorOptions } from './interceptor.schema';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Interceptor Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

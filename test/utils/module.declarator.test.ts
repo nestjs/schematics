@@ -1,5 +1,6 @@
 import { normalize } from '@angular-devkit/core';
 import { DeclarationOptions, ModuleDeclarator } from '../../src/utils/module.declarator';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Module Declarator', () => {
   it('should add module declaration when declare', () => {

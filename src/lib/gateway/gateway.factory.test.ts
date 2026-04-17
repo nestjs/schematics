@@ -4,6 +4,7 @@ import {
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { GatewayOptions } from './gateway.schema';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Gateway Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

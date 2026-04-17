@@ -1,4 +1,5 @@
 import { MetadataManager } from '../../src/utils/metadata.manager';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Metadata Manager', () => {
   it('should insert the new metadata', () => {

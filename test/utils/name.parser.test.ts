@@ -1,4 +1,5 @@
 import { Location, NameParser, ParseOptions } from '../../src/utils/name.parser';
+import { describe, expect, it, beforeAll } from '@jest/globals';
 
 describe('Name Parser', () => {
   let parser: NameParser;

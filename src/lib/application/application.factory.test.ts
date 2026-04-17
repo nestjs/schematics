@@ -4,6 +4,7 @@ import {
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { ApplicationOptions } from './application.schema';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Application Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

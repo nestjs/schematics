@@ -4,6 +4,7 @@ import {
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { GuardOptions } from './guard.schema';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Guard Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

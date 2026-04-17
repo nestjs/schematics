@@ -2,6 +2,7 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { formatFiles } from './format-files.rule';
+import { describe, expect, it } from '@jest/globals';
 
 describe('formatFiles Rule', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

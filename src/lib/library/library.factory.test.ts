@@ -5,6 +5,7 @@ import {
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { LibraryOptions } from './library.schema';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Library Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

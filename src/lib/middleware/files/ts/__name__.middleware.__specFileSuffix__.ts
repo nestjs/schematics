@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { <%= classify(name) %>Middleware } from './<%= name %>.middleware';
 
 describe('<%= classify(name) %>Middleware', () => {

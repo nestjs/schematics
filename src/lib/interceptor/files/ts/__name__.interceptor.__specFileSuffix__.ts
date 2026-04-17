@@ -1,3 +1,5 @@
+
+import { describe, expect, it } from '@jest/globals';
 import { <%= classify(name) %>Interceptor } from './<%= name %>.interceptor';
 
 describe('<%= classify(name) %>Interceptor', () => {

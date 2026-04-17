@@ -1,6 +1,7 @@
 import { normalize } from '@angular-devkit/core';
 import { EmptyTree } from '@angular-devkit/schematics';
 import { FindOptions, ModuleFinder } from '../../src/utils/module.finder';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Module Finder', () => {
   it('should return the app module path', () => {

@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { describe, expect, it, beforeEach } from '@jest/globals';
 import { <%= classify(name) %>Resolver } from './<%= name %>.resolver';
 
 describe('<%= classify(name) %>Resolver', () => {

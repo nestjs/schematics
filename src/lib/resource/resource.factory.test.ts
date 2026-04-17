@@ -4,6 +4,7 @@ import {
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { ResourceOptions } from './resource.schema';
+import { describe, expect, it, beforeAll } from '@jest/globals';
 
 describe('Resource Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
@@ -202,6 +203,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {}
     it('should generate "UsersController" spec file', () => {
       expect(tree.readContent('/users/users.controller.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+import { describe, expect, it, beforeEach } from '@jest/globals';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
@@ -227,6 +229,7 @@ describe('UsersController', () => {
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+import { describe, expect, it, beforeEach } from '@jest/globals';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -489,6 +492,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     it('should generate "UsersController" spec file', () => {
       expect(tree.readContent('/users/users.controller.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+import { describe, expect, it, beforeEach } from '@jest/globals';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
@@ -514,6 +518,7 @@ describe('UsersController', () => {
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+import { describe, expect, it, beforeEach } from '@jest/globals';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -775,6 +780,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     it('should generate "UsersGateway" spec file', () => {
       expect(tree.readContent('/users/users.gateway.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+import { describe, expect, it, beforeEach } from '@jest/globals';
 import { UsersGateway } from './users.gateway';
 import { UsersService } from './users.service';
 
@@ -799,6 +805,7 @@ describe('UsersGateway', () => {
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+import { describe, expect, it, beforeEach } from '@jest/globals';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -1073,6 +1080,7 @@ export class UpdateUserInput extends PartialType(CreateUserInput) {
     it('should generate "UsersResolver" spec file', () => {
       expect(tree.readContent('/users/users.resolver.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+import { describe, expect, it, beforeEach } from '@jest/globals';
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 
@@ -1097,6 +1105,7 @@ describe('UsersResolver', () => {
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+import { describe, expect, it, beforeEach } from '@jest/globals';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -1295,6 +1304,7 @@ export class UpdateUserInput extends PartialType(CreateUserInput) {
     it('should generate "UsersResolver" spec file', () => {
       expect(tree.readContent('/users/users.resolver.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+import { describe, expect, it, beforeEach } from '@jest/globals';
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 
@@ -1319,6 +1329,7 @@ describe('UsersResolver', () => {
     it('should generate "UsersService" spec file', () => {
       expect(tree.readContent('/users/users.service.spec.ts'))
         .toEqual(`import { Test, TestingModule } from '@nestjs/testing';
+import { describe, expect, it, beforeEach } from '@jest/globals';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {

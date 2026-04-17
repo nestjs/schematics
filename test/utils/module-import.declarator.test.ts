@@ -1,6 +1,7 @@
 import { normalize } from '@angular-devkit/core';
 import { ModuleImportDeclarator } from '../../src/utils/module-import.declarator';
 import { DeclarationOptions } from '../../src/utils/module.declarator';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Module Import Declarator', () => {
   it('should add import to the buffered module content', () => {

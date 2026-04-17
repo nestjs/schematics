@@ -4,6 +4,7 @@ import {
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { DecoratorOptions } from './decorator.schema';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Decorator Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

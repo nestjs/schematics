@@ -6,6 +6,7 @@ import {
 import * as path from 'path';
 import { LibraryOptions } from '../library/library.schema';
 import { SubAppOptions } from './sub-app.schema';
+import { describe, expect, it } from '@jest/globals';
 
 describe('SubApp Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

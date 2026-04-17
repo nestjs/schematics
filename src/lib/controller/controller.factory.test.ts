@@ -7,6 +7,7 @@ import * as path from 'path';
 import { ApplicationOptions } from '../application/application.schema';
 import { ModuleOptions } from '../module/module.schema';
 import { ControllerOptions } from './controller.schema';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Controller Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

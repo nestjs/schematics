@@ -6,6 +6,7 @@ import {
 import * as path from 'path';
 import { ApplicationOptions } from '../application/application.schema';
 import { ModuleOptions } from './module.schema';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Module Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

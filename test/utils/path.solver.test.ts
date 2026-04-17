@@ -1,5 +1,6 @@
 import { normalize, Path } from '@angular-devkit/core';
 import { PathSolver } from '../../src/utils/path.solver';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Path Solver', () => {
   it('should relative path between path', () => {

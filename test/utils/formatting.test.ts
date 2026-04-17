@@ -1,4 +1,5 @@
 import { normalizeToKebabOrSnakeCase } from '../../src/utils';
+import { describe, expect, it } from '@jest/globals';
 
 describe('normalizeToKebabOrSnakeCase', () => {
   it('should convert camelCase to kebab-case', () => {
