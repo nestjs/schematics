@@ -41,8 +41,8 @@
   },
   "homepage": "https://github.com/nestjs/schematics#readme",
   "dependencies": {
-    "@angular-devkit/core": "19.2.24",
-    "@angular-devkit/schematics": "19.2.24",
+    "@angular-devkit/core": "21.2.8",
+    "@angular-devkit/schematics": "21.2.8",
     "comment-json": "5.0.0",
     "jsonc-parser": "3.3.1",
     "pluralize": "8.0.0"
