@@ -65,7 +65,13 @@
     "vitest": "4.0.18"
   },
   "peerDependencies": {
+    "prettier": "^3.0.0",
     "typescript": ">=6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "prettier": {
+      "optional": true
+    }
   },
   "schematics": "./dist/collection.json",
   "lint-staged": {

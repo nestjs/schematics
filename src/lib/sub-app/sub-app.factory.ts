@@ -17,6 +17,7 @@ import {
 } from '@angular-devkit/schematics';
 import { existsSync, readFileSync } from 'fs';
 import { parse, stringify } from 'comment-json';
+import { formatFiles } from '../../utils/format-files.rule.js';
 import {
   inPlaceSortByKeys,
   normalizeToKebabOrSnakeCase,
@@ -63,6 +64,7 @@ export function main(options: SubAppOptions): Rule {
       return tree;
     },
     branchAndMerge(mergeWith(generate(options))),
+    options.format === true ? formatFiles() : noop(),
   ]);
 }
 

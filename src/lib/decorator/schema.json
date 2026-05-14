@@ -30,6 +30,11 @@
       "type": "boolean",
       "default": true,
       "description": "Flag to indicate if a directory is created."
+    },
+    "format": {
+      "type": "boolean",
+      "default": false,
+      "description": "Format generated files using Prettier if available."
     }
   },
   "required": ["name"]

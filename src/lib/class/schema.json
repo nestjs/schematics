@@ -44,6 +44,11 @@
     "className": {
       "type": "string",
       "description": "Class name to be used internally."
+    },
+    "format": {
+      "type": "boolean",
+      "default": false,
+      "description": "Format generated files using Prettier if available."
     }
   },
   "required": ["name"]

@@ -3,6 +3,7 @@ import {
   apply,
   chain,
   mergeWith,
+  noop,
   move,
   Rule,
   SchematicContext,
@@ -11,6 +12,7 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
+import { formatFiles } from '../../utils/format-files.rule.js';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting.js';
 import { Location, NameParser } from '../../utils/name.parser.js';
 import { mergeSourceRoot } from '../../utils/source-root.helpers.js';
@@ -18,7 +20,11 @@ import type { InterfaceOptions } from './interface.schema.js';
 
 export function main(options: InterfaceOptions): Rule {
   options = transform(options);
-  return chain([mergeSourceRoot(options), mergeWith(generate(options))]);
+  return chain([
+    mergeSourceRoot(options),
+    mergeWith(generate(options)),
+    options.format === true ? formatFiles() : noop(),
+  ]);
 }
 
 function transform(options: InterfaceOptions): InterfaceOptions {

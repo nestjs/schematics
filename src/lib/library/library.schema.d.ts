@@ -26,4 +26,8 @@ export interface LibraryOptions {
    * @default "spec"
    */
   specFileSuffix?: string;
+  /**
+   * Format generated files using Prettier if available.
+   */
+  format?: boolean;
 }

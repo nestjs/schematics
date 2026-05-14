@@ -23,4 +23,8 @@ export interface SubAppOptions {
    */
   specFileSuffix?: string;
   sourceRoot?: string;
+  /**
+   * Format generated files using Prettier if available.
+   */
+  format?: boolean;
 }

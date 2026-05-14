@@ -13,6 +13,7 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
+import { formatFiles } from '../../utils/format-files.rule.js';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting.js';
 import { Location, NameParser } from '../../utils/name.parser.js';
 import {
@@ -30,6 +31,7 @@ export function main(options: MiddlewareOptions): Rule {
       return tree;
     },
     mergeWith(generate(options)),
+    options.format === true ? formatFiles() : noop(),
   ]);
 }
 

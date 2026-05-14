@@ -5,6 +5,7 @@ import {
   chain,
   mergeWith,
   move,
+  noop,
   Rule,
   SchematicContext,
   SchematicsException,
@@ -14,6 +15,7 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { parse } from 'jsonc-parser';
+import { formatFiles } from '../../utils/format-files.rule.js';
 import {
   createModuleNameMapper,
   inPlaceSortByKeys,
@@ -51,6 +53,7 @@ export function main(options: LibraryOptions): Rule {
       return tree;
     },
     branchAndMerge(mergeWith(generate(options))),
+    options.format === true ? formatFiles() : noop(),
   ]);
 }
 
