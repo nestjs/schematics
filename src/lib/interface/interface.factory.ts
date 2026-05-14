@@ -12,11 +12,11 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import { formatFiles } from '../../utils/format-files.rule';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
-import { Location, NameParser } from '../../utils/name.parser';
-import { mergeSourceRoot } from '../../utils/source-root.helpers';
-import { InterfaceOptions } from './interface.schema';
+import { formatFiles } from '../../utils/format-files.rule.js';
+import { normalizeToKebabOrSnakeCase } from '../../utils/formatting.js';
+import { Location, NameParser } from '../../utils/name.parser.js';
+import { mergeSourceRoot } from '../../utils/source-root.helpers.js';
+import type { InterfaceOptions } from './interface.schema.js';
 
 export function main(options: InterfaceOptions): Rule {
   options = transform(options);
@@ -49,6 +49,6 @@ function generate(options: InterfaceOptions): Source {
         ...strings,
         ...options,
       }),
-      move(options.path),
+      move(options.path!),
     ])(context);
 }

@@ -3,7 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { ApplicationOptions } from './application.schema';
+import type { ApplicationOptions } from './application.schema.js';
 
 describe('Application Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
@@ -14,6 +14,7 @@ describe('Application Factory', () => {
     it('should manage basic (ie., cross-platform) name', async () => {
       const options: ApplicationOptions = {
         name: 'project',
+        type: 'cjs',
       };
       const tree: UnitTestTree = await runner.runSchematic(
         'application',
@@ -23,10 +24,11 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/project/eslint.config.mjs',
+          '/project/oxlint.json',
           '/project/.gitignore',
           '/project/.prettierrc',
           '/project/README.md',
+          '/project/jest.config.ts',
           '/project/nest-cli.json',
           '/project/package.json',
           '/project/tsconfig.build.json',
@@ -50,6 +52,7 @@ describe('Application Factory', () => {
     it('should manage name with dots in it', async () => {
       const options: ApplicationOptions = {
         name: 'project.foo.bar',
+        type: 'cjs',
       };
       const tree: UnitTestTree = await runner.runSchematic(
         'application',
@@ -58,10 +61,11 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          `/project.foo.bar/eslint.config.mjs`,
+          `/project.foo.bar/oxlint.json`,
           `/project.foo.bar/.gitignore`,
           `/project.foo.bar/.prettierrc`,
           `/project.foo.bar/README.md`,
+          `/project.foo.bar/jest.config.ts`,
           `/project.foo.bar/nest-cli.json`,
           `/project.foo.bar/package.json`,
           `/project.foo.bar/tsconfig.build.json`,
@@ -85,6 +89,7 @@ describe('Application Factory', () => {
     it('should manage name to normalize from camel case name', async () => {
       const options: ApplicationOptions = {
         name: 'awesomeProject',
+        type: 'cjs',
       };
       const tree: UnitTestTree = await runner.runSchematic(
         'application',
@@ -93,10 +98,11 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/awesome-project/eslint.config.mjs',
+          '/awesome-project/oxlint.json',
           '/awesome-project/.gitignore',
           '/awesome-project/.prettierrc',
           '/awesome-project/README.md',
+          '/awesome-project/jest.config.ts',
           '/awesome-project/nest-cli.json',
           '/awesome-project/package.json',
           '/awesome-project/tsconfig.build.json',
@@ -120,6 +126,7 @@ describe('Application Factory', () => {
     it('should keep underscores', async () => {
       const options: ApplicationOptions = {
         name: '_awesomeProject',
+        type: 'cjs',
       };
       const tree: UnitTestTree = await runner.runSchematic(
         'application',
@@ -128,10 +135,11 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/_awesome-project/eslint.config.mjs',
+          '/_awesome-project/oxlint.json',
           '/_awesome-project/.gitignore',
           '/_awesome-project/.prettierrc',
           '/_awesome-project/README.md',
+          '/_awesome-project/jest.config.ts',
           '/_awesome-project/nest-cli.json',
           '/_awesome-project/package.json',
           '/_awesome-project/tsconfig.build.json',
@@ -155,6 +163,7 @@ describe('Application Factory', () => {
     it('should manage basic name that has no scope name in it but starts with "@"', async () => {
       const options: ApplicationOptions = {
         name: '@/package',
+        type: 'cjs',
       };
       const tree: UnitTestTree = await runner.runSchematic(
         'application',
@@ -163,10 +172,11 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/@/package/eslint.config.mjs',
+          '/@/package/oxlint.json',
           '/@/package/.gitignore',
           '/@/package/.prettierrc',
           '/@/package/README.md',
+          '/@/package/jest.config.ts',
           '/@/package/nest-cli.json',
           '/@/package/package.json',
           '/@/package/tsconfig.build.json',
@@ -190,6 +200,7 @@ describe('Application Factory', () => {
     it('should manage the name "." (ie., current working directory)', async () => {
       const options: ApplicationOptions = {
         name: '.',
+        type: 'cjs',
       };
       const tree: UnitTestTree = await runner.runSchematic(
         'application',
@@ -198,10 +209,11 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/eslint.config.mjs',
+          '/oxlint.json',
           '/.gitignore',
           '/.prettierrc',
           '/README.md',
+          '/jest.config.ts',
           '/nest-cli.json',
           '/package.json',
           '/tsconfig.build.json',
@@ -225,6 +237,7 @@ describe('Application Factory', () => {
         it('should manage basic name', async () => {
           const options: ApplicationOptions = {
             name: '@scope/package',
+            type: 'cjs',
           };
           const tree: UnitTestTree = await runner.runSchematic(
             'application',
@@ -233,10 +246,11 @@ describe('Application Factory', () => {
           const files: string[] = tree.files;
           expect(files.sort()).toEqual(
             [
-              '/@scope/package/eslint.config.mjs',
+              '/@scope/package/oxlint.json',
               '/@scope/package/.gitignore',
               '/@scope/package/.prettierrc',
               '/@scope/package/README.md',
+              '/@scope/package/jest.config.ts',
               '/@scope/package/nest-cli.json',
               '/@scope/package/package.json',
               '/@scope/package/tsconfig.build.json',
@@ -260,6 +274,7 @@ describe('Application Factory', () => {
         it('should manage name with blank space right after the "@" symbol', async () => {
           const options: ApplicationOptions = {
             name: '@ /package',
+            type: 'cjs',
           };
           const tree: UnitTestTree = await runner.runSchematic(
             'application',
@@ -268,10 +283,11 @@ describe('Application Factory', () => {
           const files: string[] = tree.files;
           expect(files.sort()).toEqual(
             [
-              '/@-/package/eslint.config.mjs',
+              '/@-/package/oxlint.json',
               '/@-/package/.gitignore',
               '/@-/package/.prettierrc',
               '/@-/package/README.md',
+              '/@-/package/jest.config.ts',
               '/@-/package/nest-cli.json',
               '/@-/package/package.json',
               '/@-/package/tsconfig.build.json',
@@ -298,6 +314,7 @@ describe('Application Factory', () => {
   it('should manage name as number', async () => {
     const options: ApplicationOptions = {
       name: 123,
+      type: 'cjs',
     };
     const tree: UnitTestTree = await runner.runSchematic(
       'application',
@@ -307,10 +324,11 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/123/eslint.config.mjs',
+        '/123/oxlint.json',
         '/123/.gitignore',
         '/123/.prettierrc',
         '/123/README.md',
+        '/123/jest.config.ts',
         '/123/nest-cli.json',
         '/123/package.json',
         '/123/tsconfig.build.json',
@@ -347,6 +365,7 @@ describe('Application Factory', () => {
         '/project/.prettierrc',
         '/project/README.md',
         '/project/index.js',
+        '/project/jest.config.js',
         '/project/jsconfig.json',
         '/project/nest-cli.json',
         '/project/nodemon.json',
@@ -371,6 +390,7 @@ describe('Application Factory', () => {
     const options: ApplicationOptions = {
       name: 'project',
       directory: 'app',
+      type: 'cjs',
     };
     const tree: UnitTestTree = await runner.runSchematic(
       'application',
@@ -380,10 +400,11 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/app/eslint.config.mjs',
+        '/app/oxlint.json',
         '/app/.gitignore',
         '/app/.prettierrc',
         '/app/README.md',
+        '/app/jest.config.ts',
         '/app/nest-cli.json',
         '/app/package.json',
         '/app/tsconfig.build.json',
@@ -421,6 +442,7 @@ describe('Application Factory', () => {
         '/project/.prettierrc',
         '/project/README.md',
         '/project/index.js',
+        '/project/jest.config.js',
         '/project/jsconfig.json',
         '/project/nest-cli.json',
         '/project/nodemon.json',
@@ -452,6 +474,7 @@ describe('Application Factory', () => {
         '/project/.prettierrc',
         '/project/README.md',
         '/project/index.js',
+        '/project/jest.config.js',
         '/project/jsconfig.json',
         '/project/nest-cli.json',
         '/project/nodemon.json',
@@ -471,6 +494,7 @@ describe('Application Factory', () => {
       name: 'project',
       spec: true,
       specFileSuffix: 'test',
+      type: 'cjs',
     };
     const tree: UnitTestTree = await runner.runSchematic(
       'application',
@@ -480,10 +504,11 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/project/eslint.config.mjs',
+        '/project/oxlint.json',
         '/project/.gitignore',
         '/project/.prettierrc',
         '/project/README.md',
+        '/project/jest.config.ts',
         '/project/nest-cli.json',
         '/project/package.json',
         '/project/tsconfig.build.json',
@@ -497,5 +522,127 @@ describe('Application Factory', () => {
         '/project/test/jest-e2e.json',
       ].sort(),
     );
+  });
+  describe('when type is "esm"', () => {
+    it('should generate ESM project files with vitest', async () => {
+      const options: ApplicationOptions = {
+        name: 'project',
+        type: 'esm',
+      };
+      const tree: UnitTestTree = await runner.runSchematic(
+        'application',
+        options,
+      );
+
+      const files: string[] = tree.files;
+      expect(files.sort()).toEqual(
+        [
+          '/project/oxlint.json',
+          '/project/.gitignore',
+          '/project/.prettierrc',
+          '/project/README.md',
+          '/project/nest-cli.json',
+          '/project/package.json',
+          '/project/tsconfig.build.json',
+          '/project/tsconfig.json',
+          '/project/src/app.controller.spec.ts',
+          '/project/src/app.controller.ts',
+          '/project/src/app.module.ts',
+          '/project/src/app.service.ts',
+          '/project/src/main.ts',
+          '/project/test/app.e2e-spec.ts',
+          '/project/vitest.config.ts',
+          '/project/vitest.config.e2e.ts',
+        ].sort(),
+      );
+    });
+
+    it('should generate ESM package.json with type module and vitest', async () => {
+      const options: ApplicationOptions = {
+        name: 'project',
+        type: 'esm',
+      };
+      const tree: UnitTestTree = await runner.runSchematic(
+        'application',
+        options,
+      );
+
+      const packageJson = JSON.parse(tree.readContent('/project/package.json'));
+      expect(packageJson.type).toBe('module');
+      expect(packageJson.devDependencies).toHaveProperty('vitest');
+      expect(packageJson.devDependencies).not.toHaveProperty('unplugin-swc');
+      expect(packageJson.devDependencies).not.toHaveProperty('@swc/core');
+      expect(packageJson.devDependencies).not.toHaveProperty('jest');
+      expect(packageJson.devDependencies).not.toHaveProperty('ts-jest');
+      expect(packageJson.devDependencies).not.toHaveProperty('@types/jest');
+      expect(packageJson.devDependencies).not.toHaveProperty('ts-node');
+      expect(packageJson.devDependencies).not.toHaveProperty('tsconfig-paths');
+      expect(packageJson.devDependencies).toHaveProperty('oxlint');
+      expect(packageJson.devDependencies).not.toHaveProperty('eslint');
+      expect(packageJson.scripts.test).toBe('vitest run');
+      expect(packageJson.scripts['test:e2e']).toBe(
+        'vitest run --config ./vitest.config.e2e.ts',
+      );
+    });
+
+    it('should generate ESM source files with .js import extensions', async () => {
+      const options: ApplicationOptions = {
+        name: 'project',
+        type: 'esm',
+      };
+      const tree: UnitTestTree = await runner.runSchematic(
+        'application',
+        options,
+      );
+
+      const mainContent = tree.readContent('/project/src/main.ts');
+      expect(mainContent).toContain("from './app.module.js'");
+
+      const moduleContent = tree.readContent('/project/src/app.module.ts');
+      expect(moduleContent).toContain("from './app.controller.js'");
+      expect(moduleContent).toContain("from './app.service.js'");
+
+      const controllerContent = tree.readContent(
+        '/project/src/app.controller.ts',
+      );
+      expect(controllerContent).toContain("from './app.service.js'");
+    });
+
+    it('should generate oxlint.json config', async () => {
+      const options: ApplicationOptions = {
+        name: 'project',
+        type: 'esm',
+      };
+      const tree: UnitTestTree = await runner.runSchematic(
+        'application',
+        options,
+      );
+
+      const oxlintContent = tree.readContent('/project/oxlint.json');
+      const oxlintConfig = JSON.parse(oxlintContent);
+      expect(oxlintConfig.rules).toBeDefined();
+    });
+
+    it('should generate CJS project files with jest', async () => {
+      const options: ApplicationOptions = {
+        name: 'project',
+        type: 'cjs',
+      };
+      const tree: UnitTestTree = await runner.runSchematic(
+        'application',
+        options,
+      );
+
+      const files: string[] = tree.files;
+      expect(files).toContain('/project/test/jest-e2e.json');
+      expect(files).toContain('/project/jest.config.ts');
+      expect(files).not.toContain('/project/vitest.config.ts');
+
+      const packageJson = JSON.parse(tree.readContent('/project/package.json'));
+      expect(packageJson.type).toBeUndefined();
+      expect(packageJson.devDependencies).toHaveProperty('jest');
+      expect(packageJson.devDependencies).toHaveProperty('oxlint');
+      expect(packageJson.devDependencies).not.toHaveProperty('eslint');
+    });
   });
 });

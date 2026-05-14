@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { <%= classify(name) %>Controller } from './<%= name %>.controller';
-import { <%= classify(name) %>Service } from './<%= name %>.service';
+import { <%= classify(name) %>Controller } from './<%= name %>.controller<%= isEsm ? '.js' : '' %>';
+import { <%= classify(name) %>Service } from './<%= name %>.service<%= isEsm ? '.js' : '' %>';
 
 describe('<%= classify(name) %>Controller', () => {
   let <%= camelize(name) %>Controller: <%= classify(name) %>Controller;

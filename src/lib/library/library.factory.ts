@@ -7,6 +7,7 @@ import {
   move,
   noop,
   Rule,
+  SchematicContext,
   SchematicsException,
   Source,
   template,
@@ -14,21 +15,26 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { parse } from 'jsonc-parser';
-import { formatFiles } from '../../utils/format-files.rule';
-import { createModuleNameMapper, inPlaceSortByKeys, normalizeToKebabOrSnakeCase } from '../../utils';
+import { formatFiles } from '../../utils/format-files.rule.js';
+import {
+  createModuleNameMapper,
+  inPlaceSortByKeys,
+  normalizeToKebabOrSnakeCase,
+} from '../../utils/index.js';
 import {
   DEFAULT_LANGUAGE,
   DEFAULT_LIB_PATH,
   DEFAULT_PATH_NAME,
   PROJECT_TYPE,
-} from '../defaults';
-import { LibraryOptions } from './library.schema';
-import { FileSystemReader } from '../readers';
+} from '../defaults.js';
+import type { LibraryOptions } from './library.schema.js';
+import { FileSystemReader } from '../readers/index.js';
+import { isEsmProject } from '../../utils/source-root.helpers.js';
 
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
   compilerOptions: {
-    baseUrl: string;
+    baseUrl?: string;
     paths: {
       [key: string]: string[];
     };
@@ -38,10 +44,14 @@ interface TsConfigPartialType {
 export function main(options: LibraryOptions): Rule {
   options = transform(options);
   return chain([
-    addLibraryToCliOptions(options.path, options.name),
+    addLibraryToCliOptions(options.path!, options.name),
     updatePackageJson(options),
     updateJestEndToEnd(options),
-    updateTsConfig(options.name, options.prefix, options.path),
+    updateTsConfig(options.name, options.prefix!, options.path!),
+    (tree) => {
+      (options as any).isEsm = isEsmProject(tree);
+      return tree;
+    },
     branchAndMerge(mergeWith(generate(options))),
     options.format === true ? formatFiles() : noop(),
   ]);
@@ -86,6 +96,9 @@ function transform(options: LibraryOptions): LibraryOptions {
       : normalize(defaultSourceRoot);
 
   target.prefix = target.prefix || getDefaultLibraryPrefix();
+  target.specFileSuffix = normalizeToKebabOrSnakeCase(
+    target.specFileSuffix ?? 'spec',
+  );
   return target;
 }
 
@@ -140,7 +153,7 @@ function updateJestConfig(
   const newMapper = createModuleNameMapper(packageKey, packageRoot);
   Object.assign(jestOptions.moduleNameMapper, newMapper);
 
-  inPlaceSortByKeys(jestOptions.moduleNameMapper);
+  inPlaceSortByKeys(jestOptions.moduleNameMapper as Record<string, any>);
 }
 
 function updateNpmScripts(
@@ -188,7 +201,7 @@ function updateJestEndToEnd(options: LibraryOptions) {
         const newMapper = createModuleNameMapper(packageKey, packageRoot);
         Object.assign(jestOptions.moduleNameMapper, newMapper);
 
-        inPlaceSortByKeys(jestOptions.moduleNameMapper);
+        inPlaceSortByKeys(jestOptions.moduleNameMapper as Record<string, any>);
       },
     );
   };
@@ -230,22 +243,22 @@ function updateTsConfig(
         if (!tsconfig.compilerOptions) {
           tsconfig.compilerOptions = {} as any;
         }
-        if (!tsconfig.compilerOptions.baseUrl) {
-          tsconfig.compilerOptions.baseUrl = './';
-        }
+        delete tsconfig.compilerOptions.baseUrl;
         if (!tsconfig.compilerOptions.paths) {
           tsconfig.compilerOptions.paths = {};
         }
         if (!tsconfig.compilerOptions.paths[packageKey]) {
           tsconfig.compilerOptions.paths[packageKey] = [];
         }
-        tsconfig.compilerOptions.paths[packageKey].push(distRoot);
+        tsconfig.compilerOptions.paths[packageKey].push('./' + distRoot);
 
         const deepPackagePath = packageKey + '/*';
         if (!tsconfig.compilerOptions.paths[deepPackagePath]) {
           tsconfig.compilerOptions.paths[deepPackagePath] = [];
         }
-        tsconfig.compilerOptions.paths[deepPackagePath].push(distRoot + '/*');
+        tsconfig.compilerOptions.paths[deepPackagePath].push(
+          './' + distRoot + '/*',
+        );
 
         inPlaceSortByKeys(tsconfig.compilerOptions.paths);
       },
@@ -285,8 +298,8 @@ function addLibraryToCliOptions(
         if (!optionsFile.compilerOptions) {
           optionsFile.compilerOptions = {};
         }
-        if (optionsFile.compilerOptions.webpack === undefined) {
-          optionsFile.compilerOptions.webpack = true;
+        if (optionsFile.compilerOptions.builder === undefined) {
+          optionsFile.compilerOptions.builder = 'rspack';
         }
         if (optionsFile.projects[projectName]) {
           throw new SchematicsException(
@@ -295,20 +308,21 @@ function addLibraryToCliOptions(
         }
         optionsFile.projects[projectName] = project;
 
-        inPlaceSortByKeys(optionsFile.projects);
+        inPlaceSortByKeys(optionsFile.projects as Record<string, any>);
       },
     );
   };
 }
 
 function generate(options: LibraryOptions): Source {
-  const path = join(options.path as Path, options.name);
-
-  return apply(url(join('./files' as Path, options.language)), [
-    template({
-      ...strings,
-      ...options,
-    }),
-    move(path),
-  ]);
+  return (context: SchematicContext) => {
+    const path = join(options.path as Path, options.name);
+    return apply(url(join('./files' as Path, options.language!)), [
+      template({
+        ...strings,
+        ...options,
+      }),
+      move(path),
+    ])(context);
+  };
 }

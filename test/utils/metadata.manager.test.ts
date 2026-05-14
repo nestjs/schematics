@@ -1,4 +1,4 @@
-import { MetadataManager } from '../../src/utils/metadata.manager';
+import { MetadataManager } from '../../src/utils/metadata.manager.js';
 
 describe('Metadata Manager', () => {
   it('should insert the new metadata', () => {

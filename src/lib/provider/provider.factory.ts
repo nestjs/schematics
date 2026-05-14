@@ -14,20 +14,24 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import { formatFiles } from '../../utils/format-files.rule';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
+import { formatFiles } from '../../utils/format-files.rule.js';
+import { normalizeToKebabOrSnakeCase } from '../../utils/formatting.js';
 import {
   DeclarationOptions,
   ModuleDeclarator,
-} from '../../utils/module.declarator';
-import { ModuleFinder } from '../../utils/module.finder';
-import { Location, NameParser } from '../../utils/name.parser';
-import { mergeSourceRoot } from '../../utils/source-root.helpers';
-import { ProviderOptions } from './provider.schema';
+} from '../../utils/module.declarator.js';
+import { ModuleFinder } from '../../utils/module.finder.js';
+import { Location, NameParser } from '../../utils/name.parser.js';
+import {
+  isEsmProject,
+  mergeSourceRoot,
+} from '../../utils/source-root.helpers.js';
+import type { ProviderOptions } from './provider.schema.js';
 
 export function main(options: ProviderOptions): Rule {
   options = transform(options);
   return (tree: Tree, context: SchematicContext) => {
+    (options as any).isEsm = isEsmProject(tree);
     return branchAndMerge(
       chain([
         mergeSourceRoot(options),
@@ -68,7 +72,7 @@ function transform(options: ProviderOptions): ProviderOptions {
 
 function generate(options: ProviderOptions) {
   return (context: SchematicContext) =>
-    apply(url(join('./files' as Path, options.language)), [
+    apply(url(join('./files' as Path, options.language!)), [
       options.spec
         ? noop()
         : filter((path) => {
@@ -80,7 +84,7 @@ function generate(options: ProviderOptions) {
         ...strings,
         ...options,
       }),
-      move(options.path),
+      move(options.path!),
     ])(context);
 }
 
@@ -89,18 +93,22 @@ function addDeclarationToModule(options: ProviderOptions): Rule {
     if (options.skipImport !== undefined && options.skipImport) {
       return tree;
     }
-    options.module = new ModuleFinder(tree).find({
-      name: options.name,
-      path: options.path as Path,
-    });
+    options.module =
+      new ModuleFinder(tree).find({
+        name: options.name,
+        path: options.path as Path,
+      }) ?? undefined;
     if (!options.module) {
       return tree;
     }
-    const content = tree.read(options.module).toString();
+    const content = tree.read(options.module)!.toString();
     const declarator: ModuleDeclarator = new ModuleDeclarator();
     tree.overwrite(
       options.module,
-      declarator.declare(content, options as DeclarationOptions),
+      declarator.declare(content, {
+        ...options,
+        isEsm: isEsmProject(tree),
+      } as DeclarationOptions),
     );
     return tree;
   };

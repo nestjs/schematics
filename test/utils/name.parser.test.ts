@@ -1,4 +1,4 @@
-import { Location, NameParser, ParseOptions } from '../../src/utils/name.parser';
+import { Location, NameParser, ParseOptions } from '../../src/utils/name.parser.js';
 
 describe('Name Parser', () => {
   let parser: NameParser;

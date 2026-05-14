@@ -22,6 +22,11 @@ export interface LibraryOptions {
    */
   rootDir?: string | Path;
   /**
+   * Specifies the file suffix of spec files.
+   * @default "spec"
+   */
+  specFileSuffix?: string;
+  /**
    * Format generated files using Prettier if available.
    */
   format?: boolean;

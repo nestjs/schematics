@@ -1,5 +1,5 @@
 import { normalize } from '@angular-devkit/core';
-import { DeclarationOptions, ModuleDeclarator } from '../../src/utils/module.declarator';
+import { DeclarationOptions, ModuleDeclarator } from '../../src/utils/module.declarator.js';
 
 describe('Module Declarator', () => {
   it('should add module declaration when declare', () => {

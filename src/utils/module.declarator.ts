@@ -1,7 +1,7 @@
 import { Path } from '@angular-devkit/core';
 import { capitalize, classify } from '@angular-devkit/core/src/utils/strings';
-import { ModuleImportDeclarator } from './module-import.declarator';
-import { ModuleMetadataDeclarator } from './module-metadata.declarator';
+import { ModuleImportDeclarator } from './module-import.declarator.js';
+import { ModuleMetadataDeclarator } from './module-metadata.declarator.js';
 
 export interface DeclarationOptions {
   metadata: string;
@@ -11,6 +11,7 @@ export interface DeclarationOptions {
   path: Path;
   module: Path;
   symbol?: string;
+  isEsm?: boolean;
   staticOptions?: {
     name: string;
     value: Record<string, any>;

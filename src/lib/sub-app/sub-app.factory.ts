@@ -8,6 +8,7 @@ import {
   move,
   noop,
   Rule,
+  SchematicContext,
   SchematicsException,
   Source,
   template,
@@ -16,8 +17,11 @@ import {
 } from '@angular-devkit/schematics';
 import { existsSync, readFileSync } from 'fs';
 import { parse, stringify } from 'comment-json';
-import { inPlaceSortByKeys, normalizeToKebabOrSnakeCase } from '../../utils';
-import { formatFiles } from '../../utils/format-files.rule';
+import { formatFiles } from '../../utils/format-files.rule.js';
+import {
+  inPlaceSortByKeys,
+  normalizeToKebabOrSnakeCase,
+} from '../../utils/index.js';
 import {
   DEFAULT_APPS_PATH,
   DEFAULT_APP_NAME,
@@ -27,33 +31,38 @@ import {
   DEFAULT_PATH_NAME,
   PROJECT_TYPE,
   TEST_ENV,
-} from '../defaults';
-import { SubAppOptions } from './sub-app.schema';
+} from '../defaults.js';
+import type { SubAppOptions } from './sub-app.schema.js';
+import { isEsmProject } from '../../utils/source-root.helpers.js';
 
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
-  compilerOptions: {
-    baseUrl: string;
-    paths: {
-      [key: string]: string[];
-    };
-  };
+  compilerOptions?: Record<string, any>;
+  files?: string[];
+  include?: string[];
+  exclude?: string[];
+  references?: Array<{ path: string }>;
 }
 
 export function main(options: SubAppOptions): Rule {
   const appName = getAppNameFromPackageJson();
   options = transform(options);
   return chain([
-    updateTsConfig(),
+    updateTsConfig(options.path!, appName),
     updatePackageJson(options, appName),
     (tree, context) =>
       isMonorepo(tree)
         ? noop()(tree, context)
         : chain([
             branchAndMerge(mergeWith(generateWorkspace(options, appName))),
-            moveDefaultAppToApps(options.path, appName, options.sourceRoot),
+            moveDefaultAppToApps(options.path!, appName, options.sourceRoot),
           ])(tree, context),
-    addAppsToCliOptions(options.path, options.name, appName),
+    addAppsToCliOptions(options.path!, options.name, appName),
+    addTsConfigReference(options.path!, options.name),
+    (tree) => {
+      (options as any).isEsm = isEsmProject(tree);
+      return tree;
+    },
     branchAndMerge(mergeWith(generate(options))),
     options.format === true ? formatFiles() : noop(),
   ]);
@@ -134,7 +143,7 @@ function updateJsonFile<T>(
   return host;
 }
 
-function updateTsConfig() {
+function updateTsConfig(projectRoot: string, appName: string) {
   return (host: Tree) => {
     if (!host.exists('tsconfig.json')) {
       return host;
@@ -144,16 +153,59 @@ function updateTsConfig() {
       'tsconfig.json',
       (tsconfig: TsConfigPartialType) => {
         if (!tsconfig.compilerOptions) {
-          tsconfig.compilerOptions = {} as any;
+          tsconfig.compilerOptions = {};
         }
-        if (!tsconfig.compilerOptions.baseUrl) {
-          tsconfig.compilerOptions.baseUrl = './';
+        // Remove deprecated baseUrl
+        delete tsconfig.compilerOptions.baseUrl;
+        delete tsconfig.compilerOptions.paths;
+
+        // Convert to solution-style tsconfig
+        if (!tsconfig.files) {
+          tsconfig.files = [];
         }
-        if (!tsconfig.compilerOptions.paths) {
-          tsconfig.compilerOptions.paths = {};
+        delete tsconfig.include;
+        delete tsconfig.exclude;
+
+        if (!tsconfig.references) {
+          tsconfig.references = [];
         }
 
-        inPlaceSortByKeys(tsconfig.compilerOptions.paths);
+        // Add reference for the workspace (original) app
+        const workspaceAppTsConfigPath = join(
+          projectRoot as Path,
+          appName,
+          'tsconfig.app.json',
+        );
+        const hasWorkspaceRef = tsconfig.references.some(
+          (ref) => ref.path === `./${workspaceAppTsConfigPath}`,
+        );
+        if (!hasWorkspaceRef) {
+          tsconfig.references.push({
+            path: `./${workspaceAppTsConfigPath}`,
+          });
+        }
+      },
+    );
+  };
+}
+
+function addTsConfigReference(projectRoot: string, projectName: string): Rule {
+  return (host: Tree) => {
+    if (!host.exists('tsconfig.json')) {
+      return host;
+    }
+    return updateJsonFile(
+      host,
+      'tsconfig.json',
+      (tsconfig: TsConfigPartialType) => {
+        if (!tsconfig.references) {
+          tsconfig.references = [];
+        }
+        const refPath = `./${join(projectRoot as Path, projectName, 'tsconfig.app.json')}`;
+        const hasRef = tsconfig.references.some((ref) => ref.path === refPath);
+        if (!hasRef) {
+          tsconfig.references.push({ path: refPath });
+        }
       },
     );
   };
@@ -280,11 +332,14 @@ function moveDirectoryTo(
   tree: Tree,
 ): void {
   let srcDirExists = false;
-  tree.getDir(srcDir).visit((filePath: Path, file: Readonly<FileEntry>) => {
-    srcDirExists = true;
-    const newFilePath = join(destination as Path, filePath);
-    tree.create(newFilePath, file.content);
-  });
+  tree
+    .getDir(srcDir)
+    .visit((filePath: Path, file: Readonly<FileEntry> | null | undefined) => {
+      if (!file) return;
+      srcDirExists = true;
+      const newFilePath = join(destination as Path, filePath);
+      tree.create(newFilePath, file.content);
+    });
   if (srcDirExists) {
     tree.delete(srcDir);
   }
@@ -328,7 +383,7 @@ function addAppsToCliOptions(
         }
         optionsFile.projects[projectName] = project;
 
-        inPlaceSortByKeys(optionsFile.projects);
+        inPlaceSortByKeys(optionsFile.projects as Record<string, any>);
       },
     );
   };
@@ -355,7 +410,7 @@ function updateMainAppOptions(
   if (!optionsFile.compilerOptions) {
     optionsFile.compilerOptions = {};
   }
-  optionsFile.compilerOptions.webpack = true;
+  optionsFile.compilerOptions.builder = 'rspack';
   optionsFile.compilerOptions.tsConfigPath = tsConfigPath;
 
   if (!optionsFile.projects) {
@@ -374,7 +429,7 @@ function updateMainAppOptions(
 
 function generateWorkspace(options: SubAppOptions, appName: string): Source {
   const path = join(options.path as Path, appName);
-  return apply(url(join('./workspace' as Path, options.language)), [
+  return apply(url(join('./workspace' as Path, options.language!)), [
     template({
       ...strings,
       ...options,
@@ -385,12 +440,14 @@ function generateWorkspace(options: SubAppOptions, appName: string): Source {
 }
 
 function generate(options: SubAppOptions): Source {
-  const path = join(options.path as Path, options.name);
-  return apply(url(join('./files' as Path, options.language)), [
-    template({
-      ...strings,
-      ...options,
-    }),
-    move(path),
-  ]);
+  return (context: SchematicContext) => {
+    const path = join(options.path as Path, options.name);
+    return apply(url(join('./files' as Path, options.language!)), [
+      template({
+        ...strings,
+        ...options,
+      }),
+      move(path),
+    ])(context);
+  };
 }

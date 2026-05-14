@@ -32,6 +32,11 @@
       "format": "path",
       "description": "The libraries root directory."
     },
+    "specFileSuffix": {
+      "type": "string",
+      "default": "spec",
+      "description": "Specifies the file suffix of spec files."
+    },
     "format": {
       "type": "boolean",
       "default": false,

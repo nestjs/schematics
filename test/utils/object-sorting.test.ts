@@ -1,4 +1,4 @@
-import { inPlaceSortByKeys } from '../../src/utils/object-sorting';
+import { inPlaceSortByKeys } from '../../src/utils/object-sorting.js';
 
 
 describe('inPlaceSortByKeys', () => {

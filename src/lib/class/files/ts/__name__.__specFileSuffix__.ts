@@ -1,4 +1,4 @@
-import { <%= classify(className) %> } from './<%= name %>';
+import { <%= classify(className) %> } from './<%= name %><%= isEsm ? '.js' : '' %>';
 
 describe('<%= classify(className) %>', () => {
   it('should be defined', () => {

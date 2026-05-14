@@ -3,7 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { ConfigurationOptions } from './configuration.schema';
+import type { ConfigurationOptions } from './configuration.schema.js';
 
 describe('Configuration Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

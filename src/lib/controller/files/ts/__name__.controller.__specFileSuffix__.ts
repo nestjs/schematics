@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { <%= classify(name) %>Controller } from './<%= name %>.controller';
+import { <%= classify(name) %>Controller } from './<%= name %>.controller<%= isEsm ? '.js' : '' %>';
 
 describe('<%= classify(name) %>Controller', () => {
   let controller: <%= classify(name) %>Controller;

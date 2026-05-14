@@ -14,14 +14,14 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^11.0.1",
-    "@nestjs/core": "^11.0.1",
-    "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/common": "next",
+    "@nestjs/core": "next",
+    "@nestjs/platform-express": "next",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
-    "@nestjs/testing": "^11.0.1",
+    "@nestjs/testing": "next",
     "@babel/core": "7.29.0",
     "@babel/node": "7.29.0",
     "@babel/plugin-proposal-decorators": "7.29.0",
@@ -33,14 +33,5 @@
     "nodemon": "3.1.14",
     "prettier": "3.8.3",
     "supertest": "7.2.2"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json"
-    ],
-    "rootDir": "src",
-    "testRegex": ".spec.js$",
-    "coverageDirectory": "../coverage"
   }
 }
