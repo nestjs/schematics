@@ -75,6 +75,11 @@
       "default": true,
       "description": "Specifies if a spec file is generated."
     },
+    "skipTesting": {
+      "type": "boolean",
+      "default": false,
+      "description": "Specifies if testing files and package entries are skipped."
+    },
     "specFileSuffix": {
       "type": "string",
       "default": "spec",
