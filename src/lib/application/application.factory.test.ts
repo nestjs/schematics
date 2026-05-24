@@ -46,6 +46,14 @@ describe('Application Factory', () => {
       ).toMatchObject({
         name: 'project',
       });
+
+      expect(
+        JSON.parse(tree.readContent('/project/tsconfig.json')),
+      ).toMatchObject({
+        compilerOptions: {
+          types: ['node', 'jest'],
+        },
+      });
     });
     it('should manage name with dots in it', async () => {
       const options: ApplicationOptions = {
