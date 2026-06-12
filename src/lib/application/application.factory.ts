@@ -88,18 +88,27 @@ function generate(options: ApplicationOptions, path: string): Source {
     options.type === 'esm' && options.language === 'ts'
       ? 'ts-esm'
       : options.language!;
+  const shouldSkipTesting = options.skipTesting === true;
+  const shouldSkipSpecFiles = shouldSkipTesting || options.spec === false;
 
   return apply(url(join('./files' as Path, templateDir)), [
-    options.spec
-      ? noop()
-      : filter((path) => !path.endsWith('__specFileSuffix__.ts')),
-    options.spec
-      ? noop()
-      : filter((path) => {
+    shouldSkipTesting
+      ? filter(
+          (path) =>
+            !path.startsWith('/test/') &&
+            !path.endsWith('/jest.config.js') &&
+            !path.endsWith('/jest.config.ts') &&
+            !path.endsWith('/vitest.config.ts') &&
+            !path.endsWith('/vitest.config.e2e.ts'),
+        )
+      : noop(),
+    shouldSkipSpecFiles
+      ? filter((path) => {
           const languageExtension = options.language || 'ts';
           const suffix = `__specFileSuffix__.${languageExtension}`;
           return !path.endsWith(suffix);
-        }),
+        })
+      : noop(),
     template({
       ...strings,
       ...options,

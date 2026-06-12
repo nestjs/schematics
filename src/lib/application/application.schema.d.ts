@@ -50,6 +50,10 @@ export interface ApplicationOptions {
    */
   spec?: boolean;
   /**
+   * Specifies if testing files and package entries are skipped.
+   */
+  skipTesting?: boolean;
+  /**
    * Specifies the file suffix of spec files.
    * @default "spec"
    */

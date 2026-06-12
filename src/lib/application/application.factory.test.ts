@@ -455,6 +455,91 @@ describe('Application Factory', () => {
       ].sort(),
     );
   });
+  it('should skip testing files and package entries', async () => {
+    const options = {
+      name: 'project',
+      skipTesting: true,
+    } as ApplicationOptions;
+    const tree: UnitTestTree = await runner.runSchematic(
+      'application',
+      options,
+    );
+
+    const files: string[] = tree.files;
+    expect(files.sort()).toEqual(
+      [
+        '/project/oxlint.json',
+        '/project/.gitignore',
+        '/project/.prettierrc',
+        '/project/README.md',
+        '/project/nest-cli.json',
+        '/project/package.json',
+        '/project/tsconfig.build.json',
+        '/project/tsconfig.json',
+        '/project/src/app.controller.ts',
+        '/project/src/app.module.ts',
+        '/project/src/app.service.ts',
+        '/project/src/main.ts',
+      ].sort(),
+    );
+
+    const packageJson = JSON.parse(tree.readContent('/project/package.json'));
+
+    expect(packageJson.scripts).not.toHaveProperty('test');
+    expect(packageJson.scripts).not.toHaveProperty('test:watch');
+    expect(packageJson.scripts).not.toHaveProperty('test:cov');
+    expect(packageJson.scripts).not.toHaveProperty('test:debug');
+    expect(packageJson.scripts).not.toHaveProperty('test:e2e');
+    expect(packageJson.scripts.format).toBe('prettier --write "src/**/*.ts"');
+    expect(packageJson.devDependencies).not.toHaveProperty('@nestjs/testing');
+    expect(packageJson.devDependencies).not.toHaveProperty('@types/jest');
+    expect(packageJson.devDependencies).not.toHaveProperty('@types/supertest');
+    expect(packageJson.devDependencies).not.toHaveProperty('jest');
+    expect(packageJson.devDependencies).not.toHaveProperty('supertest');
+    expect(packageJson.devDependencies).not.toHaveProperty('ts-jest');
+    expect(packageJson.devDependencies).not.toHaveProperty('vitest');
+    expect(packageJson).not.toHaveProperty('jest');
+  });
+  it('should skip testing files and package entries for JavaScript projects', async () => {
+    const options = {
+      name: 'project',
+      skipTesting: true,
+      language: 'js',
+    } as ApplicationOptions;
+    const tree: UnitTestTree = await runner.runSchematic(
+      'application',
+      options,
+    );
+
+    const files: string[] = tree.files;
+    expect(files.sort()).toEqual(
+      [
+        '/project/.babelrc',
+        '/project/.gitignore',
+        '/project/.prettierrc',
+        '/project/README.md',
+        '/project/index.js',
+        '/project/jsconfig.json',
+        '/project/nest-cli.json',
+        '/project/nodemon.json',
+        '/project/package.json',
+        '/project/src/app.controller.js',
+        '/project/src/app.module.js',
+        '/project/src/app.service.js',
+        '/project/src/main.js',
+      ].sort(),
+    );
+
+    const packageJson = JSON.parse(tree.readContent('/project/package.json'));
+
+    expect(packageJson.scripts).not.toHaveProperty('test');
+    expect(packageJson.scripts).not.toHaveProperty('test:cov');
+    expect(packageJson.scripts).not.toHaveProperty('test:e2e');
+    expect(packageJson.devDependencies).not.toHaveProperty('@nestjs/testing');
+    expect(packageJson.devDependencies).not.toHaveProperty('jest');
+    expect(packageJson.devDependencies).not.toHaveProperty('supertest');
+    expect(packageJson).not.toHaveProperty('jest');
+  });
   it('should create a spec file', async () => {
     const options: ApplicationOptions = {
       name: 'project',
