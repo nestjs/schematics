@@ -50,7 +50,7 @@
   "devDependencies": {
     "@commitlint/cli": "21.2.1",
     "@commitlint/config-angular": "21.2.0",
-    "@eslint/eslintrc": "3.3.5",
+    "@eslint/eslintrc": "3.3.6",
     "@eslint/js": "9.39.4",
     "@types/jest": "30.0.0",
     "@types/node": "24.13.3",
