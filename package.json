@@ -69,7 +69,7 @@
     "nyc": "18.0.0",
     "prettier": "3.9.6",
     "release-it": "20.2.1",
-    "ts-jest": "29.4.11",
+    "ts-jest": "29.4.12",
     "ts-node": "10.9.2",
     "typescript": "5.9.3",
     "typescript-eslint": "^8.15.0"
