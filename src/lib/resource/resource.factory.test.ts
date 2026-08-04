@@ -1429,4 +1429,108 @@ type Mutation {
       "import { UsersService } from './users.service.js'",
     );
   });
+
+  it('should generate REST resource files with .js imports for ESM projects', async () => {
+    const app: ApplicationOptions = { name: '', type: 'esm' };
+    let tree = await runner.runSchematic('application', app);
+    const options: ResourceOptions = { name: 'users', flat: true };
+    tree = await runner.runSchematic('resource', options, tree);
+
+    expect(tree.readContent('/src/users.controller.ts')).toContain(
+      "import { UsersService } from './users.service.js'",
+    );
+    expect(tree.readContent('/src/users.controller.ts')).toContain(
+      "import { CreateUserDto } from './dto/create-user.dto.js'",
+    );
+    expect(tree.readContent('/src/users.controller.ts')).toContain(
+      "import { UpdateUserDto } from './dto/update-user.dto.js'",
+    );
+    expect(tree.readContent('/src/users.service.ts')).toContain(
+      "import { CreateUserDto } from './dto/create-user.dto.js'",
+    );
+    expect(tree.readContent('/src/users.service.ts')).toContain(
+      "import { UpdateUserDto } from './dto/update-user.dto.js'",
+    );
+    expect(tree.readContent('/src/users.module.ts')).toContain(
+      "import { UsersController } from './users.controller.js'",
+    );
+    expect(tree.readContent('/src/users.module.ts')).toContain(
+      "import { UsersService } from './users.service.js'",
+    );
+    expect(tree.readContent('/src/dto/update-user.dto.ts')).toContain(
+      "import { CreateUserDto } from './create-user.dto.js'",
+    );
+  });
+  it('should generate WS resource files with .js imports for ESM projects', async () => {
+    const app: ApplicationOptions = { name: '', type: 'esm' };
+    let tree = await runner.runSchematic('application', app);
+    const options: ResourceOptions = {
+      name: 'users',
+      type: 'ws',
+      flat: true,
+    };
+    tree = await runner.runSchematic('resource', options, tree);
+
+    expect(tree.readContent('/src/users.gateway.ts')).toContain(
+      "import { UsersService } from './users.service.js'",
+    );
+    expect(tree.readContent('/src/users.module.ts')).toContain(
+      "import { UsersGateway } from './users.gateway.js'",
+    );
+    expect(tree.readContent('/src/users.module.ts')).toContain(
+      "import { UsersService } from './users.service.js'",
+    );
+  });
+  it('should generate GraphQL (code first) resource files with .js imports for ESM projects', async () => {
+    const app: ApplicationOptions = { name: '', type: 'esm' };
+    let tree = await runner.runSchematic('application', app);
+    const options: ResourceOptions = {
+      name: 'users',
+      type: 'graphql-code-first',
+      flat: true,
+    };
+    tree = await runner.runSchematic('resource', options, tree);
+
+    expect(tree.readContent('/src/users.resolver.ts')).toContain(
+      "import { UsersService } from './users.service.js'",
+    );
+    expect(tree.readContent('/src/users.resolver.ts')).toContain(
+      "import { User } from './entities/user.entity.js'",
+    );
+    expect(tree.readContent('/src/users.resolver.ts')).toContain(
+      "import { CreateUserInput } from './dto/create-user.input.js'",
+    );
+    expect(tree.readContent('/src/users.resolver.ts')).toContain(
+      "import { UpdateUserInput } from './dto/update-user.input.js'",
+    );
+    expect(tree.readContent('/src/users.module.ts')).toContain(
+      "import { UsersResolver } from './users.resolver.js'",
+    );
+    expect(tree.readContent('/src/users.module.ts')).toContain(
+      "import { UsersService } from './users.service.js'",
+    );
+    expect(tree.readContent('/src/dto/update-user.input.ts')).toContain(
+      "import { CreateUserInput } from './create-user.input.js'",
+    );
+  });
+  it('should not append .js extensions for non-ESM (CJS) projects', async () => {
+    const options: ResourceOptions = { name: 'users', flat: true };
+    const tree = await runner.runSchematic('resource', options);
+
+    const controller = tree.readContent('/users.controller.ts');
+    const service = tree.readContent('/users.service.ts');
+    const module = tree.readContent('/users.module.ts');
+    const updateDto = tree.readContent('/dto/update-user.dto.ts');
+
+    for (const content of [controller, service, module, updateDto]) {
+      expect(content).not.toContain('.js');
+      expect(content).not.toMatch(/''/);
+    }
+    expect(controller).toContain(
+      "import { UsersService } from './users.service'",
+    );
+    expect(module).toContain(
+      "import { UsersController } from './users.controller'",
+    );
+  });
 });
