@@ -83,6 +83,55 @@ describe('Module Import Declarator', () => {
     );
   });
 
+  it('should append .js extension for providers when isEsm is true', () => {
+    const content: string =
+      "import { Module } from '@nestjs/common';\n" +
+      '\n' +
+      '@Module({})\n' +
+      'export class FooModule {}\n';
+    const options: DeclarationOptions = {
+      metadata: 'providers',
+      name: 'foo',
+      path: normalize('/src/foo'),
+      module: normalize('/src/foo/foo.ts'),
+      symbol: 'Foo',
+      isEsm: true,
+    };
+    const declarator = new ModuleImportDeclarator();
+    expect(declarator.declare(content, options)).toEqual(
+      "import { Module } from '@nestjs/common';\n" +
+        "import { Foo } from './foo.js';\n" +
+        '\n' +
+        '@Module({})\n' +
+        'export class FooModule {}\n',
+    );
+  });
+
+  it('should append .js extension for module imports when isEsm is true', () => {
+    const content: string =
+      "import { Module } from '@nestjs/common';\n" +
+      '\n' +
+      '@Module({})\n' +
+      'export class FooModule {}\n';
+    const options: DeclarationOptions = {
+      metadata: 'imports',
+      type: 'module',
+      name: 'bar',
+      path: normalize('/src/foo/bar'),
+      module: normalize('/src/foo/foo.module.ts'),
+      symbol: 'BarModule',
+      isEsm: true,
+    };
+    const declarator = new ModuleImportDeclarator();
+    expect(declarator.declare(content, options)).toEqual(
+      "import { Module } from '@nestjs/common';\n" +
+        "import { BarModule } from './bar/bar.module.js';\n" +
+        '\n' +
+        '@Module({})\n' +
+        'export class FooModule {}\n',
+    );
+  });
+
   it('should not break on match of "from" in another context', () => {
     const content: string =
       'import {\n' +

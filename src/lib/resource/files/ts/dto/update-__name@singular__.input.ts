@@ -1,4 +1,4 @@
-import { Create<%= singular(classify(name)) %>Input } from './create-<%= singular(name) %>.input';<% if (type === 'graphql-code-first') { %>
+import { Create<%= singular(classify(name)) %>Input } from './create-<%= singular(name) %>.input<%= isEsm ? '.js' : '' %>';<% if (type === 'graphql-code-first') { %>
 import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()

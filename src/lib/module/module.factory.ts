@@ -29,6 +29,7 @@ import type { ModuleOptions } from './module.schema.js';
 export function main(options: ModuleOptions): Rule {
   options = transform(options);
   return (tree: Tree, context: SchematicContext) => {
+    (options as any).isEsm = isEsmProject(tree);
     return branchAndMerge(
       chain([
         mergeSourceRoot(options),
