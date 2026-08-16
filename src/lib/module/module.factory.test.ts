@@ -4,8 +4,8 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { ApplicationOptions } from '../application/application.schema';
-import { ModuleOptions } from './module.schema';
+import type { ApplicationOptions } from '../application/application.schema.js';
+import type { ModuleOptions } from './module.schema.js';
 
 describe('Module Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
@@ -181,6 +181,7 @@ describe('Module Factory', () => {
   it('should manage declaration in app module', async () => {
     const app: ApplicationOptions = {
       name: '',
+      type: 'cjs',
     };
     let tree: UnitTestTree = await runner.runSchematic('application', app);
 
@@ -205,6 +206,7 @@ describe('Module Factory', () => {
   it('should manage declaration in bar module', async () => {
     const app: ApplicationOptions = {
       name: '',
+      type: 'cjs',
     };
     let tree: UnitTestTree = await runner.runSchematic('application', app);
 
@@ -224,6 +226,31 @@ describe('Module Factory', () => {
         '  imports: [FooModule]\n' +
         '})\n' +
         'export class BarModule {}\n',
+    );
+  });
+  it('should manage declaration in app module with .js extension for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: ModuleOptions = {
+      name: 'foo',
+    };
+    tree = await runner.runSchematic('module', options, tree);
+    expect(tree.readContent(normalize('/src/app.module.ts'))).toEqual(
+      "import { Module } from '@nestjs/common';\n" +
+        "import { AppController } from './app.controller.js';\n" +
+        "import { AppService } from './app.service.js';\n" +
+        "import { FooModule } from './foo/foo.module.js';\n" +
+        '\n' +
+        '@Module({\n' +
+        '  imports: [FooModule],\n' +
+        '  controllers: [AppController],\n' +
+        '  providers: [AppService],\n' +
+        '})\n' +
+        'export class AppModule {}\n',
     );
   });
 });

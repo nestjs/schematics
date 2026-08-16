@@ -14,7 +14,7 @@ import {
   SourceFile,
   SyntaxKind,
 } from 'typescript';
-import { DeclarationOptions } from './module.declarator';
+import { DeclarationOptions } from './module.declarator.js';
 
 /**
  * The `MetadataManager` class provides utilities for managing metadata entries

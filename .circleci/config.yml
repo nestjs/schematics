@@ -16,6 +16,10 @@ aliases:
     run:
       name: Test
       command: npm run test
+  - &run-typecheck
+    run:
+      name: Typecheck
+      command: npm run typecheck
 
 jobs:
   build:
@@ -46,6 +50,7 @@ jobs:
       - *restore-cache
       - *install-deps
       - *build-packages
+      - *run-typecheck
       - *run-unit-tests
 
 workflows:

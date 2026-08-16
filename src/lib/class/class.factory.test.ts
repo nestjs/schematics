@@ -3,7 +3,8 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { ClassOptions } from './class.schema';
+import type { ApplicationOptions } from '../application/application.schema.js';
+import type { ClassOptions } from './class.schema.js';
 
 describe('Class Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
@@ -152,5 +153,28 @@ describe('Class Factory', () => {
       files.find((filename) => filename === '/foo.spec.ts'),
     ).toBeUndefined();
     expect(files.find((filename) => filename === '/foo.test.ts')).toBeDefined();
+  });
+  it('should generate spec file with .js import for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: ClassOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    tree = await runner.runSchematic('class', options, tree);
+    expect(tree.readContent('/src/foo.spec.ts')).toEqual(
+      "import { Foo } from './foo.js';\n" +
+        '\n' +
+        "describe('Foo', () => {\n" +
+        "  it('should be defined', () => {\n" +
+        '    expect(new Foo()).toBeDefined();\n' +
+        '  });\n' +
+        '});\n',
+    );
   });
 });

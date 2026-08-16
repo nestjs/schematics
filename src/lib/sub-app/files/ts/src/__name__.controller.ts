@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { <%= classify(name) %>Service } from './<%= name %>.service';
+import { <%= classify(name) %>Service } from './<%= name %>.service<%= isEsm ? '.js' : '' %>';
 
 @Controller()
 export class <%= classify(name) %>Controller {

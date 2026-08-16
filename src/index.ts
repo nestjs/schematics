@@ -1,2 +1,2 @@
-export * from './utils';
-export * from './lib/defaults';
+export * from './utils/index.js';
+export * from './lib/defaults.js';

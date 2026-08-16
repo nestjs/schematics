@@ -1,11 +1,13 @@
-import { EmptyTree, Tree } from '@angular-devkit/schematics';
+import { EmptyTree } from '@angular-devkit/schematics';
 import {
   SchematicTestRunner,
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { LibraryOptions } from '../library/library.schema';
-import { SubAppOptions } from './sub-app.schema';
+import type { SubAppOptions } from './sub-app.schema.js';
+
+const readJson = (tree: UnitTestTree, filePath: string) =>
+  tree.readJson(filePath) as Record<string, any>;
 
 describe('SubApp Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
@@ -129,6 +131,84 @@ describe('SubApp Factory', () => {
     );
   });
 
+  it('should set rspack as default builder in nest-cli.json', async () => {
+    const options: SubAppOptions = {
+      name: 'project',
+    };
+    const tree: UnitTestTree = await runner.runSchematic('sub-app', options);
+
+    const config = readJson(tree, '/nest-cli.json');
+    expect(config['compilerOptions']['builder']).toEqual('rspack');
+  });
+
+  it('should convert tsconfig.json to solution-style with project references', async () => {
+    const options: SubAppOptions = {
+      name: 'project',
+    };
+
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create(
+      '/tsconfig.json',
+      JSON.stringify({
+        compilerOptions: {
+          baseUrl: './',
+          paths: { '@app/*': ['src/*'] },
+          target: 'ES2023',
+        },
+        include: ['src'],
+      }),
+    );
+
+    tree = await runner.runSchematic('sub-app', options, tree);
+
+    const tsconfig = readJson(tree, '/tsconfig.json');
+    // Should be converted to solution-style
+    expect(tsconfig['files']).toEqual([]);
+    expect(tsconfig['include']).toBeUndefined();
+    expect(tsconfig['exclude']).toBeUndefined();
+    // baseUrl should be removed, while paths (e.g. library aliases) survive
+    expect(tsconfig['compilerOptions']['baseUrl']).toBeUndefined();
+    expect(tsconfig['compilerOptions']['paths']).toEqual({
+      '@app/*': ['src/*'],
+    });
+    // Other compiler options should be preserved
+    expect(tsconfig['compilerOptions']['target']).toEqual('ES2023');
+    // Should have references to both apps
+    expect(tsconfig['references']).toEqual([
+      { path: './apps/nestjs-schematics/tsconfig.app.json' },
+      { path: './apps/project/tsconfig.app.json' },
+    ]);
+  });
+
+  it('should add project reference when adding sub-app to existing monorepo', async () => {
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create(
+      '/nest-cli.json',
+      JSON.stringify({ monorepo: true, projects: {} }),
+    );
+    tree.create(
+      '/tsconfig.json',
+      JSON.stringify({
+        compilerOptions: {},
+        files: [],
+        references: [{ path: './apps/existing-app/tsconfig.app.json' }],
+      }),
+    );
+
+    tree = await runner.runSchematic(
+      'sub-app',
+      { name: 'new-app' } as SubAppOptions,
+      tree,
+    );
+
+    const tsconfig = readJson(tree, '/tsconfig.json');
+    expect(tsconfig['references']).toEqual([
+      { path: './apps/existing-app/tsconfig.app.json' },
+      { path: './apps/nestjs-schematics/tsconfig.app.json' },
+      { path: './apps/new-app/tsconfig.app.json' },
+    ]);
+  });
+
   it('should sort sub-app names in nest-cli.json', async () => {
     const options: SubAppOptions[] = [
       {
@@ -142,17 +222,63 @@ describe('SubApp Factory', () => {
       {
         name: 'b',
         language: 'ts',
-      }
+      },
     ];
 
-    let tree: Tree = new EmptyTree();
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create('/nest-cli.json', `{"monorepo": true, "projects": {}}`);
 
     for (const o of options) {
       tree = await runner.runSchematic('sub-app', o, tree);
     }
 
-    const config = tree.readJson('/nest-cli.json');
+    const config = readJson(tree, '/nest-cli.json');
     expect(Object.keys(config['projects'])).toEqual(['a', 'b', 'c']); // Sorted
+  });
+
+  it('should generate files with .js imports for ESM projects', async () => {
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create(
+      '/package.json',
+      JSON.stringify({ name: 'test', type: 'module' }),
+    );
+    tree.create('/tsconfig.json', JSON.stringify({ compilerOptions: {} }));
+
+    const options: SubAppOptions = { name: 'project' };
+    tree = await runner.runSchematic('sub-app', options, tree);
+
+    // Spec file should have .js imports
+    const specContent = tree.readContent(
+      '/apps/project/src/project.controller.spec.ts',
+    );
+    expect(specContent).toContain(
+      "import { ProjectController } from './project.controller.js'",
+    );
+    expect(specContent).toContain(
+      "import { ProjectService } from './project.service.js'",
+    );
+
+    // Non-spec files should have .js imports
+    const moduleContent = tree.readContent(
+      '/apps/project/src/project.module.ts',
+    );
+    expect(moduleContent).toContain(
+      "import { ProjectController } from './project.controller.js'",
+    );
+    expect(moduleContent).toContain(
+      "import { ProjectService } from './project.service.js'",
+    );
+
+    const controllerContent = tree.readContent(
+      '/apps/project/src/project.controller.ts',
+    );
+    expect(controllerContent).toContain(
+      "import { ProjectService } from './project.service.js'",
+    );
+
+    const mainContent = tree.readContent('/apps/project/src/main.ts');
+    expect(mainContent).toContain(
+      "import { ProjectModule } from './project.module.js'",
+    );
   });
 });

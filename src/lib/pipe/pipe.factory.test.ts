@@ -3,7 +3,8 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { PipeOptions } from './pipe.schema';
+import type { ApplicationOptions } from '../application/application.schema.js';
+import type { PipeOptions } from './pipe.schema.js';
 
 describe('Pipe Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
@@ -199,5 +200,28 @@ describe('Pipe Factory', () => {
     expect(
       files.find((filename) => filename === '/foo.pipe.test.ts'),
     ).toBeDefined();
+  });
+  it('should generate spec file with .js import for ESM projects', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'esm',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const options: PipeOptions = {
+      name: 'foo',
+      spec: true,
+      flat: true,
+    };
+    tree = await runner.runSchematic('pipe', options, tree);
+    expect(tree.readContent('/src/foo.pipe.spec.ts')).toEqual(
+      "import { FooPipe } from './foo.pipe.js';\n" +
+        '\n' +
+        "describe('FooPipe', () => {\n" +
+        "  it('should be defined', () => {\n" +
+        '    expect(new FooPipe()).toBeDefined();\n' +
+        '  });\n' +
+        '});\n',
+    );
   });
 });

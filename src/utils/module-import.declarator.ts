@@ -1,6 +1,6 @@
 import { normalize, Path } from '@angular-devkit/core';
-import { DeclarationOptions } from './module.declarator';
-import { PathSolver } from './path.solver';
+import { DeclarationOptions } from './module.declarator.js';
+import { PathSolver } from './path.solver.js';
 
 /**
  * The `ModuleImportDeclarator` class is responsible for declaring module imports
@@ -69,6 +69,7 @@ export class ModuleImportDeclarator {
     } else {
       importModulePath = normalize(`/${options.path}/${options.name}`);
     }
-    return this.solver.relative(options.module, importModulePath);
+    const relativePath = this.solver.relative(options.module, importModulePath);
+    return options.isEsm ? `${relativePath}.js` : relativePath;
   }
 }

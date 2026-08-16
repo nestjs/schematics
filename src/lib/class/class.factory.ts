@@ -13,17 +13,24 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import { formatFiles } from '../../utils/format-files.rule';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
-import { Location, NameParser } from '../../utils/name.parser';
-import { mergeSourceRoot } from '../../utils/source-root.helpers';
-import { DEFAULT_LANGUAGE } from '../defaults';
-import { ClassOptions } from './class.schema';
+import { formatFiles } from '../../utils/format-files.rule.js';
+import { normalizeToKebabOrSnakeCase } from '../../utils/formatting.js';
+import { Location, NameParser } from '../../utils/name.parser.js';
+import {
+  isEsmProject,
+  mergeSourceRoot,
+} from '../../utils/source-root.helpers.js';
+import { DEFAULT_LANGUAGE } from '../defaults.js';
+import type { ClassOptions } from './class.schema.js';
 
 export function main(options: ClassOptions): Rule {
   options = transform(options);
   return chain([
     mergeSourceRoot(options),
+    (tree) => {
+      (options as any).isEsm = isEsmProject(tree);
+      return tree;
+    },
     mergeWith(generate(options)),
     options.format === true ? formatFiles() : noop(),
   ]);
@@ -59,7 +66,7 @@ function transform(options: ClassOptions): ClassOptions {
 
 function generate(options: ClassOptions): Source {
   return (context: SchematicContext) =>
-    apply(url(join('./files' as Path, options.language)), [
+    apply(url(join('./files' as Path, options.language!)), [
       options.spec
         ? noop()
         : filter((path) => {
@@ -71,6 +78,6 @@ function generate(options: ClassOptions): Source {
         ...strings,
         ...options,
       }),
-      move(options.path),
+      move(options.path!),
     ])(context);
 }

@@ -15,4 +15,5 @@ src/lib/**/*.d.ts
 src/utils/**/*.js
 src/utils/**/*.d.ts
 
+*.tsbuildinfo
 .DS_Store

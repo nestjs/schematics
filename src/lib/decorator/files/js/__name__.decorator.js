@@ -1,3 +1,3 @@
-import { SetMetadata } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 
-export const <%= classify(name) %> = (...args) => SetMetadata('<%= name %>', args);
+export const <%= classify(name) %> = Reflector.createDecorator();

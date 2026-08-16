@@ -13,16 +13,23 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import { formatFiles } from '../../utils/format-files.rule';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
-import { Location, NameParser } from '../../utils/name.parser';
-import { mergeSourceRoot } from '../../utils/source-root.helpers';
-import { MiddlewareOptions } from './middleware.schema';
+import { formatFiles } from '../../utils/format-files.rule.js';
+import { normalizeToKebabOrSnakeCase } from '../../utils/formatting.js';
+import { Location, NameParser } from '../../utils/name.parser.js';
+import {
+  isEsmProject,
+  mergeSourceRoot,
+} from '../../utils/source-root.helpers.js';
+import type { MiddlewareOptions } from './middleware.schema.js';
 
 export function main(options: MiddlewareOptions): Rule {
   options = transform(options);
   return chain([
     mergeSourceRoot(options),
+    (tree) => {
+      (options as any).isEsm = isEsmProject(tree);
+      return tree;
+    },
     mergeWith(generate(options)),
     options.format === true ? formatFiles() : noop(),
   ]);
@@ -49,7 +56,7 @@ function transform(options: MiddlewareOptions): MiddlewareOptions {
 
 function generate(options: MiddlewareOptions): Source {
   return (context: SchematicContext) =>
-    apply(url(join('./files' as Path, options.language)), [
+    apply(url(join('./files' as Path, options.language!)), [
       options.spec
         ? noop()
         : filter((path) => {
@@ -61,6 +68,6 @@ function generate(options: MiddlewareOptions): Source {
         ...strings,
         ...options,
       }),
-      move(options.path),
+      move(options.path!),
     ])(context);
 }

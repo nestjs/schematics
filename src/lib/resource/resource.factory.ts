@@ -16,24 +16,32 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
-import * as pluralize from 'pluralize';
-import { DeclarationOptions, ModuleDeclarator, ModuleFinder } from '../..';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks/index.js';
+import pluralize from 'pluralize';
+import {
+  DeclarationOptions,
+  ModuleDeclarator,
+  ModuleFinder,
+} from '../../index.js';
 import {
   addPackageJsonDependency,
   getPackageJsonDependency,
   NodeDependencyType,
-} from '../../utils/dependencies.utils';
-import { formatFiles } from '../../utils/format-files.rule';
-import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
-import { Location, NameParser } from '../../utils/name.parser';
-import { mergeSourceRoot } from '../../utils/source-root.helpers';
-import { ResourceOptions } from './resource.schema';
+} from '../../utils/dependencies.utils.js';
+import { formatFiles } from '../../utils/format-files.rule.js';
+import { normalizeToKebabOrSnakeCase } from '../../utils/formatting.js';
+import { Location, NameParser } from '../../utils/name.parser.js';
+import {
+  isEsmProject,
+  mergeSourceRoot,
+} from '../../utils/source-root.helpers.js';
+import type { ResourceOptions } from './resource.schema.js';
 
 export function main(options: ResourceOptions): Rule {
   options = transform(options);
 
   return (tree: Tree, context: SchematicContext) => {
+    (options as any).isEsm = isEsmProject(tree);
     return branchAndMerge(
       chain([
         addMappedTypesDependencyIfApplies(options),
@@ -76,20 +84,20 @@ function transform(options: ResourceOptions): ResourceOptions {
 
 function generate(options: ResourceOptions): Source {
   return (context: SchematicContext) =>
-    apply(url(join('./files' as Path, options.language)), [
+    apply(url(join('./files' as Path, options.language!)), [
       filter((path) => {
         if (path.endsWith('.dto.ts')) {
           return (
             options.type !== 'graphql-code-first' &&
             options.type !== 'graphql-schema-first' &&
-            options.crud
+            !!options.crud
           );
         }
         if (path.endsWith('.input.ts')) {
           return (
             (options.type === 'graphql-code-first' ||
               options.type === 'graphql-schema-first') &&
-            options.crud
+            !!options.crud
           );
         }
         if (
@@ -102,7 +110,7 @@ function generate(options: ResourceOptions): Source {
           );
         }
         if (path.endsWith('.graphql')) {
-          return options.type === 'graphql-schema-first' && options.crud;
+          return options.type === 'graphql-schema-first' && !!options.crud;
         }
         if (
           path.endsWith('controller.ts') ||
@@ -120,7 +128,7 @@ function generate(options: ResourceOptions): Source {
           // Entity class file workaround
           // When an invalid glob path for entities has been specified (on the application part)
           // TypeORM was trying to load a template class
-          return options.crud;
+          return !!options.crud;
         }
         return true;
       }),
@@ -142,7 +150,7 @@ function generate(options: ResourceOptions): Source {
         singular: (name: string) => pluralize.singular(name) as string,
         ent: (name: string) => name + '.entity',
       }),
-      move(options.path),
+      move(options.path!),
     ])(context);
 }
 
@@ -151,20 +159,22 @@ function addDeclarationToModule(options: ResourceOptions): Rule {
     if (options.skipImport !== undefined && options.skipImport) {
       return tree;
     }
-    options.module = new ModuleFinder(tree).find({
-      name: options.name,
-      path: options.path as Path,
-    });
+    options.module =
+      new ModuleFinder(tree).find({
+        name: options.name,
+        path: options.path as Path,
+      }) ?? undefined;
     if (!options.module) {
       return tree;
     }
-    const content = tree.read(options.module).toString();
+    const content = tree.read(options.module)!.toString();
     const declarator: ModuleDeclarator = new ModuleDeclarator();
     tree.overwrite(
       options.module,
       declarator.declare(content, {
         ...options,
         type: 'module',
+        isEsm: isEsmProject(tree),
       } as DeclarationOptions),
     );
     return tree;

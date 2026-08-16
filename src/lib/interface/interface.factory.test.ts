@@ -3,7 +3,7 @@ import {
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { InterfaceOptions } from './interface.schema';
+import type { InterfaceOptions } from './interface.schema.js';
 
 describe('Interface Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(

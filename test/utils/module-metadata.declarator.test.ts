@@ -1,6 +1,6 @@
 import { normalize } from '@angular-devkit/core';
-import { ModuleMetadataDeclarator } from '../../src/utils/module-metadata.declarator';
-import { DeclarationOptions } from '../../src/utils/module.declarator';
+import { ModuleMetadataDeclarator } from '../../src/utils/module-metadata.declarator.js';
+import { DeclarationOptions } from '../../src/utils/module.declarator.js';
 
 describe('Module Metadata Declarator', () => {
   let declarator: ModuleMetadataDeclarator;

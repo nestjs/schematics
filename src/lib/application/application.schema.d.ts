@@ -29,6 +29,11 @@ export interface ApplicationOptions {
    */
   language?: string;
   /**
+   * Module type (CJS or ESM).
+   * @default "esm"
+   */
+  type?: 'cjs' | 'esm';
+  /**
    * The used package manager.
    */
   packageManager?: 'npm' | 'yarn' | 'pnpm' | 'undefined';
@@ -53,4 +58,9 @@ export interface ApplicationOptions {
    * Format generated files using Prettier if available.
    */
   format?: boolean;
+  /**
+   * Preconfigure the application with `@nestjs/observe`.
+   * @default false
+   */
+  observe?: boolean;
 }

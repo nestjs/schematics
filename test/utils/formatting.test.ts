@@ -1,4 +1,4 @@
-import { normalizeToKebabOrSnakeCase } from '../../src/utils';
+import { normalizeToKebabOrSnakeCase } from '../../src/utils/index.js';
 
 describe('normalizeToKebabOrSnakeCase', () => {
   it('should convert camelCase to kebab-case', () => {
@@ -32,13 +32,13 @@ describe('normalizeToKebabOrSnakeCase', () => {
   });
 
   it('should handle nil value', () => {
-    const input = null;
+    const input = null as unknown as string;
     const output = normalizeToKebabOrSnakeCase(input);
     expect(output).toBe(undefined);
   });
 
   it('should handle undefined value', () => {
-    const input = undefined;
+    const input = undefined as unknown as string;
     const output = normalizeToKebabOrSnakeCase(input);
     expect(output).toBe(undefined);
   });
