@@ -1,7 +1,7 @@
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { formatFiles } from './format-files.rule';
+import { formatFiles } from './format-files.rule.js';
 
 describe('formatFiles Rule', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
@@ -17,7 +17,7 @@ describe('formatFiles Rule', () => {
     );
 
     const rule = formatFiles();
-    const result = await runner.callRule(rule, tree).toPromise();
+    const result = (await runner.callRule(rule, tree).toPromise())!;
 
     expect(result.exists('/src/foo.ts')).toBe(true);
     const content = result.read('/src/foo.ts')!.toString('utf-8');
@@ -31,7 +31,7 @@ describe('formatFiles Rule', () => {
     tree.create('/src/notes.md', '# Notes');
 
     const rule = formatFiles();
-    const result = await runner.callRule(rule, tree).toPromise();
+    const result = (await runner.callRule(rule, tree).toPromise())!;
 
     expect(result.read('/src/data.json')!.toString('utf-8')).toBe(
       '{"name":"foo"}',
@@ -45,7 +45,7 @@ describe('formatFiles Rule', () => {
     tree.create('/src/b.ts', 'export const b = 2;');
 
     const rule = formatFiles(['/src/a.ts']);
-    const result = await runner.callRule(rule, tree).toPromise();
+    const result = (await runner.callRule(rule, tree).toPromise())!;
 
     expect(result.exists('/src/a.ts')).toBe(true);
     expect(result.exists('/src/b.ts')).toBe(true);

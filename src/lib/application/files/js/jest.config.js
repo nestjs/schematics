@@ -2,7 +2,7 @@
 const config = {
   moduleFileExtensions: ['js', 'json'],
   rootDir: 'src',
-  testRegex: '.spec.js$',
+  testRegex: '.<%= specFileSuffix %>.js$',
   coverageDirectory: '../coverage',
 };
 

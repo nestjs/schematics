@@ -1,10 +1,13 @@
-import { EmptyTree, Tree } from '@angular-devkit/schematics';
+import { EmptyTree } from '@angular-devkit/schematics';
 import {
   SchematicTestRunner,
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import type { LibraryOptions } from './library.schema.js';
+
+const readJson = (tree: UnitTestTree, filePath: string) =>
+  tree.readJson(filePath) as Record<string, any>;
 
 describe('Library Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
@@ -100,7 +103,7 @@ describe('Library Factory', () => {
       '/libs/project/src/project.service.ts',
     ]);
 
-    const tsconfigLib = tree.readJson('/libs/project/tsconfig.lib.json');
+    const tsconfigLib = readJson(tree, '/libs/project/tsconfig.lib.json');
     expect(tsconfigLib['exclude']).toContain('**/*test.ts');
   });
 
@@ -111,7 +114,7 @@ describe('Library Factory', () => {
     };
     const tree: UnitTestTree = await runner.runSchematic('library', options);
 
-    const config = tree.readJson('/nest-cli.json');
+    const config = readJson(tree, '/nest-cli.json');
     expect(config['compilerOptions']['builder']).toEqual('rspack');
   });
 
@@ -121,7 +124,7 @@ describe('Library Factory', () => {
       prefix: 'app',
     };
 
-    let tree: Tree = new EmptyTree();
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create(
       '/nest-cli.json',
       JSON.stringify({ compilerOptions: { builder: 'webpack' } }),
@@ -131,7 +134,7 @@ describe('Library Factory', () => {
 
     tree = await runner.runSchematic('library', options, tree);
 
-    const config = tree.readJson('/nest-cli.json');
+    const config = readJson(tree, '/nest-cli.json');
     expect(config['compilerOptions']['builder']).toEqual('webpack');
   });
 
@@ -141,7 +144,7 @@ describe('Library Factory', () => {
       prefix: 'app',
     };
 
-    let tree: Tree = new EmptyTree();
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create(
       '/tsconfig.json',
       JSON.stringify({
@@ -153,7 +156,7 @@ describe('Library Factory', () => {
 
     tree = await runner.runSchematic('library', options, tree);
 
-    const tsconfig = tree.readJson('/tsconfig.json');
+    const tsconfig = readJson(tree, '/tsconfig.json');
     expect(tsconfig['compilerOptions']['baseUrl']).toBeUndefined();
     expect(tsconfig['compilerOptions']['paths']['app/project']).toEqual([
       './libs/project/src',
@@ -166,7 +169,7 @@ describe('Library Factory', () => {
   });
 
   it('should add paths when adding library to existing project', async () => {
-    let tree: Tree = new EmptyTree();
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create('/nest-cli.json', JSON.stringify({ projects: {} }));
     tree.create(
       '/tsconfig.json',
@@ -185,7 +188,7 @@ describe('Library Factory', () => {
       tree,
     );
 
-    const tsconfig = tree.readJson('/tsconfig.json');
+    const tsconfig = readJson(tree, '/tsconfig.json');
     expect(tsconfig['compilerOptions']['baseUrl']).toBeUndefined();
     expect(tsconfig['compilerOptions']['paths']['app/my-lib']).toEqual([
       './libs/my-lib/src',
@@ -214,7 +217,7 @@ describe('Library Factory', () => {
       },
     ];
 
-    let tree: Tree = new EmptyTree();
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create(
       '/package.json',
       `{"name": "my-pacakge","version": "1.0.0","jest": {}}`,
@@ -226,7 +229,7 @@ describe('Library Factory', () => {
       tree = await runner.runSchematic('library', o, tree);
     }
 
-    const packageJson = tree.readJson('/package.json');
+    const packageJson = readJson(tree, '/package.json');
     const moduleNameMapper = packageJson['jest']['moduleNameMapper'];
     expect(Object.keys(moduleNameMapper)).toEqual([
       '^app/a(|/.*)$',
@@ -239,7 +242,7 @@ describe('Library Factory', () => {
       '^app/c(|/.*)$': '<rootDir>/libs/c/src/$1',
     }); // Check package.json moduleNameMapper values
 
-    const jestE2EJson = tree.readJson('/test/jest-e2e.json');
+    const jestE2EJson = readJson(tree, '/test/jest-e2e.json');
     const e2eModuleNameMapper = jestE2EJson['moduleNameMapper'];
     expect(Object.keys(e2eModuleNameMapper)).toEqual([
       '^app/a(|/.*)$',
@@ -252,7 +255,7 @@ describe('Library Factory', () => {
       '^app/c(|/.*)$': '<rootDir>/../libs/c/src/$1',
     }); // Check jest-e2e.json moduleNameMapper values with different root path
 
-    const tsConfigJson = tree.readJson('/tsconfig.json');
+    const tsConfigJson = readJson(tree, '/tsconfig.json');
     const paths = tsConfigJson['compilerOptions']['paths'];
     expect(Object.keys(paths)).toEqual([
       'app/a',
@@ -263,12 +266,12 @@ describe('Library Factory', () => {
       'app/c/*',
     ]); // Sorted paths by keys
 
-    const config = tree.readJson('/nest-cli.json');
+    const config = readJson(tree, '/nest-cli.json');
     expect(Object.keys(config['projects'])).toEqual(['a', 'b', 'c']); // Sorted
   });
 
   it('should generate files with .js imports for ESM projects', async () => {
-    let tree: Tree = new EmptyTree();
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create(
       '/package.json',
       JSON.stringify({ name: 'test', type: 'module' }),

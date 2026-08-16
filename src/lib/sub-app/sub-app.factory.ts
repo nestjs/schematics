@@ -155,9 +155,10 @@ function updateTsConfig(projectRoot: string, appName: string) {
         if (!tsconfig.compilerOptions) {
           tsconfig.compilerOptions = {};
         }
-        // Remove deprecated baseUrl
+        // Remove deprecated baseUrl. `paths` is kept: entries are relative to
+        // the tsconfig location once baseUrl is gone, and dropping them would
+        // wipe the aliases written by the library schematic.
         delete tsconfig.compilerOptions.baseUrl;
-        delete tsconfig.compilerOptions.paths;
 
         // Convert to solution-style tsconfig
         if (!tsconfig.files) {

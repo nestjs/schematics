@@ -523,6 +523,42 @@ describe('Application Factory', () => {
       ].sort(),
     );
   });
+  it('should propagate a custom spec file suffix to the test runner configs', async () => {
+    const options: ApplicationOptions = {
+      name: 'project',
+      spec: true,
+      specFileSuffix: 'test',
+      type: 'cjs',
+    };
+    const tree: UnitTestTree = await runner.runSchematic(
+      'application',
+      options,
+    );
+
+    expect(tree.readContent('/project/jest.config.ts')).toContain(
+      "testRegex: '.*\\\\.test\\\\.ts$'",
+    );
+    expect(
+      JSON.parse(tree.readContent('/project/test/jest-e2e.json')).testRegex,
+    ).toEqual('.e2e-test.ts$');
+    expect(
+      JSON.parse(tree.readContent('/project/tsconfig.build.json')).exclude,
+    ).toContain('**/*test.ts');
+  });
+  it('should limit the build tsconfig to src so the entry point stays at dist/main', async () => {
+    const options: ApplicationOptions = {
+      name: 'project',
+      type: 'cjs',
+    };
+    const tree: UnitTestTree = await runner.runSchematic(
+      'application',
+      options,
+    );
+
+    expect(
+      JSON.parse(tree.readContent('/project/tsconfig.build.json')).include,
+    ).toEqual(['src']);
+  });
   describe('when type is "esm"', () => {
     it('should generate ESM project files with vitest', async () => {
       const options: ApplicationOptions = {
@@ -571,6 +607,8 @@ describe('Application Factory', () => {
       expect(packageJson.type).toBe('module');
       expect(packageJson.devDependencies).toHaveProperty('vitest');
       expect(packageJson.devDependencies).not.toHaveProperty('unplugin-swc');
+      // `test:cov` is unusable without an explicit coverage provider
+      expect(packageJson.devDependencies).toHaveProperty('@vitest/coverage-v8');
       expect(packageJson.devDependencies).not.toHaveProperty('@swc/core');
       expect(packageJson.devDependencies).not.toHaveProperty('jest');
       expect(packageJson.devDependencies).not.toHaveProperty('ts-jest');

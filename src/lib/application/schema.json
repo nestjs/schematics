@@ -84,6 +84,11 @@
       "type": "boolean",
       "default": false,
       "description": "Format generated files using Prettier if available."
+    },
+    "observe": {
+      "type": "boolean",
+      "default": false,
+      "description": "Preconfigure the application with @nestjs/observe."
     }
   },
   "required": ["name"]

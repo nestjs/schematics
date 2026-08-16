@@ -1,12 +1,15 @@
 {
   "name": "@nestjs/schematics",
-  "version": "12.0.0-alpha.7",
+  "version": "12.0.0-alpha.9",
   "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
   "type": "module",
   "main": "dist/index.js",
   "files": [
     "dist/**/*"
   ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -17,6 +20,7 @@
     "copy:collection": "cpx src/collection.json dist && cpx 'src/lib/**/schema.json' dist/lib",
     "copy:lib": "cpx 'src/lib/**/{files,workspace}/**/*.*' dist/lib && cpx 'src/lib/**/{files,workspace}/**/.!(gitignore)' dist/lib",
     "lint": "oxlint --ignore-pattern 'src/**/files/**' --ignore-pattern 'src/**/workspace/**' src/ test/",
+    "typecheck": "tsc -b tsconfig.json",
     "prepublish:next": "npm run build",
     "publish:next": "npm publish --access public --tag next",
     "prepublish:npm": "npm run build",

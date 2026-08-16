@@ -8,10 +8,8 @@ export default defineConfig({
     exclude: ['node_modules', 'dist', 'src/**/files/**'],
     testTimeout: 15000,
     pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
+    // Schematic runs share the collection loaded from disk; keep them in one
+    // process to avoid re-resolving it per worker.
+    fileParallelism: false,
   },
 });

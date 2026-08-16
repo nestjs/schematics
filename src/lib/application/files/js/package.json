@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "deploy": "nest deploy",
     "format": "prettier --write \"**/*.js\"",
     "start": "babel-node index.js",
     "start:dev": "nodemon",
@@ -16,11 +17,13 @@
   "dependencies": {
     "@nestjs/common": "next",
     "@nestjs/core": "next",
-    "@nestjs/platform-express": "next",
+<% if (observe) { %>    "@nestjs/observe": "next",
+<% } %>    "@nestjs/platform-express": "next",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
+    "@nestjs/mau": "^0.2.6",
     "@nestjs/testing": "next",
     "@babel/core": "7.29.0",
     "@babel/node": "7.29.0",

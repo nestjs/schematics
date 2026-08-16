@@ -97,7 +97,7 @@ function transform(options: LibraryOptions): LibraryOptions {
 
   target.prefix = target.prefix || getDefaultLibraryPrefix();
   target.specFileSuffix = normalizeToKebabOrSnakeCase(
-    target.specFileSuffix ?? 'spec',
+    target.specFileSuffix || 'spec',
   );
   return target;
 }

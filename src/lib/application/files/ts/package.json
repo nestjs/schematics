@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "deploy": "nest deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -22,12 +23,14 @@
   "dependencies": {
     "@nestjs/common": "next",
     "@nestjs/core": "next",
-    "@nestjs/platform-express": "next",
+<% if (observe) { %>    "@nestjs/observe": "next",
+<% } %>    "@nestjs/platform-express": "next",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@nestjs/cli": "next",
+    "@nestjs/mau": "^0.2.6",
     "@nestjs/schematics": "next",
     "@nestjs/testing": "next",
     "@types/express": "^5.0.0",

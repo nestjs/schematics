@@ -48,6 +48,9 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   target.name = resolvePackageName(target.name.toString());
   target.version = target.version ? target.version : DEFAULT_VERSION;
   target.type = target.type ?? 'esm';
+  // Guarantee the key exists so the templates can branch on it even when the
+  // factory is invoked directly, bypassing the schema defaults.
+  target.observe = target.observe ?? false;
   target.specFileSuffix = normalizeToKebabOrSnakeCase(
     options.specFileSuffix || 'spec',
   );
@@ -90,9 +93,6 @@ function generate(options: ApplicationOptions, path: string): Source {
       : options.language!;
 
   return apply(url(join('./files' as Path, templateDir)), [
-    options.spec
-      ? noop()
-      : filter((path) => !path.endsWith('__specFileSuffix__.ts')),
     options.spec
       ? noop()
       : filter((path) => {
