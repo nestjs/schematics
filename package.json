@@ -55,7 +55,7 @@
   "devDependencies": {
     "@commitlint/cli": "20.4.3",
     "@commitlint/config-angular": "20.4.3",
-    "@types/node": "25.3.5",
+    "@types/node": "25.9.5",
     "@types/pluralize": "^0.0.33",
     "cpx2": "8.0.0",
     "del-cli": "^7.0.0",
