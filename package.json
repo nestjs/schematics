@@ -57,7 +57,7 @@
     "@commitlint/config-angular": "21.2.2",
     "@types/node": "25.9.5",
     "@types/pluralize": "^0.0.33",
-    "cpx2": "8.0.2",
+    "cpx2": "9.0.0",
     "del-cli": "^7.0.0",
     "husky": "9.1.7",
     "jiti": "2.7.0",
