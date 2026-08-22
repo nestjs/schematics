@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "SchematicsNestUpgrade",
+  "title": "Nest Upgrade Options Schema",
+  "type": "object",
+  "properties": {
+    "observe": {
+      "type": "boolean",
+      "default": false,
+      "description": "Install and wire up @nestjs/observe (tracing, logs, metrics and alarms).",
+      "x-prompt": "Would you like to set up @nestjs/observe (distributed tracing, auto-correlated logs, metrics and alarms — https://observe.nestjs.com)?"
+    },
+    "skipInstall": {
+      "type": "boolean",
+      "default": false,
+      "description": "Do not run the package manager after updating package.json."
+    },
+    "tag": {
+      "type": "string",
+      "description": "Use an npm dist-tag (e.g. \"next\") instead of the default semver ranges for NestJS packages."
+    },
+    "format": {
+      "type": "boolean",
+      "default": false,
+      "description": "Format modified files using Prettier if available."
+    }
+  },
+  "required": []
+}

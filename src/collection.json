@@ -112,6 +112,12 @@
       "description": "Create a Nest resource.",
       "schema": "./lib/resource/schema.json",
       "aliases": ["res"]
+    },
+    "upgrade": {
+      "factory": "./lib/upgrade/upgrade.factory#main",
+      "description": "Upgrade a Nest v11 project to v12.",
+      "schema": "./lib/upgrade/schema.json",
+      "aliases": ["update"]
     }
   }
 }
