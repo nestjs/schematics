@@ -43,6 +43,21 @@ export function checkTsConfig(report: UpgradeReport): Rule {
         `tsconfig.json uses "moduleResolution": "${compilerOptions.moduleResolution}", which TypeScript 6 no longer supports and which cannot resolve the ESM-only NestJS 12 packages. Switch to "nodenext" (or "bundler").`,
       );
     }
+
+    const buildConfig = readJsonFile(tree, 'tsconfig.build.json');
+    if (buildConfig) {
+      const buildCompilerOptions = buildConfig.compilerOptions;
+      const hasRootDir =
+        (buildCompilerOptions &&
+          typeof buildCompilerOptions === 'object' &&
+          'rootDir' in buildCompilerOptions) ||
+        (compilerOptions && 'rootDir' in compilerOptions);
+      if (!hasRootDir) {
+        report.action(
+          'tsconfig.build.json does not set "rootDir". TypeScript 6 requires it explicitly (error TS5011); add `"rootDir": "./src"` to its "compilerOptions" to keep the dist layout unchanged.',
+        );
+      }
+    }
     return tree;
   };
 }

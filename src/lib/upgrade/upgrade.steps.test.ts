@@ -424,5 +424,44 @@ export class BService implements OnApplicationBootstrap {
       );
       expect(output()).not.toMatch(/tsconfig\.json/);
     });
+
+    it('should ask for an explicit rootDir in tsconfig.build.json', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+            },
+          }),
+          'tsconfig.build.json': JSON.stringify({
+            extends: './tsconfig.json',
+            include: ['src'],
+          }),
+        }),
+      );
+      expect(output()).toMatch(
+        /tsconfig\.build\.json does not set "rootDir"[\s\S]*TS5011/,
+      );
+    });
+
+    it('should accept a tsconfig.build.json that already sets rootDir', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+            },
+          }),
+          'tsconfig.build.json': JSON.stringify({
+            extends: './tsconfig.json',
+            compilerOptions: { rootDir: './src' },
+            include: ['src'],
+          }),
+        }),
+      );
+      expect(output()).not.toMatch(/rootDir/);
+    });
   });
 });
