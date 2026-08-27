@@ -31,7 +31,7 @@ import {
 } from '../upgrade.utils.js';
 
 const OBSERVE_PACKAGE = '@nestjs/observe';
-const OBSERVE_VERSION = '^0.1.0';
+const OBSERVE_VERSION = '^0.1.8';
 const OBSERVE_DOCS = 'https://github.com/nestjs/observe';
 
 interface ApplicationTarget {

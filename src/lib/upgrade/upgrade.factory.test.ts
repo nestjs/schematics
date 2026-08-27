@@ -477,7 +477,7 @@ export const mod = ConfigModule.forRoot({
       const tree = await run(createProject(), { observe: true });
       expect(
         readJson(tree, '/package.json').dependencies['@nestjs/observe'],
-      ).toBe('^0.1.0');
+      ).toBe('^0.1.8');
       expect(read(tree, '/src/app.module.ts')).toBe(
         `import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';

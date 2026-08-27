@@ -15,16 +15,16 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "next",
-    "@nestjs/core": "next",
-<% if (observe) { %>    "@nestjs/observe": "next",
-<% } %>    "@nestjs/platform-express": "next",
+    "@nestjs/common": "^12.0.1",
+    "@nestjs/core": "^12.0.1",
+<% if (observe) { %>    "@nestjs/observe": "^0.1.8",
+<% } %>    "@nestjs/platform-express": "^12.0.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
     "@nestjs/mau": "^0.2.6",
-    "@nestjs/testing": "next",
+    "@nestjs/testing": "^12.0.1",
     "@babel/core": "8.0.1",
     "@babel/node": "8.0.1",
     "@babel/plugin-proposal-decorators": "8.0.2",
