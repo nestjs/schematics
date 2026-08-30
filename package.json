@@ -64,7 +64,7 @@
     "oxlint": "1.80.0",
     "prettier": "3.9.6",
     "release-it": "21.0.2",
-    "tsx": "4.23.12",
+    "tsx": "4.23.13",
     "typescript": "^6.0.2",
     "vitest": "4.1.11"
   },
