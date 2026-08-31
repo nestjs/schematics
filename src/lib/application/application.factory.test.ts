@@ -24,7 +24,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/project/oxlint.json',
+          '/project/.oxlintrc.json',
           '/project/.gitignore',
           '/project/.prettierrc',
           '/project/README.md',
@@ -69,7 +69,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          `/project.foo.bar/oxlint.json`,
+          `/project.foo.bar/.oxlintrc.json`,
           `/project.foo.bar/.gitignore`,
           `/project.foo.bar/.prettierrc`,
           `/project.foo.bar/README.md`,
@@ -106,7 +106,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/awesome-project/oxlint.json',
+          '/awesome-project/.oxlintrc.json',
           '/awesome-project/.gitignore',
           '/awesome-project/.prettierrc',
           '/awesome-project/README.md',
@@ -143,7 +143,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/_awesome-project/oxlint.json',
+          '/_awesome-project/.oxlintrc.json',
           '/_awesome-project/.gitignore',
           '/_awesome-project/.prettierrc',
           '/_awesome-project/README.md',
@@ -180,7 +180,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/@/package/oxlint.json',
+          '/@/package/.oxlintrc.json',
           '/@/package/.gitignore',
           '/@/package/.prettierrc',
           '/@/package/README.md',
@@ -217,7 +217,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/oxlint.json',
+          '/.oxlintrc.json',
           '/.gitignore',
           '/.prettierrc',
           '/README.md',
@@ -254,7 +254,7 @@ describe('Application Factory', () => {
           const files: string[] = tree.files;
           expect(files.sort()).toEqual(
             [
-              '/@scope/package/oxlint.json',
+              '/@scope/package/.oxlintrc.json',
               '/@scope/package/.gitignore',
               '/@scope/package/.prettierrc',
               '/@scope/package/README.md',
@@ -291,7 +291,7 @@ describe('Application Factory', () => {
           const files: string[] = tree.files;
           expect(files.sort()).toEqual(
             [
-              '/@-/package/oxlint.json',
+              '/@-/package/.oxlintrc.json',
               '/@-/package/.gitignore',
               '/@-/package/.prettierrc',
               '/@-/package/README.md',
@@ -332,7 +332,7 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/123/oxlint.json',
+        '/123/.oxlintrc.json',
         '/123/.gitignore',
         '/123/.prettierrc',
         '/123/README.md',
@@ -408,7 +408,7 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/app/oxlint.json',
+        '/app/.oxlintrc.json',
         '/app/.gitignore',
         '/app/.prettierrc',
         '/app/README.md',
@@ -512,7 +512,7 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/project/oxlint.json',
+        '/project/.oxlintrc.json',
         '/project/.gitignore',
         '/project/.prettierrc',
         '/project/README.md',
@@ -581,7 +581,7 @@ describe('Application Factory', () => {
       const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
-          '/project/oxlint.json',
+          '/project/.oxlintrc.json',
           '/project/.gitignore',
           '/project/.prettierrc',
           '/project/README.md',
@@ -654,7 +654,7 @@ describe('Application Factory', () => {
       expect(controllerContent).toContain("from './app.service.js'");
     });
 
-    it('should generate oxlint.json config', async () => {
+    it('should generate .oxlintrc.json config', async () => {
       const options: ApplicationOptions = {
         name: 'project',
         type: 'esm',
@@ -664,7 +664,7 @@ describe('Application Factory', () => {
         options,
       );
 
-      const oxlintContent = tree.readContent('/project/oxlint.json');
+      const oxlintContent = tree.readContent('/project/.oxlintrc.json');
       const oxlintConfig = JSON.parse(oxlintContent);
       expect(oxlintConfig.rules).toBeDefined();
     });
