@@ -38,6 +38,20 @@ describe('Generated project configuration', () => {
       expect(tree.readContent('/jest.config.ts')).toContain("rootDir: '.'");
     });
 
+    it('should enable Jest require(esm) for Nest 12 packages', async () => {
+      const tree = await app('cjs');
+      const packageJson = JSON.parse(tree.readContent('/package.json'));
+
+      expect(packageJson.scripts.test).toContain('--experimental-vm-modules');
+      expect(packageJson.scripts['test:cov']).toContain(
+        '--experimental-vm-modules',
+      );
+      expect(packageJson.scripts['test:e2e']).toContain(
+        '--experimental-vm-modules',
+      );
+      expect(packageJson.devDependencies['ts-jest']).toBe('^29.4.0');
+    });
+
     it('should keep the e2e jest config alongside the e2e tests', async () => {
       const tree = await app('cjs');
 
