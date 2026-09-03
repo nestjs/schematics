@@ -229,6 +229,19 @@ describe('Generated project configuration', () => {
     });
   });
 
+  describe('base tsconfig', () => {
+    it.each(['esm', 'cjs'] as const)(
+      'should set an explicit rootDir on the %s tsconfig so TS 6 does not emit TS5011',
+      async (type) => {
+        const tree = await app(type);
+        const tsconfig = JSON.parse(tree.readContent('/tsconfig.json'));
+
+        expect(tsconfig.compilerOptions.rootDir).toBe('.');
+        expect(tsconfig.compilerOptions.outDir).toBe('./dist');
+      },
+    );
+  });
+
   describe('build tsconfig', () => {
     it.each(['esm', 'cjs'] as const)(
       'should scope the %s build to src so the entry point stays at dist/main',
