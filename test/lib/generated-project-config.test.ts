@@ -229,6 +229,18 @@ describe('Generated project configuration', () => {
     });
   });
 
+  describe('tsconfig', () => {
+    it.each(['esm', 'cjs'] as const)(
+      'should set rootDir to "." in the %s tsconfig',
+      async (type) => {
+        const tree = await app(type);
+        const tsconfig = JSON.parse(tree.readContent('/tsconfig.json'));
+
+        expect(tsconfig.compilerOptions.rootDir).toBe('.');
+      },
+    );
+  });
+
   describe('build tsconfig', () => {
     it.each(['esm', 'cjs'] as const)(
       'should scope the %s build to src so the entry point stays at dist/main',
