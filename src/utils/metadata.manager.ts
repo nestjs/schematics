@@ -10,10 +10,10 @@ import {
   ObjectLiteralElement,
   ObjectLiteralExpression,
   PropertyAssignment,
-  ScriptTarget,
   SourceFile,
   SyntaxKind,
 } from 'typescript';
+import type { ScriptTarget } from 'typescript';
 import { DeclarationOptions } from './module.declarator.js';
 
 /**
@@ -42,7 +42,7 @@ export class MetadataManager {
     const source: SourceFile = createSourceFile(
       'filename.ts',
       this.content,
-      ScriptTarget.ES2017,
+      4 as ScriptTarget, // ScriptTarget.ES2017
     );
     const moduleDecoratorNode = this.findFirstDecoratorMetadata(
       source,
