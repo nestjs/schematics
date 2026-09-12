@@ -37,6 +37,15 @@ describe('Monorepo workspace schematics', () => {
       expect(paths['@app/shared/*']).toEqual(['./libs/shared/src/*']);
     });
 
+    it('should point at the entry file for ESM so nodenext can resolve it', async () => {
+      let tree = await app('esm');
+      tree = await addLibrary(tree);
+
+      const paths = readJson(tree, '/tsconfig.json').compilerOptions.paths;
+      expect(paths['@app/shared']).toEqual(['./libs/shared/src/index.ts']);
+      expect(paths['@app/shared/*']).toEqual(['./libs/shared/src/*']);
+    });
+
     it('should survive a subsequent sub-app generation', async () => {
       let tree = await app();
       tree = await addLibrary(tree);
@@ -91,6 +100,23 @@ describe('Monorepo workspace schematics', () => {
       expect(
         readJson(tree, '/tsconfig.json').compilerOptions.baseUrl,
       ).toBeUndefined();
+    });
+  });
+
+  describe('project tsconfig', () => {
+    it('should keep sibling library sources inside the program', async () => {
+      let tree = await app();
+      tree = await addLibrary(tree);
+
+      const lib = readJson(tree, '/libs/shared/tsconfig.lib.json');
+      expect(lib.compilerOptions.rootDir).toBe('../..');
+      expect(lib.compilerOptions.composite).toBeUndefined();
+
+      tree = await addApp(tree);
+
+      const appConfig = readJson(tree, '/apps/admin/tsconfig.app.json');
+      expect(appConfig.compilerOptions.rootDir).toBe('../..');
+      expect(appConfig.compilerOptions.composite).toBeUndefined();
     });
   });
 
