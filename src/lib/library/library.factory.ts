@@ -235,6 +235,10 @@ function updateTsConfig(
     const packageKey = packagePrefix
       ? packagePrefix + '/' + packageName
       : packageName;
+    // ESM performs no directory-index resolution, so the alias has to name the
+    // entry file; CommonJS keeps resolving `./libs/x/src` through index.*.
+    const aliasTarget =
+      './' + distRoot + (isEsmProject(host) ? '/index.ts' : '');
 
     return updateJsonFile(
       host,
@@ -250,7 +254,7 @@ function updateTsConfig(
         if (!tsconfig.compilerOptions.paths[packageKey]) {
           tsconfig.compilerOptions.paths[packageKey] = [];
         }
-        tsconfig.compilerOptions.paths[packageKey].push('./' + distRoot);
+        tsconfig.compilerOptions.paths[packageKey].push(aliasTarget);
 
         const deepPackagePath = packageKey + '/*';
         if (!tsconfig.compilerOptions.paths[deepPackagePath]) {

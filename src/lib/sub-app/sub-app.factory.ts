@@ -59,6 +59,7 @@ export function main(options: SubAppOptions): Rule {
           ])(tree, context),
     addAppsToCliOptions(options.path!, options.name, appName),
     addTsConfigReference(options.path!, options.name),
+    applyStartProdScript(options, appName),
     (tree) => {
       (options as any).isEsm = isEsmProject(tree);
       return tree;
@@ -228,6 +229,34 @@ function updatePackageJson(options: SubAppOptions, defaultAppName: string) {
   };
 }
 
+const NEST_CLI_CONFIG_FILES = [
+  'nest-cli.json',
+  '.nestcli.json',
+  '.nest-cli.json',
+  'nest.json',
+];
+
+/** Read the builder in use, defaulting to the one the schematic writes. */
+function readBuilder(host: Tree): string {
+  for (const file of NEST_CLI_CONFIG_FILES) {
+    if (!host.exists(file)) {
+      continue;
+    }
+    try {
+      const config = parse(host.read(file)!.toString('utf-8')) as {
+        compilerOptions?: { builder?: unknown };
+      };
+      const builder = config.compilerOptions?.builder;
+      if (typeof builder === 'string' && builder.length > 0) {
+        return builder;
+      }
+    } catch {
+      // Malformed config: fall through to the default below.
+    }
+  }
+  return 'rspack';
+}
+
 function updateNpmScripts(
   scripts: Record<string, any>,
   options: SubAppOptions,
@@ -269,15 +298,47 @@ function updateNpmScripts(
     scripts[defaultFormatScriptName] =
       `prettier --write "${defaultSourceRoot}/**/*.ts" "${DEFAULT_LIB_PATH}/**/*.ts"`;
   }
-  if (
-    scripts[defaultStartScriptName] &&
-    scripts[defaultStartScriptName].indexOf('dist/main') >= 0
-  ) {
-    const defaultSourceRoot =
-      options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
-    scripts[defaultStartScriptName] =
-      `node dist/${defaultSourceRoot}/${defaultAppName}/main`;
-  }
+}
+
+/**
+ * Writes `start:prod` for the builder the workspace ends up using. This has to
+ * run after the CLI options are final: `nest g app` forces `rspack` when it
+ * converts a single app into a monorepo, so reading the builder earlier would
+ * write a script that does not match the final config.
+ */
+function applyStartProdScript(
+  options: SubAppOptions,
+  defaultAppName: string,
+): Rule {
+  return (host: Tree) => {
+    if (!host.exists('package.json')) {
+      return host;
+    }
+    const builder = readBuilder(host);
+    return updateJsonFile(
+      host,
+      'package.json',
+      (packageJson: Record<string, Record<string, any>>) => {
+        const scripts = packageJson.scripts;
+        const startScript = scripts?.['start:prod'];
+        if (
+          typeof startScript !== 'string' ||
+          !/^node dist\/.*\/?main$/.test(startScript)
+        ) {
+          return;
+        }
+        const defaultSourceRoot =
+          options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
+        // `tsc` respects `rootDir`, so the entry moves under the app's own
+        // folder (dist/apps/<app>/apps/<app>/src/main). Bundlers ignore
+        // rootDir and keep the flat dist/apps/<app>/main layout.
+        scripts['start:prod'] =
+          builder === 'tsc'
+            ? `node dist/${defaultSourceRoot}/${defaultAppName}/${defaultSourceRoot}/${defaultAppName}/src/main`
+            : `node dist/${defaultSourceRoot}/${defaultAppName}/main`;
+      },
+    );
+  };
 }
 
 function updateJestOptions(
