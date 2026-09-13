@@ -117,6 +117,44 @@ describe('Monorepo workspace schematics', () => {
       const appConfig = readJson(tree, '/apps/admin/tsconfig.app.json');
       expect(appConfig.compilerOptions.rootDir).toBe('../..');
       expect(appConfig.compilerOptions.composite).toBeUndefined();
+
+      // `nest g app` also moves the original app into apps/<workspace name>,
+      // and that copy comes from the workspace template.
+      const workspaceApp = readJson(
+        tree,
+        '/apps/nestjs-schematics/tsconfig.app.json',
+      );
+      expect(workspaceApp.compilerOptions.rootDir).toBe('../..');
+      expect(workspaceApp.compilerOptions.composite).toBeUndefined();
+    });
+  });
+
+  describe('start:prod script', () => {
+    it('should keep the flat entry for bundlers', async () => {
+      let tree = await app();
+      tree = await addApp(tree, 'api');
+
+      const scripts = readJson(tree, '/package.json').scripts;
+      expect(scripts['start:prod']).toBe(
+        'node dist/apps/nestjs-schematics/main',
+      );
+    });
+
+    it('should use the nested entry when the builder is tsc', async () => {
+      let tree = await app();
+      // first `nest g app` converts the workspace (and forces the default builder)
+      tree = await addApp(tree, 'first');
+      const cli = readJson(tree, '/nest-cli.json');
+      cli.compilerOptions.builder = 'tsc';
+      tree.overwrite('/nest-cli.json', JSON.stringify(cli, null, 2));
+
+      // once it is a monorepo, the existing builder is kept
+      tree = await addApp(tree, 'second');
+
+      const scripts = readJson(tree, '/package.json').scripts;
+      expect(scripts['start:prod']).toBe(
+        'node dist/apps/nestjs-schematics/apps/nestjs-schematics/src/main',
+      );
     });
   });
 
