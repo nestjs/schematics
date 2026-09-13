@@ -19,8 +19,10 @@ import { existsSync, readFileSync } from 'fs';
 import { parse, stringify } from 'comment-json';
 import { formatFiles } from '../../utils/format-files.rule.js';
 import {
+  findNestCliConfigPath,
   inPlaceSortByKeys,
   normalizeToKebabOrSnakeCase,
+  readJsonFile,
 } from '../../utils/index.js';
 import {
   DEFAULT_APPS_PATH,
@@ -229,32 +231,14 @@ function updatePackageJson(options: SubAppOptions, defaultAppName: string) {
   };
 }
 
-const NEST_CLI_CONFIG_FILES = [
-  'nest-cli.json',
-  '.nestcli.json',
-  '.nest-cli.json',
-  'nest.json',
-];
-
 /** Read the builder in use, defaulting to the one the schematic writes. */
 function readBuilder(host: Tree): string {
-  for (const file of NEST_CLI_CONFIG_FILES) {
-    if (!host.exists(file)) {
-      continue;
-    }
-    try {
-      const config = parse(host.read(file)!.toString('utf-8')) as {
-        compilerOptions?: { builder?: unknown };
-      };
-      const builder = config.compilerOptions?.builder;
-      if (typeof builder === 'string' && builder.length > 0) {
-        return builder;
-      }
-    } catch {
-      // Malformed config: fall through to the default below.
-    }
-  }
-  return 'rspack';
+  const path = findNestCliConfigPath(host);
+  const config = path
+    ? readJsonFile<{ compilerOptions?: { builder?: unknown } }>(host, path)
+    : null;
+  const builder = config?.compilerOptions?.builder;
+  return typeof builder === 'string' && builder ? builder : 'rspack';
 }
 
 function updateNpmScripts(

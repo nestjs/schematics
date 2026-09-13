@@ -1,5 +1,4 @@
 import { SchematicContext, Tree } from '@angular-devkit/schematics';
-import { parse } from 'jsonc-parser';
 import type {
   Node,
   ObjectLiteralElementLike,
@@ -17,9 +16,16 @@ import {
 } from 'typescript';
 import { JSONFile } from '../../utils/json-file.util.js';
 import {
+  findNestCliConfigPath,
+  readJsonFile,
+} from '../../utils/nest-cli-config.util.js';
+import {
   getPackageJsonDependency,
   NodeDependencyType,
 } from '../../utils/dependencies.utils.js';
+
+// Re-exported so existing `upgrade.utils.js` consumers keep working.
+export { findNestCliConfigPath, readJsonFile };
 
 export const MIGRATION_GUIDE_URL = 'https://docs.nestjs.com/migration-guide';
 
@@ -114,21 +120,6 @@ export function parseVersion(version: string): number[] {
   return match ? [Number(match[1]), Number(match[2]), Number(match[3])] : [];
 }
 
-export function readJsonFile<T = Record<string, any>>(
-  tree: Tree,
-  path: string,
-): T | null {
-  const buffer = tree.read(path);
-  if (!buffer) {
-    return null;
-  }
-  try {
-    return parse(buffer.toString('utf-8')) as T;
-  } catch {
-    return null;
-  }
-}
-
 export function readPackageJson(tree: Tree): Record<string, any> | null {
   return readJsonFile(tree, 'package.json');
 }
@@ -144,17 +135,6 @@ export interface NestCliConfig {
   sourceRoot: string;
   entryFile: string;
   projects: Record<string, NestCliProject>;
-}
-
-const NEST_CLI_CONFIG_FILES = [
-  'nest-cli.json',
-  '.nestcli.json',
-  '.nest-cli.json',
-  'nest.json',
-];
-
-export function findNestCliConfigPath(tree: Tree): string | undefined {
-  return NEST_CLI_CONFIG_FILES.find((candidate) => tree.exists(candidate));
 }
 
 export function readNestCliConfig(tree: Tree): NestCliConfig {

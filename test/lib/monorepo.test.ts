@@ -156,6 +156,28 @@ describe('Monorepo workspace schematics', () => {
         'node dist/apps/nestjs-schematics/apps/nestjs-schematics/src/main',
       );
     });
+
+    it('should not fall through to a later config file', async () => {
+      let tree = await app();
+      tree = await addApp(tree, 'first');
+
+      // The CLI only loads the first config file it finds, so a builder
+      // declared in `.nestcli.json` must not win over `nest-cli.json`.
+      const cli = readJson(tree, '/nest-cli.json');
+      delete cli.compilerOptions.builder;
+      tree.overwrite('/nest-cli.json', JSON.stringify(cli, null, 2));
+      tree.create(
+        '/.nestcli.json',
+        JSON.stringify({ compilerOptions: { builder: 'tsc' } }, null, 2),
+      );
+
+      tree = await addApp(tree, 'second');
+
+      const scripts = readJson(tree, '/package.json').scripts;
+      expect(scripts['start:prod']).toBe(
+        'node dist/apps/nestjs-schematics/main',
+      );
+    });
   });
 
   describe('nest-cli.json', () => {

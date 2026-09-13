@@ -10,3 +10,4 @@ export * from './source-root.helpers.js';
 export * from './formatting.js';
 export * from './jest-module-mapper.js';
 export * from './object-sorting.js';
+export * from './nest-cli-config.util.js';

@@ -19,6 +19,7 @@ import { formatFiles } from '../../utils/format-files.rule.js';
 import {
   createModuleNameMapper,
   inPlaceSortByKeys,
+  NEST_CLI_CONFIG_FILES,
   normalizeToKebabOrSnakeCase,
 } from '../../utils/index.js';
 import {
@@ -59,12 +60,9 @@ export function main(options: LibraryOptions): Rule {
 
 function getDefaultLibraryPrefix(defaultLibraryPrefix = '@app') {
   const fileSystemReader = new FileSystemReader(process.cwd());
-  const content: string | undefined = fileSystemReader.readSyncAnyOf([
-    'nest-cli.json',
-    '.nestcli.json',
-    '.nest-cli.json',
-    'nest.json',
-  ]);
+  const content: string | undefined = fileSystemReader.readSyncAnyOf(
+    NEST_CLI_CONFIG_FILES,
+  );
 
   try {
     const nestJson = JSON.parse(content || '{}');
