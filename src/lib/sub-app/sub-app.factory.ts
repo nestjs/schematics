@@ -323,7 +323,7 @@ function applyStartProdScript(
         const startScript = scripts?.['start:prod'];
         if (
           typeof startScript !== 'string' ||
-          !/^node dist\/.*\/?main$/.test(startScript)
+          !/^node dist\/(.+\/)?main$/.test(startScript)
         ) {
           return;
         }
