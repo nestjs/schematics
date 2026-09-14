@@ -394,7 +394,19 @@ describe('Monorepo workspace schematics', () => {
 
     it('should read the builder from its object form', async () => {
       let tree = await app();
-      tree = await setBuilder(tree, { type: 'swc', options: {} });
+      // A bundler, so the expectation differs from the fallback: reading the
+      // object as "no builder" would give the tsc-shaped path instead.
+      tree = await setBuilder(tree, { type: 'rspack', options: {} });
+
+      const scripts = readJson(tree, '/package.json').scripts;
+      expect(scripts['start:prod']).toBe(
+        'node dist/apps/nestjs-schematics/main',
+      );
+    });
+
+    it('should ignore a builder object with no type', async () => {
+      let tree = await app();
+      tree = await setBuilder(tree, { options: {} });
 
       const scripts = readJson(tree, '/package.json').scripts;
       expect(scripts['start:prod']).toBe(
