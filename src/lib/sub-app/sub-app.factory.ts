@@ -40,6 +40,9 @@ import { isEsmProject } from '../../utils/source-root.helpers.js';
 /** The builder `nest g app` writes when it converts a workspace to a monorepo. */
 const DEFAULT_BUILDER = 'rspack';
 
+/** What the CLI itself assumes when `nest-cli.json` names no builder. */
+const CLI_DEFAULT_BUILDER = 'tsc';
+
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
   compilerOptions?: Record<string, any>;
@@ -234,14 +237,31 @@ function updatePackageJson(options: SubAppOptions, defaultAppName: string) {
   };
 }
 
-/** Read the builder in use, defaulting to the one the schematic writes. */
+type BuilderConfig = { compilerOptions?: { builder?: unknown } };
+
+/**
+ * Reads the builder in use. `builder` is either a name or a `{ type }` object,
+ * and the CLI falls back to `tsc` when it is absent - which only happens in a
+ * workspace that was already a monorepo, since the conversion writes one.
+ */
 function readBuilder(host: Tree): string {
   const path = findNestCliConfigPath(host);
-  const config = path
-    ? readJsonFile<{ compilerOptions?: { builder?: unknown } }>(host, path)
-    : null;
+  const config = path ? readJsonFile<BuilderConfig>(host, path) : null;
   const builder = config?.compilerOptions?.builder;
-  return typeof builder === 'string' && builder ? builder : DEFAULT_BUILDER;
+  const name =
+    typeof builder === 'string'
+      ? builder
+      : (builder as { type?: unknown } | undefined)?.type;
+  return typeof name === 'string' && name ? name : CLI_DEFAULT_BUILDER;
+}
+
+/**
+ * Builders that emit one bundle per project rather than mirroring the source
+ * tree. Everything else - `tsc`, and `swc`, whose `stripLeadingPaths` is off
+ * whenever `rootDir` sits above the source root - keeps the `src` segment.
+ */
+function isBundler(builder: string): boolean {
+  return builder === 'rspack' || builder === 'webpack';
 }
 
 function updateNpmScripts(
@@ -311,14 +331,13 @@ function applyStartProdScript(
         }
         const defaultSourceRoot =
           options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
-        // Both builders emit into the workspace `dist`, but they lay it out
-        // differently: `tsc` mirrors the source tree under `rootDir`, so the
-        // entry keeps its `src` segment, while a bundler emits a single file
-        // named after the project root.
-        scripts['start:prod'] =
-          builder === 'tsc'
-            ? `node dist/${defaultSourceRoot}/${defaultAppName}/src/main`
-            : `node dist/${defaultSourceRoot}/${defaultAppName}/main`;
+        // Every builder emits into the workspace `dist`, but they lay it out
+        // differently: a bundler writes a single file named after the project
+        // root, while a per-file compiler mirrors the source tree under
+        // `rootDir` and so keeps the `src` segment.
+        scripts['start:prod'] = isBundler(builder)
+          ? `node dist/${defaultSourceRoot}/${defaultAppName}/main`
+          : `node dist/${defaultSourceRoot}/${defaultAppName}/src/main`;
       },
     );
   };
