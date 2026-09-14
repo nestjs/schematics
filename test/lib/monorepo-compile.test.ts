@@ -427,7 +427,7 @@ describe('Generated monorepo compiles', () => {
       expect(rootDirErrors(result).length).toBeGreaterThan(0);
     });
 
-    it('should require an explicit rootDir', async () => {
+    it('should fall back to the workspace rootDir when a project omits its own', async () => {
       const dir = await workspace('esm');
       patchJson(dir, 'libs/shared/tsconfig.lib.json', (json) => {
         delete json.compilerOptions.rootDir;
@@ -435,7 +435,14 @@ describe('Generated monorepo compiles', () => {
 
       const result = compile(dir, 'libs/shared/tsconfig.lib.json');
 
-      expect(rootDirErrors(result).length).toBeGreaterThan(0);
+      // TypeScript 6 refuses to infer `rootDir` (TS5011), so this only
+      // compiles because the root tsconfig declares `rootDir: "."` and the
+      // project inherits it through `extends` - the same directory the
+      // project's own `../..` names, hence the same nested layout.
+      expect(rootDirErrors(result)).toEqual([]);
+      expect(jsOutputs(result)).toContain(
+        'dist/libs/shared/libs/shared/src/index.js',
+      );
     });
 
   });
