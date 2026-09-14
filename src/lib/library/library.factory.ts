@@ -19,6 +19,7 @@ import { formatFiles } from '../../utils/format-files.rule.js';
 import {
   createModuleNameMapper,
   inPlaceSortByKeys,
+  NEST_CLI_CONFIG_FILES,
   normalizeToKebabOrSnakeCase,
 } from '../../utils/index.js';
 import {
@@ -59,12 +60,9 @@ export function main(options: LibraryOptions): Rule {
 
 function getDefaultLibraryPrefix(defaultLibraryPrefix = '@app') {
   const fileSystemReader = new FileSystemReader(process.cwd());
-  const content: string | undefined = fileSystemReader.readSyncAnyOf([
-    'nest-cli.json',
-    '.nestcli.json',
-    '.nest-cli.json',
-    'nest.json',
-  ]);
+  const content: string | undefined = fileSystemReader.readSyncAnyOf(
+    NEST_CLI_CONFIG_FILES,
+  );
 
   try {
     const nestJson = JSON.parse(content || '{}');
@@ -235,6 +233,10 @@ function updateTsConfig(
     const packageKey = packagePrefix
       ? packagePrefix + '/' + packageName
       : packageName;
+    // ESM performs no directory-index resolution, so the alias has to name the
+    // entry file; CommonJS keeps resolving `./libs/x/src` through index.*.
+    const aliasTarget =
+      './' + distRoot + (isEsmProject(host) ? '/index.ts' : '');
 
     return updateJsonFile(
       host,
@@ -250,7 +252,7 @@ function updateTsConfig(
         if (!tsconfig.compilerOptions.paths[packageKey]) {
           tsconfig.compilerOptions.paths[packageKey] = [];
         }
-        tsconfig.compilerOptions.paths[packageKey].push('./' + distRoot);
+        tsconfig.compilerOptions.paths[packageKey].push(aliasTarget);
 
         const deepPackagePath = packageKey + '/*';
         if (!tsconfig.compilerOptions.paths[deepPackagePath]) {

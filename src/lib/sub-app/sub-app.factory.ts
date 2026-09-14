@@ -19,8 +19,10 @@ import { existsSync, readFileSync } from 'fs';
 import { parse, stringify } from 'comment-json';
 import { formatFiles } from '../../utils/format-files.rule.js';
 import {
+  findNestCliConfigPath,
   inPlaceSortByKeys,
   normalizeToKebabOrSnakeCase,
+  readJsonFile,
 } from '../../utils/index.js';
 import {
   DEFAULT_APPS_PATH,
@@ -34,6 +36,12 @@ import {
 } from '../defaults.js';
 import type { SubAppOptions } from './sub-app.schema.js';
 import { isEsmProject } from '../../utils/source-root.helpers.js';
+
+/** The builder `nest g app` writes when it converts a workspace to a monorepo. */
+const DEFAULT_BUILDER = 'rspack';
+
+/** What the CLI itself assumes when `nest-cli.json` names no builder. */
+const CLI_DEFAULT_BUILDER = 'tsc';
 
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
@@ -59,6 +67,7 @@ export function main(options: SubAppOptions): Rule {
           ])(tree, context),
     addAppsToCliOptions(options.path!, options.name, appName),
     addTsConfigReference(options.path!, options.name),
+    applyStartProdScript(options, appName),
     (tree) => {
       (options as any).isEsm = isEsmProject(tree);
       return tree;
@@ -228,6 +237,34 @@ function updatePackageJson(options: SubAppOptions, defaultAppName: string) {
   };
 }
 
+type BuilderConfig = { compilerOptions?: { builder?: unknown } };
+
+/**
+ * Reads the builder in use. `builder` is either a name or a `{ type }` object,
+ * and the CLI falls back to `tsc` when it is absent - which only happens in a
+ * workspace that was already a monorepo, since the conversion writes one.
+ */
+function readBuilder(host: Tree): string {
+  const path = findNestCliConfigPath(host);
+  const config = path ? readJsonFile<BuilderConfig>(host, path) : null;
+  const builder = config?.compilerOptions?.builder;
+  const name =
+    typeof builder === 'string'
+      ? builder
+      : (builder as { type?: unknown } | undefined)?.type;
+  return typeof name === 'string' && name ? name : CLI_DEFAULT_BUILDER;
+}
+
+/**
+ * Builders that emit one bundle per project rather than mirroring the source
+ * tree into `outDir`. Everything else - `tsc`, and `swc`, whose
+ * `stripLeadingPaths` is off whenever `rootDir` sits above the source root -
+ * writes the nested `dist/<root>/<root>/src/main.js` entry.
+ */
+function isBundler(builder: string): boolean {
+  return builder === 'rspack' || builder === 'webpack';
+}
+
 function updateNpmScripts(
   scripts: Record<string, any>,
   options: SubAppOptions,
@@ -237,13 +274,8 @@ function updateNpmScripts(
     return;
   }
   const defaultFormatScriptName = 'format';
-  const defaultStartScriptName = 'start:prod';
   const defaultTestScriptName = 'test:e2e';
-  if (
-    !scripts[defaultTestScriptName] &&
-    !scripts[defaultFormatScriptName] &&
-    !scripts[defaultStartScriptName]
-  ) {
+  if (!scripts[defaultTestScriptName] && !scripts[defaultFormatScriptName]) {
     return;
   }
   if (
@@ -269,15 +301,49 @@ function updateNpmScripts(
     scripts[defaultFormatScriptName] =
       `prettier --write "${defaultSourceRoot}/**/*.ts" "${DEFAULT_LIB_PATH}/**/*.ts"`;
   }
-  if (
-    scripts[defaultStartScriptName] &&
-    scripts[defaultStartScriptName].indexOf('dist/main') >= 0
-  ) {
-    const defaultSourceRoot =
-      options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
-    scripts[defaultStartScriptName] =
-      `node dist/${defaultSourceRoot}/${defaultAppName}/main`;
-  }
+}
+
+/**
+ * Writes `start:prod` for the builder the workspace ends up using. This has to
+ * run after the CLI options are final: `nest g app` forces `rspack` when it
+ * converts a single app into a monorepo, so reading the builder earlier would
+ * write a script that does not match the final config.
+ */
+function applyStartProdScript(
+  options: SubAppOptions,
+  defaultAppName: string,
+): Rule {
+  return (host: Tree) => {
+    if (!host.exists('package.json')) {
+      return host;
+    }
+    const builder = readBuilder(host);
+    return updateJsonFile(
+      host,
+      'package.json',
+      (packageJson: Record<string, Record<string, any>>) => {
+        const scripts = packageJson.scripts;
+        const startScript = scripts?.['start:prod'];
+        if (
+          typeof startScript !== 'string' ||
+          !/^node dist\/(.+\/)?main$/.test(startScript)
+        ) {
+          return;
+        }
+        const defaultSourceRoot =
+          options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
+        // A bundler ignores `rootDir` and writes `dist/<root>/main.js`, which
+        // is also where `nest start` falls back to looking. A per-file
+        // compiler mirrors the source tree under `rootDir` (the workspace
+        // root) into the project's `outDir`, so the project path appears
+        // twice: dist/apps/<app>/apps/<app>/src/main.
+        const projectRoot = `${defaultSourceRoot}/${defaultAppName}`;
+        scripts['start:prod'] = isBundler(builder)
+          ? `node dist/${projectRoot}/main`
+          : `node dist/${projectRoot}/${projectRoot}/src/main`;
+      },
+    );
+  };
 }
 
 function updateJestOptions(
@@ -411,7 +477,7 @@ function updateMainAppOptions(
   if (!optionsFile.compilerOptions) {
     optionsFile.compilerOptions = {};
   }
-  optionsFile.compilerOptions.builder = 'rspack';
+  optionsFile.compilerOptions.builder = DEFAULT_BUILDER;
   optionsFile.compilerOptions.tsConfigPath = tsConfigPath;
 
   if (!optionsFile.projects) {
