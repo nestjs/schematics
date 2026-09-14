@@ -250,73 +250,74 @@ describe('Generated monorepo compiles', () => {
       expect(result.diagnostics).toEqual([]);
     });
 
-    it('should emit the sub-app without repeating the project path', async () => {
+    it('should mirror the source tree under the sub-app outDir', async () => {
       const dir = await workspace(type);
 
       const result = compile(dir, 'apps/admin/tsconfig.app.json');
 
-      expect(jsOutputs(result)).toContain('dist/apps/admin/src/main.js');
-      expect(
-        jsOutputs(result).some((file) => file.includes('apps/admin/apps/')),
-      ).toBe(false);
+      // `rootDir` is the workspace root, so the project path repeats.
+      expect(jsOutputs(result)).toContain(
+        'dist/apps/admin/apps/admin/src/main.js',
+      );
     });
 
-    it('should emit a library without repeating the project path', async () => {
+    it('should mirror the source tree under the library outDir', async () => {
       const dir = await workspace(type);
 
       const result = compile(dir, 'libs/shared/tsconfig.lib.json');
 
-      expect(jsOutputs(result)).toContain('dist/libs/shared/src/index.js');
-      expect(
-        jsOutputs(result).some((file) => file.includes('libs/shared/libs/')),
-      ).toBe(false);
+      expect(jsOutputs(result)).toContain(
+        'dist/libs/shared/libs/shared/src/index.js',
+      );
     });
 
-    it('should emit a consumed library beside the app, not inside it', async () => {
+    it('should carry a consumed library inside the app outDir', async () => {
       const dir = await workspace(type);
       importSharedFrom(dir, 'apps/admin/src');
 
       const result = compile(dir, 'apps/admin/tsconfig.app.json');
 
-      // The library is pulled into the app's program by the alias, so it is
-      // emitted too - at the path the library's own build would use, which is
-      // what makes a shared `dist` safe to overwrite.
-      expect(jsOutputs(result)).toContain('dist/libs/shared/src/index.js');
+      // The alias pulls the library into the app's program, so the app emits
+      // its own copy: no build ordering between projects, and one project's
+      // `deleteOutDir` never touches another's output.
+      expect(jsOutputs(result)).toContain(
+        'dist/apps/admin/libs/shared/src/index.js',
+      );
     });
 
-    it('should emit the moved workspace app under its own project path', async () => {
+    it('should mirror the source tree under the moved workspace app outDir', async () => {
       const dir = await workspace(type);
 
-      const result = compile(
-        dir,
-        `apps/${WORKSPACE_APP}/tsconfig.app.json`,
-      );
+      const result = compile(dir, `apps/${WORKSPACE_APP}/tsconfig.app.json`);
 
       expect(jsOutputs(result)).toContain(
-        `dist/apps/${WORKSPACE_APP}/src/main.js`,
+        `dist/apps/${WORKSPACE_APP}/apps/${WORKSPACE_APP}/src/main.js`,
       );
     });
 
-    it('should emit each project into a disjoint part of the shared dist', async () => {
+    it('should keep every project inside its own outDir', async () => {
       const dir = await workspace(type);
 
-      const admin = jsOutputs(compile(dir, 'apps/admin/tsconfig.app.json'));
-      const workspaceApp = jsOutputs(
-        compile(dir, `apps/${WORKSPACE_APP}/tsconfig.app.json`),
-      );
-      const shared = jsOutputs(compile(dir, 'libs/shared/tsconfig.lib.json'));
+      const outputs = {
+        'dist/apps/admin/': jsOutputs(
+          compile(dir, 'apps/admin/tsconfig.app.json'),
+        ),
+        [`dist/apps/${WORKSPACE_APP}/`]: jsOutputs(
+          compile(dir, `apps/${WORKSPACE_APP}/tsconfig.app.json`),
+        ),
+        'dist/libs/shared/': jsOutputs(
+          compile(dir, 'libs/shared/tsconfig.lib.json'),
+        ),
+      };
 
-      expect(admin.length).toBeGreaterThan(0);
-      expect(workspaceApp.length).toBeGreaterThan(0);
-      expect(shared.length).toBeGreaterThan(0);
-
-      // Nothing is dropped in the root of `dist` either, which would collide
-      // with a sibling project's entry file.
-      for (const file of [...admin, ...workspaceApp, ...shared]) {
-        expect(file.split('/').length).toBeGreaterThan(2);
+      for (const [outDir, files] of Object.entries(outputs)) {
+        expect(files.length).toBeGreaterThan(0);
+        // What `deleteOutDir` removes before a build is exactly this prefix,
+        // so nothing a project emits may land outside it.
+        for (const file of files) {
+          expect(file.startsWith(outDir)).toBe(true);
+        }
       }
-      expect(admin.filter((file) => workspaceApp.includes(file))).toEqual([]);
-      expect(admin.filter((file) => shared.includes(file))).toEqual([]);
     });
 
     it('should not emit declarations for applications', async () => {
@@ -332,7 +333,9 @@ describe('Generated monorepo compiles', () => {
 
       const result = compile(dir, 'libs/shared/tsconfig.lib.json');
 
-      expect(result.emitted).toContain('dist/libs/shared/src/index.d.ts');
+      expect(result.emitted).toContain(
+        'dist/libs/shared/libs/shared/src/index.d.ts',
+      );
     });
 
     it('should keep spec files out of the build', async () => {
@@ -435,17 +438,75 @@ describe('Generated monorepo compiles', () => {
       expect(rootDirErrors(result).length).toBeGreaterThan(0);
     });
 
-    it('should repeat the project path if outDir names the project', async () => {
-      const dir = await workspace('esm');
-      patchJson(dir, 'apps/admin/tsconfig.app.json', (json) => {
-        json.compilerOptions.outDir = '../../dist/apps/admin';
-      });
+  });
 
-      const result = compile(dir, 'apps/admin/tsconfig.app.json');
+  /**
+   * `nest start` locates the compiled entry as `<outDir>/<sourceRoot>/<entryFile>`
+   * and, failing that, `<outDir>/<entryFile>` - the second being where a
+   * bundler writes, since bundlers emit `dist/<root>/<entryFile>.js` no matter
+   * what the tsconfig says. These pin both probes against the generated
+   * config so the layout cannot drift away from what the CLI will look for.
+   */
+  describe('nest start resolution', () => {
+    const readConfig = (dir: string, relativePath: string) =>
+      JSON.parse(fs.readFileSync(path.join(dir, relativePath), 'utf-8'));
 
-      expect(jsOutputs(result)).toContain(
-        'dist/apps/admin/apps/admin/src/main.js',
+    /** The project's `outDir`, as the CLI sees it: relative to the workspace. */
+    const projectOutDir = (dir: string, tsconfigRelativePath: string) => {
+      const { compilerOptions } = readConfig(dir, tsconfigRelativePath);
+      return path.posix.normalize(
+        path.posix.join(
+          path.posix.dirname(tsconfigRelativePath),
+          compilerOptions.outDir,
+        ),
       );
+    };
+
+    it.each(['esm', 'cjs'] as const)(
+      'should emit the per-file entry where the first probe looks (%s)',
+      async (type) => {
+        const dir = await workspace(type);
+        const cli = readConfig(dir, 'nest-cli.json');
+
+        for (const [name, project] of Object.entries<any>(cli.projects)) {
+          if (project.type !== 'application') {
+            continue;
+          }
+          const tsconfig = project.compilerOptions.tsConfigPath;
+          const probe = path.posix.join(
+            projectOutDir(dir, tsconfig),
+            project.sourceRoot,
+            `${project.entryFile}.js`,
+          );
+
+          expect({ name, outputs: jsOutputs(compile(dir, tsconfig)) }).toEqual(
+            expect.objectContaining({
+              name,
+              outputs: expect.arrayContaining([probe]),
+            }),
+          );
+        }
+      },
+    );
+
+    it('should put the bundler fallback probe where a bundler writes', async () => {
+      const dir = await workspace('cjs');
+      const cli = readConfig(dir, 'nest-cli.json');
+
+      for (const project of Object.values<any>(cli.projects)) {
+        if (project.type !== 'application') {
+          continue;
+        }
+        const fallback = path.posix.join(
+          projectOutDir(dir, project.compilerOptions.tsConfigPath),
+          project.entryFile,
+        );
+        // rspack and webpack: `output.filename` is `<root>/<entryFile>.js`
+        // under the default `dist`, and neither sets `output.path`.
+        const bundle = path.posix.join('dist', project.root, project.entryFile);
+
+        expect(fallback).toBe(bundle);
+      }
     });
   });
 });

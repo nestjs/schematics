@@ -3,7 +3,7 @@
   "compilerOptions": {
     "declaration": false,
     "rootDir": "../..",
-    "outDir": "../../dist"
+    "outDir": "../../dist/apps/<%= name %>"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "test", "**/*<%= specFileSuffix %>.ts"]

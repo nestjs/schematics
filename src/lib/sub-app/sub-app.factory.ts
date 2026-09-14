@@ -257,8 +257,9 @@ function readBuilder(host: Tree): string {
 
 /**
  * Builders that emit one bundle per project rather than mirroring the source
- * tree. Everything else - `tsc`, and `swc`, whose `stripLeadingPaths` is off
- * whenever `rootDir` sits above the source root - keeps the `src` segment.
+ * tree into `outDir`. Everything else - `tsc`, and `swc`, whose
+ * `stripLeadingPaths` is off whenever `rootDir` sits above the source root -
+ * writes the nested `dist/<root>/<root>/src/main.js` entry.
  */
 function isBundler(builder: string): boolean {
   return builder === 'rspack' || builder === 'webpack';
@@ -331,13 +332,15 @@ function applyStartProdScript(
         }
         const defaultSourceRoot =
           options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
-        // Every builder emits into the workspace `dist`, but they lay it out
-        // differently: a bundler writes a single file named after the project
-        // root, while a per-file compiler mirrors the source tree under
-        // `rootDir` and so keeps the `src` segment.
+        // A bundler ignores `rootDir` and writes `dist/<root>/main.js`, which
+        // is also where `nest start` falls back to looking. A per-file
+        // compiler mirrors the source tree under `rootDir` (the workspace
+        // root) into the project's `outDir`, so the project path appears
+        // twice: dist/apps/<app>/apps/<app>/src/main.
+        const projectRoot = `${defaultSourceRoot}/${defaultAppName}`;
         scripts['start:prod'] = isBundler(builder)
-          ? `node dist/${defaultSourceRoot}/${defaultAppName}/main`
-          : `node dist/${defaultSourceRoot}/${defaultAppName}/src/main`;
+          ? `node dist/${projectRoot}/main`
+          : `node dist/${projectRoot}/${projectRoot}/src/main`;
       },
     );
   };
@@ -476,11 +479,6 @@ function updateMainAppOptions(
   }
   optionsFile.compilerOptions.builder = DEFAULT_BUILDER;
   optionsFile.compilerOptions.tsConfigPath = tsConfigPath;
-  // Monorepo projects share the workspace `dist`: rspack writes every app to
-  // `dist/<root>/<entryFile>.js`, and the project tsconfigs emit next to it.
-  // `deleteOutDir` resolves to that shared root, so leaving it on would make
-  // `nest build <app>` wipe the output of every other project.
-  delete optionsFile.compilerOptions.deleteOutDir;
 
   if (!optionsFile.projects) {
     optionsFile.projects = {} as any;
