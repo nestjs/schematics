@@ -1,5 +1,12 @@
 import { SchematicContext, Tree } from '@angular-devkit/schematics';
 import { parse } from 'jsonc-parser';
+import type {
+  Node,
+  ObjectLiteralElementLike,
+  ObjectLiteralExpression,
+  ScriptTarget,
+  SourceFile,
+} from 'typescript';
 import {
   createSourceFile,
   forEachChild,
@@ -7,11 +14,6 @@ import {
   isImportDeclaration,
   isNoSubstitutionTemplateLiteral,
   isStringLiteral,
-  Node,
-  ObjectLiteralElementLike,
-  ObjectLiteralExpression,
-  ScriptTarget,
-  SourceFile,
 } from 'typescript';
 import { JSONFile } from '../../utils/json-file.util.js';
 import {
@@ -231,7 +233,8 @@ export function collectSourceFiles(tree: Tree, roots: string[]): string[] {
 }
 
 export function parseSource(path: string, content: string): SourceFile {
-  return createSourceFile(path, content, ScriptTarget.Latest, true);
+  // Use 99 (ScriptTarget.Latest) to avoid runtime ScriptTarget enum export dependency
+  return createSourceFile(path, content, 99 as ScriptTarget, true);
 }
 
 export function forEachDescendant(
