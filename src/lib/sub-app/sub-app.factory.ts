@@ -37,6 +37,9 @@ import {
 import type { SubAppOptions } from './sub-app.schema.js';
 import { isEsmProject } from '../../utils/source-root.helpers.js';
 
+/** The builder `nest g app` writes when it converts a workspace to a monorepo. */
+const DEFAULT_BUILDER = 'rspack';
+
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
   compilerOptions?: Record<string, any>;
@@ -238,7 +241,7 @@ function readBuilder(host: Tree): string {
     ? readJsonFile<{ compilerOptions?: { builder?: unknown } }>(host, path)
     : null;
   const builder = config?.compilerOptions?.builder;
-  return typeof builder === 'string' && builder ? builder : 'rspack';
+  return typeof builder === 'string' && builder ? builder : DEFAULT_BUILDER;
 }
 
 function updateNpmScripts(
@@ -250,13 +253,8 @@ function updateNpmScripts(
     return;
   }
   const defaultFormatScriptName = 'format';
-  const defaultStartScriptName = 'start:prod';
   const defaultTestScriptName = 'test:e2e';
-  if (
-    !scripts[defaultTestScriptName] &&
-    !scripts[defaultFormatScriptName] &&
-    !scripts[defaultStartScriptName]
-  ) {
+  if (!scripts[defaultTestScriptName] && !scripts[defaultFormatScriptName]) {
     return;
   }
   if (
@@ -313,12 +311,13 @@ function applyStartProdScript(
         }
         const defaultSourceRoot =
           options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
-        // `tsc` respects `rootDir`, so the entry moves under the app's own
-        // folder (dist/apps/<app>/apps/<app>/src/main). Bundlers ignore
-        // rootDir and keep the flat dist/apps/<app>/main layout.
+        // Both builders emit into the workspace `dist`, but they lay it out
+        // differently: `tsc` mirrors the source tree under `rootDir`, so the
+        // entry keeps its `src` segment, while a bundler emits a single file
+        // named after the project root.
         scripts['start:prod'] =
           builder === 'tsc'
-            ? `node dist/${defaultSourceRoot}/${defaultAppName}/${defaultSourceRoot}/${defaultAppName}/src/main`
+            ? `node dist/${defaultSourceRoot}/${defaultAppName}/src/main`
             : `node dist/${defaultSourceRoot}/${defaultAppName}/main`;
       },
     );
@@ -456,8 +455,13 @@ function updateMainAppOptions(
   if (!optionsFile.compilerOptions) {
     optionsFile.compilerOptions = {};
   }
-  optionsFile.compilerOptions.builder = 'rspack';
+  optionsFile.compilerOptions.builder = DEFAULT_BUILDER;
   optionsFile.compilerOptions.tsConfigPath = tsConfigPath;
+  // Monorepo projects share the workspace `dist`: rspack writes every app to
+  // `dist/<root>/<entryFile>.js`, and the project tsconfigs emit next to it.
+  // `deleteOutDir` resolves to that shared root, so leaving it on would make
+  // `nest build <app>` wipe the output of every other project.
+  delete optionsFile.compilerOptions.deleteOutDir;
 
   if (!optionsFile.projects) {
     optionsFile.projects = {} as any;

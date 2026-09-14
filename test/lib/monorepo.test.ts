@@ -111,12 +111,16 @@ describe('Monorepo workspace schematics', () => {
       const lib = readJson(tree, '/libs/shared/tsconfig.lib.json');
       expect(lib.compilerOptions.rootDir).toBe('../..');
       expect(lib.compilerOptions.composite).toBeUndefined();
+      // `rootDir` already carries the project path, so a per-project `outDir`
+      // would repeat it (dist/libs/shared/libs/shared/src).
+      expect(lib.compilerOptions.outDir).toBe('../../dist');
 
       tree = await addApp(tree);
 
       const appConfig = readJson(tree, '/apps/admin/tsconfig.app.json');
       expect(appConfig.compilerOptions.rootDir).toBe('../..');
       expect(appConfig.compilerOptions.composite).toBeUndefined();
+      expect(appConfig.compilerOptions.outDir).toBe('../../dist');
 
       // `nest g app` also moves the original app into apps/<workspace name>,
       // and that copy comes from the workspace template.
@@ -126,6 +130,7 @@ describe('Monorepo workspace schematics', () => {
       );
       expect(workspaceApp.compilerOptions.rootDir).toBe('../..');
       expect(workspaceApp.compilerOptions.composite).toBeUndefined();
+      expect(workspaceApp.compilerOptions.outDir).toBe('../../dist');
     });
   });
 
@@ -140,7 +145,7 @@ describe('Monorepo workspace schematics', () => {
       );
     });
 
-    it('should use the nested entry when the builder is tsc', async () => {
+    it('should keep the src segment when the builder is tsc', async () => {
       let tree = await app();
       // first `nest g app` converts the workspace (and forces the default builder)
       tree = await addApp(tree, 'first');
@@ -153,7 +158,7 @@ describe('Monorepo workspace schematics', () => {
 
       const scripts = readJson(tree, '/package.json').scripts;
       expect(scripts['start:prod']).toBe(
-        'node dist/apps/nestjs-schematics/apps/nestjs-schematics/src/main',
+        'node dist/apps/nestjs-schematics/src/main',
       );
     });
 
@@ -189,6 +194,20 @@ describe('Monorepo workspace schematics', () => {
       expect(config.projects).toHaveProperty('shared');
       expect(config.projects.shared.type).toBe('library');
       expect(config.projects.shared.root).toBe('libs/shared');
+    });
+
+    it('should stop deleting the shared outDir once it is a monorepo', async () => {
+      let tree = await app();
+      expect(
+        readJson(tree, '/nest-cli.json').compilerOptions.deleteOutDir,
+      ).toBe(true);
+
+      tree = await addApp(tree);
+
+      // Every project emits into the workspace `dist`, so a per-build wipe
+      // would take the other projects' output with it.
+      const config = readJson(tree, '/nest-cli.json');
+      expect(config.compilerOptions.deleteOutDir).toBeUndefined();
     });
 
     it('should register the sub-app as a project and flag the monorepo', async () => {
