@@ -62,7 +62,7 @@
     "husky": "9.1.7",
     "jiti": "2.7.0",
     "oxlint": "1.83.0",
-    "prettier": "3.9.6",
+    "prettier": "3.9.7",
     "release-it": "21.0.3",
     "tsx": "4.23.13",
     "typescript": "^6.0.2",
