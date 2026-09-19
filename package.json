@@ -63,7 +63,7 @@
     "jiti": "2.7.0",
     "oxlint": "1.83.0",
     "prettier": "3.9.8",
-    "release-it": "21.0.3",
+    "release-it": "21.1.0",
     "tsx": "4.23.13",
     "typescript": "^6.0.2",
     "vite": "^8.0.0",
