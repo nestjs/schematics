@@ -335,6 +335,39 @@ describe('Monorepo workspace schematics', () => {
         'vitest run --config ./vitest.config.e2e.ts',
       );
     });
+
+    it.each([
+      [
+        'jest --config ./test/jest-e2e.json --setupFiles ./src/test/setup.ts',
+        'jest --config ./apps/nestjs-schematics/test/jest-e2e.json --setupFiles ./src/test/setup.ts',
+      ],
+      [
+        'jest --config=test/jest-e2e.json --rootDir ./test',
+        'jest --config=apps/nestjs-schematics/test/jest-e2e.json --rootDir ./apps/nestjs-schematics/test',
+      ],
+      [
+        'npm test -- --config "./test/jest-e2e.json"',
+        'npm test -- --config "./apps/nestjs-schematics/test/jest-e2e.json"',
+      ],
+      [
+        'jest --config ./test-utils/jest-e2e.json',
+        'jest --config ./test-utils/jest-e2e.json',
+      ],
+    ])(
+      'should rewrite only paths into the root test directory in `%s`',
+      async (script, expected) => {
+        let tree = await app('cjs');
+        patchPackageJson(tree, (pkg) => {
+          pkg.scripts['test:e2e'] = script;
+        });
+
+        tree = await addApp(tree, 'admin');
+
+        expect(readJson(tree, '/package.json').scripts['test:e2e']).toBe(
+          expected,
+        );
+      },
+    );
   });
 
   describe('start:prod script', () => {
