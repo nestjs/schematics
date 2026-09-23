@@ -317,6 +317,59 @@ describe('Monorepo workspace schematics', () => {
     });
   });
 
+  describe('test:e2e script', () => {
+    it('should move the jest e2e config with the tests', async () => {
+      let tree = await app('cjs');
+      tree = await addApp(tree, 'admin');
+
+      expect(readJson(tree, '/package.json').scripts['test:e2e']).toContain(
+        './apps/nestjs-schematics/test/jest-e2e.json',
+      );
+    });
+
+    it('should leave the vitest command alone, since `test` also sits inside `vitest`', async () => {
+      let tree = await app('esm');
+      tree = await addApp(tree, 'admin');
+
+      expect(readJson(tree, '/package.json').scripts['test:e2e']).toBe(
+        'vitest run --config ./vitest.config.e2e.ts',
+      );
+    });
+
+    it.each([
+      [
+        'jest --config ./test/jest-e2e.json --setupFiles ./src/test/setup.ts',
+        'jest --config ./apps/nestjs-schematics/test/jest-e2e.json --setupFiles ./src/test/setup.ts',
+      ],
+      [
+        'jest --config=test/jest-e2e.json --rootDir ./test',
+        'jest --config=apps/nestjs-schematics/test/jest-e2e.json --rootDir ./apps/nestjs-schematics/test',
+      ],
+      [
+        'npm test -- --config "./test/jest-e2e.json"',
+        'npm test -- --config "./apps/nestjs-schematics/test/jest-e2e.json"',
+      ],
+      [
+        'jest --config ./test-utils/jest-e2e.json',
+        'jest --config ./test-utils/jest-e2e.json',
+      ],
+    ])(
+      'should rewrite only paths into the root test directory in `%s`',
+      async (script, expected) => {
+        let tree = await app('cjs');
+        patchPackageJson(tree, (pkg) => {
+          pkg.scripts['test:e2e'] = script;
+        });
+
+        tree = await addApp(tree, 'admin');
+
+        expect(readJson(tree, '/package.json').scripts['test:e2e']).toBe(
+          expected,
+        );
+      },
+    );
+  });
+
   describe('start:prod script', () => {
     it('should keep the flat entry for bundlers', async () => {
       let tree = await app();
@@ -454,9 +507,9 @@ describe('Monorepo workspace schematics', () => {
       expect(readJson(tree, '/package.json').scripts['start:prod']).toContain(
         'nestjs-schematics',
       );
-      expect(readJson(tree, '/package.json').scripts['start:prod']).not.toContain(
-        'admin',
-      );
+      expect(
+        readJson(tree, '/package.json').scripts['start:prod'],
+      ).not.toContain('admin');
     });
 
     it('should leave a customised start:prod alone', async () => {

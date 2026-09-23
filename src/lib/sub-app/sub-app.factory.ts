@@ -288,9 +288,15 @@ function updateNpmScripts(
       defaultAppName,
       defaultTestDir,
     );
+    // Only the root `test` directory moves, so rewrite `./test` and `test/...`
+    // where they start a path, not `src/test/`, `vitest` or `npm test`. The
+    // ESM script needs nothing: its root config globs every app's e2e specs.
     scripts[defaultTestScriptName] = (
       scripts[defaultTestScriptName] as string
-    ).replace(defaultTestDir, newTestDir);
+    ).replace(
+      /(^|[\s"'=])(?:(\.\/)test(?![\w.-])|test(?=\/))/g,
+      `$1$2${newTestDir}`,
+    );
   }
   if (
     scripts[defaultFormatScriptName] &&
