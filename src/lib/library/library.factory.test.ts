@@ -168,6 +168,25 @@ describe('Library Factory', () => {
     expect(tsconfig['compilerOptions']['target']).toEqual('ES2023');
   });
 
+  it('should default the prefix when none is given', async () => {
+    const options: LibraryOptions = {
+      name: 'project',
+    };
+
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create('/tsconfig.json', JSON.stringify({ compilerOptions: {} }));
+
+    tree = await runner.runSchematic('library', options, tree);
+
+    const tsconfig = readJson(tree, '/tsconfig.json');
+    expect(tsconfig['compilerOptions']['paths']['@app/project']).toEqual([
+      './libs/project/src',
+    ]);
+    expect(tsconfig['compilerOptions']['paths']['@app/project/*']).toEqual([
+      './libs/project/src/*',
+    ]);
+  });
+
   it('should add paths when adding library to existing project', async () => {
     let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create('/nest-cli.json', JSON.stringify({ projects: {} }));

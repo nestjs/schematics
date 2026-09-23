@@ -43,5 +43,5 @@
       "description": "Format generated files using Prettier if available."
     }
   },
-  "required": ["name", "prefix"]
+  "required": ["name"]
 }
