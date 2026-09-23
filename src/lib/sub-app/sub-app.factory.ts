@@ -288,9 +288,18 @@ function updateNpmScripts(
       defaultAppName,
       defaultTestDir,
     );
+    // Only the directory moves, so only a path segment is rewritten. A bare
+    // replace also matched the `test` inside `vitest` and turned
+    // `vitest run --config ./vitest.config.e2e.ts` into
+    // `viapps/<app>/test run --config ./vitest.config.e2e.ts`. The ESM flavour
+    // keeps its config at the workspace root and globs for e2e specs, so its
+    // script is left alone.
     scripts[defaultTestScriptName] = (
       scripts[defaultTestScriptName] as string
-    ).replace(defaultTestDir, newTestDir);
+    ).replace(
+      new RegExp(`(^|[\\s"'=./])${defaultTestDir}/`, 'g'),
+      (_match, before: string) => `${before}${newTestDir}/`,
+    );
   }
   if (
     scripts[defaultFormatScriptName] &&
