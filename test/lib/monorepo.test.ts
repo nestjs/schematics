@@ -318,12 +318,17 @@ describe('Monorepo workspace schematics', () => {
   });
 
   describe('test:e2e script', () => {
-    it('should move the jest e2e config with the tests', async () => {
+    it('should run the e2e tests of every CommonJS app', async () => {
       let tree = await app('cjs');
       tree = await addApp(tree, 'admin');
 
-      expect(readJson(tree, '/package.json').scripts['test:e2e']).toContain(
-        './apps/nestjs-schematics/test/jest-e2e.json',
+      expect(readJson(tree, '/package.json').scripts['test:e2e']).toBe(
+        'node --experimental-vm-modules ./node_modules/jest/bin/jest.js --projects "./apps/nestjs-schematics/test/jest-e2e.json" "./apps/admin/test/jest-e2e.json"',
+      );
+
+      tree = await addApp(tree, 'billing');
+      expect(readJson(tree, '/package.json').scripts['test:e2e']).toBe(
+        'node --experimental-vm-modules ./node_modules/jest/bin/jest.js --projects "./apps/nestjs-schematics/test/jest-e2e.json" "./apps/admin/test/jest-e2e.json" "./apps/billing/test/jest-e2e.json"',
       );
     });
 
