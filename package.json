@@ -65,7 +65,7 @@
     "prettier": "3.9.9",
     "release-it": "21.1.0",
     "tsx": "4.23.15",
-    "typescript": "^6.0.2",
+    "typescript": "^7.0.0",
     "vite": "^8.0.0",
     "vitest": "5.0.1"
   },
