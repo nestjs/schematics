@@ -278,10 +278,23 @@ function updateNpmScripts(
   if (!scripts[defaultTestScriptName] && !scripts[defaultFormatScriptName]) {
     return;
   }
-  if (
-    scripts[defaultTestScriptName] &&
-    scripts[defaultTestScriptName].indexOf(options.path as string) < 0
+  const jestCommand =
+    'node --experimental-vm-modules ./node_modules/jest/bin/jest.js';
+  const testScript = scripts[defaultTestScriptName];
+  const appConfig = (name: string) =>
+    `"./${join(options.path as Path, name, 'test', 'jest-e2e.json')}"`;
+  if (testScript === `${jestCommand} --config ./test/jest-e2e.json`) {
+    scripts[defaultTestScriptName] =
+      `${jestCommand} --projects ${appConfig(defaultAppName)} ${appConfig(options.name)}`;
+  } else if (
+    typeof testScript === 'string' &&
+    testScript.startsWith(`${jestCommand} --projects `)
   ) {
+    const config = appConfig(options.name);
+    if (!testScript.includes(config)) {
+      scripts[defaultTestScriptName] = `${testScript} ${config}`;
+    }
+  } else if (testScript && testScript.indexOf(options.path as string) < 0) {
     const defaultTestDir = 'test';
     const newTestDir = join(
       options.path as Path,
