@@ -285,18 +285,21 @@ describe('Generated project configuration', () => {
   });
 
   describe('e2e templates', () => {
-    const expectCallableSupertest = (content: string) => {
+    const expectSupertestImports = (content: string, type: 'esm' | 'cjs') => {
       // A namespace import is not callable under NodeNext ESM interop.
       expect(content).not.toContain("import * as request from 'supertest'");
       expect(content).toContain("import request from 'supertest'");
+      expect(content).toContain(
+        `import { App } from 'supertest/types${type === 'esm' ? '.js' : ''}';`,
+      );
     };
 
     it.each(['esm', 'cjs'] as const)(
-      'should use a callable supertest import in the %s application',
+      'should use mode-appropriate supertest imports in the %s application',
       async (type) => {
         const tree = await app(type);
 
-        expectCallableSupertest(tree.readContent('/test/app.e2e-spec.ts'));
+        expectSupertestImports(tree.readContent('/test/app.e2e-spec.ts'), type);
       },
     );
 
@@ -323,13 +326,14 @@ describe('Generated project configuration', () => {
     );
 
     it.each(['esm', 'cjs'] as const)(
-      'should use a callable supertest import in a %s sub-app',
+      'should use mode-appropriate supertest imports in a %s sub-app',
       async (type) => {
         let tree = await app(type);
         tree = await runner.runSchematic('sub-app', { name: 'admin' }, tree);
 
-        expectCallableSupertest(
+        expectSupertestImports(
           tree.readContent('/apps/admin/test/app.e2e-spec.ts'),
+          type,
         );
       },
     );
