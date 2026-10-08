@@ -243,6 +243,23 @@ describe('Generated project configuration', () => {
     });
   });
 
+  describe('line endings', () => {
+    it.each([
+      ['TS ESM', 'esm', {}],
+      ['TS CJS', 'cjs', {}],
+      ['JS', 'cjs', { language: 'js' }],
+    ] as const)(
+      'should pin LF line endings in the %s template',
+      async (_, type, extra) => {
+        const tree = await app(type, extra);
+
+        expect(tree.readContent('/.gitattributes')).toBe(
+          '* text=auto eol=lf\n',
+        );
+      },
+    );
+  });
+
   describe('base tsconfig', () => {
     it.each(['esm', 'cjs'] as const)(
       'should set an explicit rootDir on the %s tsconfig so TS 6 does not emit TS5011',
