@@ -65,21 +65,24 @@ describe('Generated project configuration', () => {
   });
 
   describe('ESM (vitest) application', () => {
-    it('should resolve tsconfig path aliases through the vitest plugin', async () => {
+    it('should resolve tsconfig path aliases through the native resolve.tsconfigPaths option', async () => {
       const tree = await app('esm');
 
       for (const config of ['/vitest.config.ts', '/vitest.config.e2e.ts']) {
         const content = tree.readContent(config);
-        expect(content).toContain("from 'vite-tsconfig-paths'");
-        expect(content).toContain('tsconfigPaths()');
+        expect(content).toContain('tsconfigPaths: true');
+        expect(content).not.toContain('vite-tsconfig-paths');
       }
     });
 
-    it('should declare the vite-tsconfig-paths dependency it imports', async () => {
+    it('should require Vite 8 instead of the vite-tsconfig-paths plugin', async () => {
       const tree = await app('esm');
       const packageJson = JSON.parse(tree.readContent('/package.json'));
 
-      expect(packageJson.devDependencies).toHaveProperty('vite-tsconfig-paths');
+      expect(packageJson.devDependencies).not.toHaveProperty(
+        'vite-tsconfig-paths',
+      );
+      expect(packageJson.devDependencies.vite).toBe('^8.0.0');
     });
 
     it('should ship a coverage provider for the test:cov script', async () => {
