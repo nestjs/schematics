@@ -25,6 +25,7 @@ describe('Application Factory', () => {
       expect(files.sort()).toEqual(
         [
           '/project/.oxlintrc.json',
+          '/project/.gitattributes',
           '/project/.gitignore',
           '/project/.prettierrc',
           '/project/README.md',
@@ -70,6 +71,7 @@ describe('Application Factory', () => {
       expect(files.sort()).toEqual(
         [
           `/project.foo.bar/.oxlintrc.json`,
+          `/project.foo.bar/.gitattributes`,
           `/project.foo.bar/.gitignore`,
           `/project.foo.bar/.prettierrc`,
           `/project.foo.bar/README.md`,
@@ -107,6 +109,7 @@ describe('Application Factory', () => {
       expect(files.sort()).toEqual(
         [
           '/awesome-project/.oxlintrc.json',
+          '/awesome-project/.gitattributes',
           '/awesome-project/.gitignore',
           '/awesome-project/.prettierrc',
           '/awesome-project/README.md',
@@ -144,6 +147,7 @@ describe('Application Factory', () => {
       expect(files.sort()).toEqual(
         [
           '/_awesome-project/.oxlintrc.json',
+          '/_awesome-project/.gitattributes',
           '/_awesome-project/.gitignore',
           '/_awesome-project/.prettierrc',
           '/_awesome-project/README.md',
@@ -181,6 +185,7 @@ describe('Application Factory', () => {
       expect(files.sort()).toEqual(
         [
           '/@/package/.oxlintrc.json',
+          '/@/package/.gitattributes',
           '/@/package/.gitignore',
           '/@/package/.prettierrc',
           '/@/package/README.md',
@@ -218,6 +223,7 @@ describe('Application Factory', () => {
       expect(files.sort()).toEqual(
         [
           '/.oxlintrc.json',
+          '/.gitattributes',
           '/.gitignore',
           '/.prettierrc',
           '/README.md',
@@ -255,6 +261,7 @@ describe('Application Factory', () => {
           expect(files.sort()).toEqual(
             [
               '/@scope/package/.oxlintrc.json',
+              '/@scope/package/.gitattributes',
               '/@scope/package/.gitignore',
               '/@scope/package/.prettierrc',
               '/@scope/package/README.md',
@@ -292,6 +299,7 @@ describe('Application Factory', () => {
           expect(files.sort()).toEqual(
             [
               '/@-/package/.oxlintrc.json',
+              '/@-/package/.gitattributes',
               '/@-/package/.gitignore',
               '/@-/package/.prettierrc',
               '/@-/package/README.md',
@@ -333,6 +341,7 @@ describe('Application Factory', () => {
     expect(files.sort()).toEqual(
       [
         '/123/.oxlintrc.json',
+        '/123/.gitattributes',
         '/123/.gitignore',
         '/123/.prettierrc',
         '/123/README.md',
@@ -369,6 +378,7 @@ describe('Application Factory', () => {
     expect(files.sort()).toEqual(
       [
         '/project/.babelrc',
+        '/project/.gitattributes',
         '/project/.gitignore',
         '/project/.prettierrc',
         '/project/README.md',
@@ -409,6 +419,7 @@ describe('Application Factory', () => {
     expect(files.sort()).toEqual(
       [
         '/app/.oxlintrc.json',
+        '/app/.gitattributes',
         '/app/.gitignore',
         '/app/.prettierrc',
         '/app/README.md',
@@ -446,6 +457,7 @@ describe('Application Factory', () => {
     expect(files.sort()).toEqual(
       [
         '/project/.babelrc',
+        '/project/.gitattributes',
         '/project/.gitignore',
         '/project/.prettierrc',
         '/project/README.md',
@@ -478,6 +490,7 @@ describe('Application Factory', () => {
     expect(files.sort()).toEqual(
       [
         '/project/.babelrc',
+        '/project/.gitattributes',
         '/project/.gitignore',
         '/project/.prettierrc',
         '/project/README.md',
@@ -513,6 +526,7 @@ describe('Application Factory', () => {
     expect(files.sort()).toEqual(
       [
         '/project/.oxlintrc.json',
+        '/project/.gitattributes',
         '/project/.gitignore',
         '/project/.prettierrc',
         '/project/README.md',
@@ -582,6 +596,7 @@ describe('Application Factory', () => {
       expect(files.sort()).toEqual(
         [
           '/project/.oxlintrc.json',
+          '/project/.gitattributes',
           '/project/.gitignore',
           '/project/.prettierrc',
           '/project/README.md',
