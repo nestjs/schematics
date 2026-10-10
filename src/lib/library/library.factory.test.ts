@@ -217,6 +217,67 @@ describe('Library Factory', () => {
     ]);
   });
 
+  it('should preserve comments in tsconfig.json and nest-cli.json', async () => {
+    const options: LibraryOptions = {
+      name: 'project',
+      prefix: 'app',
+    };
+
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create(
+      '/nest-cli.json',
+      `{
+  // monorepo projects
+  "projects": {
+    // existing library
+    "z-lib": {}
+  }
+}`,
+    );
+    tree.create(
+      '/tsconfig.json',
+      `{
+  // project-wide compiler options
+  "compilerOptions": {
+    /* keep strict on */
+    "strict": true,
+    "paths": {
+      // existing alias
+      "z-lib": ["./libs/z-lib/src"]
+    }
+  }
+}`,
+    );
+
+    tree = await runner.runSchematic('library', options, tree);
+
+    const tsconfigContent = tree.readContent('/tsconfig.json');
+    expect(tsconfigContent).toContain('// project-wide compiler options');
+    expect(tsconfigContent).toContain('/* keep strict on */');
+    expect(tsconfigContent).toContain('// existing alias');
+
+    const tsconfig = readJson(tree, '/tsconfig.json');
+    expect(tsconfig['compilerOptions']['strict']).toEqual(true);
+    expect(Object.keys(tsconfig['compilerOptions']['paths'])).toEqual([
+      'app/project',
+      'app/project/*',
+      'z-lib',
+    ]);
+    expect(tsconfig['compilerOptions']['paths']['app/project']).toEqual([
+      './libs/project/src',
+    ]);
+    expect(tsconfig['compilerOptions']['paths']['app/project/*']).toEqual([
+      './libs/project/src/*',
+    ]);
+
+    const configContent = tree.readContent('/nest-cli.json');
+    expect(configContent).toContain('// monorepo projects');
+    expect(configContent).toContain('// existing library');
+
+    const config = readJson(tree, '/nest-cli.json');
+    expect(Object.keys(config['projects'])).toEqual(['project', 'z-lib']);
+  });
+
   it('should sort library names in nest-cli.json, package.json and tsconfig.json', async () => {
     const options: LibraryOptions[] = [
       {
