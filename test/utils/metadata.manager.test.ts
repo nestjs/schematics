@@ -344,6 +344,40 @@ describe('Metadata Manager', () => {
       'export class FooModule {}\n'
     );
   });
+  it('should not duplicate a shorthand metadata', () => {
+    const metadata = 'providers';
+    const symbol = 'FooService';
+    const content =
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({ providers })\n' +
+      'export class FooModule {}\n';
+    const manager = new MetadataManager(content);
+    expect(manager.insert(metadata, symbol)).toEqual(content);
+  });
+  it('should manage multi line with a shorthand metadata', () => {
+    const symbol = 'FooService';
+    const content =
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [],\n' +
+      '  providers,\n' +
+      '})\n' +
+      'export class FooModule {}\n';
+    expect(new MetadataManager(content).insert('providers', symbol)).toEqual(
+      content
+    );
+    expect(new MetadataManager(content).insert('imports', 'BarModule')).toEqual(
+      'import { Module } from \'@nestjs/common\';\n' +
+      '\n' +
+      '@Module({\n' +
+      '  imports: [BarModule],\n' +
+      '  providers,\n' +
+      '})\n' +
+      'export class FooModule {}\n'
+    );
+  });
   it('should return undefined if there is no metadata to update', () => {
     const metadata = 'imports';
     const symbol = 'FooModule';
