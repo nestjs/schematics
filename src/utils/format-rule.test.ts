@@ -1,6 +1,9 @@
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
+import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
+import { vi } from 'vitest';
 import { formatFiles } from './format-files.rule.js';
 
 describe('formatFiles Rule', () => {
@@ -59,5 +62,27 @@ describe('formatFiles Rule', () => {
     await expect(
       runner.callRule(rule, tree).toPromise(),
     ).resolves.toBeDefined();
+  });
+
+  it('should honor the prettier config of the project', async () => {
+    // A fresh directory per run keeps Prettier's config cache out of the way.
+    const projectDir = fs.mkdtempSync(path.join(os.tmpdir(), 'nest-format-'));
+    fs.writeFileSync(path.join(projectDir, '.prettierrc'), '{ "semi": false }');
+    const cwd = vi.spyOn(process, 'cwd').mockReturnValue(projectDir);
+
+    try {
+      const tree = Tree.empty();
+      tree.create('/src/foo.ts', 'export const foo = 1;\n');
+
+      const rule = formatFiles();
+      const result = (await runner.callRule(rule, tree).toPromise())!;
+
+      expect(result.read('/src/foo.ts')!.toString('utf-8')).toBe(
+        'export const foo = 1\n',
+      );
+    } finally {
+      cwd.mockRestore();
+      fs.rmSync(projectDir, { recursive: true, force: true });
+    }
   });
 });
