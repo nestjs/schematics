@@ -18,6 +18,7 @@ import { parse } from 'jsonc-parser';
 import { formatFiles } from '../../utils/format-files.rule.js';
 import {
   createModuleNameMapper,
+  findNestCliConfigPath,
   inPlaceSortByKeys,
   NEST_CLI_CONFIG_FILES,
   normalizeToKebabOrSnakeCase,
@@ -283,16 +284,14 @@ function addLibraryToCliOptions(
     },
   };
   return (host: Tree) => {
-    const nestFileExists = host.exists('nest.json');
-
-    let nestCliFileExists = host.exists('nest-cli.json');
-    if (!nestCliFileExists && !nestFileExists) {
-      host.create('nest-cli.json', '{}');
-      nestCliFileExists = true;
+    let configPath = findNestCliConfigPath(host);
+    if (!configPath) {
+      configPath = 'nest-cli.json';
+      host.create(configPath, '{}');
     }
     return updateJsonFile(
       host,
-      nestCliFileExists ? 'nest-cli.json' : 'nest.json',
+      configPath,
       (optionsFile: Record<string, any>) => {
         if (!optionsFile.projects) {
           optionsFile.projects = {} as any;

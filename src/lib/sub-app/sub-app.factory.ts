@@ -122,12 +122,10 @@ function transform(options: SubAppOptions): SubAppOptions {
 }
 
 function isMonorepo(host: Tree) {
-  const nestFileExists = host.exists('nest.json');
-  const nestCliFileExists = host.exists('nest-cli.json');
-  if (!nestFileExists && !nestCliFileExists) {
+  const filename = findNestCliConfigPath(host);
+  if (!filename) {
     return false;
   }
-  const filename = nestCliFileExists ? 'nest-cli.json' : 'nest.json';
   const source = host.read(filename);
   if (!source) {
     return false;
@@ -447,16 +445,14 @@ function addAppsToCliOptions(
     },
   };
   return (host: Tree) => {
-    const nestFileExists = host.exists('nest.json');
-
-    let nestCliFileExists = host.exists('nest-cli.json');
-    if (!nestCliFileExists && !nestFileExists) {
-      host.create('nest-cli.json', '{}');
-      nestCliFileExists = true;
+    let configPath = findNestCliConfigPath(host);
+    if (!configPath) {
+      configPath = 'nest-cli.json';
+      host.create(configPath, '{}');
     }
     return updateJsonFile(
       host,
-      nestCliFileExists ? 'nest-cli.json' : 'nest.json',
+      configPath,
       (optionsFile: Record<string, any>) => {
         updateMainAppOptions(optionsFile, projectRoot, appName);
         if (!optionsFile.projects) {
