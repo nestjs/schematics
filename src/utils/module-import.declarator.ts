@@ -18,11 +18,36 @@ export class ModuleImportDeclarator {
    * @returns The updated content string with the import statement inserted.
    */
   public declare(content: string, options: DeclarationOptions): string {
+    if (this.isAlreadyImported(content, options)) {
+      return content;
+    }
     const toInsert = this.buildLineToInsert(options);
     const contentLines = content.split('\n');
     const finalImportIndex = this.findImportsEndpoint(contentLines);
     contentLines.splice(finalImportIndex + 1, 0, toInsert);
     return contentLines.join('\n');
+  }
+
+  /**
+   * Checks whether the content already imports the symbol from the same path.
+   *
+   * @param content - The content of the file where the import will be declared.
+   * @param options - The options for the declaration, including the symbol and path.
+   * @returns `true` if the import statement is already present.
+   */
+  private isAlreadyImported(
+    content: string,
+    options: DeclarationOptions,
+  ): boolean {
+    const escape = (value: string) =>
+      value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const symbol = escape(String(options.symbol));
+    const path = escape(this.computeRelativePath(options));
+    return new RegExp(
+      `^\\s*import\\s*\\{[^}]*(?<![\\w$])${symbol}(?![\\w$])[^}]*\\}` +
+        `\\s*from\\s*['"]${path}['"]`,
+      'm',
+    ).test(content);
   }
 
   /**
