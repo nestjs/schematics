@@ -10,6 +10,7 @@ import {
   ObjectLiteralElement,
   ObjectLiteralExpression,
   PropertyAssignment,
+  ShorthandPropertyAssignment,
   SourceFile,
   SyntaxKind,
 } from 'typescript';
@@ -54,8 +55,12 @@ export class MetadataManager {
     }
     const matchingProperties: ObjectLiteralElement[] =
       moduleDecoratorNode.properties
-        .filter((prop) => prop.kind === SyntaxKind.PropertyAssignment)
-        .filter((prop: PropertyAssignment) => {
+        .filter(
+          (prop) =>
+            prop.kind === SyntaxKind.PropertyAssignment ||
+            prop.kind === SyntaxKind.ShorthandPropertyAssignment,
+        )
+        .filter((prop: PropertyAssignment | ShorthandPropertyAssignment) => {
           const name = prop.name;
           switch (name.kind) {
             case SyntaxKind.Identifier:
@@ -228,6 +233,10 @@ export class MetadataManager {
     symbol: string,
     staticOptions?: DeclarationOptions['staticOptions'],
   ): string {
+    if (matchingProperties[0].kind === SyntaxKind.ShorthandPropertyAssignment) {
+      // the metadata is a shorthand property, there is no array to insert into
+      return this.content;
+    }
     const assignment = matchingProperties[0] as PropertyAssignment;
     let node: Node | NodeArray<Expression>;
     const arrLiteral = assignment.initializer as ArrayLiteralExpression;
