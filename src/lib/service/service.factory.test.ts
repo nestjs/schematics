@@ -219,6 +219,43 @@ describe('Service Factory', () => {
         'export class FooModule {}\n',
     );
   });
+  it('should manage declaration in the module matching the name', async () => {
+    const app: ApplicationOptions = {
+      name: '',
+      type: 'cjs',
+    };
+    let tree: UnitTestTree = await runner.runSchematic('application', app);
+
+    const adminModule =
+      "import { Module } from '@nestjs/common';\n" +
+      '\n' +
+      '@Module({})\n' +
+      'export class AdminModule {}\n';
+    tree.create('/src/users/admin.module.ts', adminModule);
+    tree.create(
+      '/src/users/users.module.ts',
+      "import { Module } from '@nestjs/common';\n" +
+        '\n' +
+        '@Module({})\n' +
+        'export class UsersModule {}\n',
+    );
+    const options: ServiceOptions = {
+      name: 'users',
+    };
+    tree = await runner.runSchematic('service', options, tree);
+    expect(tree.readContent(normalize('/src/users/admin.module.ts'))).toEqual(
+      adminModule,
+    );
+    expect(tree.readContent(normalize('/src/users/users.module.ts'))).toEqual(
+      "import { Module } from '@nestjs/common';\n" +
+        "import { UsersService } from './users.service';\n" +
+        '\n' +
+        '@Module({\n' +
+        '  providers: [UsersService]\n' +
+        '})\n' +
+        'export class UsersModule {}\n',
+    );
+  });
   it('should create a spec file', async () => {
     const options: ServiceOptions = {
       name: 'foo',

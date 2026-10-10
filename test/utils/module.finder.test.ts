@@ -56,4 +56,72 @@ describe('Module Finder', () => {
     };
     expect(finder.find(options)).toEqual(null);
   });
+
+  it('should prefer the module file matching the name', () => {
+    const tree = new EmptyTree();
+    tree.create('/src/users/admin.module.ts', 'admin module content');
+    tree.create('/src/users/users.module.ts', 'users module content');
+    const finder = new ModuleFinder(tree);
+    const options: FindOptions = {
+      name: 'users',
+      path: normalize('/src/users'),
+    };
+    expect(finder.find(options)).toEqual(
+      normalize('/src/users/users.module.ts'),
+    );
+  });
+
+  it('should prefer the module file matching the name regardless of creation order', () => {
+    const tree = new EmptyTree();
+    tree.create('/src/admin/users.module.ts', 'users module content');
+    tree.create('/src/admin/admin.module.ts', 'admin module content');
+    const finder = new ModuleFinder(tree);
+    const options: FindOptions = {
+      name: 'admin',
+      path: normalize('/src/admin'),
+    };
+    expect(finder.find(options)).toEqual(
+      normalize('/src/admin/admin.module.ts'),
+    );
+  });
+
+  it('should prefer the javascript module file matching the name', () => {
+    const tree = new EmptyTree();
+    tree.create('/src/users/admin.module.js', 'admin module content');
+    tree.create('/src/users/users.module.js', 'users module content');
+    const finder = new ModuleFinder(tree);
+    const options: FindOptions = {
+      name: 'users',
+      path: normalize('/src/users'),
+    };
+    expect(finder.find(options)).toEqual(
+      normalize('/src/users/users.module.js'),
+    );
+  });
+
+  it('should return the first module file when none matches the name', () => {
+    const tree = new EmptyTree();
+    tree.create('/src/users/admin.module.ts', 'admin module content');
+    tree.create('/src/users/users.module.ts', 'users module content');
+    const finder = new ModuleFinder(tree);
+    const options: FindOptions = {
+      name: 'foo',
+      path: normalize('/src/users'),
+    };
+    expect(finder.find(options)).toEqual(
+      normalize('/src/users/admin.module.ts'),
+    );
+  });
+
+  it('should not prefer the module file matching the name in a parent directory', () => {
+    const tree = new EmptyTree();
+    tree.create('/src/admin.module.ts', 'admin module content');
+    tree.create('/src/users.module.ts', 'users module content');
+    const finder = new ModuleFinder(tree);
+    const options: FindOptions = {
+      name: 'users',
+      path: normalize('/src/users'),
+    };
+    expect(finder.find(options)).toEqual(normalize('/src/admin.module.ts'));
+  });
 });
