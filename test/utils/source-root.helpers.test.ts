@@ -48,12 +48,22 @@ describe('isInRootDirectory', () => {
     expect(isInRootDirectory(tree)).toBe(true);
   });
 
-  it('should detect the root directory through the legacy nest.json', () => {
+  it('should detect the root directory through .nest-cli.json', () => {
     const tree = Tree.empty();
-    tree.create('nest.json', '{}');
+    tree.create('.nest-cli.json', '{}');
 
     expect(isInRootDirectory(tree)).toBe(true);
   });
+
+  it.each(['nest.json', '.nestcli.json'])(
+    'should not detect the root directory through %s, which the CLI ignores',
+    (filename) => {
+      const tree = Tree.empty();
+      tree.create(filename, '{}');
+
+      expect(isInRootDirectory(tree)).toBe(false);
+    },
+  );
 
   it('should consider the extra files passed by the caller', () => {
     const tree = Tree.empty();

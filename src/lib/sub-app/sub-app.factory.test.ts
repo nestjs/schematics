@@ -279,6 +279,27 @@ describe('SubApp Factory', () => {
     ]);
   });
 
+  it.each(['/.nestcli.json', '/nest.json'])(
+    'should not register the application in %s, which the CLI ignores',
+    async (legacyPath) => {
+      const legacyContent = JSON.stringify({ sourceRoot: 'source' });
+
+      let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create(legacyPath, legacyContent);
+
+      tree = await runner.runSchematic(
+        'sub-app',
+        { name: 'project' } as SubAppOptions,
+        tree,
+      );
+
+      const config = readJson(tree, '/nest-cli.json');
+      expect(config['monorepo']).toBe(true);
+      expect(config['projects']['project']['root']).toEqual('apps/project');
+      expect(tree.readContent(legacyPath)).toEqual(legacyContent);
+    },
+  );
+
   it('should generate files with .js imports for ESM projects', async () => {
     let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create(

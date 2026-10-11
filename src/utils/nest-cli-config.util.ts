@@ -4,12 +4,7 @@ import { parse } from 'jsonc-parser';
 /**
  * The config file names the CLI looks for, in the order it tries them.
  */
-export const NEST_CLI_CONFIG_FILES = [
-  'nest-cli.json',
-  '.nestcli.json',
-  '.nest-cli.json',
-  'nest.json',
-];
+export const NEST_CLI_CONFIG_FILES = ['nest-cli.json', '.nest-cli.json'];
 
 /**
  * Resolves the Nest CLI config file in use. The CLI loads the first file that

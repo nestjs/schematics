@@ -162,6 +162,26 @@ describe('Library Factory', () => {
     expect(config['projects']['project']['root']).toEqual('libs/project');
   });
 
+  it.each(['/.nestcli.json', '/nest.json'])(
+    'should not register the library in %s, which the CLI ignores',
+    async (legacyPath) => {
+      const options: LibraryOptions = {
+        name: 'project',
+        prefix: 'app',
+      };
+      const legacyContent = JSON.stringify({ sourceRoot: 'source' });
+
+      let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create(legacyPath, legacyContent);
+
+      tree = await runner.runSchematic('library', options, tree);
+
+      const config = readJson(tree, '/nest-cli.json');
+      expect(config['projects']['project']['root']).toEqual('libs/project');
+      expect(tree.readContent(legacyPath)).toEqual(legacyContent);
+    },
+  );
+
   it('should add paths to tsconfig.json', async () => {
     const options: LibraryOptions = {
       name: 'project',
