@@ -12,6 +12,7 @@ export class ModuleFinder {
 
   /**
    * Finds the module file in the given path.
+   * In that path, a module file named after `options.name` is preferred.
    *
    * @param options - The options for finding the module, including the path.
    * @returns The path to the module file, or null if not found.
@@ -21,7 +22,16 @@ export class ModuleFinder {
     const generatedDirectory: DirEntry = this.tree.getDir(
       generatedDirectoryPath,
     );
-    return this.findIn(generatedDirectory);
+    const namedModuleFilename: PathFragment | undefined = options.name
+      ? generatedDirectory.subfiles.find(
+          (filename) =>
+            filename === `${options.name}.module.ts` ||
+            filename === `${options.name}.module.js`,
+        )
+      : undefined;
+    return namedModuleFilename !== undefined
+      ? join(generatedDirectory.path, namedModuleFilename.valueOf())
+      : this.findIn(generatedDirectory);
   }
 
   /**
