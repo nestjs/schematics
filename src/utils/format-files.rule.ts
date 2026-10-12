@@ -1,5 +1,6 @@
 import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { join } from 'path';
 
 const FORMATTABLE_EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'];
 
@@ -50,8 +51,10 @@ export function formatFiles(paths?: Array<string | Path>): Rule {
       }
       const source = buffer.toString('utf-8');
       try {
+        // Tree paths are rooted at the workspace, which is the cwd on disk.
         const resolvedOptions =
-          (await prettier.resolveConfig(filePath)) ?? undefined;
+          (await prettier.resolveConfig(join(process.cwd(), filePath))) ??
+          undefined;
         const formatted = await prettier.format(source, {
           ...resolvedOptions,
           filepath: filePath,
