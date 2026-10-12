@@ -14,6 +14,23 @@ describe('SubApp Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
+  const runAndCollectWarnings = async (
+    options: SubAppOptions,
+    tree: UnitTestTree,
+    warnings: string[] = [],
+  ) => {
+    const subscription = runner.logger.subscribe((entry) => {
+      if (entry.level === 'warn') {
+        warnings.push(entry.message);
+      }
+    });
+    try {
+      await runner.runSchematic('sub-app', options, tree);
+    } finally {
+      subscription.unsubscribe();
+    }
+    return warnings;
+  };
   it('should manage name only', async () => {
     const options: SubAppOptions = {
       name: 'project',
@@ -297,6 +314,79 @@ describe('SubApp Factory', () => {
       expect(config['monorepo']).toBe(true);
       expect(config['projects']['project']['root']).toEqual('apps/project');
       expect(tree.readContent(legacyPath)).toEqual(legacyContent);
+    },
+  );
+
+  it.each(['.nestcli.json', 'nest.json'])(
+    'should warn that %s is ignored when it creates nest-cli.json',
+    async (legacyFile) => {
+      const tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create(`/${legacyFile}`, JSON.stringify({ sourceRoot: 'source' }));
+
+      const warnings = await runAndCollectWarnings(
+        { name: 'project' } as SubAppOptions,
+        tree,
+      );
+
+      expect(warnings).toEqual([
+        `The Nest CLI does not load "${legacyFile}", so this schematic ignores it. Move its configuration to "nest-cli.json".`,
+      ]);
+    },
+  );
+
+  it.each(['.nestcli.json', 'nest.json'])(
+    'should not warn about %s when nest-cli.json exists',
+    async (legacyFile) => {
+      const tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create('/nest-cli.json', JSON.stringify({ sourceRoot: 'src' }));
+      tree.create(`/${legacyFile}`, JSON.stringify({ sourceRoot: 'source' }));
+
+      const warnings = await runAndCollectWarnings(
+        { name: 'project' } as SubAppOptions,
+        tree,
+      );
+
+      expect(warnings).toEqual([]);
+    },
+  );
+
+  it.each(['.nestcli.json', 'nest.json'])(
+    'should not warn about %s when .nest-cli.json exists',
+    async (legacyFile) => {
+      const tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create('/.nest-cli.json', JSON.stringify({ sourceRoot: 'src' }));
+      tree.create(`/${legacyFile}`, JSON.stringify({ sourceRoot: 'source' }));
+
+      const warnings = await runAndCollectWarnings(
+        { name: 'project' } as SubAppOptions,
+        tree,
+      );
+
+      expect(warnings).toEqual([]);
+    },
+  );
+
+  it.each(['.nestcli.json', 'nest.json'])(
+    'should warn that %s is ignored even when the workspace files exist already',
+    async (legacyFile) => {
+      const tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create(
+        `/${legacyFile}`,
+        JSON.stringify({ monorepo: true, projects: {} }),
+      );
+      tree.create('/apps/nestjs-schematics/tsconfig.app.json', '{}');
+      const warnings: string[] = [];
+
+      await expect(
+        runAndCollectWarnings(
+          { name: 'project' } as SubAppOptions,
+          tree,
+          warnings,
+        ),
+      ).rejects.toThrow('A merge conflicted on path');
+      expect(warnings).toEqual([
+        `The Nest CLI does not load "${legacyFile}", so this schematic ignores it. Move its configuration to "nest-cli.json".`,
+      ]);
     },
   );
 

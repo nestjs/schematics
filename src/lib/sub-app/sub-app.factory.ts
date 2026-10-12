@@ -23,6 +23,7 @@ import {
   inPlaceSortByKeys,
   normalizeToKebabOrSnakeCase,
   readJsonFile,
+  warnAboutLegacyNestCliConfig,
 } from '../../utils/index.js';
 import {
   DEFAULT_APPS_PATH,
@@ -56,6 +57,7 @@ export function main(options: SubAppOptions): Rule {
   const appName = getAppNameFromPackageJson();
   options = transform(options);
   return chain([
+    warnAboutLegacyNestCliConfig,
     updateTsConfig(options.path!, appName),
     updatePackageJson(options, appName),
     (tree, context) =>
