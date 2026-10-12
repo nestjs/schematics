@@ -1,6 +1,7 @@
 import { join, normalize } from '@angular-devkit/core';
 import { Rule, Tree } from '@angular-devkit/schematics';
 import { DEFAULT_PATH_NAME } from '../lib/defaults.js';
+import { NEST_CLI_CONFIG_FILES } from './nest-cli-config.util.js';
 
 /**
  * Checks if the project uses ESM by looking for "type": "module" in package.json.
@@ -33,7 +34,7 @@ export function isInRootDirectory(
   host: Tree,
   extraFiles: string[] = [],
 ): boolean {
-  const files = ['nest-cli.json', 'nest.json'].concat(extraFiles || []);
+  const files = NEST_CLI_CONFIG_FILES.concat(extraFiles || []);
   return files.map((file) => host.exists(file)).some((isPresent) => isPresent);
 }
 

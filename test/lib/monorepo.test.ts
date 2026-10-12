@@ -408,12 +408,12 @@ describe('Monorepo workspace schematics', () => {
       tree = await addApp(tree, 'first');
 
       // The CLI only loads the first config file it finds, so a builder
-      // declared in `.nestcli.json` must not win over `nest-cli.json`.
+      // declared in `.nest-cli.json` must not win over `nest-cli.json`.
       const cli = readJson(tree, '/nest-cli.json');
       cli.compilerOptions.builder = 'rspack';
       tree.overwrite('/nest-cli.json', JSON.stringify(cli, null, 2));
       tree.create(
-        '/.nestcli.json',
+        '/.nest-cli.json',
         JSON.stringify({ compilerOptions: { builder: 'tsc' } }, null, 2),
       );
 

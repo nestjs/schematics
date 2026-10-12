@@ -22,6 +22,7 @@ import {
   inPlaceSortByKeys,
   NEST_CLI_CONFIG_FILES,
   normalizeToKebabOrSnakeCase,
+  warnAboutLegacyNestCliConfig,
 } from '../../utils/index.js';
 import {
   DEFAULT_LANGUAGE,
@@ -46,6 +47,7 @@ interface TsConfigPartialType {
 export function main(options: LibraryOptions): Rule {
   options = transform(options);
   return chain([
+    warnAboutLegacyNestCliConfig,
     addLibraryToCliOptions(options.path!, options.name),
     updatePackageJson(options),
     updateJestEndToEnd(options),

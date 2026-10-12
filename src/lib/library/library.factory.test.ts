@@ -14,6 +14,23 @@ describe('Library Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
+  const runAndCollectWarnings = async (
+    options: LibraryOptions,
+    tree: UnitTestTree,
+    warnings: string[] = [],
+  ) => {
+    const subscription = runner.logger.subscribe((entry) => {
+      if (entry.level === 'warn') {
+        warnings.push(entry.message);
+      }
+    });
+    try {
+      await runner.runSchematic('library', options, tree);
+    } finally {
+      subscription.unsubscribe();
+    }
+    return warnings;
+  };
   it('should manage name only', async () => {
     const options: LibraryOptions = {
       name: 'project',
@@ -161,6 +178,96 @@ describe('Library Factory', () => {
     expect(config['compilerOptions']['deleteOutDir']).toBe(true);
     expect(config['projects']['project']['root']).toEqual('libs/project');
   });
+
+  it.each(['/.nestcli.json', '/nest.json'])(
+    'should not register the library in %s, which the CLI ignores',
+    async (legacyPath) => {
+      const options: LibraryOptions = {
+        name: 'project',
+        prefix: 'app',
+      };
+      const legacyContent = JSON.stringify({ sourceRoot: 'source' });
+
+      let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create(legacyPath, legacyContent);
+
+      tree = await runner.runSchematic('library', options, tree);
+
+      const config = readJson(tree, '/nest-cli.json');
+      expect(config['projects']['project']['root']).toEqual('libs/project');
+      expect(tree.readContent(legacyPath)).toEqual(legacyContent);
+    },
+  );
+
+  it.each(['.nestcli.json', 'nest.json'])(
+    'should warn that %s is ignored when it creates nest-cli.json',
+    async (legacyFile) => {
+      const tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create(`/${legacyFile}`, JSON.stringify({ sourceRoot: 'source' }));
+
+      const warnings = await runAndCollectWarnings(
+        { name: 'project', prefix: 'app' },
+        tree,
+      );
+
+      expect(warnings).toEqual([
+        `The Nest CLI does not load "${legacyFile}", so this schematic ignores it. Move its configuration to "nest-cli.json".`,
+      ]);
+    },
+  );
+
+  it.each(['.nestcli.json', 'nest.json'])(
+    'should not warn about %s when nest-cli.json exists',
+    async (legacyFile) => {
+      const tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create('/nest-cli.json', JSON.stringify({ sourceRoot: 'src' }));
+      tree.create(`/${legacyFile}`, JSON.stringify({ sourceRoot: 'source' }));
+
+      const warnings = await runAndCollectWarnings(
+        { name: 'project', prefix: 'app' },
+        tree,
+      );
+
+      expect(warnings).toEqual([]);
+    },
+  );
+
+  it.each(['.nestcli.json', 'nest.json'])(
+    'should not warn about %s when .nest-cli.json exists',
+    async (legacyFile) => {
+      const tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create('/.nest-cli.json', JSON.stringify({ sourceRoot: 'src' }));
+      tree.create(`/${legacyFile}`, JSON.stringify({ sourceRoot: 'source' }));
+
+      const warnings = await runAndCollectWarnings(
+        { name: 'project', prefix: 'app' },
+        tree,
+      );
+
+      expect(warnings).toEqual([]);
+    },
+  );
+
+  it.each(['.nestcli.json', 'nest.json'])(
+    'should warn that %s is ignored even when the library files exist already',
+    async (legacyFile) => {
+      const tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create(`/${legacyFile}`, JSON.stringify({ sourceRoot: 'source' }));
+      tree.create('/libs/project/src/index.ts', '');
+      const warnings: string[] = [];
+
+      await expect(
+        runAndCollectWarnings(
+          { name: 'project', prefix: 'app' },
+          tree,
+          warnings,
+        ),
+      ).rejects.toThrow('A merge conflicted on path');
+      expect(warnings).toEqual([
+        `The Nest CLI does not load "${legacyFile}", so this schematic ignores it. Move its configuration to "nest-cli.json".`,
+      ]);
+    },
+  );
 
   it('should add paths to tsconfig.json', async () => {
     const options: LibraryOptions = {
