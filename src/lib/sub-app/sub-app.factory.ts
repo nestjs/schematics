@@ -57,6 +57,7 @@ export function main(options: SubAppOptions): Rule {
   const appName = getAppNameFromPackageJson();
   options = transform(options);
   return chain([
+    warnAboutLegacyNestCliConfig,
     updateTsConfig(options.path!, appName),
     updatePackageJson(options, appName),
     (tree, context) =>
@@ -445,10 +446,9 @@ function addAppsToCliOptions(
       tsConfigPath: join(rootPath, 'tsconfig.app.json'),
     },
   };
-  return (host: Tree, context: SchematicContext) => {
+  return (host: Tree) => {
     let configPath = findNestCliConfigPath(host);
     if (!configPath) {
-      warnAboutLegacyNestCliConfig(host, context);
       configPath = 'nest-cli.json';
       host.create(configPath, '{}');
     }

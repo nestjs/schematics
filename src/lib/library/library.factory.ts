@@ -47,6 +47,7 @@ interface TsConfigPartialType {
 export function main(options: LibraryOptions): Rule {
   options = transform(options);
   return chain([
+    warnAboutLegacyNestCliConfig,
     addLibraryToCliOptions(options.path!, options.name),
     updatePackageJson(options),
     updateJestEndToEnd(options),
@@ -284,10 +285,9 @@ function addLibraryToCliOptions(
       tsConfigPath: join(rootPath, 'tsconfig.lib.json'),
     },
   };
-  return (host: Tree, context: SchematicContext) => {
+  return (host: Tree) => {
     let configPath = findNestCliConfigPath(host);
     if (!configPath) {
-      warnAboutLegacyNestCliConfig(host, context);
       configPath = 'nest-cli.json';
       host.create(configPath, '{}');
     }

@@ -17,8 +17,8 @@ describe('Library Factory', () => {
   const runAndCollectWarnings = async (
     options: LibraryOptions,
     tree: UnitTestTree,
+    warnings: string[] = [],
   ) => {
-    const warnings: string[] = [];
     const subscription = runner.logger.subscribe((entry) => {
       if (entry.level === 'warn') {
         warnings.push(entry.message);
@@ -211,7 +211,7 @@ describe('Library Factory', () => {
       );
 
       expect(warnings).toEqual([
-        `The Nest CLI ignores "${legacyFile}", so a new "nest-cli.json" was created. Move the configuration from "${legacyFile}" into "nest-cli.json".`,
+        `The Nest CLI does not load "${legacyFile}", so this schematic ignores it. Move its configuration to "nest-cli.json".`,
       ]);
     },
   );
@@ -229,6 +229,43 @@ describe('Library Factory', () => {
       );
 
       expect(warnings).toEqual([]);
+    },
+  );
+
+  it.each(['.nestcli.json', 'nest.json'])(
+    'should not warn about %s when .nest-cli.json exists',
+    async (legacyFile) => {
+      const tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create('/.nest-cli.json', JSON.stringify({ sourceRoot: 'src' }));
+      tree.create(`/${legacyFile}`, JSON.stringify({ sourceRoot: 'source' }));
+
+      const warnings = await runAndCollectWarnings(
+        { name: 'project', prefix: 'app' },
+        tree,
+      );
+
+      expect(warnings).toEqual([]);
+    },
+  );
+
+  it.each(['.nestcli.json', 'nest.json'])(
+    'should warn that %s is ignored even when the library files exist already',
+    async (legacyFile) => {
+      const tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create(`/${legacyFile}`, JSON.stringify({ sourceRoot: 'source' }));
+      tree.create('/libs/project/src/index.ts', '');
+      const warnings: string[] = [];
+
+      await expect(
+        runAndCollectWarnings(
+          { name: 'project', prefix: 'app' },
+          tree,
+          warnings,
+        ),
+      ).rejects.toThrow('A merge conflicted on path');
+      expect(warnings).toEqual([
+        `The Nest CLI does not load "${legacyFile}", so this schematic ignores it. Move its configuration to "nest-cli.json".`,
+      ]);
     },
   );
 
