@@ -184,17 +184,60 @@ describe('Module Import Declarator', () => {
       );
     });
 
-    it('should still add the import for a similar symbol or another path', () => {
+    it.each([false, true])(
+      'should add the import when the symbol is aliased (isEsm: %s)',
+      (isEsm) => {
+        const path = `./users/users.service${isEsm ? '.js' : ''}`;
+        const content =
+          "import { Module } from '@nestjs/common';\n" +
+          `import { UsersService as LegacyUsers } from '${path}';\n` +
+          moduleBody;
+        const declarator = new ModuleImportDeclarator();
+        expect(declarator.declare(content, { ...options, isEsm })).toEqual(
+          "import { Module } from '@nestjs/common';\n" +
+            `import { UsersService as LegacyUsers } from '${path}';\n` +
+            `import { UsersService } from '${path}';\n` +
+            moduleBody,
+        );
+      },
+    );
+
+    it('should add the import when the alias is on the next line', () => {
+      const imports =
+        "import { Module } from '@nestjs/common';\n" +
+        'import {\n' +
+        '  UsersService\n' +
+        '    as LegacyUsers,\n' +
+        "} from './users/users.service';\n";
+      const declarator = new ModuleImportDeclarator();
+      expect(declarator.declare(imports + moduleBody, options)).toEqual(
+        imports +
+          "import { UsersService } from './users/users.service';\n" +
+          moduleBody,
+      );
+    });
+
+    it('should still add the import for a similar symbol', () => {
       const content: string =
         "import { Module } from '@nestjs/common';\n" +
         "import { AdminUsersService } from './users/users.service';\n" +
-        "import { UsersService } from './legacy/users.service';\n" +
         moduleBody;
       const declarator = new ModuleImportDeclarator();
       expect(declarator.declare(content, options)).toEqual(
         "import { Module } from '@nestjs/common';\n" +
           "import { AdminUsersService } from './users/users.service';\n" +
-          "import { UsersService } from './legacy/users.service';\n" +
+          "import { UsersService } from './users/users.service';\n" +
+          moduleBody,
+      );
+    });
+
+    it('should still add the import when another path imports the symbol with an alias', () => {
+      const imports =
+        "import { Module } from '@nestjs/common';\n" +
+        "import { UsersService as LegacyUsers } from './legacy/users.service';\n";
+      const declarator = new ModuleImportDeclarator();
+      expect(declarator.declare(imports + moduleBody, options)).toEqual(
+        imports +
           "import { UsersService } from './users/users.service';\n" +
           moduleBody,
       );

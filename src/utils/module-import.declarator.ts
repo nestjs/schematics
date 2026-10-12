@@ -29,7 +29,8 @@ export class ModuleImportDeclarator {
   }
 
   /**
-   * Checks whether the content already imports the symbol from the same path.
+   * Checks whether the content already imports the symbol without an alias
+   * from the same path.
    *
    * @param content - The content of the file where the import will be declared.
    * @param options - The options for the declaration, including the symbol and path.
@@ -44,7 +45,7 @@ export class ModuleImportDeclarator {
     const symbol = escape(String(options.symbol));
     const path = escape(this.computeRelativePath(options));
     return new RegExp(
-      `^\\s*import\\s*\\{[^}]*(?<![\\w$])${symbol}(?![\\w$])[^}]*\\}` +
+      `^\\s*import\\s*\\{[^}]*(?<![\\w$])${symbol}(?![\\w$])(?!\\s+as\\b)[^}]*\\}` +
         `\\s*from\\s*['"]${path}['"]`,
       'm',
     ).test(content);
