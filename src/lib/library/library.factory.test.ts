@@ -138,6 +138,30 @@ describe('Library Factory', () => {
     expect(config['compilerOptions']['builder']).toEqual('webpack');
   });
 
+  it('should update .nest-cli.json when it is the config file in use', async () => {
+    const options: LibraryOptions = {
+      name: 'project',
+      prefix: 'app',
+    };
+
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create(
+      '/.nest-cli.json',
+      JSON.stringify({
+        sourceRoot: 'source',
+        compilerOptions: { deleteOutDir: true },
+      }),
+    );
+
+    tree = await runner.runSchematic('library', options, tree);
+
+    expect(tree.exists('/nest-cli.json')).toBe(false);
+    const config = readJson(tree, '/.nest-cli.json');
+    expect(config['sourceRoot']).toEqual('source');
+    expect(config['compilerOptions']['deleteOutDir']).toBe(true);
+    expect(config['projects']['project']['root']).toEqual('libs/project');
+  });
+
   it('should add paths to tsconfig.json', async () => {
     const options: LibraryOptions = {
       name: 'project',

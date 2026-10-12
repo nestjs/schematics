@@ -236,6 +236,49 @@ describe('SubApp Factory', () => {
     expect(Object.keys(config['projects'])).toEqual(['a', 'b', 'c']); // Sorted
   });
 
+  it('should update .nest-cli.json when it is the config file in use', async () => {
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create(
+      '/.nest-cli.json',
+      JSON.stringify({ compilerOptions: { deleteOutDir: true } }),
+    );
+
+    tree = await runner.runSchematic(
+      'sub-app',
+      { name: 'project' } as SubAppOptions,
+      tree,
+    );
+
+    expect(tree.exists('/nest-cli.json')).toBe(false);
+    const config = readJson(tree, '/.nest-cli.json');
+    expect(config['monorepo']).toBe(true);
+    expect(config['compilerOptions']['deleteOutDir']).toBe(true);
+    expect(config['projects']['project']['root']).toEqual('apps/project');
+  });
+
+  it('should detect a monorepo declared in .nest-cli.json', async () => {
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create(
+      '/.nest-cli.json',
+      JSON.stringify({ monorepo: true, projects: {} }),
+    );
+
+    tree = await runner.runSchematic(
+      'sub-app',
+      { name: 'project' } as SubAppOptions,
+      tree,
+    );
+
+    // The workspace files are generated only on conversion to a monorepo.
+    expect(tree.exists('/apps/nestjs-schematics/tsconfig.app.json')).toBe(
+      false,
+    );
+    expect(tree.exists('/nest-cli.json')).toBe(false);
+    expect(Object.keys(readJson(tree, '/.nest-cli.json')['projects'])).toEqual([
+      'project',
+    ]);
+  });
+
   it('should generate files with .js imports for ESM projects', async () => {
     let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create(
