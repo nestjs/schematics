@@ -14,6 +14,23 @@ describe('Library Factory', () => {
     '.',
     path.join(process.cwd(), 'src/collection.json'),
   );
+  const runAndCollectWarnings = async (
+    options: LibraryOptions,
+    tree: UnitTestTree,
+  ) => {
+    const warnings: string[] = [];
+    const subscription = runner.logger.subscribe((entry) => {
+      if (entry.level === 'warn') {
+        warnings.push(entry.message);
+      }
+    });
+    try {
+      await runner.runSchematic('library', options, tree);
+    } finally {
+      subscription.unsubscribe();
+    }
+    return warnings;
+  };
   it('should manage name only', async () => {
     const options: LibraryOptions = {
       name: 'project',
@@ -179,6 +196,39 @@ describe('Library Factory', () => {
       const config = readJson(tree, '/nest-cli.json');
       expect(config['projects']['project']['root']).toEqual('libs/project');
       expect(tree.readContent(legacyPath)).toEqual(legacyContent);
+    },
+  );
+
+  it.each(['.nestcli.json', 'nest.json'])(
+    'should warn that %s is ignored when it creates nest-cli.json',
+    async (legacyFile) => {
+      const tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create(`/${legacyFile}`, JSON.stringify({ sourceRoot: 'source' }));
+
+      const warnings = await runAndCollectWarnings(
+        { name: 'project', prefix: 'app' },
+        tree,
+      );
+
+      expect(warnings).toEqual([
+        `The Nest CLI ignores "${legacyFile}", so a new "nest-cli.json" was created. Move the configuration from "${legacyFile}" into "nest-cli.json".`,
+      ]);
+    },
+  );
+
+  it.each(['.nestcli.json', 'nest.json'])(
+    'should not warn about %s when nest-cli.json exists',
+    async (legacyFile) => {
+      const tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create('/nest-cli.json', JSON.stringify({ sourceRoot: 'src' }));
+      tree.create(`/${legacyFile}`, JSON.stringify({ sourceRoot: 'source' }));
+
+      const warnings = await runAndCollectWarnings(
+        { name: 'project', prefix: 'app' },
+        tree,
+      );
+
+      expect(warnings).toEqual([]);
     },
   );
 

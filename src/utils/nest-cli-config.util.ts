@@ -1,4 +1,4 @@
-import { Tree } from '@angular-devkit/schematics';
+import { SchematicContext, Tree } from '@angular-devkit/schematics';
 import { parse } from 'jsonc-parser';
 
 /**
@@ -13,6 +13,29 @@ export const NEST_CLI_CONFIG_FILES = ['nest-cli.json', '.nest-cli.json'];
  */
 export function findNestCliConfigPath(tree: Tree): string | undefined {
   return NEST_CLI_CONFIG_FILES.find((candidate) => tree.exists(candidate));
+}
+
+/**
+ * The config file names the CLI no longer loads.
+ */
+export const LEGACY_NEST_CLI_CONFIG_FILES = ['.nestcli.json', 'nest.json'];
+
+/**
+ * Tells the user why a new `nest-cli.json` appeared next to a legacy config
+ * file. Call it only when no supported config file exists.
+ */
+export function warnAboutLegacyNestCliConfig(
+  tree: Tree,
+  context: SchematicContext,
+): void {
+  const legacyFile = LEGACY_NEST_CLI_CONFIG_FILES.find((candidate) =>
+    tree.exists(candidate),
+  );
+  if (legacyFile) {
+    context.logger.warn(
+      `The Nest CLI ignores "${legacyFile}", so a new "nest-cli.json" was created. Move the configuration from "${legacyFile}" into "nest-cli.json".`,
+    );
+  }
 }
 
 export function readJsonFile<T = Record<string, any>>(

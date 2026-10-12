@@ -22,6 +22,7 @@ import {
   inPlaceSortByKeys,
   NEST_CLI_CONFIG_FILES,
   normalizeToKebabOrSnakeCase,
+  warnAboutLegacyNestCliConfig,
 } from '../../utils/index.js';
 import {
   DEFAULT_LANGUAGE,
@@ -283,9 +284,10 @@ function addLibraryToCliOptions(
       tsConfigPath: join(rootPath, 'tsconfig.lib.json'),
     },
   };
-  return (host: Tree) => {
+  return (host: Tree, context: SchematicContext) => {
     let configPath = findNestCliConfigPath(host);
     if (!configPath) {
+      warnAboutLegacyNestCliConfig(host, context);
       configPath = 'nest-cli.json';
       host.create(configPath, '{}');
     }

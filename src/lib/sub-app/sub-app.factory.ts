@@ -23,6 +23,7 @@ import {
   inPlaceSortByKeys,
   normalizeToKebabOrSnakeCase,
   readJsonFile,
+  warnAboutLegacyNestCliConfig,
 } from '../../utils/index.js';
 import {
   DEFAULT_APPS_PATH,
@@ -444,9 +445,10 @@ function addAppsToCliOptions(
       tsConfigPath: join(rootPath, 'tsconfig.app.json'),
     },
   };
-  return (host: Tree) => {
+  return (host: Tree, context: SchematicContext) => {
     let configPath = findNestCliConfigPath(host);
     if (!configPath) {
+      warnAboutLegacyNestCliConfig(host, context);
       configPath = 'nest-cli.json';
       host.create(configPath, '{}');
     }
