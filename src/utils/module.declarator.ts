@@ -39,7 +39,9 @@ export class ModuleDeclarator {
    */
   public declare(content: string, options: DeclarationOptions): string {
     options = this.computeSymbol(options);
-    content = this.imports.declare(content, options);
+    const declaration = this.imports.declareWithSymbol(content, options);
+    content = declaration.content;
+    options.symbol = declaration.symbol;
     content = this.metadata.declare(content, options);
     return content;
   }
