@@ -6,103 +6,7 @@ import {
   ModuleDeclarator,
 } from '../../src/utils/module.declarator.js';
 
-function compileAndCaptureProviders(content: string): {
-  generatedService: Function;
-  providers: unknown[];
-} {
-  const files = new Map([
-    ['/virtual/app.module.ts', content],
-    [
-      '/virtual/other.ts',
-      'export class Other {}\nexport class OtherService {}\n',
-    ],
-    ['/virtual/users/users.service.ts', 'export class UsersService {}\n'],
-    [
-      '/virtual/nest-common.d.ts',
-      "declare module '@nestjs/common' { export function Module(metadata: { providers: unknown[] }): ClassDecorator; }\n",
-    ],
-  ]);
-  const options: ts.CompilerOptions = {
-    experimentalDecorators: true,
-    module: ts.ModuleKind.CommonJS,
-    moduleResolution: ts.ModuleResolutionKind.Bundler,
-    noEmit: true,
-    strict: true,
-    target: ts.ScriptTarget.ES2022,
-    types: [],
-  };
-  const host = ts.createCompilerHost(options);
-  const originalFileExists = host.fileExists.bind(host);
-  const originalReadFile = host.readFile.bind(host);
-  const originalGetSourceFile = host.getSourceFile.bind(host);
-  host.fileExists = (fileName) =>
-    files.has(fileName) || originalFileExists(fileName);
-  host.readFile = (fileName) =>
-    files.get(fileName) ?? originalReadFile(fileName);
-  host.getSourceFile = (
-    fileName,
-    languageVersion,
-    onError,
-    shouldCreateNew,
-  ) => {
-    const text = files.get(fileName);
-    return text === undefined
-      ? originalGetSourceFile(
-          fileName,
-          languageVersion,
-          onError,
-          shouldCreateNew,
-        )
-      : ts.createSourceFile(fileName, text, languageVersion);
-  };
-  host.resolveModuleNames = (moduleNames) =>
-    moduleNames.map((moduleName) => {
-      const fileName =
-        moduleName === '@nestjs/common'
-          ? '/virtual/nest-common.d.ts'
-          : moduleName === './other'
-            ? '/virtual/other.ts'
-            : moduleName === './users/users.service'
-              ? '/virtual/users/users.service.ts'
-              : undefined;
-      return fileName
-        ? { resolvedFileName: fileName, extension: ts.Extension.Ts }
-        : undefined;
-    });
-  const program = ts.createProgram([...files.keys()], options, host);
-  expect(ts.getPreEmitDiagnostics(program)).toEqual([]);
-
-  const generatedService = class GeneratedUsersService {};
-  const other = class Other {};
-  const otherService = class OtherService {};
-  const emitted = ts.transpileModule(content, {
-    compilerOptions: {
-      experimentalDecorators: true,
-      module: ts.ModuleKind.CommonJS,
-      target: ts.ScriptTarget.ES2022,
-    },
-  }).outputText;
-  let providers: unknown[] = [];
-  const requireModule = (specifier: string) => {
-    if (specifier === '@nestjs/common') {
-      return {
-        Module: (metadata: { providers: unknown[] }) => {
-          providers = metadata.providers;
-          return (target: unknown) => target;
-        },
-      };
-    }
-    if (specifier === './users/users.service') {
-      return { UsersService: generatedService };
-    }
-    if (specifier === './other') {
-      return { Other: other, OtherService: otherService };
-    }
-    throw new Error(`Unexpected module: ${specifier}`);
-  };
-  new Function('require', 'exports', emitted)(requireModule, {});
-  return { generatedService, providers };
-}
+import { compileAndCaptureProviders } from '../helpers/module-import.js';
 
 describe('Module Import Declarator', () => {
   it('should add import to the buffered module content', () => {
@@ -250,36 +154,40 @@ describe('Module Import Declarator', () => {
       const content = moduleContent(
         "import { UsersService } from './users/users.service';\n",
       );
-      expect(new ModuleImportDeclarator().declare(content, options)).toBe(
-        content,
-      );
+      expect(
+        new ModuleImportDeclarator().declareWithSymbol(content, options)
+          .content,
+      ).toBe(content);
     });
 
     it('reuses a named value import in a multiline declaration with comments', () => {
       const content = moduleContent(
         "import {\n  /* service */ UsersService,\n  OtherService,\n} from './users/users.service';\n",
       );
-      expect(new ModuleImportDeclarator().declare(content, options)).toBe(
-        content,
-      );
+      expect(
+        new ModuleImportDeclarator().declareWithSymbol(content, options)
+          .content,
+      ).toBe(content);
     });
 
     it('reuses the requested named import in a mixed default and named import', () => {
       const content = moduleContent(
         "import Other, { UsersService } from './users/users.service';\n",
       );
-      expect(new ModuleImportDeclarator().declare(content, options)).toBe(
-        content,
-      );
+      expect(
+        new ModuleImportDeclarator().declareWithSymbol(content, options)
+          .content,
+      ).toBe(content);
     });
 
     it('registers an existing aliased import by its local name', () => {
       const content = moduleContent(
         "import { UsersService as LegacyUsers } from './users/users.service';\n",
       ).replace('providers: [UsersService]', 'providers: [LegacyUsers]');
-      expect(new ModuleImportDeclarator().declare(content, options)).toBe(
-        content,
-      );
+      expect(
+        new ModuleImportDeclarator().declareWithSymbol(content, options)
+          .content,
+      ).toBe(content);
       expect(new ModuleDeclarator().declare(content, options)).toContain(
         'providers: [LegacyUsers]',
       );
@@ -354,9 +262,21 @@ describe('Module Import Declarator', () => {
       const content = moduleContent(
         "/* import { UsersService } from './users/users.service'; */\n",
       );
-      expect(new ModuleImportDeclarator().declare(content, options)).toContain(
+      const result = new ModuleImportDeclarator().declareWithSymbol(
+        content,
+        options,
+      ).content;
+      const source = ts.createSourceFile(
+        'app.module.ts',
+        result,
+        ts.ScriptTarget.Latest,
+      );
+      const imports = source.statements.filter(ts.isImportDeclaration);
+      expect(imports).toHaveLength(1);
+      expect(imports[0].getText(source)).toBe(
         "import { UsersService } from './users/users.service';",
       );
+      expect(imports[0].end).toBeLessThan(result.indexOf('@Module'));
     });
 
     it.each([
@@ -398,7 +318,10 @@ describe('Module Import Declarator', () => {
       ],
     ])('uses a unique alias for conflicting binding %s', (binding) => {
       const content = moduleContent(binding);
-      expect(new ModuleImportDeclarator().declare(content, options)).toContain(
+      expect(
+        new ModuleImportDeclarator().declareWithSymbol(content, options)
+          .content,
+      ).toContain(
         "import { UsersService as UsersService_1 } from './users/users.service';",
       );
     });
@@ -408,10 +331,10 @@ describe('Module Import Declarator', () => {
         "import { UsersService } from './users/users.service.js';\n",
       );
       expect(
-        new ModuleImportDeclarator().declare(content, {
+        new ModuleImportDeclarator().declareWithSymbol(content, {
           ...options,
           isEsm: true,
-        }),
+        }).content,
       ).toBe(content);
     });
 
@@ -561,9 +484,9 @@ describe('Module Import Declarator', () => {
         "import { Module } from '@nestjs/common';\n" +
           "import { OtherService } from './other';\n" +
           'function setup() {\n' +
-          '  const Unrelated = OtherService;\n' +
-          '  @Module({ providers: [] }) class AppModule {}\n' +
+          '  const UsersService = OtherService;\n' +
           '}\n' +
+          '@Module({ providers: [] }) class AppModule {}\n' +
           'setup();\n',
         options,
       );
@@ -598,98 +521,9 @@ describe('Module Import Declarator', () => {
           'export class AppModule {}\n',
         options,
       );
-      const virtualFiles = new Map([
-        ['/virtual/app.module.ts', content],
-        ['/virtual/other.ts', 'export class Other {}\n'],
-        ['/virtual/users/users.service.ts', 'export class UsersService {}\n'],
-        [
-          '/virtual/nest-common.d.ts',
-          "declare module '@nestjs/common' { export function Module(metadata: { providers: unknown[] }): ClassDecorator; }\n",
-        ],
-      ]);
-      const compilerOptions: ts.CompilerOptions = {
-        experimentalDecorators: true,
-        module: ts.ModuleKind.CommonJS,
-        moduleResolution: ts.ModuleResolutionKind.Bundler,
-        noEmit: true,
-        strict: true,
-        target: ts.ScriptTarget.ES2022,
-        types: [],
-      };
-      const host = ts.createCompilerHost(compilerOptions);
-      const originalFileExists = host.fileExists.bind(host);
-      const originalReadFile = host.readFile.bind(host);
-      const originalGetSourceFile = host.getSourceFile.bind(host);
-      host.fileExists = (fileName) =>
-        virtualFiles.has(fileName) || originalFileExists(fileName);
-      host.readFile = (fileName) =>
-        virtualFiles.get(fileName) ?? originalReadFile(fileName);
-      host.getSourceFile = (
-        fileName,
-        languageVersion,
-        onError,
-        shouldCreateNew,
-      ) => {
-        const text = virtualFiles.get(fileName);
-        return text === undefined
-          ? originalGetSourceFile(
-              fileName,
-              languageVersion,
-              onError,
-              shouldCreateNew,
-            )
-          : ts.createSourceFile(fileName, text, languageVersion);
-      };
-      host.resolveModuleNames = (moduleNames) =>
-        moduleNames.map((moduleName) => {
-          const fileName =
-            moduleName === '@nestjs/common'
-              ? '/virtual/nest-common.d.ts'
-              : moduleName === './other'
-                ? '/virtual/other.ts'
-                : moduleName === './users/users.service'
-                  ? '/virtual/users/users.service.ts'
-                  : undefined;
-          return fileName
-            ? { resolvedFileName: fileName, extension: ts.Extension.Ts }
-            : undefined;
-        });
-      const program = ts.createProgram(
-        [...virtualFiles.keys()],
-        compilerOptions,
-        host,
-      );
-      expect(ts.getPreEmitDiagnostics(program)).toEqual([]);
-      const emitted = ts.transpileModule(content, {
-        compilerOptions: {
-          experimentalDecorators: true,
-          module: ts.ModuleKind.CommonJS,
-          target: ts.ScriptTarget.ES2022,
-        },
-      }).outputText;
-      class GeneratedUsersService {}
-      class ExistingUsersService {}
-      let registeredProviders: unknown[] = [];
-      const requireModule = (specifier: string) => {
-        if (specifier === '@nestjs/common') {
-          return {
-            Module: (metadata: { providers: unknown[] }) => {
-              registeredProviders = metadata.providers;
-              return (target: unknown) => target;
-            },
-          };
-        }
-        if (specifier === './users/users.service') {
-          return { UsersService: GeneratedUsersService };
-        }
-        if (specifier === './other') {
-          return { Other: ExistingUsersService };
-        }
-        throw new Error(`Unexpected module: ${specifier}`);
-      };
-      const execute = new Function('require', 'exports', emitted);
-      execute(requireModule, {});
-      expect(registeredProviders).toEqual([GeneratedUsersService]);
+      const { generatedService, providers } =
+        compileAndCaptureProviders(content);
+      expect(providers).toEqual([generatedService]);
     });
 
     it('is idempotent when the generated declaration is inserted repeatedly', () => {

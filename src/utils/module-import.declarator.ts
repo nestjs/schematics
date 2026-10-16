@@ -1,6 +1,21 @@
 import { normalize, Path } from '@angular-devkit/core';
 import {
   createSourceFile,
+  getTrailingCommentRanges,
+  isBlock,
+  isCaseBlock,
+  isCatchClause,
+  isClassStaticBlockDeclaration,
+  isDecorator,
+  isCallExpression,
+  isObjectLiteralExpression,
+  isForStatement,
+  isForInStatement,
+  isForOfStatement,
+  isFunctionLike,
+  isModuleBlock,
+  isVariableDeclarationList,
+  NodeFlags,
   ImportDeclaration,
   isIdentifier,
   isImportDeclaration,
@@ -15,13 +30,12 @@ import {
   isModuleDeclaration,
   isParameter,
   isTypeAliasDeclaration,
-  isTypeParameterDeclaration,
   isVariableDeclaration,
   Node,
-  ScriptTarget,
   SourceFile,
   SyntaxKind,
 } from 'typescript';
+import type { ScriptTarget } from 'typescript';
 import { DeclarationOptions } from './module.declarator.js';
 import { PathSolver } from './path.solver.js';
 
@@ -34,18 +48,32 @@ export class ModuleImportDeclarator {
   constructor(private solver: PathSolver = new PathSolver()) {}
 
   /**
-   * Declares a module import in the given content string.
+   * Inserts the requested named import without reusing or renaming its local symbol.
+   * This legacy API can be composed directly with a metadata declarator.
+   * Use `declareWithSymbol` when import reuse or collision handling is needed.
    *
    * @param content - The content of the file where the import will be declared.
    * @param options - The options for the declaration, including the symbol and path.
    * @returns The updated content string with the import statement inserted.
    */
   public declare(content: string, options: DeclarationOptions): string {
-    return this.declareWithSymbol(content, options).content;
+    const source = createSourceFile(
+      options.module,
+      content,
+      99 as ScriptTarget,
+    );
+    const symbol = String(options.symbol);
+    const targetPath = this.computeRelativePath(options);
+    return this.insertImport(
+      content,
+      source,
+      this.buildLineToInsert(symbol, symbol, targetPath),
+    );
   }
 
   /**
-   * Declares the import and returns the local name used by module metadata.
+   * Reuses a value import or inserts one with a collision-free local name.
+   * Pass the returned symbol to the metadata declarator.
    */
   public declareWithSymbol(
     content: string,
@@ -55,7 +83,7 @@ export class ModuleImportDeclarator {
     const source = createSourceFile(
       options.module,
       content,
-      ScriptTarget.Latest,
+      99 as ScriptTarget,
     );
     const imports = source.statements.filter(isImportDeclaration);
     const targetPath = this.computeRelativePath(options);
@@ -64,41 +92,68 @@ export class ModuleImportDeclarator {
       imports,
       symbol,
       targetPath,
-    ).filter(({ localName, binding }) =>
-      bindings.get(localName)?.every((declaration) => declaration === binding),
-    );
+    ).filter((localName) => bindings.get(localName) === 1);
     if (requestedImports.length > 0) {
-      return { content, symbol: requestedImports[0].localName };
+      return { content, symbol: requestedImports[0] };
     }
 
-    const localSymbol = this.uniqueSymbol(symbol, new Set(bindings.keys()));
-    const toInsert = this.buildLineToInsert(options, localSymbol);
-    const lastImport = imports[imports.length - 1];
-    const insertionPoint =
-      lastImport?.end ?? source.statements[0]?.getStart(source) ?? source.end;
-    const importText = lastImport ? `\n${toInsert}` : `${toInsert}\n`;
+    const localSymbol = this.uniqueSymbol(symbol, bindings);
     return {
-      content:
-        content.slice(0, insertionPoint) +
-        importText +
-        content.slice(insertionPoint),
+      content: this.insertImport(
+        content,
+        source,
+        this.buildLineToInsert(symbol, localSymbol, targetPath),
+      ),
       symbol: localSymbol,
     };
+  }
+
+  private insertImport(
+    content: string,
+    source: SourceFile,
+    toInsert: string,
+  ): string {
+    // Recovery can turn everything after `from` into a moduleSpecifier expression.
+    // Only complete string specifiers provide a safe import endpoint.
+    const imports = source.statements
+      .filter(isImportDeclaration)
+      .filter(
+        (node) =>
+          isStringLiteral(node.moduleSpecifier) &&
+          !node.moduleSpecifier.isUnterminated,
+      );
+    const lastImport = imports[imports.length - 1];
+    let position =
+      lastImport?.end ?? source.statements[0]?.getStart(source) ?? source.end;
+    if (lastImport) {
+      const comments = getTrailingCommentRanges(content, position) ?? [];
+      position = comments[comments.length - 1]?.end ?? position;
+    }
+    const before = content.slice(0, position);
+    const after = content.slice(position);
+    const newline = content.includes('\r\n') ? '\r\n' : '\n';
+    const prefix =
+      before && !before.endsWith('\n') && !before.endsWith('\r') ? newline : '';
+    const suffix =
+      after.startsWith('\n') || after.startsWith('\r') ? '' : newline;
+    return before + prefix + toInsert + suffix + after;
   }
 
   private findRequestedImports(
     imports: ImportDeclaration[],
     symbol: string,
     targetPath: string,
-  ): Array<{ localName: string; binding: Node }> {
-    const bindings: Array<{ localName: string; binding: Node }> = [];
+  ): string[] {
+    const bindings: string[] = [];
     for (const declaration of imports) {
       const clause = declaration.importClause;
       if (
         !clause ||
         clause.isTypeOnly ||
         !isStringLiteral(declaration.moduleSpecifier) ||
-        declaration.moduleSpecifier.text !== targetPath ||
+        declaration.moduleSpecifier.isUnterminated ||
+        this.normalizeSpecifier(declaration.moduleSpecifier.text) !==
+          this.normalizeSpecifier(targetPath) ||
         clause.namedBindings?.kind !== SyntaxKind.NamedImports
       ) {
         continue;
@@ -110,83 +165,162 @@ export class ModuleImportDeclarator {
           isIdentifier(importedName) &&
           importedName.text === symbol
         ) {
-          bindings.push({
-            localName: specifier.name.text,
-            binding: specifier.name,
+          bindings.push(specifier.name.text);
+        }
+      }
+    }
+    return bindings;
+  }
+
+  private normalizeSpecifier(path: string): string {
+    return path.endsWith('.js') ? path.slice(0, -3) : path;
+  }
+
+  /** Scopes enclosing the first decorator handled by MetadataManager. */
+  private getModuleScopes(source: SourceFile): Set<Node> {
+    type Entry = { node: Node; parent?: Entry };
+    const pending: Entry[] = [{ node: source }];
+    while (pending.length) {
+      const entry = pending.pop()!;
+      const { node } = entry;
+      if (
+        isDecorator(node) &&
+        isCallExpression(node.expression) &&
+        isIdentifier(node.expression.expression) &&
+        node.expression.expression.text.toLowerCase() === 'module' &&
+        node.expression.arguments[0] &&
+        isObjectLiteralExpression(node.expression.arguments[0])
+      ) {
+        const scopes = new Set<Node>();
+        for (
+          let ancestor: Entry | undefined = entry;
+          ancestor;
+          ancestor = ancestor.parent
+        ) {
+          scopes.add(ancestor.node);
+        }
+        return scopes;
+      }
+      const children: Node[] = [];
+      node.forEachChild((child) => {
+        children.push(child);
+      });
+      for (let i = children.length - 1; i >= 0; i--) {
+        pending.push({ node: children[i], parent: entry });
+      }
+    }
+    return new Set([source]);
+  }
+
+  /** Count only declarations visible at the decorator, including hoisted var bindings. */
+  private getModuleBindings(source: SourceFile): Map<string, number> {
+    const scopes = this.getModuleScopes(source);
+    const bindings = new Map<string, number>();
+    const addName = (name: Node, scope: Node): void => {
+      if (!scopes.has(scope)) return;
+      const names = [name];
+      while (names.length) {
+        const current = names.pop()!;
+        if (isIdentifier(current)) {
+          bindings.set(current.text, (bindings.get(current.text) ?? 0) + 1);
+        } else if (
+          current.kind === SyntaxKind.ObjectBindingPattern ||
+          current.kind === SyntaxKind.ArrayBindingPattern
+        ) {
+          current.forEachChild((element) => {
+            if (element.kind === SyntaxKind.BindingElement)
+              names.push((element as import('typescript').BindingElement).name);
           });
         }
       }
-    }
-    return bindings;
-  }
-
-  private getModuleBindings(source: SourceFile): Map<string, Node[]> {
-    const bindings = new Map<string, Node[]>();
-    const addIdentifier = (identifier: Node): void => {
-      if (!isIdentifier(identifier)) return;
-      const declarations = bindings.get(identifier.text) ?? [];
-      declarations.push(identifier);
-      bindings.set(identifier.text, declarations);
     };
-    const visit = (node: Node): void => {
+    const pending: Array<{
+      node: Node;
+      lexical: Node;
+      hoist: Node;
+      parent?: Node;
+    }> = [{ node: source, lexical: source, hoist: source }];
+    while (pending.length) {
+      const { node, lexical, hoist, parent } = pending.pop()!;
       if (isImportDeclaration(node)) {
         const clause = node.importClause;
-        if (clause?.name) addIdentifier(clause.name);
+        if (clause?.name) addName(clause.name, lexical);
         if (clause?.namedBindings?.kind === SyntaxKind.NamespaceImport) {
-          addIdentifier(clause.namedBindings.name);
+          addName(clause.namedBindings.name, lexical);
         } else if (clause?.namedBindings) {
-          for (const specifier of clause.namedBindings.elements) {
-            addIdentifier(specifier.name);
-          }
+          for (const specifier of clause.namedBindings.elements)
+            addName(specifier.name, lexical);
         }
-        return;
+        continue;
       }
-      if (isImportEqualsDeclaration(node)) {
-        addIdentifier(node.name);
-        return;
-      }
+      if (isImportEqualsDeclaration(node)) addName(node.name, lexical);
       if (
         isClassDeclaration(node) ||
-        isClassExpression(node) ||
         isFunctionDeclaration(node) ||
-        isFunctionExpression(node) ||
-        isInterfaceDeclaration(node) ||
-        isTypeAliasDeclaration(node) ||
         isEnumDeclaration(node) ||
-        isModuleDeclaration(node) ||
-        isTypeParameterDeclaration(node)
+        isModuleDeclaration(node)
       ) {
-        if ('name' in node && node.name && isIdentifier(node.name)) {
-          addIdentifier(node.name);
-        }
+        if (node.name) addName(node.name, lexical);
       }
-      if (isVariableDeclaration(node) || isParameter(node)) {
-        this.addBindingNames(node.name, bindings);
+      // Type declarations can conflict with an import at module scope, but
+      // nested type names (including type parameters) do not shadow its value.
+      if (
+        (isInterfaceDeclaration(node) || isTypeAliasDeclaration(node)) &&
+        lexical === source
+      ) {
+        addName(node.name, source);
       }
-      node.forEachChild(visit);
-    };
-    visit(source);
+      if (isClassExpression(node) || isFunctionExpression(node)) {
+        if (node.name) addName(node.name, node);
+      }
+      if (isVariableDeclaration(node)) {
+        const scope =
+          parent &&
+          isVariableDeclarationList(parent) &&
+          !(parent.flags & NodeFlags.BlockScoped)
+            ? hoist
+            : lexical;
+        addName(node.name, scope);
+      }
+      if (isParameter(node)) addName(node.name, lexical);
+
+      let childLexical = lexical;
+      let childHoist = hoist;
+      if (
+        isFunctionLike(node) ||
+        isModuleBlock(node) ||
+        isModuleDeclaration(node) ||
+        isClassStaticBlockDeclaration(node)
+      ) {
+        childLexical = childHoist = node;
+      } else if (
+        isBlock(node) ||
+        isCaseBlock(node) ||
+        isCatchClause(node) ||
+        isForStatement(node) ||
+        isForInStatement(node) ||
+        isForOfStatement(node) ||
+        isClassDeclaration(node) ||
+        isClassExpression(node)
+      ) {
+        childLexical = node;
+      }
+      node.forEachChild((child) => {
+        pending.push({
+          node: child,
+          lexical: childLexical,
+          hoist: childHoist,
+          parent: node,
+        });
+      });
+    }
     return bindings;
   }
 
-  private addBindingNames(
-    name: import('typescript').BindingName,
-    bindings: Map<string, Node[]>,
-  ): void {
-    if (isIdentifier(name)) {
-      const declarations = bindings.get(name.text) ?? [];
-      declarations.push(name);
-      bindings.set(name.text, declarations);
-      return;
-    }
-    for (const element of name.elements) {
-      if (element.kind !== SyntaxKind.OmittedExpression) {
-        this.addBindingNames(element.name, bindings);
-      }
-    }
-  }
-
-  private uniqueSymbol(symbol: string, bindings: Set<string>): string {
+  private uniqueSymbol(
+    symbol: string,
+    bindings: ReadonlyMap<string, number>,
+  ): string {
     if (!bindings.has(symbol)) return symbol;
     let suffix = 1;
     while (bindings.has(`${symbol}_${suffix}`)) suffix++;
@@ -196,15 +330,18 @@ export class ModuleImportDeclarator {
   /**
    * Builds the import line to insert based on the declaration options.
    *
-   * @param options - The options for the declaration, including the symbol and path.
+   * @param symbol - The exported symbol to import.
+   * @param localSymbol - The local identifier to use.
+   * @param targetPath - The precomputed module specifier.
    * @returns The import line to insert.
    */
   private buildLineToInsert(
-    options: DeclarationOptions,
+    symbol: string,
     localSymbol: string,
+    targetPath: string,
   ): string {
-    const alias = localSymbol === options.symbol ? '' : ` as ${localSymbol}`;
-    return `import { ${options.symbol}${alias} } from '${this.computeRelativePath(options)}';`;
+    const alias = localSymbol === symbol ? '' : ` as ${localSymbol}`;
+    return `import { ${symbol}${alias} } from '${targetPath}';`;
   }
 
   /**
