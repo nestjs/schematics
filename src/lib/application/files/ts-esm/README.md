@@ -91,7 +91,7 @@ This project is already instrumented. To connect it, run this and approve the co
 $ npx @nestjs/observe link
 ```
 
-It writes the app key and secret into `.env` and makes `start` and `start:dev` load it. In production, set `OBSERVE_APP_KEY` and `OBSERVE_APP_SECRET` in the environment instead.
+It writes the app key and secret into `.env` and makes every `nest start` script (`start`, `start:dev`, `start:debug`) load it. In production, set `OBSERVE_APP_KEY` and `OBSERVE_APP_SECRET` in the environment instead.
 <% } else { %>
 To add it to this project:
 
