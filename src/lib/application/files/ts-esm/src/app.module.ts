@@ -8,7 +8,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
 @Module({
   imports: [<% if (observe) { %>
     // Distributed tracing, auto-correlated logs, request/job metrics, error
-    // telemetry, alarms, and more — out of the box. Sign up at https://observe.nestjs.com
+    // telemetry, alarms, and more — out of the box. To connect, run
+    // `npx @nestjs/observe link`: it swaps these placeholders for your key pair.
     ObserveModule.forRoot({
       appKey: 'YOUR_APP_KEY',
       appSecret: 'YOUR_APP_SECRET',

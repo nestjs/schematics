@@ -167,7 +167,7 @@ describe('Generated project configuration', () => {
         expect(appModule).toContain("appKey: 'YOUR_APP_KEY',");
         expect(appModule).toContain("appSecret: 'YOUR_APP_SECRET',");
         expect(appModule).toContain("serviceId: 'cats-app',");
-        expect(appModule).toContain('observe.nestjs.com');
+        expect(appModule).toContain('npx @nestjs/observe link');
       });
 
       it('should pass the instrument to NestFactory.create', async () => {
