@@ -164,10 +164,17 @@ describe('Generated project configuration', () => {
         const appModule = tree.readContent(`/cats-app/src/app.module.${ext}`);
 
         expect(appModule).toContain('ObserveModule.forRoot({');
-        expect(appModule).toContain("appKey: 'YOUR_APP_KEY',");
-        expect(appModule).toContain("appSecret: 'YOUR_APP_SECRET',");
+        // The environment wins - `npx @nestjs/observe link` writes the pair
+        // into .env - and the placeholder shows what is missing until then.
+        expect(appModule).toContain(
+          "appKey: process.env.OBSERVE_APP_KEY ?? 'YOUR_APP_KEY',",
+        );
+        expect(appModule).toContain(
+          "appSecret: process.env.OBSERVE_APP_SECRET ?? 'YOUR_APP_SECRET',",
+        );
         expect(appModule).toContain("serviceId: 'cats-app',");
         expect(appModule).toContain('observe.nestjs.com');
+        expect(appModule).toContain('npx @nestjs/observe link');
       });
 
       it('should pass the instrument to NestFactory.create', async () => {
