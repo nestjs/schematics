@@ -477,7 +477,7 @@ export const mod = ConfigModule.forRoot({
       const tree = await run(createProject(), { observe: true });
       expect(
         readJson(tree, '/package.json').dependencies['@nestjs/observe'],
-      ).toBe('^0.3.16');
+      ).toBe('^0.3.0');
       expect(read(tree, '/src/app.module.ts')).toBe(
         `import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -489,8 +489,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
 @Module({
   imports: [
     ObserveModule.forRoot({
-      appKey: process.env.OBSERVE_APP_KEY,
-      appSecret: process.env.OBSERVE_APP_SECRET,
+      appKey: process.env.OBSERVE_APP_KEY ?? 'YOUR_APP_KEY',
+      appSecret: process.env.OBSERVE_APP_SECRET ?? 'YOUR_APP_SECRET',
       serviceId: 'my-app',
     }),
   ],
@@ -552,8 +552,8 @@ export class AppModule {}
       expect(module).toContain(`  imports: [
     ConfigModule.forRoot(),
     ObserveModule.forRoot({
-      appKey: process.env.OBSERVE_APP_KEY,
-      appSecret: process.env.OBSERVE_APP_SECRET,
+      appKey: process.env.OBSERVE_APP_KEY ?? 'YOUR_APP_KEY',
+      appSecret: process.env.OBSERVE_APP_SECRET ?? 'YOUR_APP_SECRET',
       serviceId: 'my-app',
     }),
   ],`);

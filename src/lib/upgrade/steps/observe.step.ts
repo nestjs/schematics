@@ -31,7 +31,7 @@ import {
 } from '../upgrade.utils.js';
 
 const OBSERVE_PACKAGE = '@nestjs/observe';
-const OBSERVE_VERSION = '^0.3.16';
+const OBSERVE_VERSION = '^0.3.0';
 const OBSERVE_DOCS = 'https://github.com/nestjs/observe';
 
 interface ApplicationTarget {
@@ -276,8 +276,10 @@ function wireRootModule(
 
   const symbol =
     'ObserveModule.forRoot({\n' +
-    `      appKey: process.env.OBSERVE_APP_KEY,\n` +
-    `      appSecret: process.env.OBSERVE_APP_SECRET,\n` +
+    // `??` keeps both a `string`: SDKs before 0.3.16 type the pair as
+    // required, which `process.env.*` alone fails in a strict project.
+    `      appKey: process.env.OBSERVE_APP_KEY ?? ${quote}YOUR_APP_KEY${quote},\n` +
+    `      appSecret: process.env.OBSERVE_APP_SECRET ?? ${quote}YOUR_APP_SECRET${quote},\n` +
     `      serviceId: ${quote}${serviceId}${quote},\n` +
     '    })';
   // MetadataManager drops an element straight into an empty array
