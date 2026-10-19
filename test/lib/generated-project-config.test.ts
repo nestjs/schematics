@@ -173,6 +173,7 @@ describe('Generated project configuration', () => {
           "appSecret: process.env.OBSERVE_APP_SECRET ?? 'YOUR_APP_SECRET',",
         );
         expect(appModule).toContain("serviceId: 'cats-app',");
+        expect(appModule).toContain('observe.nestjs.com');
         expect(appModule).toContain('npx @nestjs/observe link');
       });
 
