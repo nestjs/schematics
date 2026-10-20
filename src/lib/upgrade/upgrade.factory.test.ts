@@ -473,6 +473,19 @@ export const mod = ConfigModule.forRoot({
   });
 
   describe('observe', () => {
+    it('should point to npx @nestjs/observe link to connect it', async () => {
+      const messages: string[] = [];
+      const subscription = runner.logger.subscribe((entry) =>
+        messages.push(entry.message),
+      );
+      await run(createProject(), { observe: true });
+      subscription.unsubscribe();
+
+      const output = messages.join('\n');
+      expect(output).toContain('npx @nestjs/observe link');
+      expect(output).toContain('OBSERVE_APP_KEY and OBSERVE_APP_SECRET');
+    });
+
     it('should install and wire up @nestjs/observe', async () => {
       const tree = await run(createProject(), { observe: true });
       expect(

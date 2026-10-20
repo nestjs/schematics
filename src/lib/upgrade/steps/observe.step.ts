@@ -78,7 +78,7 @@ export function setupObserve(report: UpgradeReport): Rule {
     }
 
     report.action(
-      'Set the OBSERVE_APP_KEY and OBSERVE_APP_SECRET environment variables (sign up at https://observe.nestjs.com — free for up to 300,000 events a month).',
+      'Connect the app to NestJS Observe: run `npx @nestjs/observe link` in the project and approve the code it prints (signing up for free if needed — up to 300,000 events a month). It writes OBSERVE_APP_KEY and OBSERVE_APP_SECRET into .env. Or create a key at https://observe.nestjs.com and set those two environment variables yourself.',
     );
     return tree;
   };
