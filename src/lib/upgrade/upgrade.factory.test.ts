@@ -168,12 +168,45 @@ describe('Upgrade Factory', () => {
       expect(pkg.dependencies['@nestjs/apollo']).toBe('^14.0.0');
       expect(pkg.dependencies['@nestjs/config']).toBe('^12.0.0');
       expect(pkg.dependencies['@nestjs/swagger']).toBe('^12.0.0');
-      // unknown companion packages are left alone
-      expect(pkg.dependencies['@nestjs/typeorm']).toBe('^11.0.0');
+      expect(pkg.dependencies['@nestjs/typeorm']).toBe('^12.0.0');
       expect(pkg.devDependencies['@nestjs/cli']).toBe('^12.0.0');
       expect(pkg.devDependencies['@nestjs/schematics']).toBe('^12.0.0');
       expect(pkg.devDependencies['@nestjs/testing']).toBe('^12.0.0');
       expect(pkg.devDependencies.typescript).toBe('^6.0.0');
+    });
+
+    it('should bump companion packages to their v12 majors', async () => {
+      const messages: string[] = [];
+      const subscription = runner.logger.subscribe((entry) =>
+        messages.push(entry.message),
+      );
+      const tree = await run(
+        createProject({
+          'package.json': packageJson({
+            dependencies: {
+              '@nestjs/common': '^11.0.1',
+              '@nestjs/core': '^11.0.1',
+              '@nestjs/jwt': '^11.0.2',
+              '@nestjs/passport': '^11.0.5',
+              '@nestjs/schedule': '^6.1.3',
+              '@nestjs/terminus': '^11.1.1',
+              '@nestjs/azure-database': '^4.0.0',
+            },
+          }),
+        }),
+      );
+      subscription.unsubscribe();
+
+      const pkg = readJson(tree, '/package.json');
+      expect(pkg.dependencies['@nestjs/jwt']).toBe('^12.0.0');
+      expect(pkg.dependencies['@nestjs/passport']).toBe('^12.0.0');
+      expect(pkg.dependencies['@nestjs/schedule']).toBe('^12.0.0');
+      expect(pkg.dependencies['@nestjs/terminus']).toBe('^12.0.0');
+      expect(pkg.dependencies['@nestjs/azure-database']).toBe('^4.0.0');
+
+      const untouched = messages.find((m) => m.includes('left untouched'));
+      expect(untouched).toContain('@nestjs/azure-database');
+      expect(untouched).not.toContain('@nestjs/terminus');
     });
 
     it('should not add packages that are not installed', async () => {
@@ -202,6 +235,24 @@ describe('Upgrade Factory', () => {
       const pkg = readJson(tree, '/package.json');
       expect(pkg.dependencies['@nestjs/core']).toBe('next');
       expect(pkg.devDependencies['@nestjs/cli']).toBe('next');
+    });
+
+    it('should not apply the dist-tag to companion packages', async () => {
+      const tree = await run(
+        createProject({
+          'package.json': packageJson({
+            dependencies: {
+              '@nestjs/common': '^11.0.1',
+              '@nestjs/core': '^11.0.1',
+              '@nestjs/typeorm': '^11.0.3',
+            },
+          }),
+        }),
+        { tag: 'next' },
+      );
+      const pkg = readJson(tree, '/package.json');
+      expect(pkg.dependencies['@nestjs/core']).toBe('next');
+      expect(pkg.dependencies['@nestjs/typeorm']).toBe('^12.0.0');
     });
 
     it('should preserve package.json formatting', async () => {

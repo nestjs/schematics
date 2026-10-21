@@ -40,6 +40,31 @@ export const NEST_V12_PACKAGES: Record<string, string> = {
   '@nestjs/mercurius': GRAPHQL_V14,
 };
 
+/**
+ * Companion packages moved to v12 together with the framework. Their v11
+ * releases cap the `@nestjs/*` peers at v11, so they have to be bumped too.
+ * Their dist-tags do not follow the framework, so `--tag` is not applied.
+ */
+export const NEST_V12_COMPANION_PACKAGES: Record<string, string> = {
+  '@nestjs/axios': NEST_V12,
+  '@nestjs/bull': NEST_V12,
+  '@nestjs/bullmq': NEST_V12,
+  '@nestjs/cache-manager': NEST_V12,
+  '@nestjs/cqrs': NEST_V12,
+  '@nestjs/devtools-integration': NEST_V12,
+  '@nestjs/elasticsearch': NEST_V12,
+  '@nestjs/event-emitter': NEST_V12,
+  '@nestjs/jwt': NEST_V12,
+  '@nestjs/mapped-types': NEST_V12,
+  '@nestjs/mongoose': NEST_V12,
+  '@nestjs/passport': NEST_V12,
+  '@nestjs/schedule': NEST_V12,
+  '@nestjs/sequelize': NEST_V12,
+  '@nestjs/serve-static': NEST_V12,
+  '@nestjs/terminus': NEST_V12,
+  '@nestjs/typeorm': NEST_V12,
+};
+
 /** Packages that are not tied to a NestJS major. */
 const VERSION_AGNOSTIC_PACKAGES = ['@nestjs/mau', '@nestjs/observe'];
 
@@ -59,12 +84,16 @@ export function updateNestDependencies(
 ): Rule {
   return (tree: Tree) => {
     const updated: string[] = [];
-    for (const [name, version] of Object.entries(NEST_V12_PACKAGES)) {
+    for (const [name, version] of [
+      ...Object.entries(NEST_V12_PACKAGES),
+      ...Object.entries(NEST_V12_COMPANION_PACKAGES),
+    ]) {
       const dependency = getPackageJsonDependency(tree, name);
       if (!dependency) {
         continue;
       }
-      const target = options.tag ? options.tag : version;
+      const target =
+        options.tag && name in NEST_V12_PACKAGES ? options.tag : version;
       if (dependency.version !== target) {
         addPackageJsonDependency(tree, {
           ...dependency,
@@ -146,6 +175,7 @@ function findUnknownNestPackages(tree: Tree): string[] {
       if (
         name.startsWith('@nestjs/') &&
         !(name in NEST_V12_PACKAGES) &&
+        !(name in NEST_V12_COMPANION_PACKAGES) &&
         !VERSION_AGNOSTIC_PACKAGES.includes(name)
       ) {
         unknown.add(name);
