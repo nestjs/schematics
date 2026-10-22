@@ -207,6 +207,59 @@ describe('Upgrade Factory (additional steps)', () => {
       expect(output()).toMatch(/Node\.js v24\.9\+/);
     });
 
+    it('should run Jest scripts with --experimental-vm-modules', async () => {
+      const tree = await run(
+        createProject({
+          'package.json': packageJson({
+            scripts: {
+              build: 'nest build',
+              test: 'jest',
+              'test:watch': 'jest --watch',
+              'test:cov': 'jest --coverage',
+              'test:debug':
+                'node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand',
+              'test:e2e': 'jest --config ./test/jest-e2e.json',
+            },
+            devDependencies: { jest: '^30.0.0', 'ts-jest': '^29.4.0' },
+          }),
+        }),
+      );
+      const scripts = readJson(tree, '/package.json').scripts;
+      expect(scripts).toEqual({
+        build: 'nest build',
+        test: 'node --experimental-vm-modules ./node_modules/jest/bin/jest.js',
+        'test:watch':
+          'node --experimental-vm-modules ./node_modules/jest/bin/jest.js --watch',
+        'test:cov':
+          'node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage',
+        'test:debug':
+          'node --experimental-vm-modules --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand',
+        'test:e2e':
+          'node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config ./test/jest-e2e.json',
+      });
+      expect(output()).toMatch(
+        /updated the "test:e2e" script to run Jest with --experimental-vm-modules/,
+      );
+    });
+
+    it('should leave scripts that pass the flag or start Jest differently alone', async () => {
+      const scripts = {
+        test: 'NODE_OPTIONS=--experimental-vm-modules npx jest',
+        'test:ci': 'cross-env NODE_ENV=test jest --ci',
+        'test:clean': 'node scripts/clear-jest-cache.js',
+      };
+      const tree = await run(
+        createProject({
+          'package.json': packageJson({
+            scripts,
+            devDependencies: { jest: '^30.0.0' },
+          }),
+        }),
+      );
+      expect(readJson(tree, '/package.json').scripts).toEqual(scripts);
+      expect(output()).toMatch(/NODE_OPTIONS=--experimental-vm-modules/);
+    });
+
     it('should keep an up-to-date Jest stack untouched', async () => {
       const tree = await run(
         createProject({
