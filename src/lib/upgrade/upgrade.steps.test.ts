@@ -418,6 +418,7 @@ export class BService implements OnApplicationBootstrap {
             compilerOptions: {
               module: 'nodenext',
               moduleResolution: 'nodenext',
+              strict: false,
             },
           }),
         }),
@@ -462,6 +463,250 @@ export class BService implements OnApplicationBootstrap {
         }),
       );
       expect(output()).not.toMatch(/rootDir/);
+    });
+
+    it('should still ask for rootDir in tsconfig.build.json when tsconfig.json sets "."', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              rootDir: '.',
+            },
+          }),
+          'tsconfig.build.json': JSON.stringify({
+            extends: './tsconfig.json',
+            include: ['src'],
+          }),
+        }),
+      );
+      expect(output()).toMatch(
+        /tsconfig\.build\.json does not set "rootDir"[\s\S]*TS5011/,
+      );
+    });
+
+    it('should accept a rootDir inherited from tsconfig.json when it points at src', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              rootDir: './src',
+            },
+          }),
+          'tsconfig.build.json': JSON.stringify({
+            extends: './tsconfig.json',
+            include: ['src'],
+          }),
+        }),
+      );
+      expect(output()).not.toMatch(/rootDir/);
+    });
+
+    it('should flag a "./" baseUrl, which TypeScript 6 rejects', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              baseUrl: './',
+              paths: { '@app/shared': ['libs/shared/src'] },
+            },
+          }),
+        }),
+      );
+      expect(output()).toMatch(
+        /tsconfig\.json sets "baseUrl": "\.\/", which TypeScript 6 rejects \(error TS5101\)\. Remove it, prefix any "paths" targets with "\.\/"[\s\S]*"src\/\*": \["\.\/src\/\*"\][\s\S]*"ignoreDeprecations": "6\.0"/,
+      );
+    });
+
+    it('should ask to rewrite "paths" for any other baseUrl', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              baseUrl: './src',
+              paths: { '@app/*': ['app/*'] },
+            },
+          }),
+        }),
+      );
+      const text = output();
+      expect(text).toMatch(
+        /tsconfig\.json sets "baseUrl": "\.\/src"[\s\S]*TS5101[\s\S]*Rewrite "paths" targets relative to tsconfig\.json/,
+      );
+      expect(text).not.toMatch(/Remove it/);
+    });
+
+    it('should accept baseUrl with "ignoreDeprecations": "6.0"', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              baseUrl: './',
+              ignoreDeprecations: '6.0',
+            },
+          }),
+        }),
+      );
+      expect(output()).not.toMatch(/baseUrl/);
+    });
+
+    it('should ask for "types" when the project relies on @types/node and @types/jest', async () => {
+      await run(
+        createProject({
+          'package.json': packageJson({
+            devDependencies: {
+              '@types/jest': '^30.0.0',
+              '@types/node': '^22.0.0',
+              typescript: '^6.0.0',
+            },
+          }),
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+            },
+          }),
+        }),
+      );
+      expect(output()).toMatch(
+        /tsconfig\.json does not set "types"[\s\S]*TS2591[\s\S]*TS2593[\s\S]*`"types": \["node", "jest"\]`/,
+      );
+    });
+
+    it('should ask for rootDir in tsconfig.json when ts-jest compiles the specs', async () => {
+      await run(
+        createProject({
+          'package.json': packageJson({
+            devDependencies: {
+              jest: '^30.0.0',
+              'ts-jest': '^29.4.0',
+              typescript: '^6.0.0',
+            },
+          }),
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+            },
+          }),
+        }),
+      );
+      expect(output()).toMatch(
+        /tsconfig\.json does not set "rootDir"\. ts-jest compiles the specs with it[\s\S]*TS5011[\s\S]*`"rootDir": "\."`/,
+      );
+    });
+
+    it('should flag the strict default of TypeScript 6 when "strict" is not set', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              strictNullChecks: true,
+              noImplicitAny: false,
+            },
+          }),
+        }),
+      );
+      expect(output()).toMatch(
+        /tsconfig\.json does not set "strict", which TypeScript 6 enables by default[\s\S]*TS2564[\s\S]*`"strict": false`[\s\S]*`"strictPropertyInitialization": false`/,
+      );
+    });
+
+    it('should accept an explicit "strict" setting', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              strict: true,
+            },
+          }),
+        }),
+      );
+      expect(output()).not.toMatch(/"strict"/);
+    });
+
+    it('should flag the other options TypeScript 6 deprecates', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              strict: false,
+              target: 'es5',
+              downlevelIteration: true,
+              esModuleInterop: false,
+              allowSyntheticDefaultImports: true,
+            },
+          }),
+        }),
+      );
+      const text = output();
+      expect(text).toMatch(
+        /tsconfig\.json sets "target": "es5", "downlevelIteration": true, "esModuleInterop": false, which TypeScript 6 deprecates[\s\S]*Remove them \(set "target" to "ES2023"[\s\S]*"ignoreDeprecations": "6\.0"/,
+      );
+      expect(text).not.toMatch(/"allowSyntheticDefaultImports"/);
+    });
+
+    it('should accept deprecated options with "ignoreDeprecations": "6.0"', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              strict: false,
+              target: 'es5',
+              ignoreDeprecations: '6.0',
+            },
+          }),
+        }),
+      );
+      expect(output()).not.toMatch(/deprecates/);
+    });
+
+    it('should accept a tsconfig.json shaped like the v12 template', async () => {
+      await run(
+        createProject({
+          'package.json': packageJson({
+            devDependencies: {
+              '@types/jest': '^30.0.0',
+              '@types/node': '^22.0.0',
+              jest: '^30.0.0',
+              'ts-jest': '^29.4.0',
+              typescript: '^6.0.0',
+            },
+          }),
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              types: ['node', 'jest'],
+              rootDir: '.',
+              strict: false,
+            },
+          }),
+          'tsconfig.build.json': JSON.stringify({
+            extends: './tsconfig.json',
+            compilerOptions: { rootDir: './src' },
+            include: ['src'],
+          }),
+        }),
+      );
+      expect(output()).not.toMatch(/tsconfig/);
     });
   });
 });
