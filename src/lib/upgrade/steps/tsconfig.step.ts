@@ -17,6 +17,16 @@ const GLOBAL_TYPES: Record<string, string> = {
   jest: '"describe" (error TS2593)',
 };
 
+/** Options TypeScript 6 deprecates, other than "baseUrl" (TS5101/TS5107). */
+const DEPRECATED_OPTIONS: Array<[string, (value: unknown) => boolean]> = [
+  ['target', (value) => String(value).toLowerCase() === 'es5'],
+  ['downlevelIteration', () => true],
+  ['outFile', () => true],
+  ['esModuleInterop', (value) => value === false],
+  ['allowSyntheticDefaultImports', (value) => value === false],
+  ['alwaysStrict', (value) => value === false],
+];
+
 /**
  * Projects generated with Nest v10 or earlier still use
  * `"module": "commonjs"` without a `moduleResolution`. That combination
@@ -54,11 +64,14 @@ export function checkTsConfig(report: UpgradeReport): Rule {
     const buildConfig = readJsonFile(tree, 'tsconfig.build.json');
     if (buildConfig) {
       const buildCompilerOptions = buildConfig.compilerOptions;
+      // An inherited rootDir only keeps `dist/main.js` when it points at src;
+      // the "." that tsconfig.json needs for ts-jest emits `dist/src/main.js`.
       const hasRootDir =
         (buildCompilerOptions &&
           typeof buildCompilerOptions === 'object' &&
           'rootDir' in buildCompilerOptions) ||
-        (compilerOptions && 'rootDir' in compilerOptions);
+        String(compilerOptions.rootDir ?? '').replace(/^\.\/|\/$/g, '') ===
+          'src';
       if (!hasRootDir) {
         report.action(
           'tsconfig.build.json does not set "rootDir". TypeScript 6 requires it explicitly (error TS5011); add `"rootDir": "./src"` to its "compilerOptions" to keep the dist layout unchanged.',
@@ -97,6 +110,30 @@ export function checkTsConfig(report: UpgradeReport): Rule {
     if (types.length > 0 && !('types' in compilerOptions)) {
       report.action(
         `tsconfig.json does not set "types", which TypeScript 6 defaults to [], so globals such as ${types.map((name) => GLOBAL_TYPES[name]).join(' and ')} are not found. Add \`"types": [${types.map((name) => `"${name}"`).join(', ')}]\` to its "compilerOptions".`,
+      );
+    }
+
+    if (!('strict' in compilerOptions)) {
+      report.action(
+        'tsconfig.json does not set "strict", which TypeScript 6 enables by default, so code that compiled before can fail with errors such as TS2564 (properties without an initializer, e.g. in DTO classes) and TS18046 ("catch" variables are "unknown"). ' +
+          'Add `"strict": false` to its "compilerOptions" to keep the v11 behaviour, or adopt it with `"strictPropertyInitialization": false` like new v12 projects.',
+      );
+    }
+
+    const deprecated = DEPRECATED_OPTIONS.filter(
+      ([name, isDeprecated]) =>
+        name in compilerOptions && isDeprecated(compilerOptions[name]),
+    ).map(([name]) => name);
+    if (deprecated.length > 0 && compilerOptions.ignoreDeprecations !== '6.0') {
+      const options = deprecated
+        .map((name) => `"${name}": ${JSON.stringify(compilerOptions[name])}`)
+        .join(', ');
+      const pronoun = deprecated.length > 1 ? 'them' : 'it';
+      const target = deprecated.includes('target')
+        ? ' (set "target" to "ES2023" like new projects)'
+        : '';
+      report.action(
+        `tsconfig.json sets ${options}, which TypeScript 6 deprecates (errors TS5101/TS5107). Remove ${pronoun}${target}, or add \`"ignoreDeprecations": "6.0"\` to keep ${pronoun} until TypeScript 7.`,
       );
     }
     return tree;

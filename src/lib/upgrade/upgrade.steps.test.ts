@@ -418,6 +418,7 @@ export class BService implements OnApplicationBootstrap {
             compilerOptions: {
               module: 'nodenext',
               moduleResolution: 'nodenext',
+              strict: false,
             },
           }),
         }),
@@ -457,6 +458,46 @@ export class BService implements OnApplicationBootstrap {
           'tsconfig.build.json': JSON.stringify({
             extends: './tsconfig.json',
             compilerOptions: { rootDir: './src' },
+            include: ['src'],
+          }),
+        }),
+      );
+      expect(output()).not.toMatch(/rootDir/);
+    });
+
+    it('should still ask for rootDir in tsconfig.build.json when tsconfig.json sets "."', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              rootDir: '.',
+            },
+          }),
+          'tsconfig.build.json': JSON.stringify({
+            extends: './tsconfig.json',
+            include: ['src'],
+          }),
+        }),
+      );
+      expect(output()).toMatch(
+        /tsconfig\.build\.json does not set "rootDir"[\s\S]*TS5011/,
+      );
+    });
+
+    it('should accept a rootDir inherited from tsconfig.json when it points at src', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              rootDir: './src',
+            },
+          }),
+          'tsconfig.build.json': JSON.stringify({
+            extends: './tsconfig.json',
             include: ['src'],
           }),
         }),
@@ -564,6 +605,79 @@ export class BService implements OnApplicationBootstrap {
       );
     });
 
+    it('should flag the strict default of TypeScript 6 when "strict" is not set', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              strictNullChecks: true,
+              noImplicitAny: false,
+            },
+          }),
+        }),
+      );
+      expect(output()).toMatch(
+        /tsconfig\.json does not set "strict", which TypeScript 6 enables by default[\s\S]*TS2564[\s\S]*`"strict": false`[\s\S]*`"strictPropertyInitialization": false`/,
+      );
+    });
+
+    it('should accept an explicit "strict" setting', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              strict: true,
+            },
+          }),
+        }),
+      );
+      expect(output()).not.toMatch(/"strict"/);
+    });
+
+    it('should flag the other options TypeScript 6 deprecates', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              strict: false,
+              target: 'es5',
+              downlevelIteration: true,
+              esModuleInterop: false,
+              allowSyntheticDefaultImports: true,
+            },
+          }),
+        }),
+      );
+      const text = output();
+      expect(text).toMatch(
+        /tsconfig\.json sets "target": "es5", "downlevelIteration": true, "esModuleInterop": false, which TypeScript 6 deprecates[\s\S]*Remove them \(set "target" to "ES2023"[\s\S]*"ignoreDeprecations": "6\.0"/,
+      );
+      expect(text).not.toMatch(/"allowSyntheticDefaultImports"/);
+    });
+
+    it('should accept deprecated options with "ignoreDeprecations": "6.0"', async () => {
+      await run(
+        createProject({
+          'tsconfig.json': JSON.stringify({
+            compilerOptions: {
+              module: 'nodenext',
+              moduleResolution: 'nodenext',
+              strict: false,
+              target: 'es5',
+              ignoreDeprecations: '6.0',
+            },
+          }),
+        }),
+      );
+      expect(output()).not.toMatch(/deprecates/);
+    });
+
     it('should accept a tsconfig.json shaped like the v12 template', async () => {
       await run(
         createProject({
@@ -582,6 +696,7 @@ export class BService implements OnApplicationBootstrap {
               moduleResolution: 'nodenext',
               types: ['node', 'jest'],
               rootDir: '.',
+              strict: false,
             },
           }),
           'tsconfig.build.json': JSON.stringify({
