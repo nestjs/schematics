@@ -1,5 +1,8 @@
 {
   "moduleFileExtensions": ["js", "json"],
   "rootDir": ".",
-  "testRegex": ".e2e-spec.js$"
+  "testRegex": ".e2e-spec.js$",
+  "transform": {
+    "^.+\\.js$": ["babel-jest", { "rootMode": "upward" }]
+  }
 }
