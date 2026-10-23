@@ -180,6 +180,39 @@ describe('Upgrade Factory (additional steps)', () => {
       expect(scripts['start:swc']).toBe('nest start -b swc');
     });
 
+    it('should add the rspack builder packages to devDependencies', async () => {
+      const tree = await run(
+        createProject({
+          'nest-cli.json': JSON.stringify(
+            { sourceRoot: 'src', compilerOptions: { webpack: true } },
+            null,
+            2,
+          ),
+        }),
+      );
+      expect(readJson(tree, '/package.json').devDependencies).toMatchObject({
+        '@rspack/core': '^2.1.10',
+        'tsconfig-paths-webpack-plugin': '^4.2.0',
+        'webpack-node-externals': '^3.0.0',
+      });
+      expect(output()).toContain(
+        'Added "@rspack/core", "tsconfig-paths-webpack-plugin", "webpack-node-externals" to devDependencies',
+      );
+    });
+
+    it('should add the rspack builder packages for rewritten --webpack scripts', async () => {
+      const tree = await run(
+        createProject({
+          'package.json': packageJson({
+            scripts: { build: 'nest build --webpack' },
+          }),
+        }),
+      );
+      expect(readJson(tree, '/package.json').devDependencies).toHaveProperty(
+        '@rspack/core',
+      );
+    });
+
     it('should leave projects without webpack alone', async () => {
       const tree = await run(createProject());
       expect(readJson(tree, '/nest-cli.json')).toEqual({ sourceRoot: 'src' });

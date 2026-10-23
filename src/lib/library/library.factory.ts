@@ -16,6 +16,7 @@ import {
 } from '@angular-devkit/schematics';
 import { parse, stringify } from 'comment-json';
 import { formatFiles } from '../../utils/format-files.rule.js';
+import { addRspackDependencies } from '../../utils/rspack-dependencies.rule.js';
 import {
   createModuleNameMapper,
   findNestCliConfigPath,
@@ -49,6 +50,7 @@ export function main(options: LibraryOptions): Rule {
   return chain([
     warnAboutLegacyNestCliConfig,
     addLibraryToCliOptions(options.path!, options.name),
+    addRspackDependencies(),
     updatePackageJson(options),
     updateJestEndToEnd(options),
     updateTsConfig(options.name, options.prefix!, options.path!),

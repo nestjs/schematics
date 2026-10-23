@@ -135,6 +135,49 @@ describe('Library Factory', () => {
     expect(config['compilerOptions']['builder']).toEqual('rspack');
   });
 
+  it('should add the rspack builder packages to devDependencies', async () => {
+    const options: LibraryOptions = {
+      name: 'project',
+      prefix: 'app',
+    };
+
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create(
+      '/package.json',
+      JSON.stringify({ devDependencies: { '@rspack/core': '^1.7.7' } }),
+    );
+    tree.create('/tsconfig.json', `{"compilerOptions": {}}`);
+
+    tree = await runner.runSchematic('library', options, tree);
+
+    expect(readJson(tree, '/package.json')['devDependencies']).toEqual({
+      '@rspack/core': '^1.7.7',
+      'tsconfig-paths-webpack-plugin': '^4.2.0',
+      'webpack-node-externals': '^3.0.0',
+    });
+    expect(runner.tasks.map((task) => task.name)).toContain('node-package');
+  });
+
+  it('should not add the rspack builder packages for another builder', async () => {
+    const options: LibraryOptions = {
+      name: 'project',
+      prefix: 'app',
+    };
+
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create(
+      '/nest-cli.json',
+      JSON.stringify({ compilerOptions: { builder: 'swc' } }),
+    );
+    tree.create('/package.json', `{"name": "test", "version": "1.0.0"}`);
+    tree.create('/tsconfig.json', `{"compilerOptions": {}}`);
+
+    tree = await runner.runSchematic('library', options, tree);
+
+    expect(readJson(tree, '/package.json')['devDependencies']).toBeUndefined();
+    expect(runner.tasks).toEqual([]);
+  });
+
   it('should not overwrite existing builder in nest-cli.json', async () => {
     const options: LibraryOptions = {
       name: 'project',

@@ -158,6 +158,24 @@ describe('SubApp Factory', () => {
     expect(config['compilerOptions']['builder']).toEqual('rspack');
   });
 
+  it('should add the rspack builder packages to devDependencies', async () => {
+    const options: SubAppOptions = {
+      name: 'project',
+    };
+
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create('/package.json', `{"name": "test", "version": "1.0.0"}`);
+
+    tree = await runner.runSchematic('sub-app', options, tree);
+
+    expect(readJson(tree, '/package.json')['devDependencies']).toEqual({
+      '@rspack/core': '^2.1.10',
+      'tsconfig-paths-webpack-plugin': '^4.2.0',
+      'webpack-node-externals': '^3.0.0',
+    });
+    expect(runner.tasks.map((task) => task.name)).toContain('node-package');
+  });
+
   it('should convert tsconfig.json to solution-style with project references', async () => {
     const options: SubAppOptions = {
       name: 'project',
