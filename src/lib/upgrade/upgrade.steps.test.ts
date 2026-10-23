@@ -201,7 +201,7 @@ describe('Upgrade Factory (additional steps)', () => {
         }),
       );
       const dev = readJson(tree, '/package.json').devDependencies;
-      expect(dev.jest).toBe('^30.0.0');
+      expect(dev.jest).toBe('^30.4.0');
       expect(dev['@types/jest']).toBe('^30.0.0');
       expect(dev['ts-jest']).toBe('^29.4.0');
       expect(output()).toMatch(/Node\.js v24\.9\+/);
@@ -242,6 +242,134 @@ describe('Upgrade Factory (additional steps)', () => {
       );
     });
 
+    it('should run every Jest command of a compound script with the flag', async () => {
+      const scripts = {
+        test: 'jest && jest --config ./test/jest-e2e.json',
+        'test:all': 'npm run build && jest --ci; jest --watchAll=false',
+        'test:mixed':
+          'node --experimental-vm-modules ./node_modules/jest/bin/jest.js || jest',
+      };
+      const project = (scripts: Record<string, string>) =>
+        createProject({
+          'package.json': packageJson({
+            scripts,
+            devDependencies: { jest: '^30.4.0' },
+          }),
+        });
+      const tree = await run(project(scripts));
+      const updated = readJson(tree, '/package.json').scripts;
+      expect(updated).toEqual({
+        test: 'node --experimental-vm-modules ./node_modules/jest/bin/jest.js && node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config ./test/jest-e2e.json',
+        'test:all':
+          'npm run build && node --experimental-vm-modules ./node_modules/jest/bin/jest.js --ci; node --experimental-vm-modules ./node_modules/jest/bin/jest.js --watchAll=false',
+        'test:mixed':
+          'node --experimental-vm-modules ./node_modules/jest/bin/jest.js || node --experimental-vm-modules ./node_modules/jest/bin/jest.js',
+      });
+
+      messages = [];
+      const again = await run(project(updated));
+      expect(readJson(again, '/package.json').scripts).toEqual(updated);
+      expect(output()).not.toMatch(/script (to run|runs) Jest/);
+    });
+
+    it('should not touch node scripts that only have "jest" in their name', async () => {
+      const scripts = {
+        'test:clean': 'node scripts/clear-jest-cache.js',
+        'test:helper': 'node scripts/run-jest',
+        'test:codemod': 'jest-codemods',
+      };
+      const tree = await run(
+        createProject({
+          'package.json': packageJson({
+            scripts,
+            devDependencies: { jest: '^30.4.0' },
+          }),
+        }),
+      );
+      expect(readJson(tree, '/package.json').scripts).toEqual(scripts);
+      expect(output()).not.toMatch(/script (to run|runs) Jest/);
+    });
+
+    it('should ask to pass the flag where Jest is started indirectly', async () => {
+      const scripts = {
+        'test:ci': 'cross-env NODE_ENV=test jest --ci',
+        'test:tz': 'TZ=UTC jest',
+        'test:npx': 'npx jest --runInBand',
+        'test:env': 'dotenv -e .env.test -- jest',
+      };
+      const tree = await run(
+        createProject({
+          'package.json': packageJson({
+            scripts,
+            devDependencies: { jest: '^30.4.0' },
+          }),
+        }),
+      );
+      expect(readJson(tree, '/package.json').scripts).toEqual(scripts);
+      const text = output();
+      expect(text).toMatch(
+        /the "test:ci" script runs Jest without --experimental-vm-modules \("cross-env NODE_ENV=test jest --ci"\)\. Start Jest through Node\.js with the flag, e\.g\. "cross-env NODE_ENV=test node --experimental-vm-modules \.\/node_modules\/jest\/bin\/jest\.js --ci"/,
+      );
+      expect(text).toMatch(
+        /"test:tz"[\s\S]*"TZ=UTC node --experimental-vm-modules \.\/node_modules\/jest\/bin\/jest\.js"/,
+      );
+      expect(text).toMatch(
+        /"test:npx"[\s\S]*"node --experimental-vm-modules \.\/node_modules\/jest\/bin\/jest\.js --runInBand"/,
+      );
+      expect(text).toMatch(
+        /"test:env"[\s\S]*"dotenv -e \.env\.test -- node --experimental-vm-modules \.\/node_modules\/jest\/bin\/jest\.js"/,
+      );
+    });
+
+    it('should report instead of rewriting when there is no local node_modules/jest (Yarn PnP)', async () => {
+      const scripts = { test: 'jest' };
+      const tree = await run(
+        createProject({
+          '.pnp.cjs': '',
+          'package.json': packageJson({
+            scripts,
+            devDependencies: { jest: '^30.4.0' },
+          }),
+        }),
+      );
+      expect(readJson(tree, '/package.json').scripts).toEqual(scripts);
+      expect(output()).toMatch(
+        /the "test" script runs Jest without --experimental-vm-modules, and "\.\/node_modules\/jest\/bin\/jest\.js" does not exist[\s\S]*"cross-env NODE_OPTIONS=\\"\$NODE_OPTIONS --experimental-vm-modules\\" jest"/,
+      );
+    });
+
+    it('should report instead of rewriting when Jest is hoisted out of node_modules', async () => {
+      const scripts = { test: 'jest' };
+      const tree = await run(
+        createProject({
+          'node_modules/@nestjs/core/package.json': '{}',
+          'package.json': packageJson({
+            scripts,
+            devDependencies: { jest: '^30.4.0' },
+          }),
+        }),
+      );
+      expect(readJson(tree, '/package.json').scripts).toEqual(scripts);
+      expect(output()).toMatch(
+        /"\.\/node_modules\/jest\/bin\/jest\.js" does not exist/,
+      );
+    });
+
+    it('should rewrite when node_modules has a local Jest', async () => {
+      const tree = await run(
+        createProject({
+          'node_modules/jest/bin/jest.js': '',
+          'package.json': packageJson({
+            scripts: { test: 'jest' },
+            devDependencies: { jest: '^30.4.0' },
+          }),
+        }),
+      );
+      expect(readJson(tree, '/package.json').scripts.test).toBe(
+        'node --experimental-vm-modules ./node_modules/jest/bin/jest.js',
+      );
+    });
+
     it('should leave scripts that pass the flag or start Jest differently alone', async () => {
       const scripts = {
         test: 'NODE_OPTIONS=--experimental-vm-modules npx jest',
@@ -260,12 +388,28 @@ describe('Upgrade Factory (additional steps)', () => {
       expect(output()).toMatch(/NODE_OPTIONS=--experimental-vm-modules/);
     });
 
+    it('should raise Jest 30 releases that cannot require() ESM', async () => {
+      const tree = await run(
+        createProject({
+          'package.json': packageJson({
+            devDependencies: { jest: '^30.2.0' },
+          }),
+        }),
+      );
+      expect(readJson(tree, '/package.json').devDependencies.jest).toBe(
+        '^30.4.0',
+      );
+      expect(output()).toMatch(
+        /Updated "jest" from "\^30\.2\.0" to "\^30\.4\.0"/,
+      );
+    });
+
     it('should keep an up-to-date Jest stack untouched', async () => {
       const tree = await run(
         createProject({
           'package.json': packageJson({
             devDependencies: {
-              jest: '^30.1.0',
+              jest: '^30.5.0',
               '@types/jest': '^30.0.0',
               'ts-jest': '^29.4.1',
             },
@@ -273,7 +417,7 @@ describe('Upgrade Factory (additional steps)', () => {
         }),
       );
       const dev = readJson(tree, '/package.json').devDependencies;
-      expect(dev.jest).toBe('^30.1.0');
+      expect(dev.jest).toBe('^30.5.0');
       expect(dev['ts-jest']).toBe('^29.4.1');
     });
 
