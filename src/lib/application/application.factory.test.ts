@@ -377,11 +377,11 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/project/.babelrc',
         '/project/.gitattributes',
         '/project/.gitignore',
         '/project/.prettierrc',
         '/project/README.md',
+        '/project/babel.config.json',
         '/project/index.js',
         '/project/jest.config.js',
         '/project/jsconfig.json',
@@ -403,6 +403,40 @@ describe('Application Factory', () => {
         name: 'project',
       },
     );
+  });
+  it('should configure babel 8 for javascript files', async () => {
+    const options: ApplicationOptions = {
+      name: 'project',
+      language: 'js',
+    };
+    const tree: UnitTestTree = await runner.runSchematic(
+      'application',
+      options,
+    );
+
+    const { scripts, devDependencies } = JSON.parse(
+      tree.readContent('/project/package.json'),
+    );
+    expect(devDependencies['@babel/core']).toMatch(/^\^?8\./);
+    expect(devDependencies).not.toHaveProperty('@babel/node');
+    expect(scripts.start).toEqual('node index.js');
+    expect(JSON.parse(tree.readContent('/project/nodemon.json')).exec).toEqual(
+      'node index.js',
+    );
+
+    const babelConfig = JSON.parse(
+      tree.readContent('/project/babel.config.json'),
+    );
+    expect(babelConfig.plugins).toContainEqual([
+      '@babel/plugin-proposal-decorators',
+      { version: 'legacy' },
+    ]);
+    expect(tree.readContent('/project/jest.config.js')).toContain(
+      "['babel-jest', { rootMode: 'upward' }]",
+    );
+    expect(
+      JSON.parse(tree.readContent('/project/test/jest-e2e.json')).transform,
+    ).toEqual({ '^.+\\.js$': ['babel-jest', { rootMode: 'upward' }] });
   });
   it('should manage destination directory', async () => {
     const options: ApplicationOptions = {
@@ -456,11 +490,11 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/project/.babelrc',
         '/project/.gitattributes',
         '/project/.gitignore',
         '/project/.prettierrc',
         '/project/README.md',
+        '/project/babel.config.json',
         '/project/index.js',
         '/project/jest.config.js',
         '/project/jsconfig.json',
@@ -489,11 +523,11 @@ describe('Application Factory', () => {
     const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
-        '/project/.babelrc',
         '/project/.gitattributes',
         '/project/.gitignore',
         '/project/.prettierrc',
         '/project/README.md',
+        '/project/babel.config.json',
         '/project/index.js',
         '/project/jest.config.js',
         '/project/jsconfig.json',
