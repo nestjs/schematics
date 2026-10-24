@@ -69,7 +69,7 @@ export function main(options: SubAppOptions): Rule {
             moveDefaultAppToApps(options.path!, appName, options.sourceRoot),
           ])(tree, context),
     addAppsToCliOptions(options.path!, options.name, appName),
-    addRspackDependencies(),
+    addRspackDependencies(options),
     addTsConfigReference(options.path!, options.name),
     applyStartProdScript(options, appName),
     (tree) => {

@@ -192,11 +192,38 @@ describe('Upgrade Factory (additional steps)', () => {
       );
       expect(readJson(tree, '/package.json').devDependencies).toMatchObject({
         '@rspack/core': '^2.1.10',
+        'fork-ts-checker-webpack-plugin': '^9.1.0',
         'tsconfig-paths-webpack-plugin': '^4.2.0',
         'webpack-node-externals': '^3.0.0',
       });
       expect(output()).toContain(
-        'Added "@rspack/core", "tsconfig-paths-webpack-plugin", "webpack-node-externals" to devDependencies',
+        'Added "@rspack/core", "fork-ts-checker-webpack-plugin", "tsconfig-paths-webpack-plugin" and "webpack-node-externals" to devDependencies',
+      );
+    });
+
+    it('should report rspack builder packages at an unsupported major', async () => {
+      const tree = await run(
+        createProject({
+          'nest-cli.json': JSON.stringify(
+            { sourceRoot: 'src', compilerOptions: { webpack: true } },
+            null,
+            2,
+          ),
+          'package.json': packageJson({
+            devDependencies: {
+              '@nestjs/cli': '^11.0.0',
+              '@rspack/core': '^0.7.0',
+              typescript: '^6.0.0',
+            },
+          }),
+        }),
+      );
+      expect(readJson(tree, '/package.json').devDependencies).toMatchObject({
+        '@rspack/core': '^0.7.0',
+        'webpack-node-externals': '^3.0.0',
+      });
+      expect(output()).toContain(
+        'Update "@rspack/core" from "^0.7.0" to "^1.7.7 || ^2.1.10" in package.json (required by the rspack builder)',
       );
     });
 

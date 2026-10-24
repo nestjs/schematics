@@ -152,10 +152,66 @@ describe('Library Factory', () => {
 
     expect(readJson(tree, '/package.json')['devDependencies']).toEqual({
       '@rspack/core': '^1.7.7',
+      'fork-ts-checker-webpack-plugin': '^9.1.0',
       'tsconfig-paths-webpack-plugin': '^4.2.0',
       'webpack-node-externals': '^3.0.0',
     });
     expect(runner.tasks.map((task) => task.name)).toContain('node-package');
+  });
+
+  it('should keep and warn about rspack builder packages at an unsupported major', async () => {
+    const options: LibraryOptions = {
+      name: 'project',
+      prefix: 'app',
+    };
+
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create(
+      '/package.json',
+      JSON.stringify({ devDependencies: { '@rspack/core': '^0.7.0' } }),
+    );
+    tree.create('/tsconfig.json', `{"compilerOptions": {}}`);
+
+    const warnings: string[] = [];
+    const subscription = runner.logger.subscribe((entry) => {
+      if (entry.level === 'warn') {
+        warnings.push(entry.message);
+      }
+    });
+    try {
+      tree = await runner.runSchematic('library', options, tree);
+    } finally {
+      subscription.unsubscribe();
+    }
+
+    expect(readJson(tree, '/package.json')['devDependencies']).toEqual({
+      '@rspack/core': '^0.7.0',
+      'fork-ts-checker-webpack-plugin': '^9.1.0',
+      'tsconfig-paths-webpack-plugin': '^4.2.0',
+      'webpack-node-externals': '^3.0.0',
+    });
+    expect(warnings).toContainEqual(
+      expect.stringContaining(
+        '@rspack/core@"^0.7.0" does not match the rspack builder\'s required range "^1.7.7 || ^2.1.10"',
+      ),
+    );
+  });
+
+  it('should not add the rspack builder packages for a javascript library', async () => {
+    const options: LibraryOptions = {
+      name: 'project',
+      prefix: 'app',
+      language: 'js',
+    };
+
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create('/package.json', `{"name": "test", "version": "1.0.0"}`);
+    tree.create('/tsconfig.json', `{"compilerOptions": {}}`);
+
+    tree = await runner.runSchematic('library', options, tree);
+
+    expect(readJson(tree, '/package.json')['devDependencies']).toBeUndefined();
+    expect(runner.tasks).toEqual([]);
   });
 
   it('should not add the rspack builder packages for another builder', async () => {

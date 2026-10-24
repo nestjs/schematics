@@ -2,6 +2,7 @@ import { Rule, Tree } from '@angular-devkit/schematics';
 import { JSONFile } from '../../../utils/json-file.util.js';
 import {
   addMissingRspackDependencies,
+  joinNames,
   usesRspackBuilder,
 } from '../../../utils/rspack-dependencies.rule.js';
 import {
@@ -33,10 +34,15 @@ export function migrateCliConfig(report: UpgradeReport): Rule {
     if (usesRspackBuilder(tree) || scriptsUseRspack(tree)) {
       // The v11 CLI shipped webpack; the v12 one leaves the Rspack builder's
       // packages to the project and fails the build without them.
-      const added = addMissingRspackDependencies(tree);
+      const { added, incompatible } = addMissingRspackDependencies(tree);
       if (added.length > 0) {
         report.change(
-          `Added ${added.map((name) => `"${name}"`).join(', ')} to devDependencies (required by the rspack builder)`,
+          `Added ${joinNames(added.map((name) => `"${name}"`))} to devDependencies (required by the rspack builder)`,
+        );
+      }
+      for (const { name, current, required } of incompatible) {
+        report.action(
+          `Update "${name}" from "${current}" to "${required}" in package.json (required by the rspack builder)`,
         );
       }
     }
