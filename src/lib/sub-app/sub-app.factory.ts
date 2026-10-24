@@ -18,6 +18,7 @@ import {
 import { existsSync, readFileSync } from 'fs';
 import { parse, stringify } from 'comment-json';
 import { formatFiles } from '../../utils/format-files.rule.js';
+import { addRspackDependencies } from '../../utils/rspack-dependencies.rule.js';
 import {
   findNestCliConfigPath,
   inPlaceSortByKeys,
@@ -68,6 +69,7 @@ export function main(options: SubAppOptions): Rule {
             moveDefaultAppToApps(options.path!, appName, options.sourceRoot),
           ])(tree, context),
     addAppsToCliOptions(options.path!, options.name, appName),
+    addRspackDependencies(options),
     addTsConfigReference(options.path!, options.name),
     applyStartProdScript(options, appName),
     (tree) => {

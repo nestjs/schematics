@@ -82,3 +82,20 @@ export function getPackageJsonDependency(
 
   return null;
 }
+
+/**
+ * The package manager a project uses, judged by its lock file (`npm` when it
+ * has none).
+ */
+export function detectPackageManager(tree: Tree): string {
+  if (tree.exists('bun.lock') || tree.exists('bun.lockb')) {
+    return 'bun';
+  }
+  if (tree.exists('pnpm-lock.yaml')) {
+    return 'pnpm';
+  }
+  if (tree.exists('yarn.lock')) {
+    return 'yarn';
+  }
+  return 'npm';
+}

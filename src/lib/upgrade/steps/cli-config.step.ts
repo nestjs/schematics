@@ -1,6 +1,11 @@
 import { Rule, Tree } from '@angular-devkit/schematics';
 import { JSONFile } from '../../../utils/json-file.util.js';
 import {
+  addMissingRspackDependencies,
+  joinNames,
+  usesRspackBuilder,
+} from '../../../utils/rspack-dependencies.rule.js';
+import {
   findNestCliConfigPath,
   readJsonFile,
   readPackageJson,
@@ -25,6 +30,22 @@ export function migrateCliConfig(report: UpgradeReport): Rule {
       configPaths.push(...migrateNestCliJson(tree, cliConfigPath, report));
     }
     configPaths.push(...migrateScripts(tree, report));
+
+    if (usesRspackBuilder(tree) || scriptsUseRspack(tree)) {
+      // The v11 CLI shipped webpack; the v12 one leaves the Rspack builder's
+      // packages to the project and fails the build without them.
+      const { added, incompatible } = addMissingRspackDependencies(tree);
+      if (added.length > 0) {
+        report.change(
+          `Added ${joinNames(added.map((name) => `"${name}"`))} to devDependencies (required by the rspack builder)`,
+        );
+      }
+      for (const { name, current, required } of incompatible) {
+        report.action(
+          `Update "${name}" from "${current}" to "${required}" in package.json (required by the rspack builder)`,
+        );
+      }
+    }
 
     if (configPaths.length > 0) {
       report.action(
@@ -166,4 +187,13 @@ function migrateScripts(tree: Tree, report: UpgradeReport): string[] {
     }
   }
   return configPaths;
+}
+
+function scriptsUseRspack(tree: Tree): boolean {
+  const scripts: Record<string, unknown> = readPackageJson(tree)?.scripts ?? {};
+  return Object.values(scripts).some(
+    (script) =>
+      typeof script === 'string' &&
+      /(?:--builder[ =]|-b )rspack\b/.test(script),
+  );
 }

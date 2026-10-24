@@ -158,6 +158,78 @@ describe('SubApp Factory', () => {
     expect(config['compilerOptions']['builder']).toEqual('rspack');
   });
 
+  it('should add the rspack builder packages to devDependencies', async () => {
+    const options: SubAppOptions = {
+      name: 'project',
+    };
+
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create('/package.json', `{"name": "test", "version": "1.0.0"}`);
+
+    const messages: string[] = [];
+    const subscription = runner.logger.subscribe((entry) =>
+      messages.push(entry.message),
+    );
+    try {
+      tree = await runner.runSchematic('sub-app', options, tree);
+    } finally {
+      subscription.unsubscribe();
+    }
+
+    expect(readJson(tree, '/package.json')['devDependencies']).toEqual({
+      '@rspack/core': '^2.1.10',
+      'fork-ts-checker-webpack-plugin': '^9.1.0',
+      'tsconfig-paths-webpack-plugin': '^4.2.0',
+      'webpack-node-externals': '^3.0.0',
+    });
+    expect(runner.tasks).toEqual([
+      expect.objectContaining({
+        name: 'node-package',
+        options: expect.objectContaining({ packageManager: 'npm' }),
+      }),
+    ]);
+    expect(messages).toContain(
+      'Added @rspack/core, fork-ts-checker-webpack-plugin, tsconfig-paths-webpack-plugin and webpack-node-externals for the rspack builder; running "npm install"',
+    );
+  });
+
+  it('should install the rspack builder packages with the project package manager', async () => {
+    const options: SubAppOptions = {
+      name: 'project',
+    };
+
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create('/package.json', `{"name": "test", "version": "1.0.0"}`);
+    tree.create('/bun.lock', '');
+
+    tree = await runner.runSchematic('sub-app', options, tree);
+
+    expect(runner.tasks).toEqual([
+      expect.objectContaining({
+        name: 'node-package',
+        options: expect.objectContaining({ packageManager: 'bun' }),
+      }),
+    ]);
+  });
+
+  it('should not add the rspack builder packages to a javascript project', async () => {
+    const options: SubAppOptions = {
+      name: 'project',
+    };
+
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create('/package.json', `{"name": "test", "version": "1.0.0"}`);
+    tree.create('/nest-cli.json', JSON.stringify({ language: 'js' }));
+
+    tree = await runner.runSchematic('sub-app', options, tree);
+
+    expect(
+      readJson(tree, '/nest-cli.json')['compilerOptions']['builder'],
+    ).toEqual('rspack');
+    expect(readJson(tree, '/package.json')['devDependencies']).toBeUndefined();
+    expect(runner.tasks).toEqual([]);
+  });
+
   it('should convert tsconfig.json to solution-style with project references', async () => {
     const options: SubAppOptions = {
       name: 'project',

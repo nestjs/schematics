@@ -2,6 +2,7 @@ import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks/index.js';
 import {
   addPackageJsonDependency,
+  detectPackageManager,
   getPackageJsonDependency,
   NodeDependencyType,
 } from '../../../utils/dependencies.utils.js';
@@ -183,19 +184,6 @@ function findUnknownNestPackages(tree: Tree): string[] {
     }
   }
   return [...unknown].sort();
-}
-
-export function detectPackageManager(tree: Tree): string {
-  if (tree.exists('bun.lock') || tree.exists('bun.lockb')) {
-    return 'bun';
-  }
-  if (tree.exists('pnpm-lock.yaml')) {
-    return 'pnpm';
-  }
-  if (tree.exists('yarn.lock')) {
-    return 'yarn';
-  }
-  return 'npm';
 }
 
 export function installDependencies(
