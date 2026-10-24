@@ -29,6 +29,7 @@ describe('Application Factory', () => {
           '/project/.gitignore',
           '/project/.prettierrc',
           '/project/README.md',
+          '/project/AGENTS.md',
           '/project/jest.config.ts',
           '/project/nest-cli.json',
           '/project/package.json',
@@ -75,6 +76,7 @@ describe('Application Factory', () => {
           `/project.foo.bar/.gitignore`,
           `/project.foo.bar/.prettierrc`,
           `/project.foo.bar/README.md`,
+          `/project.foo.bar/AGENTS.md`,
           `/project.foo.bar/jest.config.ts`,
           `/project.foo.bar/nest-cli.json`,
           `/project.foo.bar/package.json`,
@@ -113,6 +115,7 @@ describe('Application Factory', () => {
           '/awesome-project/.gitignore',
           '/awesome-project/.prettierrc',
           '/awesome-project/README.md',
+          '/awesome-project/AGENTS.md',
           '/awesome-project/jest.config.ts',
           '/awesome-project/nest-cli.json',
           '/awesome-project/package.json',
@@ -151,6 +154,7 @@ describe('Application Factory', () => {
           '/_awesome-project/.gitignore',
           '/_awesome-project/.prettierrc',
           '/_awesome-project/README.md',
+          '/_awesome-project/AGENTS.md',
           '/_awesome-project/jest.config.ts',
           '/_awesome-project/nest-cli.json',
           '/_awesome-project/package.json',
@@ -189,6 +193,7 @@ describe('Application Factory', () => {
           '/@/package/.gitignore',
           '/@/package/.prettierrc',
           '/@/package/README.md',
+          '/@/package/AGENTS.md',
           '/@/package/jest.config.ts',
           '/@/package/nest-cli.json',
           '/@/package/package.json',
@@ -227,6 +232,7 @@ describe('Application Factory', () => {
           '/.gitignore',
           '/.prettierrc',
           '/README.md',
+          '/AGENTS.md',
           '/jest.config.ts',
           '/nest-cli.json',
           '/package.json',
@@ -265,6 +271,7 @@ describe('Application Factory', () => {
               '/@scope/package/.gitignore',
               '/@scope/package/.prettierrc',
               '/@scope/package/README.md',
+              '/@scope/package/AGENTS.md',
               '/@scope/package/jest.config.ts',
               '/@scope/package/nest-cli.json',
               '/@scope/package/package.json',
@@ -303,6 +310,7 @@ describe('Application Factory', () => {
               '/@-/package/.gitignore',
               '/@-/package/.prettierrc',
               '/@-/package/README.md',
+              '/@-/package/AGENTS.md',
               '/@-/package/jest.config.ts',
               '/@-/package/nest-cli.json',
               '/@-/package/package.json',
@@ -345,6 +353,7 @@ describe('Application Factory', () => {
         '/123/.gitignore',
         '/123/.prettierrc',
         '/123/README.md',
+        '/123/AGENTS.md',
         '/123/jest.config.ts',
         '/123/nest-cli.json',
         '/123/package.json',
@@ -382,6 +391,7 @@ describe('Application Factory', () => {
         '/project/.prettierrc',
         '/project/README.md',
         '/project/babel.config.json',
+        '/project/AGENTS.md',
         '/project/index.js',
         '/project/jest.config.js',
         '/project/jsconfig.json',
@@ -457,6 +467,7 @@ describe('Application Factory', () => {
         '/app/.gitignore',
         '/app/.prettierrc',
         '/app/README.md',
+        '/app/AGENTS.md',
         '/app/jest.config.ts',
         '/app/nest-cli.json',
         '/app/package.json',
@@ -495,6 +506,7 @@ describe('Application Factory', () => {
         '/project/.prettierrc',
         '/project/README.md',
         '/project/babel.config.json',
+        '/project/AGENTS.md',
         '/project/index.js',
         '/project/jest.config.js',
         '/project/jsconfig.json',
@@ -528,6 +540,7 @@ describe('Application Factory', () => {
         '/project/.prettierrc',
         '/project/README.md',
         '/project/babel.config.json',
+        '/project/AGENTS.md',
         '/project/index.js',
         '/project/jest.config.js',
         '/project/jsconfig.json',
@@ -564,6 +577,7 @@ describe('Application Factory', () => {
         '/project/.gitignore',
         '/project/.prettierrc',
         '/project/README.md',
+        '/project/AGENTS.md',
         '/project/jest.config.ts',
         '/project/nest-cli.json',
         '/project/package.json',
@@ -615,6 +629,67 @@ describe('Application Factory', () => {
       JSON.parse(tree.readContent('/project/tsconfig.build.json')).include,
     ).toEqual(['src']);
   });
+  it('should write an AGENTS.md holding only where production data goes, as link writes it', async () => {
+    // The one thing an agent cannot learn from the repository itself. The
+    // file is the section `npx @nestjs/observe link` writes, so a project
+    // made here and a project linked later read the same.
+    const onlyTheSection = (agents: string) => {
+      expect(
+        agents.startsWith(
+          '# AGENTS.md\n\n## Production data: NestJS Observe\n',
+        ),
+      ).toBe(true);
+      expect(agents.match(/^#+ /gm)).toHaveLength(2);
+      expect(agents).toContain('https://observe-api.nestjs.com/mcp');
+      expect(agents).not.toContain('<%');
+    };
+
+    const withObserve: UnitTestTree = await runner.runSchematic('application', {
+      name: 'project',
+      type: 'cjs',
+      observe: true,
+    } as ApplicationOptions);
+    const agents = withObserve.readContent('/project/AGENTS.md');
+    onlyTheSection(agents);
+    expect(agents).toContain(
+      'This app reports its traces, errors, logs and metrics to [NestJS Observe](https://observe.nestjs.com) through `ObserveModule` in `src/app.module.ts`.',
+    );
+    expect(agents).not.toContain('nothing is sent');
+
+    // Answering no to Observe leaves it out of the app, not out of the notes:
+    // they say where production data goes and the one command that links it,
+    // in words that stay true once `link` has run - it leaves the section be.
+    const withoutObserve: UnitTestTree = await runner.runSchematic(
+      'application',
+      { name: 'project', type: 'cjs' } as ApplicationOptions,
+    );
+    const plain = withoutObserve.readContent('/project/AGENTS.md');
+    onlyTheSection(plain);
+    expect(plain).toContain(
+      'Until `ObserveModule` is registered in `src/app.module.ts`, nothing is sent: `npx @nestjs/observe link` sets it up in one step',
+    );
+    expect(plain).not.toContain('This app reports its traces');
+
+    const esm: UnitTestTree = await runner.runSchematic('application', {
+      name: 'project',
+      type: 'esm',
+    } as ApplicationOptions);
+    onlyTheSection(esm.readContent('/project/AGENTS.md'));
+
+    // JavaScript projects are linked but not wired by the CLI, so they are
+    // pointed at the edits instead.
+    const javascript: UnitTestTree = await runner.runSchematic('application', {
+      name: 'project',
+      language: 'js',
+    } as ApplicationOptions);
+    const js = javascript.readContent('/project/AGENTS.md');
+    onlyTheSection(js);
+    expect(js).toContain('registered in `src/app.module.js`, nothing is sent');
+    expect(js).toContain(
+      'https://observe.nestjs.com/documentation/sdk#quick-start',
+    );
+    expect(js).not.toContain('wires it into the app');
+  });
   describe('when type is "esm"', () => {
     it('should generate ESM project files with vitest', async () => {
       const options: ApplicationOptions = {
@@ -634,6 +709,7 @@ describe('Application Factory', () => {
           '/project/.gitignore',
           '/project/.prettierrc',
           '/project/README.md',
+          '/project/AGENTS.md',
           '/project/nest-cli.json',
           '/project/package.json',
           '/project/tsconfig.build.json',
