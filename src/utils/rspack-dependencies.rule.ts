@@ -149,7 +149,7 @@ export function addRspackDependencies(
     if (added.length > 0) {
       const packageManager = detectPackageManager(tree);
       context.logger.info(
-        `Added ${joinNames(added)} for the rspack builder; running "${packageManager} install"`,
+        `Added ${joinNames(added)} for the rspack builder; running "${packageManager ?? 'npm'} install"`,
       );
       context.addTask(new NodePackageInstallTask({ packageManager }));
     }

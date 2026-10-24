@@ -25,6 +25,7 @@ import {
 } from '../../index.js';
 import {
   addPackageJsonDependency,
+  detectPackageManager,
   getPackageJsonDependency,
   NodeDependencyType,
 } from '../../utils/dependencies.utils.js';
@@ -207,7 +208,11 @@ function addMappedTypesDependencyIfApplies(options: ResourceOptions): Rule {
           name: '@nestjs/mapped-types',
           version: '*',
         });
-        context.addTask(new NodePackageInstallTask());
+        context.addTask(
+          new NodePackageInstallTask({
+            packageManager: detectPackageManager(host),
+          }),
+        );
       }
     } catch {
       // ignore if "package.json" not found

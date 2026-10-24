@@ -84,10 +84,12 @@ export function getPackageJsonDependency(
 }
 
 /**
- * The package manager a project uses, judged by its lock file (`npm` when it
- * has none).
+ * The package manager a project uses, judged by its lock file. Returns
+ * `undefined` when the tree has no lock file, so that `NodePackageInstallTask`
+ * falls back to the schematics CLI's own detection, which also searches parent
+ * directories (for example, a workspace root).
  */
-export function detectPackageManager(tree: Tree): string {
+export function detectPackageManager(tree: Tree): string | undefined {
   if (tree.exists('bun.lock') || tree.exists('bun.lockb')) {
     return 'bun';
   }
@@ -97,5 +99,5 @@ export function detectPackageManager(tree: Tree): string {
   if (tree.exists('yarn.lock')) {
     return 'yarn';
   }
-  return 'npm';
+  return undefined;
 }
