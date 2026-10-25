@@ -6,6 +6,7 @@ import {
   mergeWith,
   move,
   noop,
+  renameTemplateFiles,
   Rule,
   Source,
   template,
@@ -104,6 +105,12 @@ function generate(options: ApplicationOptions, path: string): Source {
       ...strings,
       ...options,
     }),
+    // `package.json` ships as `package.json.template` so that security
+    // scanners walking published packages for nested manifests don't
+    // attribute the generated app's own license/metadata to
+    // `@nestjs/schematics` itself. Restore the real filename here, once the
+    // file is on its way into the user's project rather than ours.
+    renameTemplateFiles(),
     move(path),
   ]);
 }
