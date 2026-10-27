@@ -273,6 +273,12 @@ describe('Upgrade Factory', () => {
       expect((runner.tasks[0].options as any).packageManager).toBe('pnpm');
     });
 
+    it('should leave the package manager to the CLI without a lock file', async () => {
+      await runner.runSchematic('upgrade', {}, createProject());
+      expect(runner.tasks).toHaveLength(1);
+      expect((runner.tasks[0].options as any).packageManager).toBeUndefined();
+    });
+
     it('should not schedule an install with --skip-install', async () => {
       await run(createProject());
       expect(runner.tasks).toHaveLength(0);

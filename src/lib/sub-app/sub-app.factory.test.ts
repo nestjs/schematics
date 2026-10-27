@@ -185,7 +185,7 @@ describe('SubApp Factory', () => {
     expect(runner.tasks).toEqual([
       expect.objectContaining({
         name: 'node-package',
-        options: expect.objectContaining({ packageManager: 'npm' }),
+        options: expect.objectContaining({ packageManager: undefined }),
       }),
     ]);
     expect(messages).toContain(

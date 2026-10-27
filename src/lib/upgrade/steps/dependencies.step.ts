@@ -199,7 +199,7 @@ export function installDependencies(
     }
     const packageManager = detectPackageManager(tree);
     context.addTask(new NodePackageInstallTask({ packageManager }));
-    report.change(`Scheduled "${packageManager} install"`);
+    report.change(`Scheduled "${packageManager ?? 'npm'} install"`);
     return tree;
   };
 }

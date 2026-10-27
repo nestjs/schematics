@@ -1,3 +1,4 @@
+import { EmptyTree } from '@angular-devkit/schematics';
 import {
   SchematicTestRunner,
   UnitTestTree,
@@ -1532,5 +1533,34 @@ type Mutation {
     expect(module).toContain(
       "import { UsersController } from './users.controller'",
     );
+  });
+  it('should install @nestjs/mapped-types with the project package manager', async () => {
+    const options: ResourceOptions = { name: 'users' };
+    const tree = new UnitTestTree(new EmptyTree());
+    tree.create('/package.json', `{"name": "test", "version": "1.0.0"}`);
+    tree.create('/bun.lock', '');
+
+    await runner.runSchematic('resource', options, tree);
+
+    expect(runner.tasks).toEqual([
+      expect.objectContaining({
+        name: 'node-package',
+        options: expect.objectContaining({ packageManager: 'bun' }),
+      }),
+    ]);
+  });
+  it('should leave the package manager to the CLI when the project has no lock file', async () => {
+    const options: ResourceOptions = { name: 'users' };
+    const tree = new UnitTestTree(new EmptyTree());
+    tree.create('/package.json', `{"name": "test", "version": "1.0.0"}`);
+
+    await runner.runSchematic('resource', options, tree);
+
+    expect(runner.tasks).toEqual([
+      expect.objectContaining({
+        name: 'node-package',
+        options: expect.objectContaining({ packageManager: undefined }),
+      }),
+    ]);
   });
 });
