@@ -8,7 +8,7 @@
       "type": "boolean",
       "default": false,
       "description": "Install and wire up @nestjs/observe (tracing, logs, metrics and alarms).",
-      "x-prompt": "Would you like to set up @nestjs/observe (distributed tracing, auto-correlated logs, metrics and alarms — https://observe.nestjs.com)?"
+      "x-prompt": "Would you like to set up @nestjs/observe (new errors and slower routes, release by release, starting with this upgrade - free for 300k events/month, https://observe.nestjs.com)?"
     },
     "skipInstall": {
       "type": "boolean",
