@@ -317,6 +317,39 @@ describe('Monorepo workspace schematics', () => {
     });
   });
 
+  describe('lint script', () => {
+    it.each(['esm', 'cjs'] as const)(
+      'should point at the apps and libraries of a converted %s workspace',
+      async (type) => {
+        const tree = await addLibrary(await addApp(await app(type)));
+
+        expect(readJson(tree, '/package.json').scripts.lint).toBe(
+          'oxlint --type-aware apps/ libs/',
+        );
+      },
+    );
+
+    it('should keep linting the root folders next to the libraries', async () => {
+      const tree = await addLibrary(await app());
+
+      expect(readJson(tree, '/package.json').scripts.lint).toBe(
+        'oxlint --type-aware src/ test/ libs/',
+      );
+    });
+
+    it.each([
+      ['esm', 'await bootstrap();'],
+      ['cjs', 'void bootstrap();'],
+    ] as const)(
+      'should generate a %s sub-app the rule against floating promises accepts',
+      async (type, call) => {
+        const tree = await addApp(await app(type));
+
+        expect(tree.readContent('/apps/admin/src/main.ts')).toContain(call);
+      },
+    );
+  });
+
   describe('test:e2e script', () => {
     it('should run the e2e tests of every CommonJS app', async () => {
       let tree = await app('cjs');

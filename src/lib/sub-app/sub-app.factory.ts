@@ -275,6 +275,15 @@ function updateNpmScripts(
   if (!scripts) {
     return;
   }
+  // The generated script names the root folders, which are moved or gone now.
+  if (typeof scripts.lint === 'string') {
+    const defaultSourceRoot =
+      options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
+    scripts.lint = scripts.lint.replace(
+      /\bsrc\/ test\/( libs\/)?$/,
+      `${defaultSourceRoot}/ ${DEFAULT_LIB_PATH}/`,
+    );
+  }
   const defaultFormatScriptName = 'format';
   const defaultTestScriptName = 'test:e2e';
   if (!scripts[defaultTestScriptName] && !scripts[defaultFormatScriptName]) {

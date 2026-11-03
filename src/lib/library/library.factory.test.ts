@@ -368,6 +368,29 @@ describe('Library Factory', () => {
     },
   );
 
+  it('should lint the libraries too', async () => {
+    const lint = async (script: string) => {
+      let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create(
+        '/package.json',
+        JSON.stringify({ scripts: { lint: script } }),
+      );
+      tree = await runner.runSchematic(
+        'library',
+        { name: 'project', prefix: '@app' } as LibraryOptions,
+        tree,
+      );
+      return (tree.readJson('/package.json') as any).scripts.lint;
+    };
+
+    expect(await lint('oxlint --type-aware src/ test/')).toEqual(
+      'oxlint --type-aware src/ test/ libs/',
+    );
+    expect(await lint('oxlint --type-aware apps/ libs/')).toEqual(
+      'oxlint --type-aware apps/ libs/',
+    );
+  });
+
   it('should add paths to tsconfig.json', async () => {
     const options: LibraryOptions = {
       name: 'project',

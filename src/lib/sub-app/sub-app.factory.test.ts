@@ -269,6 +269,32 @@ describe('SubApp Factory', () => {
     ]);
   });
 
+  it('should lint the moved apps and the libraries', async () => {
+    const lint = async (script: string) => {
+      let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create(
+        '/package.json',
+        JSON.stringify({ scripts: { lint: script } }),
+      );
+      tree = await runner.runSchematic(
+        'sub-app',
+        { name: 'project' } as SubAppOptions,
+        tree,
+      );
+      return readJson(tree, '/package.json')['scripts']['lint'];
+    };
+
+    expect(await lint('oxlint --type-aware src/ test/')).toEqual(
+      'oxlint --type-aware apps/ libs/',
+    );
+    expect(await lint('oxlint --type-aware src/ test/ libs/')).toEqual(
+      'oxlint --type-aware apps/ libs/',
+    );
+    expect(await lint('eslint "{src,apps,libs,test}/**/*.ts"')).toEqual(
+      'eslint "{src,apps,libs,test}/**/*.ts"',
+    );
+  });
+
   it('should add project reference when adding sub-app to existing monorepo', async () => {
     let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create(
