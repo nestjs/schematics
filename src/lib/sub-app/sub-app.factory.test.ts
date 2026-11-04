@@ -266,6 +266,7 @@ describe('SubApp Factory', () => {
     expect(tsconfig['references']).toEqual([
       { path: './apps/nestjs-schematics/tsconfig.app.json' },
       { path: './apps/project/tsconfig.app.json' },
+      { path: './tsconfig.spec.json' },
     ]);
   });
 
@@ -295,6 +296,54 @@ describe('SubApp Factory', () => {
     );
   });
 
+  it('should give spec files and libraries a tsconfig of their own', async () => {
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create(
+      '/tsconfig.json',
+      JSON.stringify({ compilerOptions: { experimentalDecorators: true } }),
+    );
+
+    tree = await runner.runSchematic(
+      'sub-app',
+      { name: 'project' } as SubAppOptions,
+      tree,
+    );
+
+    expect(readJson(tree, '/tsconfig.spec.json')).toEqual({
+      extends: './tsconfig.json',
+      compilerOptions: { noEmit: true },
+      include: ['apps/**/*', 'libs/**/*'],
+    });
+  });
+
+  it('should keep the spec tsconfig reference after every project', async () => {
+    let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+    tree.create(
+      '/tsconfig.json',
+      JSON.stringify({ compilerOptions: { experimentalDecorators: true } }),
+    );
+
+    tree = await runner.runSchematic(
+      'sub-app',
+      { name: 'one' } as SubAppOptions,
+      tree,
+    );
+    tree = await runner.runSchematic(
+      'sub-app',
+      { name: 'two' } as SubAppOptions,
+      tree,
+    );
+
+    const references = readJson(tree, '/tsconfig.json').references.map(
+      (ref: { path: string }) => ref.path,
+    );
+    expect(references.at(-1)).toBe('./tsconfig.spec.json');
+    expect(references.filter((ref: string) => ref.includes('spec'))).toEqual([
+      './tsconfig.spec.json',
+    ]);
+    expect(references).toContain('./apps/two/tsconfig.app.json');
+  });
+
   it('should add project reference when adding sub-app to existing monorepo', async () => {
     let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create(
@@ -321,6 +370,7 @@ describe('SubApp Factory', () => {
       { path: './apps/existing-app/tsconfig.app.json' },
       { path: './apps/nestjs-schematics/tsconfig.app.json' },
       { path: './apps/new-app/tsconfig.app.json' },
+      { path: './tsconfig.spec.json' },
     ]);
   });
 

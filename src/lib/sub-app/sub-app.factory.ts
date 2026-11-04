@@ -45,6 +45,9 @@ const DEFAULT_BUILDER = 'rspack';
 /** What the CLI itself assumes when `nest-cli.json` names no builder. */
 const CLI_DEFAULT_BUILDER = 'tsc';
 
+/** Covers what the project tsconfigs leave out: spec files and libraries. */
+const SPEC_TSCONFIG = 'tsconfig.spec.json';
+
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
   compilerOptions?: Record<string, any>;
@@ -71,6 +74,7 @@ export function main(options: SubAppOptions): Rule {
     addAppsToCliOptions(options.path!, options.name, appName),
     addRspackDependencies(options),
     addTsConfigReference(options.path!, options.name),
+    addSpecTsConfig(options.path!),
     applyStartProdScript(options, appName),
     (tree) => {
       (options as any).isEsm = isEsmProject(tree);
@@ -218,6 +222,55 @@ function addTsConfigReference(projectRoot: string, projectName: string): Rule {
         if (!hasRef) {
           tsconfig.references.push({ path: refPath });
         }
+      },
+    );
+  };
+}
+
+/**
+ * The solution-style `tsconfig.json` covers no file itself, and the project
+ * tsconfigs exclude spec files. Tools that look up the tsconfig of each file,
+ * like Vitest through Vite, find none for spec files and libraries, so they
+ * compile them without the decorator options and the `paths` aliases.
+ *
+ * It emits nothing, so a root `tsc -b` keeps spec files out of `dist`. Its
+ * reference stays last, because those tools take the first project that has
+ * the file, and a project's own tsconfig has to win over this catch-all.
+ */
+function addSpecTsConfig(projectRoot: string): Rule {
+  return (host: Tree) => {
+    if (!host.exists('tsconfig.json')) {
+      return host;
+    }
+    if (!host.exists(SPEC_TSCONFIG)) {
+      host.create(
+        SPEC_TSCONFIG,
+        stringify(
+          {
+            extends: './tsconfig.json',
+            compilerOptions: { noEmit: true },
+            include: [`${projectRoot}/**/*`, `${DEFAULT_LIB_PATH}/**/*`],
+          },
+          null,
+          2,
+        ),
+      );
+    }
+    return updateJsonFile(
+      host,
+      'tsconfig.json',
+      (tsconfig: TsConfigPartialType) => {
+        if (!tsconfig.references) {
+          tsconfig.references = [];
+        }
+        const refPath = `./${SPEC_TSCONFIG}`;
+        const index = tsconfig.references.findIndex(
+          (ref) => ref.path === refPath,
+        );
+        if (index !== -1) {
+          tsconfig.references.splice(index, 1);
+        }
+        tsconfig.references.push({ path: refPath });
       },
     );
   };
