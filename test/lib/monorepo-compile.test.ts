@@ -347,6 +347,49 @@ describe('Generated monorepo compiles', () => {
         result.emitted.some((file) => /\.(spec|test)\.js$/.test(file)),
       ).toBe(false);
     });
+
+    it('should cover every file of the workspace with a referenced project', async () => {
+      const dir = await workspace(type);
+      write(dir, 'apps/admin/src/uses-shared.spec.ts', 'export {};\n');
+
+      const parse = (configPath: string) =>
+        ts.parseJsonConfigFileContent(
+          ts.readConfigFile(configPath, ts.sys.readFile).config,
+          ts.sys,
+          path.dirname(configPath),
+        );
+      const covered = new Set(
+        parse(path.join(dir, 'tsconfig.json')).projectReferences!.flatMap(
+          (ref) => parse(ref.path).fileNames,
+        ),
+      );
+      const sources = ['apps', 'libs'].flatMap((root) =>
+        ts.sys.readDirectory(path.join(dir, root), ['.ts']),
+      );
+
+      expect(sources.length).toBeGreaterThan(0);
+      expect(sources.filter((file) => !covered.has(file))).toEqual([]);
+    });
+
+    it('should resolve a library alias from a spec file', async () => {
+      const dir = await workspace(type);
+      write(
+        dir,
+        'apps/admin/src/uses-shared.spec.ts',
+        "import { SharedModule } from '@app/shared';\nexport const used = SharedModule;\n",
+      );
+
+      const result = compile(dir, 'tsconfig.spec.json');
+
+      expect(result.diagnostics.filter((d) => d.includes('@app/'))).toEqual([]);
+      expect(rootDirErrors(result)).toEqual([]);
+    });
+
+    it('should emit nothing for the spec project', async () => {
+      const dir = await workspace(type);
+
+      expect(jsOutputs(compile(dir, 'tsconfig.spec.json'))).toEqual([]);
+    });
   });
 
   describe('start:prod', () => {
@@ -444,7 +487,6 @@ describe('Generated monorepo compiles', () => {
         'dist/libs/shared/libs/shared/src/index.js',
       );
     });
-
   });
 
   /**
