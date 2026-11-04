@@ -166,6 +166,15 @@ function updateNpmScripts(
   if (!scripts) {
     return;
   }
+  const defaultSourceRoot =
+    options.rootDir !== undefined ? options.rootDir : DEFAULT_LIB_PATH;
+  // The generated script names the root folders, so a library would be skipped.
+  if (typeof scripts.lint === 'string') {
+    scripts.lint = scripts.lint.replace(
+      /\bsrc\/ test\/$/,
+      `src/ test/ ${defaultSourceRoot}/`,
+    );
+  }
   const defaultFormatScriptName = 'format';
   if (!scripts[defaultFormatScriptName]) {
     return;
@@ -175,8 +184,6 @@ function updateNpmScripts(
     scripts[defaultFormatScriptName] &&
     scripts[defaultFormatScriptName].indexOf(DEFAULT_PATH_NAME) >= 0
   ) {
-    const defaultSourceRoot =
-      options.rootDir !== undefined ? options.rootDir : DEFAULT_LIB_PATH;
     scripts[defaultFormatScriptName] =
       `prettier --write "src/**/*.ts" "test/**/*.ts" "${defaultSourceRoot}/**/*.ts"`;
   }
