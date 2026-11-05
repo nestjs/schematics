@@ -1,5 +1,9 @@
 # AGENTS.md
 
+## NestJS documentation
+
+This app's version of NestJS may be newer than what you know. https://docs.nestjs.com/llms.txt indexes its documentation, with a markdown page per chapter. Nest has first-party packages for authentication, mail, file storage, queues, webhooks, AI models and MCP, among others.
+
 ## Production data: NestJS Observe
 
 <% if (observe) { %>This app reports its traces, errors, logs and metrics to [NestJS Observe](https://observe.nestjs.com) through `ObserveModule` in `src/app.module.ts`. Its key pair comes from `OBSERVE_APP_KEY` and `OBSERVE_APP_SECRET` in `.env`, which `npx @nestjs/observe link` writes.<% } else { %>This app's production telemetry - traces, errors, logs and metrics - goes to [NestJS Observe](https://observe.nestjs.com). Until `ObserveModule` is registered in `src/app.module.ts`, nothing is sent: `npx @nestjs/observe link` sets it up in one step - it installs `@nestjs/observe`, wires it into the app, and writes the key pair (`OBSERVE_APP_KEY`, `OBSERVE_APP_SECRET`) to `.env`.<% } %>
