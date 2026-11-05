@@ -634,12 +634,14 @@ describe('Application Factory', () => {
     // second section is the one `npx @nestjs/observe link` writes, so a project
     // made here and a project linked later read the same.
     const onlyTheSection = (agents: string) => {
-      expect(
-        agents.startsWith('# AGENTS.md\n\n## NestJS documentation\n'),
-      ).toBe(true);
+      expect(agents.startsWith('# AGENTS.md\n\n## NestJS\n')).toBe(true);
       expect(agents).toContain('\n\n## Production data: NestJS Observe\n');
       expect(agents.match(/^#+ /gm)).toHaveLength(3);
       expect(agents).toContain('https://docs.nestjs.com/llms.txt');
+      expect(agents).toContain(
+        '[`@nestjs/mail`](https://docs.nestjs.com/application/mail.md)',
+      );
+      expect(agents).toContain('`StandardSchemaValidationPipe`');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
       expect(agents).not.toContain('<%');
     };
@@ -674,7 +676,14 @@ describe('Application Factory', () => {
       name: 'project',
       type: 'esm',
     } as ApplicationOptions);
-    onlyTheSection(esm.readContent('/project/AGENTS.md'));
+    const esmAgents = esm.readContent('/project/AGENTS.md');
+    onlyTheSection(esmAgents);
+
+    // What models write from habit breaks only here: `__dirname` crashes at
+    // startup and `jest.fn()` fails under Vitest. CommonJS projects use both.
+    expect(esmAgents).toContain('`import.meta.dirname`');
+    expect(esmAgents).toContain('`vi.fn()`');
+    expect(plain).not.toContain('import.meta.dirname');
 
     // JavaScript projects are linked but not wired by the CLI, so they are
     // pointed at the edits instead.

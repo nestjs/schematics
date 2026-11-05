@@ -1,8 +1,20 @@
 # AGENTS.md
 
-## NestJS documentation
+## NestJS
 
-This app's version of NestJS may be newer than what you know. https://docs.nestjs.com/llms.txt indexes its documentation, with a markdown page per chapter. Nest has first-party packages for authentication, mail, file storage, queues, webhooks, AI models and MCP, among others.
+This app's version of NestJS is likely newer than what you know. https://docs.nestjs.com/llms.txt indexes its documentation, with a markdown page per chapter.
+
+Nest has first-party packages for these, so check them before adding another library or writing your own:
+
+- Sign-in: [`@nestjs/authentication`](https://docs.nestjs.com/security/authentication.md). Permissions: [`@nestjs/authorization`](https://docs.nestjs.com/security/authorization.md).
+- Email: [`@nestjs/mail`](https://docs.nestjs.com/application/mail.md). Files, S3 included: [`@nestjs/storage`](https://docs.nestjs.com/application/file-storage.md). Translations: [`@nestjs/i18n`](https://docs.nestjs.com/application/i18n.md).
+- Retries, timeouts and circuit breakers: [`@nestjs/resilience`](https://docs.nestjs.com/reliability/resilience.md).
+- Idempotency keys: [`@nestjs/idempotency`](https://docs.nestjs.com/reliability/idempotency.md). Transactional outbox: [`@nestjs/outbox`](https://docs.nestjs.com/reliability/outbox.md). Sending and receiving webhooks: [`@nestjs/webhooks`](https://docs.nestjs.com/http/webhooks.md).
+- Running a scheduled job on one instance, and locks: [`@nestjs/locks`](https://docs.nestjs.com/reliability/locks.md). Processes that take days: [`@nestjs/workflows`](https://docs.nestjs.com/reliability/workflows.md).
+- Language models, tools and agents: [`@nestjs/ai`](https://docs.nestjs.com/ai/overview.md). MCP servers: [`@nestjs/mcp`](https://docs.nestjs.com/mcp/overview.md).
+- Drizzle: [`@nestjs/drizzle`](https://docs.nestjs.com/data/drizzle.md).
+
+Request bodies can be validated with Zod or another Standard Schema library through `@Body({ schema })` and `StandardSchemaValidationPipe` (https://docs.nestjs.com/application/validation.md). `NodeAdapter` from `@nestjs/platform-node` is the fastest HTTP adapter, ahead of Fastify (https://docs.nestjs.com/http/performance.md).
 
 ## Production data: NestJS Observe
 
