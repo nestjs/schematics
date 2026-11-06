@@ -645,6 +645,7 @@ describe('Application Factory', () => {
         '[`@nestjs/typeorm`](https://docs.nestjs.com/data/typeorm.md)',
       );
       expect(agents).toContain('`StandardSchemaValidationPipe`');
+      expect(agents).toContain('`StandardSchemaSerializerInterceptor`');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
       expect(agents).not.toContain('<%');
     };
@@ -684,9 +685,11 @@ describe('Application Factory', () => {
 
     // What models write from habit breaks only here: `__dirname` crashes at
     // startup and `jest.fn()` fails under Vitest. CommonJS projects use both.
+    expect(esmAgents).toContain('relative imports end in `.js`');
     expect(esmAgents).toContain('`import.meta.dirname`');
     expect(esmAgents).toContain('`vi.fn()`');
     expect(plain).not.toContain('import.meta.dirname');
+    expect(plain).toContain('`require(esm)`');
 
     // JavaScript projects are linked but not wired by the CLI, so they are
     // pointed at the edits instead.
