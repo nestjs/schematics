@@ -641,6 +641,9 @@ describe('Application Factory', () => {
       expect(agents).toContain(
         '[`@nestjs/mail`](https://docs.nestjs.com/application/mail.md)',
       );
+      expect(agents).toContain(
+        '[`@nestjs/typeorm`](https://docs.nestjs.com/data/typeorm.md)',
+      );
       expect(agents).toContain('`StandardSchemaValidationPipe`');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
       expect(agents).not.toContain('<%');
