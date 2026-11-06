@@ -645,6 +645,7 @@ describe('Application Factory', () => {
         '[`@nestjs/typeorm`](https://docs.nestjs.com/data/typeorm.md)',
       );
       expect(agents).toContain('`StandardSchemaValidationPipe`');
+      expect(agents).toContain('/http/streaming-responses.md');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
       expect(agents).not.toContain('<%');
     };
