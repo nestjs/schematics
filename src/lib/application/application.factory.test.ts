@@ -946,6 +946,7 @@ describe('Application Factory', () => {
         expect(agents).toContain('## Production data: NestJS Observe');
         expect(agents).toContain('## One-file layout');
         expect(agents).toContain('`nest g resource users`');
+        expect(agents).toContain('relative imports end in `.js`');
         expect(agents).toContain('`import.meta.dirname`');
         expect(agents).not.toContain('<%');
       }

@@ -13,5 +13,5 @@ When a task depends on how the app behaves in production - an error users hit, a
 
 All the code is in `src/main.ts`. `nest generate` (for example `nest g resource users`) writes new files under `src/` and registers them in `AppModule` there. It writes spec files once `@nestjs/testing` is in `package.json`. When `src/main.ts` gets long, move `AppModule` to `src/app.module.ts`: `nest generate` uses a `*.module.ts` file when there is one.
 
-This project is ESM: `__dirname` doesn't exist, so use `import.meta.dirname`.
+This project is ESM: relative imports end in `.js`, and `__dirname` doesn't exist (use `import.meta.dirname`).
 <% } %>
