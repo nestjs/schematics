@@ -63,4 +63,9 @@ export interface ApplicationOptions {
    * @default false
    */
   observe?: boolean;
+  /**
+   * Generate an application whose code is one file, `src/main.ts`.
+   * @default false
+   */
+  minimal?: boolean;
 }

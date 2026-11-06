@@ -830,4 +830,176 @@ describe('Application Factory', () => {
       expect(packageJson.devDependencies).not.toHaveProperty('eslint');
     });
   });
+  describe('when minimal', () => {
+    const minimal = (extra: Partial<ApplicationOptions> = {}) =>
+      runner.runSchematic('application', {
+        name: 'project',
+        minimal: true,
+        ...extra,
+      } as ApplicationOptions);
+
+    it('should generate one source file and what it takes to run it', async () => {
+      const tree: UnitTestTree = await minimal();
+
+      expect(tree.files.sort()).toEqual(
+        [
+          '/project/.gitignore',
+          '/project/AGENTS.md',
+          '/project/package.json',
+          '/project/tsconfig.json',
+          '/project/src/main.ts',
+        ].sort(),
+      );
+    });
+
+    it('should hold the service, controller, module and bootstrap in main.ts', async () => {
+      const tree: UnitTestTree = await minimal();
+
+      expect(tree.readContent('/project/src/main.ts')).toEqual(
+        "import { Controller, Get, Injectable, Module } from '@nestjs/common';\n" +
+          "import { NestFactory } from '@nestjs/core';\n" +
+          '\n' +
+          '@Injectable()\n' +
+          'class AppService {\n' +
+          '  getHello(): string {\n' +
+          "    return 'Hello World!';\n" +
+          '  }\n' +
+          '}\n' +
+          '\n' +
+          '@Controller()\n' +
+          'class AppController {\n' +
+          '  constructor(private readonly appService: AppService) {}\n' +
+          '\n' +
+          '  @Get()\n' +
+          '  getHello(): string {\n' +
+          '    return this.appService.getHello();\n' +
+          '  }\n' +
+          '}\n' +
+          '\n' +
+          '@Module({\n' +
+          '  controllers: [AppController],\n' +
+          '  providers: [AppService],\n' +
+          '})\n' +
+          'class AppModule {}\n' +
+          '\n' +
+          'async function bootstrap() {\n' +
+          '  const app = await NestFactory.create(AppModule);\n' +
+          '  await app.listen(process.env.PORT ?? 3000);\n' +
+          '}\n' +
+          'await bootstrap();\n',
+      );
+    });
+
+    it('should run through the nest cli, as ESM, with nothing for tests or linting', async () => {
+      const tree: UnitTestTree = await minimal();
+      const packageJson = JSON.parse(tree.readContent('/project/package.json'));
+
+      expect(packageJson.type).toEqual('module');
+      expect(packageJson.scripts).toEqual({
+        build: 'nest build',
+        start: 'nest start',
+        'start:dev': 'nest start --watch',
+        'start:prod': 'node dist/main',
+      });
+      expect(Object.keys(packageJson.dependencies)).toEqual([
+        '@nestjs/common',
+        '@nestjs/core',
+        '@nestjs/platform-express',
+        'reflect-metadata',
+        'rxjs',
+      ]);
+      expect(Object.keys(packageJson.devDependencies)).toEqual([
+        '@nestjs/cli',
+        '@nestjs/schematics',
+        '@types/express',
+        '@types/node',
+        'typescript',
+      ]);
+    });
+
+    it('should emit decorator metadata and build src straight to dist', async () => {
+      const tree: UnitTestTree = await minimal({ specFileSuffix: 'test' });
+      const tsconfig = JSON.parse(tree.readContent('/project/tsconfig.json'));
+
+      expect(tsconfig.compilerOptions.emitDecoratorMetadata).toBe(true);
+      expect(tsconfig.compilerOptions.experimentalDecorators).toBe(true);
+      expect(tsconfig.compilerOptions.rootDir).toEqual('./src');
+      expect(tsconfig.compilerOptions.outDir).toEqual('./dist');
+      expect(tsconfig.compilerOptions.types).toEqual(['node']);
+      expect(tsconfig.include).toEqual(['src']);
+      // `nest build` reads this file, and `nest g --spec` can add a spec file
+      // that imports the `@nestjs/testing` this project doesn't install.
+      expect(tsconfig.exclude).toEqual(['**/*test.ts']);
+    });
+
+    it('should wire observe into main.ts', async () => {
+      const tree: UnitTestTree = await minimal({ observe: true });
+      const main = tree.readContent('/project/src/main.ts');
+      const packageJson = JSON.parse(tree.readContent('/project/package.json'));
+
+      expect(main).toContain(
+        "import { createObserveModule } from '@nestjs/observe';\n\nconst { ObserveModule, ObserveInstrument } = createObserveModule();\n",
+      );
+      expect(main).toContain('  imports: [\n');
+      expect(main).toContain("serviceId: 'project',\n");
+      expect(main).toContain(
+        'NestFactory.create(AppModule, {\n    instrument: ObserveInstrument,\n  })',
+      );
+      expect(packageJson.dependencies).toHaveProperty('@nestjs/observe');
+    });
+
+    it('should point AGENTS.md at main.ts, not at a root module file', async () => {
+      const plain = (await minimal()).readContent('/project/AGENTS.md');
+      const observed = (await minimal({ observe: true })).readContent(
+        '/project/AGENTS.md',
+      );
+
+      for (const agents of [plain, observed]) {
+        expect(agents).not.toContain('src/app.module.ts`, nothing');
+        expect(agents).not.toContain('in `src/app.module.ts`. Its key pair');
+        expect(agents).toContain('## Production data: NestJS Observe');
+        expect(agents).toContain('## One-file layout');
+        expect(agents).toContain('`nest g resource users`');
+        expect(agents).toContain('relative imports end in `.js`');
+        expect(agents).toContain('`import.meta.dirname`');
+        expect(agents).not.toContain('<%');
+      }
+      expect(plain).toContain(
+        'Until `ObserveModule` is registered in `src/main.ts`, nothing is sent',
+      );
+      // `npx @nestjs/observe link` follows the import of the root module in
+      // main.ts, and here there is none to follow, so it can't do the wiring.
+      expect(plain).toContain(
+        'https://observe.nestjs.com/documentation/sdk#quick-start',
+      );
+      expect(plain).not.toContain('wires it into the app');
+      expect(observed).toContain('through `ObserveModule` in `src/main.ts`.');
+    });
+
+    it('should refuse JavaScript', async () => {
+      await expect(minimal({ language: 'js' })).rejects.toThrow(
+        /TypeScript only/,
+      );
+    });
+
+    it('should refuse CommonJS', async () => {
+      await expect(minimal({ type: 'cjs' })).rejects.toThrow(/ESM only/);
+    });
+
+    it('should leave a standard application as it was', async () => {
+      const tree: UnitTestTree = await runner.runSchematic('application', {
+        name: 'project',
+        type: 'cjs',
+      } as ApplicationOptions);
+      const agents = tree.readContent('/project/AGENTS.md');
+
+      expect(agents).not.toContain('One-file layout');
+      expect(agents).not.toContain('import.meta.dirname');
+      expect(agents).toContain(
+        'registered in `src/app.module.ts`, nothing is sent',
+      );
+      expect(agents).toContain('wires it into the app');
+      expect(agents.endsWith('as text.\n')).toBe(true);
+    });
+  });
 });

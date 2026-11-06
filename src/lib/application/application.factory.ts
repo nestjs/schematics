@@ -8,6 +8,7 @@ import {
   noop,
   renameTemplateFiles,
   Rule,
+  SchematicsException,
   Source,
   template,
   url,
@@ -34,6 +35,9 @@ export function main(options: ApplicationOptions): Rule {
   options = transform(options);
   return chain([
     mergeWith(generate(options, path)),
+    options.minimal
+      ? mergeWith(generateMinimalSharedFiles(options, path))
+      : noop(),
     options.format === true ? formatFiles() : noop(),
   ]);
 }
@@ -52,6 +56,17 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   // Guarantee the key exists so the templates can branch on it even when the
   // factory is invoked directly, bypassing the schema defaults.
   target.observe = target.observe ?? false;
+  target.minimal = target.minimal ?? false;
+  if (target.minimal && target.language !== 'ts') {
+    throw new SchematicsException(
+      'A minimal application is TypeScript only: JavaScript needs Babel and its own entry file to run decorators, so it would not stay one file.',
+    );
+  }
+  if (target.minimal && target.type !== 'esm') {
+    throw new SchematicsException(
+      'A minimal application is ESM only (type "esm"): generate a standard application to use CommonJS.',
+    );
+  }
   target.specFileSuffix = normalizeToKebabOrSnakeCase(
     options.specFileSuffix || 'spec',
   );
@@ -87,11 +102,17 @@ function resolvePackageName(path: string) {
   return baseFilename;
 }
 
+function resolveTemplateDir(options: ApplicationOptions): string {
+  if (options.minimal) {
+    return 'ts-minimal';
+  }
+  return options.type === 'esm' && options.language === 'ts'
+    ? 'ts-esm'
+    : options.language!;
+}
+
 function generate(options: ApplicationOptions, path: string): Source {
-  const templateDir =
-    options.type === 'esm' && options.language === 'ts'
-      ? 'ts-esm'
-      : options.language!;
+  const templateDir = resolveTemplateDir(options);
 
   return apply(url(join('./files' as Path, templateDir)), [
     options.spec
@@ -111,6 +132,24 @@ function generate(options: ApplicationOptions, path: string): Source {
     // `@nestjs/schematics` itself. Restore the real filename here, once the
     // file is on its way into the user's project rather than ours.
     renameTemplateFiles(),
+    move(path),
+  ]);
+}
+
+/**
+ * A minimal application shares these with the standard TypeScript template, so
+ * that a change to what agents are told reaches both.
+ */
+function generateMinimalSharedFiles(
+  options: ApplicationOptions,
+  path: string,
+): Source {
+  return apply(url(join('./files' as Path, 'ts')), [
+    filter((path) => ['/AGENTS.md', '/.gitignore'].includes(path)),
+    template({
+      ...strings,
+      ...options,
+    }),
     move(path),
   ]);
 }

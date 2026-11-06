@@ -21,7 +21,10 @@ import {
   DeclarationOptions,
   ModuleDeclarator,
 } from '../../utils/module.declarator.js';
-import { ModuleFinder } from '../../utils/module.finder.js';
+import {
+  ModuleFinder,
+  moduleNotFoundWarning,
+} from '../../utils/module.finder.js';
 import { Location, NameParser } from '../../utils/name.parser.js';
 import {
   isEsmProject,
@@ -86,7 +89,7 @@ function generate(options: ResolverOptions): Source {
 }
 
 function addDeclarationToModule(options: ProviderOptions): Rule {
-  return (tree: Tree) => {
+  return (tree: Tree, context: SchematicContext) => {
     if (options.skipImport !== undefined && options.skipImport) {
       return tree;
     }
@@ -96,6 +99,7 @@ function addDeclarationToModule(options: ProviderOptions): Rule {
         path: options.path as Path,
       }) ?? undefined;
     if (!options.module) {
+      context.logger.warn(moduleNotFoundWarning(options.name));
       return tree;
     }
     const content = tree.read(options.module)!.toString();

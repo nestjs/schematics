@@ -22,6 +22,7 @@ import {
   DeclarationOptions,
   ModuleDeclarator,
   ModuleFinder,
+  moduleNotFoundWarning,
 } from '../../index.js';
 import {
   addPackageJsonDependency,
@@ -156,7 +157,7 @@ function generate(options: ResourceOptions): Source {
 }
 
 function addDeclarationToModule(options: ResourceOptions): Rule {
-  return (tree: Tree) => {
+  return (tree: Tree, context: SchematicContext) => {
     if (options.skipImport !== undefined && options.skipImport) {
       return tree;
     }
@@ -166,6 +167,7 @@ function addDeclarationToModule(options: ResourceOptions): Rule {
         path: options.path as Path,
       }) ?? undefined;
     if (!options.module) {
+      context.logger.warn(moduleNotFoundWarning(options.name));
       return tree;
     }
     const content = tree.read(options.module)!.toString();
