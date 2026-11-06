@@ -124,4 +124,70 @@ describe('Module Finder', () => {
     };
     expect(finder.find(options)).toEqual(normalize('/src/admin.module.ts'));
   });
+
+  describe('when the root module is declared in the entry file', () => {
+    const entryFile = '@Module({\n  controllers: [],\n})\nclass AppModule {}\n';
+
+    it('should return the entry file', () => {
+      const tree = new EmptyTree();
+      tree.create('/src/main.ts', entryFile);
+      const finder = new ModuleFinder(tree);
+      const options: FindOptions = {
+        name: 'users',
+        path: normalize('/src/users'),
+      };
+      expect(finder.find(options)).toEqual(normalize('/src/main.ts'));
+    });
+
+    it('should prefer a module file in the same directory', () => {
+      const tree = new EmptyTree();
+      tree.create('/src/main.ts', entryFile);
+      tree.create('/src/app.module.ts', 'app module content');
+      const finder = new ModuleFinder(tree);
+      const options: FindOptions = {
+        name: 'users',
+        path: normalize('/src/users'),
+      };
+      expect(finder.find(options)).toEqual(normalize('/src/app.module.ts'));
+    });
+
+    it('should prefer a closer module file', () => {
+      const tree = new EmptyTree();
+      tree.create('/src/main.ts', entryFile);
+      tree.create('/src/users/users.module.ts', 'users module content');
+      const finder = new ModuleFinder(tree);
+      const options: FindOptions = {
+        name: 'profile',
+        path: normalize('/src/users/profile'),
+      };
+      expect(finder.find(options)).toEqual(
+        normalize('/src/users/users.module.ts'),
+      );
+    });
+
+    it('should not take an entry file that only bootstraps a module', () => {
+      const tree = new EmptyTree();
+      tree.create(
+        '/src/main.ts',
+        "import { AppModule } from './somewhere/app';\nNestFactory.create(AppModule);\n",
+      );
+      const finder = new ModuleFinder(tree);
+      const options: FindOptions = {
+        name: 'users',
+        path: normalize('/src/users'),
+      };
+      expect(finder.find(options)).toEqual(null);
+    });
+
+    it('should not take any other file that declares a module', () => {
+      const tree = new EmptyTree();
+      tree.create('/src/app.ts', entryFile);
+      const finder = new ModuleFinder(tree);
+      const options: FindOptions = {
+        name: 'users',
+        path: normalize('/src/users'),
+      };
+      expect(finder.find(options)).toEqual(null);
+    });
+  });
 });

@@ -7,6 +7,16 @@ export interface FindOptions {
   kind?: string;
 }
 
+/**
+ * What to say when no module was found to register a generated element in,
+ * which leaves the application unable to reach it.
+ *
+ * @param name - The name of the generated element.
+ * @returns The warning to log.
+ */
+export const moduleNotFoundWarning = (name: string): string =>
+  `No module found to register "${name}" in, so the application can't reach it yet. Add it to a module yourself, or pass --skip-import if that's intended.`;
+
 export class ModuleFinder {
   constructor(private tree: Tree) {}
 
@@ -44,11 +54,29 @@ export class ModuleFinder {
     if (!directory) {
       return null;
     }
-    const moduleFilename: PathFragment | undefined = directory.subfiles.find(
-      (filename) => /\.module\.(t|j)s$/.test(filename),
-    );
+    const moduleFilename: PathFragment | undefined =
+      directory.subfiles.find((filename) =>
+        /\.module\.(t|j)s$/.test(filename),
+      ) ?? this.findEntryFileDeclaringModule(directory);
     return moduleFilename !== undefined
       ? join(directory.path, moduleFilename.valueOf())
       : this.findIn(directory.parent);
+  }
+
+  /**
+   * Finds an entry file that declares a module itself, which is where the
+   * root module of a `nest new --minimal` application lives.
+   *
+   * @param directory - The directory to search in.
+   * @returns The entry file's name, or undefined if there is none.
+   */
+  private findEntryFileDeclaringModule(
+    directory: DirEntry,
+  ): PathFragment | undefined {
+    return directory.subfiles.find(
+      (filename) =>
+        /^main\.(t|j)s$/.test(filename) &&
+        /@Module\(\s*\{/.test(directory.file(filename)!.content.toString()),
+    );
   }
 }
