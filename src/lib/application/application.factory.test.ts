@@ -629,17 +629,22 @@ describe('Application Factory', () => {
       JSON.parse(tree.readContent('/project/tsconfig.build.json')).include,
     ).toEqual(['src']);
   });
-  it('should write an AGENTS.md holding only where production data goes, as link writes it', async () => {
-    // The one thing an agent cannot learn from the repository itself. The
-    // file is the section `npx @nestjs/observe link` writes, so a project
+  it('should write an AGENTS.md holding where the docs and production data are', async () => {
+    // The two things an agent cannot learn from the repository itself. The
+    // second section is the one `npx @nestjs/observe link` writes, so a project
     // made here and a project linked later read the same.
     const onlyTheSection = (agents: string) => {
-      expect(
-        agents.startsWith(
-          '# AGENTS.md\n\n## Production data: NestJS Observe\n',
-        ),
-      ).toBe(true);
-      expect(agents.match(/^#+ /gm)).toHaveLength(2);
+      expect(agents.startsWith('# AGENTS.md\n\n## NestJS\n')).toBe(true);
+      expect(agents).toContain('\n\n## Production data: NestJS Observe\n');
+      expect(agents.match(/^#+ /gm)).toHaveLength(3);
+      expect(agents).toContain('https://docs.nestjs.com/llms.txt');
+      expect(agents).toContain(
+        '[`@nestjs/mail`](https://docs.nestjs.com/application/mail.md)',
+      );
+      expect(agents).toContain(
+        '[`@nestjs/typeorm`](https://docs.nestjs.com/data/typeorm.md)',
+      );
+      expect(agents).toContain('`StandardSchemaValidationPipe`');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
       expect(agents).not.toContain('<%');
     };
@@ -674,7 +679,16 @@ describe('Application Factory', () => {
       name: 'project',
       type: 'esm',
     } as ApplicationOptions);
-    onlyTheSection(esm.readContent('/project/AGENTS.md'));
+    const esmAgents = esm.readContent('/project/AGENTS.md');
+    onlyTheSection(esmAgents);
+
+    // What models write from habit breaks only here: `__dirname` crashes at
+    // startup and `jest.fn()` fails under Vitest. CommonJS projects use both.
+    expect(esmAgents).toContain('relative imports end in `.js`');
+    expect(esmAgents).toContain('`import.meta.dirname`');
+    expect(esmAgents).toContain('`vi.fn()`');
+    expect(plain).not.toContain('import.meta.dirname');
+    expect(plain).toContain('`require(esm)`');
 
     // JavaScript projects are linked but not wired by the CLI, so they are
     // pointed at the edits instead.
