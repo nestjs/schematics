@@ -1,7 +1,16 @@
 {
   "name": "@nestjs/schematics",
   "version": "12.0.12",
-  "description": "Nest - modern, fast, powerful node.js web framework (@schematics)",
+  "description": "The generators behind the Nest CLI: scaffold NestJS applications, libraries, modules, controllers, services and CRUD resources.",
+  "keywords": [
+    "nestjs",
+    "nest",
+    "schematics",
+    "generator",
+    "scaffolding",
+    "code-generation",
+    "cli"
+  ],
   "type": "module",
   "main": "dist/index.js",
   "files": [
