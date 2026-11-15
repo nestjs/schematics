@@ -80,7 +80,7 @@
   },
   "peerDependencies": {
     "prettier": "^3.0.0",
-    "typescript": ">=6.0.0"
+    "typescript": "^6.0.0"
   },
   "peerDependenciesMeta": {
     "prettier": {
