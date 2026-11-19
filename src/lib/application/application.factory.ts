@@ -1,4 +1,4 @@
-import { join, Path, strings } from '@angular-devkit/core';
+import { join, normalize, Path, strings } from '@angular-devkit/core';
 import {
   apply,
   chain,
@@ -8,9 +8,11 @@ import {
   noop,
   renameTemplateFiles,
   Rule,
+  SchematicContext,
   SchematicsException,
   Source,
   template,
+  Tree,
   url,
 } from '@angular-devkit/schematics';
 import { basename, parse } from 'path';
@@ -33,13 +35,72 @@ export function main(options: ApplicationOptions): Rule {
       : options.directory;
 
   options = transform(options);
-  return chain([
-    mergeWith(generate(options, path)),
-    options.minimal
-      ? mergeWith(generateMinimalSharedFiles(options, path))
-      : noop(),
-    options.format === true ? formatFiles() : noop(),
-  ]);
+  return (host, context) => {
+    const existing = keepOrRefuseExistingFiles(host, context, path);
+    return chain([
+      mergeWith(apply(generate(options, path), [existing])),
+      options.minimal
+        ? mergeWith(
+            apply(generateMinimalSharedFiles(options, path), [existing]),
+          )
+        : noop(),
+      options.format === true ? formatFiles() : noop(),
+    ]);
+  };
+}
+
+/**
+ * Existing files the template would also write, but which only document or
+ * configure git rather than the project, so the user's copy is kept as is.
+ */
+const KEPT_IF_PRESENT = ['README.md', '.gitignore'];
+
+/**
+ * `nest new .` usually runs in a folder that already holds something (a spec,
+ * a README, `.git`). Files the template doesn't write are left alone, and so
+ * is an existing README.md or .gitignore. Any other file the template would
+ * write over is a conflict: all of them are reported at once, before anything
+ * is written, instead of failing on the first one.
+ */
+function keepOrRefuseExistingFiles(
+  host: Tree,
+  context: SchematicContext,
+  path: string,
+): Rule {
+  const root = normalize(`/${path}`);
+  const kept = KEPT_IF_PRESENT.map((file) => join(root, file) as string);
+
+  return (generated: Tree) => {
+    const conflicts: string[] = [];
+    const skipped: string[] = [];
+    generated.visit((file) => {
+      if (!host.exists(file)) {
+        return;
+      }
+      (kept.includes(file) ? skipped : conflicts).push(file);
+    });
+
+    const display = (file: string) =>
+      file.slice(root.length).replace(/^\//, '');
+    if (conflicts.length > 0) {
+      const where = root === '/' ? 'the current directory' : `"${path}"`;
+      throw new SchematicsException(
+        `Cannot create the application in ${where}: these files already exist and would be overwritten:\n` +
+          conflicts
+            .sort()
+            .map((file) => `  ${display(file)}\n`)
+            .join('') +
+          'Nothing was written. Move them elsewhere (and back afterwards), or create the application in a directory without them.',
+      );
+    }
+    for (const file of skipped) {
+      generated.delete(file);
+      context.logger.info(
+        `Kept the existing ${display(file)} (the generated one was not written).`,
+      );
+    }
+    return generated;
+  };
 }
 
 function transform(options: ApplicationOptions): ApplicationOptions {
@@ -57,6 +118,7 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   // factory is invoked directly, bypassing the schema defaults.
   target.observe = target.observe ?? false;
   target.minimal = target.minimal ?? false;
+  target.spec = target.spec ?? true;
   if (target.minimal && target.language !== 'ts') {
     throw new SchematicsException(
       'A minimal application is TypeScript only: JavaScript needs Babel and its own entry file to run decorators, so it would not stay one file.',
@@ -117,11 +179,7 @@ function generate(options: ApplicationOptions, path: string): Source {
   return apply(url(join('./files' as Path, templateDir)), [
     options.spec
       ? noop()
-      : filter((path) => {
-          const languageExtension = options.language || 'ts';
-          const suffix = `__specFileSuffix__.${languageExtension}`;
-          return !path.endsWith(suffix);
-        }),
+      : filter((path) => !isTestFile(path, options.language || 'ts')),
     template({
       ...strings,
       ...options,
@@ -134,6 +192,18 @@ function generate(options: ApplicationOptions, path: string): Source {
     renameTemplateFiles(),
     move(path),
   ]);
+}
+
+/**
+ * Without specs, the test runner's setup goes too: a config file or an e2e
+ * folder with nothing to run reads as an invitation to write tests.
+ */
+function isTestFile(path: string, languageExtension: string): boolean {
+  return (
+    path.endsWith(`__specFileSuffix__.${languageExtension}`) ||
+    path.startsWith('/test/') ||
+    /^\/(jest|vitest)\.config(\.e2e)?\.(ts|js)$/.test(path)
+  );
 }
 
 /**

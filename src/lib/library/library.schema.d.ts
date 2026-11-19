@@ -22,6 +22,11 @@ export interface LibraryOptions {
    */
   rootDir?: string | Path;
   /**
+   * Specifies if a spec file is generated.
+   * @default true
+   */
+  spec?: boolean;
+  /**
    * Specifies the file suffix of spec files.
    * @default "spec"
    */
