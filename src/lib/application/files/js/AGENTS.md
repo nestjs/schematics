@@ -25,6 +25,14 @@ A route handler can return a web `Response`, a `ReadableStream` or an async gene
 
 Nest's packages are ESM only. A CommonJS project loads them through `require(esm)`, which needs Node.js 20.19+ or 22.12+, and doesn't have to convert (https://docs.nestjs.com/migration-guide.md).
 
+Code that passes its tests can still get these wrong:
+
+- Sign-in assembled from `@nestjs/jwt` and bcrypt usually returns early for an unknown email, as in `if (!user || !(await bcrypt.compare(...))) throw`, so it answers faster for emails that aren't registered and its timing tells anyone which ones are. `@nestjs/authentication` replaces that assembly: its `PasswordHasher.verify(password, user?.passwordHash)` checks a dummy hash when there's no user or no stored hash, so both cases take the same time and give the same answer. Its global guard puts every route behind sign-in, and `@Public()` opens one.
+- `@Post()` answers 201 Created. A POST that creates nothing, such as sign-in, needs `@HttpCode(200)` or the code it means.
+- class-validator's `@IsOptional()` skips validation for `null` as well as for a missing field, so `{"title": null}` reaches the database and fails there with a 500. For a field that may be left out but not set to `null`, `@ValidateIf((_, value) => value !== undefined)` in place of `@IsOptional()` validates `null` and answers 400.
+- `SwaggerModule.setup()` serves the document outside Nest's router, so the document doesn't list its own route. Add it to the document if the API contract lists every route.
+- A server you started stops by its PID, or by the process listening on its port (`lsof -ti tcp:3000 -sTCP:LISTEN`). `pkill -f nest` and `pkill -f "npm start"` also kill other projects' processes on the machine.
+
 ## Production data: NestJS Observe
 
 <% if (observe) { %>This app reports its traces, errors, logs and metrics to [NestJS Observe](https://observe.nestjs.com) through `ObserveModule` in `src/app.module.js`. Its key pair comes from `OBSERVE_APP_KEY` and `OBSERVE_APP_SECRET` in `.env`, which `npx @nestjs/observe link` writes.<% } else { %>This app's production telemetry - traces, errors, logs and metrics - goes to [NestJS Observe](https://observe.nestjs.com). Until `ObserveModule` is registered in `src/app.module.js`, nothing is sent: `npx @nestjs/observe link` installs `@nestjs/observe` and writes the key pair (`OBSERVE_APP_KEY`, `OBSERVE_APP_SECRET`) to `.env`, and the quick start shows the edits that register it: https://observe.nestjs.com/documentation/sdk#quick-start<% } %>

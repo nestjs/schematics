@@ -646,6 +646,15 @@ describe('Application Factory', () => {
       );
       expect(agents).toContain('`StandardSchemaValidationPipe`');
       expect(agents).toContain('/http/streaming-responses.md');
+      // Mistakes agents made in Nest apps that still passed their tests.
+      expect(agents).toContain(
+        '`PasswordHasher.verify(password, user?.passwordHash)`',
+      );
+      expect(agents).toContain('`@HttpCode(200)`');
+      expect(agents).toContain(
+        '`@ValidateIf((_, value) => value !== undefined)` in place of `@IsOptional()`',
+      );
+      expect(agents).toContain('`lsof -ti tcp:3000 -sTCP:LISTEN`');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
       expect(agents).not.toContain('<%');
     };
