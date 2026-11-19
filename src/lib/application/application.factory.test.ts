@@ -655,6 +655,10 @@ describe('Application Factory', () => {
         '`@ValidateIf((_, value) => value !== undefined)` in place of `@IsOptional()`',
       );
       expect(agents).toContain('`lsof -ti tcp:3000 -sTCP:LISTEN`');
+      expect(agents).toContain(
+        '`new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_FOUND })`',
+      );
+      expect(agents).toContain('`app.enableShutdownHooks()`');
       expect(agents).toContain('`accessToken.key`');
       expect(agents).toContain('When a task says how to test, follow it.');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
