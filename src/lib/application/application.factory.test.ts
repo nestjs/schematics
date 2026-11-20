@@ -31,6 +31,7 @@ describe('Application Factory', () => {
           '/project/.prettierrc',
           '/project/README.md',
           '/project/AGENTS.md',
+          '/project/CLAUDE.md',
           '/project/jest.config.ts',
           '/project/nest-cli.json',
           '/project/package.json',
@@ -78,6 +79,7 @@ describe('Application Factory', () => {
           `/project.foo.bar/.prettierrc`,
           `/project.foo.bar/README.md`,
           `/project.foo.bar/AGENTS.md`,
+          `/project.foo.bar/CLAUDE.md`,
           `/project.foo.bar/jest.config.ts`,
           `/project.foo.bar/nest-cli.json`,
           `/project.foo.bar/package.json`,
@@ -117,6 +119,7 @@ describe('Application Factory', () => {
           '/awesome-project/.prettierrc',
           '/awesome-project/README.md',
           '/awesome-project/AGENTS.md',
+          '/awesome-project/CLAUDE.md',
           '/awesome-project/jest.config.ts',
           '/awesome-project/nest-cli.json',
           '/awesome-project/package.json',
@@ -156,6 +159,7 @@ describe('Application Factory', () => {
           '/_awesome-project/.prettierrc',
           '/_awesome-project/README.md',
           '/_awesome-project/AGENTS.md',
+          '/_awesome-project/CLAUDE.md',
           '/_awesome-project/jest.config.ts',
           '/_awesome-project/nest-cli.json',
           '/_awesome-project/package.json',
@@ -195,6 +199,7 @@ describe('Application Factory', () => {
           '/@/package/.prettierrc',
           '/@/package/README.md',
           '/@/package/AGENTS.md',
+          '/@/package/CLAUDE.md',
           '/@/package/jest.config.ts',
           '/@/package/nest-cli.json',
           '/@/package/package.json',
@@ -234,6 +239,7 @@ describe('Application Factory', () => {
           '/.prettierrc',
           '/README.md',
           '/AGENTS.md',
+          '/CLAUDE.md',
           '/jest.config.ts',
           '/nest-cli.json',
           '/package.json',
@@ -273,6 +279,7 @@ describe('Application Factory', () => {
               '/@scope/package/.prettierrc',
               '/@scope/package/README.md',
               '/@scope/package/AGENTS.md',
+              '/@scope/package/CLAUDE.md',
               '/@scope/package/jest.config.ts',
               '/@scope/package/nest-cli.json',
               '/@scope/package/package.json',
@@ -312,6 +319,7 @@ describe('Application Factory', () => {
               '/@-/package/.prettierrc',
               '/@-/package/README.md',
               '/@-/package/AGENTS.md',
+              '/@-/package/CLAUDE.md',
               '/@-/package/jest.config.ts',
               '/@-/package/nest-cli.json',
               '/@-/package/package.json',
@@ -355,6 +363,7 @@ describe('Application Factory', () => {
         '/123/.prettierrc',
         '/123/README.md',
         '/123/AGENTS.md',
+        '/123/CLAUDE.md',
         '/123/jest.config.ts',
         '/123/nest-cli.json',
         '/123/package.json',
@@ -393,6 +402,7 @@ describe('Application Factory', () => {
         '/project/README.md',
         '/project/babel.config.json',
         '/project/AGENTS.md',
+        '/project/CLAUDE.md',
         '/project/index.js',
         '/project/jest.config.js',
         '/project/jsconfig.json',
@@ -469,6 +479,7 @@ describe('Application Factory', () => {
         '/app/.prettierrc',
         '/app/README.md',
         '/app/AGENTS.md',
+        '/app/CLAUDE.md',
         '/app/jest.config.ts',
         '/app/nest-cli.json',
         '/app/package.json',
@@ -508,6 +519,7 @@ describe('Application Factory', () => {
         '/project/README.md',
         '/project/babel.config.json',
         '/project/AGENTS.md',
+        '/project/CLAUDE.md',
         '/project/index.js',
         '/project/jsconfig.json',
         '/project/nest-cli.json',
@@ -540,6 +552,7 @@ describe('Application Factory', () => {
         '/project/README.md',
         '/project/babel.config.json',
         '/project/AGENTS.md',
+        '/project/CLAUDE.md',
         '/project/index.js',
         '/project/jest.config.js',
         '/project/jsconfig.json',
@@ -577,6 +590,7 @@ describe('Application Factory', () => {
         '/project/.prettierrc',
         '/project/README.md',
         '/project/AGENTS.md',
+        '/project/CLAUDE.md',
         '/project/jest.config.ts',
         '/project/nest-cli.json',
         '/project/package.json',
@@ -763,6 +777,7 @@ describe('Application Factory', () => {
           '/project/.prettierrc',
           '/project/README.md',
           '/project/AGENTS.md',
+          '/project/CLAUDE.md',
           '/project/nest-cli.json',
           '/project/package.json',
           '/project/tsconfig.build.json',
@@ -935,6 +950,7 @@ describe('Application Factory', () => {
         [
           '/project/.gitignore',
           '/project/AGENTS.md',
+          '/project/CLAUDE.md',
           '/project/package.json',
           '/project/tsconfig.json',
           '/project/src/main.ts',
@@ -1042,6 +1058,7 @@ describe('Application Factory', () => {
       const plain = (await minimal()).readContent('/project/AGENTS.md');
       const observed = (await minimal({ observe: true })).readContent(
         '/project/AGENTS.md',
+        '/project/CLAUDE.md',
       );
 
       for (const agents of [plain, observed]) {
@@ -1125,6 +1142,7 @@ describe('Application Factory', () => {
           '/project/.oxlintrc.json',
           '/project/.prettierrc',
           '/project/AGENTS.md',
+          '/project/CLAUDE.md',
           '/project/README.md',
           '/project/nest-cli.json',
           '/project/package.json',
@@ -1286,6 +1304,26 @@ describe('Application Factory', () => {
         'Cannot create the application in "project": these files already exist and would be overwritten:\n  nest-cli.json\n',
       );
     });
+    it('should keep an existing CLAUDE.md and say how to import AGENTS.md', async () => {
+      const logs: string[] = [];
+      const subscription = runner.logger.subscribe((entry) =>
+        logs.push(entry.message),
+      );
+      const host = existing({ '/CLAUDE.md': '# My rules' });
+
+      const tree = await runner.runSchematic<ApplicationOptions>(
+        'application',
+        { name: '.', type: 'esm' },
+        host,
+      );
+      subscription.unsubscribe();
+
+      expect(tree.readContent('/CLAUDE.md')).toBe('# My rules');
+      expect(tree.files).toContain('/AGENTS.md');
+      expect(logs).toContain(
+        'Add a line "@AGENTS.md" to it, so Claude Code also reads AGENTS.md.',
+      );
+    });
     it('should refuse an existing AGENTS.md of a minimal application', async () => {
       const host = existing({ '/AGENTS.md': '# Mine' });
 
@@ -1298,5 +1336,21 @@ describe('Application Factory', () => {
       ).rejects.toThrow('  AGENTS.md\n');
       expect(host.readText('/AGENTS.md')).toBe('# Mine');
     });
+  });
+  it('should add a CLAUDE.md that imports AGENTS.md, for every template', async () => {
+    const variants: Partial<ApplicationOptions>[] = [
+      { type: 'cjs' },
+      { type: 'esm' },
+      { language: 'js' },
+      { minimal: true, type: 'esm' },
+    ];
+    for (const variant of variants) {
+      const tree = await runner.runSchematic<ApplicationOptions>(
+        'application',
+        { name: 'project', ...variant },
+      );
+      expect(tree.readContent('/project/CLAUDE.md')).toBe('@AGENTS.md\n');
+      expect(tree.files).toContain('/project/AGENTS.md');
+    }
   });
 });
