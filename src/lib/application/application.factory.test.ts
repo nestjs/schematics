@@ -659,6 +659,7 @@ describe('Application Factory', () => {
         '`new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_FOUND })`',
       );
       expect(agents).toContain('`app.enableShutdownHooks()`');
+      expect(agents).toContain('`forceCloseConnections: true`');
       expect(agents).toContain('`accessToken.key`');
       expect(agents).toContain('When a task says how to test, follow it.');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
@@ -719,6 +720,31 @@ describe('Application Factory', () => {
       'https://observe.nestjs.com/documentation/sdk#quick-start',
     );
     expect(js).not.toContain('wires it into the app');
+
+    // The layout line names the files and test runner this template made, so
+    // an agent needn't look around the scaffold to find them.
+    expect(plain).toContain('In this project, `src/main.ts` creates the app');
+    expect(plain).toContain(
+      'as `*.spec.ts` and the e2e test is in `test/`; Jest runs them',
+    );
+    expect(esmAgents).toContain('Vitest runs them');
+    expect(js).toContain('`src/main.js`');
+    expect(js).toContain('as `*.spec.js` and the e2e test is in `test/`; Jest');
+    const custom = (
+      await runner.runSchematic('application', {
+        name: 'project',
+        specFileSuffix: 'test',
+      } as ApplicationOptions)
+    ).readContent('/project/AGENTS.md');
+    expect(custom).toContain('as `*.test.ts`');
+    const noSpecs = (
+      await runner.runSchematic('application', {
+        name: 'project',
+        spec: false,
+      } as ApplicationOptions)
+    ).readContent('/project/AGENTS.md');
+    expect(noSpecs).toContain('In this project, `src/main');
+    expect(noSpecs).not.toContain('Unit tests sit beside the code');
   });
   describe('when type is "esm"', () => {
     it('should generate ESM project files with vitest', async () => {
@@ -978,6 +1004,8 @@ describe('Application Factory', () => {
         expect(agents).toContain('`nest g resource users`');
         expect(agents).toContain('relative imports end in `.js`');
         expect(agents).toContain('`import.meta.dirname`');
+        // The one-file section describes the layout instead.
+        expect(agents).not.toContain('In this project, `src/main');
         expect(agents).not.toContain('<%');
       }
       expect(plain).toContain(
