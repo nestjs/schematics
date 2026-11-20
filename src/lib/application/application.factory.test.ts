@@ -2,16 +2,8 @@ import {
   SchematicTestRunner,
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
-import * as fs from 'fs';
-import { createRequire } from 'module';
 import * as path from 'path';
 import type { ApplicationOptions } from './application.schema.js';
-
-/** The generated files, without the agent skills, which are tested apart. */
-const appFiles = (tree: UnitTestTree) =>
-  tree.files.filter(
-    (file) => !/\/\.(agents|claude|cursor)\/skills\//.test(file),
-  );
 
 describe('Application Factory', () => {
   const runner: SchematicTestRunner = new SchematicTestRunner(
@@ -29,7 +21,7 @@ describe('Application Factory', () => {
         options,
       );
 
-      const files: string[] = appFiles(tree);
+      const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
           '/project/.oxlintrc.json',
@@ -76,7 +68,7 @@ describe('Application Factory', () => {
         'application',
         options,
       );
-      const files: string[] = appFiles(tree);
+      const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
           `/project.foo.bar/.oxlintrc.json`,
@@ -115,7 +107,7 @@ describe('Application Factory', () => {
         'application',
         options,
       );
-      const files: string[] = appFiles(tree);
+      const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
           '/awesome-project/.oxlintrc.json',
@@ -154,7 +146,7 @@ describe('Application Factory', () => {
         'application',
         options,
       );
-      const files: string[] = appFiles(tree);
+      const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
           '/_awesome-project/.oxlintrc.json',
@@ -193,7 +185,7 @@ describe('Application Factory', () => {
         'application',
         options,
       );
-      const files: string[] = appFiles(tree);
+      const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
           '/@/package/.oxlintrc.json',
@@ -232,7 +224,7 @@ describe('Application Factory', () => {
         'application',
         options,
       );
-      const files: string[] = appFiles(tree);
+      const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
           '/.oxlintrc.json',
@@ -271,7 +263,7 @@ describe('Application Factory', () => {
             'application',
             options,
           );
-          const files: string[] = appFiles(tree);
+          const files: string[] = tree.files;
           expect(files.sort()).toEqual(
             [
               '/@scope/package/.oxlintrc.json',
@@ -310,7 +302,7 @@ describe('Application Factory', () => {
             'application',
             options,
           );
-          const files: string[] = appFiles(tree);
+          const files: string[] = tree.files;
           expect(files.sort()).toEqual(
             [
               '/@-/package/.oxlintrc.json',
@@ -353,7 +345,7 @@ describe('Application Factory', () => {
       options,
     );
 
-    const files: string[] = appFiles(tree);
+    const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
         '/123/.oxlintrc.json',
@@ -391,7 +383,7 @@ describe('Application Factory', () => {
       options,
     );
 
-    const files: string[] = appFiles(tree);
+    const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
         '/project/.gitattributes',
@@ -467,7 +459,7 @@ describe('Application Factory', () => {
       options,
     );
 
-    const files: string[] = appFiles(tree);
+    const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
         '/app/.oxlintrc.json',
@@ -506,7 +498,7 @@ describe('Application Factory', () => {
       options,
     );
 
-    const files: string[] = appFiles(tree);
+    const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
         '/project/.gitattributes',
@@ -540,7 +532,7 @@ describe('Application Factory', () => {
       options,
     );
 
-    const files: string[] = appFiles(tree);
+    const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
         '/project/.gitattributes',
@@ -577,7 +569,7 @@ describe('Application Factory', () => {
       options,
     );
 
-    const files: string[] = appFiles(tree);
+    const files: string[] = tree.files;
     expect(files.sort()).toEqual(
       [
         '/project/.oxlintrc.json',
@@ -755,7 +747,7 @@ describe('Application Factory', () => {
         options,
       );
 
-      const files: string[] = appFiles(tree);
+      const files: string[] = tree.files;
       expect(files.sort()).toEqual(
         [
           '/project/.oxlintrc.json',
@@ -858,7 +850,7 @@ describe('Application Factory', () => {
         options,
       );
 
-      const files: string[] = appFiles(tree);
+      const files: string[] = tree.files;
       expect(files).toContain('/project/test/jest-e2e.json');
       expect(files).toContain('/project/jest.config.ts');
       expect(files).not.toContain('/project/vitest.config.ts');
@@ -871,110 +863,52 @@ describe('Application Factory', () => {
     });
   });
   describe('agent skills', () => {
-    const require = createRequire(import.meta.url);
-    const packaged = path.join(
-      path.dirname(require.resolve('@nestjs/skills/package.json')),
-      'skills',
-    );
-    const version = JSON.parse(
-      fs.readFileSync(require.resolve('@nestjs/skills/package.json'), 'utf8'),
-    ).version;
-    const skillNames = fs
-      .readdirSync(packaged, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name)
-      .sort();
-    const skillFiles = (
-      fs.readdirSync(packaged, { recursive: true }) as string[]
-    )
-      .filter((file) => fs.statSync(path.join(packaged, file)).isFile())
-      .map((file) => file.split(path.sep).join('/'));
-    // What `npx @nestjs/skills add` writes: the files, and a marker per skill.
-    const installed = [
-      ...skillFiles,
-      ...skillNames.map((name) => `${name}/.nestjs-skills`),
-    ].sort();
-    const skillsIn = (tree: UnitTestTree, dir: string) =>
-      tree.files
-        .filter((file) => file.startsWith(`/project/${dir}/`))
-        .map((file) => file.slice(`/project/${dir}/`.length))
-        .sort();
-    const generate = (extra: Partial<ApplicationOptions> = {}) =>
-      runner.runSchematic('application', {
-        name: 'project',
-        ...extra,
-      } as ApplicationOptions);
+    // `nest new` installs them with `npx @nestjs/skills add`; the schematic
+    // only says in AGENTS.md where they are.
+    const agentsMd = async (extra: Partial<ApplicationOptions> = {}) =>
+      (
+        await runner.runSchematic('application', {
+          name: 'project',
+          ...extra,
+        } as ApplicationOptions)
+      ).readContent('/project/AGENTS.md');
 
-    it('should copy @nestjs/skills into .agents and .claude by default', async () => {
+    it('should name the folders the skills are installed into', async () => {
       for (const extra of [
         {},
         { language: 'js' },
         { minimal: true },
       ] as const) {
-        const tree: UnitTestTree = await generate(extra);
-        for (const dir of ['.agents/skills', '.claude/skills']) {
-          expect(skillsIn(tree, dir)).toEqual(installed);
-        }
-        expect(skillsIn(tree, '.cursor/skills')).toEqual([]);
-        expect(skillNames).toContain('nestjs');
-        for (const file of skillFiles) {
-          expect(tree.readContent(`/project/.claude/skills/${file}`)).toBe(
-            fs.readFileSync(path.join(packaged, file), 'utf8'),
-          );
-        }
-        const agents = tree.readContent('/project/AGENTS.md');
+        const agents = await agentsMd({ ...extra, skills: ['all'] });
         expect(agents).toContain(
-          '`.agents/skills/` and `.claude/skills/` hold the official NestJS agent skills, from `@nestjs/skills`',
-        );
-        expect(agents).toContain(
-          '`npx @nestjs/skills add --agent agents,claude` updates them.',
+          '`.agents/skills/` and `.claude/skills/` hold the official NestJS agent skills, installed with `npx @nestjs/skills add --agent agents,claude`, which also updates them',
         );
         expect(agents).not.toContain('<%');
       }
-    });
-
-    it('should mark each skill as the installer does, so it can update them', async () => {
-      const tree: UnitTestTree = await generate({ skills: ['claude'] });
-      for (const name of skillNames) {
-        expect(
-          tree.readContent(`/project/.claude/skills/${name}/.nestjs-skills`),
-        ).toBe(`${JSON.stringify({ package: '@nestjs/skills', version })}\n`);
-      }
-    });
-
-    it('should write each chosen target once', async () => {
-      const claude = await generate({ skills: ['claude'] });
-      expect(skillsIn(claude, '.claude/skills')).toEqual(installed);
-      expect(skillsIn(claude, '.agents/skills')).toEqual([]);
-      const agents = claude.readContent('/project/AGENTS.md');
-      expect(agents).toContain(
-        '`.claude/skills/` holds the official NestJS agent skills',
+      expect(await agentsMd({ skills: ['claude'] })).toContain(
+        '`.claude/skills/` holds the official NestJS agent skills, installed with `npx @nestjs/skills add --agent claude`',
       );
-      expect(agents).toContain('`npx @nestjs/skills add --agent claude`');
-
-      const several = await generate({ skills: ['all', 'agents', 'cursor'] });
-      for (const dir of [
-        '.agents/skills',
-        '.claude/skills',
-        '.cursor/skills',
-      ]) {
-        expect(skillsIn(several, dir)).toEqual(installed);
-      }
+      expect(await agentsMd({ skills: ['all', 'agents', 'cursor'] })).toContain(
+        '`.agents/skills/` and `.claude/skills/` and `.cursor/skills/` hold',
+      );
     });
 
-    it('should add no skills, and not mention them, for an empty list', async () => {
-      const tree: UnitTestTree = await generate({ skills: [] });
+    it('should not mention skills by default, and write none', async () => {
+      const tree: UnitTestTree = await runner.runSchematic('application', {
+        name: 'project',
+        skills: ['all'],
+      } as ApplicationOptions);
       expect(
         tree.files.filter((file) => /\/\.(agents|claude|cursor)\//.test(file)),
       ).toEqual([]);
-      const agents = tree.readContent('/project/AGENTS.md');
-      expect(agents).not.toContain('skills/');
-      expect(agents).not.toContain('<%');
+      const plain = await agentsMd();
+      expect(plain).not.toContain('skills/');
+      expect(plain).not.toContain('<%');
     });
 
     it('should refuse a target it has no folder for', async () => {
       await expect(
-        generate({ skills: ['copilot'] } as unknown as ApplicationOptions),
+        agentsMd({ skills: ['copilot'] } as unknown as ApplicationOptions),
       ).rejects.toThrow();
     });
   });
@@ -989,7 +923,7 @@ describe('Application Factory', () => {
     it('should generate one source file and what it takes to run it', async () => {
       const tree: UnitTestTree = await minimal();
 
-      expect(appFiles(tree).sort()).toEqual(
+      expect(tree.files.sort()).toEqual(
         [
           '/project/.gitignore',
           '/project/AGENTS.md',

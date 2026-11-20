@@ -13,9 +13,7 @@ import {
   template,
   url,
 } from '@angular-devkit/schematics';
-import { readdirSync, readFileSync, statSync } from 'fs';
-import { createRequire } from 'module';
-import { basename, join as joinPath, parse, sep } from 'path';
+import { basename, parse } from 'path';
 import { formatFiles } from '../../utils/format-files.rule.js';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting.js';
 import {
@@ -40,7 +38,6 @@ export function main(options: ApplicationOptions): Rule {
     options.minimal
       ? mergeWith(generateMinimalSharedFiles(options, path))
       : noop(),
-    addAgentSkills(options, path),
     options.format === true ? formatFiles() : noop(),
   ]);
 }
@@ -60,7 +57,7 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   // factory is invoked directly, bypassing the schema defaults.
   target.observe = target.observe ?? false;
   target.minimal = target.minimal ?? false;
-  target.skills = target.skills ?? ['all'];
+  target.skills = target.skills ?? [];
   for (const name of target.skills) {
     if (!(name in SKILLS_TARGETS) && !(name in SKILLS_GROUPS)) {
       throw new SchematicsException(
@@ -150,10 +147,9 @@ function generate(options: ApplicationOptions, path: string): Source {
 }
 
 /**
- * Where agents load project skills from, under the names the installer of
- * `@nestjs/skills` uses for them (`npx @nestjs/skills add --agent <name>`):
- * Codex reads only `.agents/skills/`, Claude Code only `.claude/skills/`, and
- * Cursor all three.
+ * The folders `npx @nestjs/skills add --agent <name>` installs the official
+ * NestJS agent skills into. `nest new` runs that installer after generating
+ * the project; the schematic only names the folders in AGENTS.md.
  */
 const SKILLS_TARGETS: Record<string, string> = {
   agents: '.agents/skills',
@@ -168,58 +164,6 @@ function skillsTargets(options: ApplicationOptions): string[] {
     (name) => SKILLS_GROUPS[name] ?? [name],
   );
   return [...new Set(names)].sort();
-}
-
-/**
- * Copies the official NestJS agent skills from the `@nestjs/skills` package
- * these schematics depend on into each chosen target. An agent loads a skill
- * when its description matches the task, so the pitfalls the skills hold cost
- * nothing until they apply, unlike AGENTS.md, which is read on every task.
- * A new `@nestjs/skills` release reaches new projects without a release of the
- * schematics. Each skill folder gets the marker the package's installer
- * writes, so `npx @nestjs/skills add` can update it later and `remove` can
- * remove it. The files are copied byte for byte, without the template step.
- */
-function addAgentSkills(options: ApplicationOptions, path: string): Rule {
-  const targets = skillsTargets(options);
-  if (targets.length === 0) {
-    return noop();
-  }
-  return async (tree) => {
-    let skills: { name: string; dir: string }[];
-    let version: string;
-    try {
-      const { listSkills } = await import('@nestjs/skills');
-      skills = listSkills();
-      version = JSON.parse(
-        readFileSync(
-          createRequire(import.meta.url).resolve('@nestjs/skills/package.json'),
-          'utf8',
-        ),
-      ).version;
-    } catch {
-      throw new SchematicsException(
-        "@nestjs/skills is missing, so the NestJS agent skills can't be added. Reinstall @nestjs/schematics, or set skills to an empty list to skip them.",
-      );
-    }
-    const marker = `${JSON.stringify({ package: '@nestjs/skills', version })}\n`;
-    for (const target of targets) {
-      for (const skill of skills) {
-        const dest = join(path as Path, SKILLS_TARGETS[target], skill.name);
-        const files = (readdirSync(skill.dir, { recursive: true }) as string[])
-          .map((file) => file.split(sep).join('/'))
-          .filter((file) => statSync(joinPath(skill.dir, file)).isFile())
-          .sort();
-        for (const file of files) {
-          tree.create(
-            join(dest, file),
-            readFileSync(joinPath(skill.dir, file)),
-          );
-        }
-        tree.create(join(dest, '.nestjs-skills'), marker);
-      }
-    }
-  };
 }
 
 /**

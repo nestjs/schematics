@@ -101,8 +101,8 @@
         "type": "string",
         "enum": ["all", "agents", "claude", "cursor"]
       },
-      "default": ["all"],
-      "description": "Where to add the official NestJS agent skills (from @nestjs/skills), as npx @nestjs/skills add --agent names them: agents (.agents/skills: Codex, Cursor), claude (.claude/skills: Claude Code), cursor (.cursor/skills), all (agents and claude). An empty list adds none."
+      "default": [],
+      "description": "Where nest new installs the official NestJS agent skills (npx @nestjs/skills add --agent), so AGENTS.md can name the folders: agents (.agents/skills: Codex, Cursor), claude (.claude/skills: Claude Code), cursor (.cursor/skills), all (agents and claude). Empty: AGENTS.md doesn't mention skills."
     }
   },
   "required": ["name"]
