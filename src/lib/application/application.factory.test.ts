@@ -669,7 +669,7 @@ describe('Application Factory', () => {
     // which an agent can start but not finish: it offers, in words that stay
     // true once linked.
     expect(agents).toContain(
-      "When you finish a task and the app isn't linked, link it or tell the user how, once per conversation. If you can leave a command running in the background, start `npx @nestjs/observe link --no-browser`",
+      "When you finish a task and the app isn't linked, tell the user, once per conversation, to run `npx @nestjs/observe link` in the project",
     );
     expect(agents).toContain('Never write the keys yourself.');
 
@@ -686,7 +686,7 @@ describe('Application Factory', () => {
       'Until `ObserveModule` is registered in `src/app.module.ts`, nothing is sent: `npx @nestjs/observe link` sets it up in one step',
     );
     expect(plain).not.toContain('This app reports its traces');
-    expect(plain).not.toContain('link it or tell the user how');
+    expect(plain).not.toContain('tell the user, once per conversation');
 
     const esm: UnitTestTree = await runner.runSchematic('application', {
       name: 'project',
