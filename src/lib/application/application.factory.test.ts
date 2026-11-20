@@ -1286,6 +1286,26 @@ describe('Application Factory', () => {
         'Cannot create the application in "project": these files already exist and would be overwritten:\n  nest-cli.json\n',
       );
     });
+    it('should keep an existing CLAUDE.md and say how to import AGENTS.md', async () => {
+      const logs: string[] = [];
+      const subscription = runner.logger.subscribe((entry) =>
+        logs.push(entry.message),
+      );
+      const host = existing({ '/CLAUDE.md': '# My rules' });
+
+      const tree = await runner.runSchematic<ApplicationOptions>(
+        'application',
+        { name: '.', type: 'esm', skills: ['all'] },
+        host,
+      );
+      subscription.unsubscribe();
+
+      expect(tree.readContent('/CLAUDE.md')).toBe('# My rules');
+      expect(tree.files).toContain('/AGENTS.md');
+      expect(logs).toContain(
+        'Add a line "@AGENTS.md" to it, so Claude Code also reads AGENTS.md.',
+      );
+    });
     it('should refuse an existing AGENTS.md of a minimal application', async () => {
       const host = existing({ '/AGENTS.md': '# Mine' });
 
@@ -1298,5 +1318,30 @@ describe('Application Factory', () => {
       ).rejects.toThrow('  AGENTS.md\n');
       expect(host.readText('/AGENTS.md')).toBe('# Mine');
     });
+  });
+  it('should add a CLAUDE.md that imports AGENTS.md when the skills are for Claude Code', async () => {
+    const variants: Partial<ApplicationOptions>[] = [
+      { type: 'cjs' },
+      { type: 'esm' },
+      { language: 'js' },
+      { minimal: true, type: 'esm' },
+    ];
+    for (const variant of variants) {
+      for (const skills of [['all'], ['claude'], ['agents', 'claude']]) {
+        const tree = await runner.runSchematic<ApplicationOptions>(
+          'application',
+          { name: 'project', ...variant, skills } as ApplicationOptions,
+        );
+        expect(tree.readContent('/project/CLAUDE.md')).toBe('@AGENTS.md\n');
+      }
+      for (const skills of [[], ['agents'], ['cursor']]) {
+        const tree = await runner.runSchematic<ApplicationOptions>(
+          'application',
+          { name: 'project', ...variant, skills } as ApplicationOptions,
+        );
+        expect(tree.files).not.toContain('/project/CLAUDE.md');
+        expect(tree.files).toContain('/project/AGENTS.md');
+      }
+    }
   });
 });

@@ -50,15 +50,16 @@ export function main(options: ApplicationOptions): Rule {
 }
 
 /**
- * Existing files the template would also write, but which only document or
- * configure git rather than the project, so the user's copy is kept as is.
+ * Existing files the template would also write, but which only document,
+ * configure git or instruct an agent rather than build the project, so the
+ * user's copy is kept as is.
  */
-const KEPT_IF_PRESENT = ['README.md', '.gitignore'];
+const KEPT_IF_PRESENT = ['README.md', '.gitignore', 'CLAUDE.md'];
 
 /**
  * `nest new .` usually runs in a folder that already holds something (a spec,
  * a README, `.git`). Files the template doesn't write are left alone, and so
- * is an existing README.md or .gitignore. Any other file the template would
+ * is an existing README.md, .gitignore or CLAUDE.md. Any other file the template would
  * write over is a conflict: all of them are reported at once, before anything
  * is written, instead of failing on the first one.
  */
@@ -98,6 +99,16 @@ function keepOrRefuseExistingFiles(
       context.logger.info(
         `Kept the existing ${display(file)} (the generated one was not written).`,
       );
+      // The generated CLAUDE.md only imports AGENTS.md: Claude Code reads
+      // CLAUDE.md, not AGENTS.md, so an existing one needs the same line.
+      if (
+        display(file) === 'CLAUDE.md' &&
+        !host.readText(file).includes('@AGENTS.md')
+      ) {
+        context.logger.info(
+          'Add a line "@AGENTS.md" to it, so Claude Code also reads AGENTS.md.',
+        );
+      }
     }
     return generated;
   };
@@ -186,6 +197,7 @@ function generate(options: ApplicationOptions, path: string): Source {
     options.spec
       ? noop()
       : filter((path) => !isTestFile(path, options.language || 'ts')),
+    forClaudeCode(options) ? noop() : filter((path) => path !== '/CLAUDE.md'),
     template({
       ...strings,
       ...options,
@@ -198,6 +210,17 @@ function generate(options: ApplicationOptions, path: string): Source {
     renameTemplateFiles(),
     move(path),
   ]);
+}
+
+/**
+ * Whether the user chose the agent skills for Claude Code. Only then does the
+ * project get a CLAUDE.md: Claude Code reads CLAUDE.md rather than AGENTS.md,
+ * and the generated one just imports AGENTS.md.
+ */
+function forClaudeCode(options: ApplicationOptions): boolean {
+  return (options.skills ?? []).some(
+    (target) => target === 'all' || target === 'claude',
+  );
 }
 
 /**
@@ -221,7 +244,13 @@ function generateMinimalSharedFiles(
   path: string,
 ): Source {
   return apply(url(join('./files' as Path, 'ts')), [
-    filter((path) => ['/AGENTS.md', '/.gitignore'].includes(path)),
+    filter((path) =>
+      [
+        '/AGENTS.md',
+        ...(forClaudeCode(options) ? ['/CLAUDE.md'] : []),
+        '/.gitignore',
+      ].includes(path),
+    ),
     template({
       ...strings,
       ...options,
