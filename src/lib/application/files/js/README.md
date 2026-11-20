@@ -22,7 +22,7 @@ $ <%= packageManager %> run start:dev
 # production mode
 <%= packageManager %> run start:prod
 ```
-
+<% if (spec) { %>
 ## Test
 
 ```bash
@@ -35,3 +35,4 @@ $ <%= packageManager %> run test:e2e
 # test coverage
 $ <%= packageManager %> run test:cov
 ```
+<% } %>

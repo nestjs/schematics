@@ -18,6 +18,6 @@
     "skipLibCheck": true,
     "strict": <%= strict %>,
     "strictPropertyInitialization": false,
-    "types": ["vitest/globals", "node"]
+    "types": [<% if (spec) { %>"vitest/globals", <% } %>"node"]
   }
 }

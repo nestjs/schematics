@@ -44,7 +44,7 @@ $ <%= packageManager %> run start:dev
 $ <%= packageManager %> run start:prod
 ```
 
-## Run tests
+<% if (spec) { %>## Run tests
 
 ```bash
 # unit tests
@@ -57,7 +57,7 @@ $ <%= packageManager %> run test:e2e
 $ <%= packageManager %> run test:cov
 ```
 
-## Deployment
+<% } %>## Deployment
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
 

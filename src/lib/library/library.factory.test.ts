@@ -123,6 +123,36 @@ describe('Library Factory', () => {
     const tsconfigLib = readJson(tree, '/libs/project/tsconfig.lib.json');
     expect(tsconfigLib['exclude']).toContain('**/*test.ts');
   });
+  it('should not generate a spec file when spec is false', async () => {
+    const options: LibraryOptions = {
+      name: 'project',
+      prefix: 'app',
+      spec: false,
+    };
+    const tree: UnitTestTree = await runner.runSchematic('library', options);
+
+    expect(tree.files).toEqual([
+      '/nest-cli.json',
+      '/libs/project/tsconfig.lib.json',
+      '/libs/project/src/index.ts',
+      '/libs/project/src/project.module.ts',
+      '/libs/project/src/project.service.ts',
+    ]);
+  });
+  it('should not generate a javascript spec file when spec is false', async () => {
+    const options: LibraryOptions = {
+      name: 'project',
+      language: 'js',
+      prefix: 'app',
+      spec: false,
+    };
+    const tree: UnitTestTree = await runner.runSchematic('library', options);
+
+    expect(tree.files).not.toContain(
+      '/libs/project/src/project.service.spec.js',
+    );
+    expect(tree.files).toContain('/libs/project/src/project.service.js');
+  });
 
   it('should set rspack as default builder in nest-cli.json', async () => {
     const options: LibraryOptions = {
