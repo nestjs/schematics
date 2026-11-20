@@ -675,6 +675,9 @@ describe('Application Factory', () => {
       expect(agents).toContain('A `Scope.REQUEST` provider makes every class');
       // Since Nest 12, a gateway's request scope is its socket connection.
       expect(agents).toContain('one instance per connected socket');
+      // `forRoot()` writes `.env` synchronously unless it validates first.
+      expect(agents).toContain('in a module file that `app.module` imports');
+      expect(agents).not.toContain('reads `.env` asynchronously');
       expect(agents).not.toContain("gateways and `@Cron()` jobs can't");
       expect(agents).toContain(
         '`CacheInterceptor` keys cached responses by URL',
