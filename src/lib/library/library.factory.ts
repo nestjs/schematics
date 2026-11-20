@@ -3,6 +3,7 @@ import {
   apply,
   branchAndMerge,
   chain,
+  filter,
   mergeWith,
   move,
   noop,
@@ -330,6 +331,15 @@ function generate(options: LibraryOptions): Source {
   return (context: SchematicContext) => {
     const path = join(options.path as Path, options.name);
     return apply(url(join('./files' as Path, options.language!)), [
+      // The CLI asks for none where `@nestjs/testing` isn't installed, as in
+      // a project created with `nest new --skip-tests`.
+      options.spec === false
+        ? filter(
+            (file) =>
+              !file.endsWith(`__specFileSuffix__.${options.language}`) &&
+              !file.endsWith(`.spec.${options.language}`),
+          )
+        : noop(),
       template({
         ...strings,
         ...options,

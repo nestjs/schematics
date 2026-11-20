@@ -32,6 +32,11 @@
       "format": "path",
       "description": "The libraries root directory."
     },
+    "spec": {
+      "type": "boolean",
+      "default": true,
+      "description": "Specifies if a spec file is generated."
+    },
     "specFileSuffix": {
       "type": "string",
       "default": "spec",

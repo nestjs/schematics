@@ -68,4 +68,12 @@ export interface ApplicationOptions {
    * @default false
    */
   minimal?: boolean;
+  /**
+   * The targets `nest new` installed the official NestJS agent skills for
+   * (`npx @nestjs/skills add --agent`), so AGENTS.md can give the command
+   * that updates them: `agents`, `claude`, `cursor` or `all`. Empty: AGENTS.md
+   * doesn't mention skills.
+   * @default []
+   */
+  skills?: ('all' | 'agents' | 'claude' | 'cursor')[];
 }

@@ -57,7 +57,11 @@ describe('Schema defaults', () => {
         if (actual === undefined) {
           continue;
         }
-        expect(`${property}=${String(actual)}`).toEqual(`${property}=${value}`);
+        // Arrays are documented as JSON: `@default ["a","b"]`.
+        const shown = Array.isArray(actual)
+          ? JSON.stringify(actual)
+          : String(actual);
+        expect(`${property}=${shown}`).toEqual(`${property}=${value}`);
       }
     },
   );

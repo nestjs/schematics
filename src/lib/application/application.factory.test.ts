@@ -1,3 +1,4 @@
+import { Tree } from '@angular-devkit/schematics';
 import {
   SchematicTestRunner,
   UnitTestTree,
@@ -508,7 +509,6 @@ describe('Application Factory', () => {
         '/project/babel.config.json',
         '/project/AGENTS.md',
         '/project/index.js',
-        '/project/jest.config.js',
         '/project/jsconfig.json',
         '/project/nest-cli.json',
         '/project/nodemon.json',
@@ -517,7 +517,6 @@ describe('Application Factory', () => {
         '/project/src/app.module.js',
         '/project/src/app.service.js',
         '/project/src/main.js',
-        '/project/test/jest-e2e.json',
       ].sort(),
     );
   });
@@ -646,6 +645,11 @@ describe('Application Factory', () => {
       );
       expect(agents).toContain('`StandardSchemaValidationPipe`');
       expect(agents).toContain('/http/streaming-responses.md');
+      // The pitfalls live in the agent skills, which load when a task needs them.
+      expect(agents).not.toContain('`PasswordHasher.verify(');
+      expect(agents).not.toContain('`@Res({ passthrough: true })`');
+      expect(agents).not.toContain('`accessToken.key`');
+      expect(agents).toContain('When a task says how to test, follow it.');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
       expect(agents).not.toContain('<%');
     };
@@ -704,6 +708,32 @@ describe('Application Factory', () => {
       'https://observe.nestjs.com/documentation/sdk#quick-start',
     );
     expect(js).not.toContain('wires it into the app');
+
+    // The layout line names the files and test runner this template made, so
+    // an agent needn't look around the scaffold to find them.
+    expect(plain).toContain('In this project, `src/main.ts` creates the app');
+    expect(plain).toContain(
+      'as `*.spec.ts` and the e2e test is in `test/`; Jest runs them',
+    );
+    expect(esmAgents).toContain('Vitest runs them');
+    expect(js).toContain('`src/main.js`');
+    // JavaScript has no type annotations to show the string in.
+    expect(js).toContain('as `*.spec.js` and the e2e test is in `test/`; Jest');
+    const custom = (
+      await runner.runSchematic('application', {
+        name: 'project',
+        specFileSuffix: 'test',
+      } as ApplicationOptions)
+    ).readContent('/project/AGENTS.md');
+    expect(custom).toContain('as `*.test.ts`');
+    const noSpecs = (
+      await runner.runSchematic('application', {
+        name: 'project',
+        spec: false,
+      } as ApplicationOptions)
+    ).readContent('/project/AGENTS.md');
+    expect(noSpecs).toContain('In this project, `src/main');
+    expect(noSpecs).not.toContain('Unit tests sit beside the code');
   });
   describe('when type is "esm"', () => {
     it('should generate ESM project files with vitest', async () => {
@@ -829,6 +859,57 @@ describe('Application Factory', () => {
       expect(packageJson.devDependencies).toHaveProperty('jest');
       expect(packageJson.devDependencies).toHaveProperty('oxlint');
       expect(packageJson.devDependencies).not.toHaveProperty('eslint');
+    });
+  });
+  describe('agent skills', () => {
+    // `nest new` installs them with `npx @nestjs/skills add`; the schematic
+    // only says in AGENTS.md where they are.
+    const agentsMd = async (extra: Partial<ApplicationOptions> = {}) =>
+      (
+        await runner.runSchematic('application', {
+          name: 'project',
+          ...extra,
+        } as ApplicationOptions)
+      ).readContent('/project/AGENTS.md');
+
+    it('should give the command that installed and updates the skills', async () => {
+      for (const extra of [
+        {},
+        { language: 'js' },
+        { minimal: true },
+      ] as const) {
+        const agents = await agentsMd({ ...extra, skills: ['all'] });
+        expect(agents).toContain(
+          'The official NestJS agent skills are installed with `npx @nestjs/skills add --agent all`, which also updates them',
+        );
+        expect(agents).not.toContain('<%');
+      }
+      expect(await agentsMd({ skills: ['claude', 'cursor'] })).toContain(
+        '`npx @nestjs/skills add --agent claude,cursor`',
+      );
+      // `nest new` repeats a lone flag so that it arrives as an array.
+      expect(await agentsMd({ skills: ['all', 'all'] })).toContain(
+        '`npx @nestjs/skills add --agent all`, which',
+      );
+    });
+
+    it('should not mention skills by default, and write none', async () => {
+      const tree: UnitTestTree = await runner.runSchematic('application', {
+        name: 'project',
+        skills: ['all'],
+      } as ApplicationOptions);
+      expect(
+        tree.files.filter((file) => /\/\.(agents|claude|cursor)\//.test(file)),
+      ).toEqual([]);
+      const plain = await agentsMd();
+      expect(plain).not.toContain('@nestjs/skills');
+      expect(plain).not.toContain('<%');
+    });
+
+    it('should refuse a target the installer does not know', async () => {
+      await expect(
+        agentsMd({ skills: ['copilot'] } as unknown as ApplicationOptions),
+      ).rejects.toThrow();
     });
   });
   describe('when minimal', () => {
@@ -963,6 +1044,8 @@ describe('Application Factory', () => {
         expect(agents).toContain('`nest g resource users`');
         expect(agents).toContain('relative imports end in `.js`');
         expect(agents).toContain('`import.meta.dirname`');
+        // The one-file section describes the layout instead.
+        expect(agents).not.toContain('In this project, `src/main');
         expect(agents).not.toContain('<%');
       }
       expect(plain).toContain(
@@ -1001,6 +1084,211 @@ describe('Application Factory', () => {
       );
       expect(agents).toContain('wires it into the app');
       expect(agents.endsWith('as text.\n')).toBe(true);
+    });
+  });
+  describe('without specs', () => {
+    const withoutSpecs = (extra: Partial<ApplicationOptions> = {}) =>
+      runner.runSchematic<ApplicationOptions>('application', {
+        name: 'project',
+        spec: false,
+        ...extra,
+      });
+    const readJson = (tree: UnitTestTree, file: string) =>
+      JSON.parse(tree.readContent(file));
+    const TEST_PACKAGES = [
+      '@nestjs/testing',
+      '@types/jest',
+      '@types/supertest',
+      '@vitest/coverage-v8',
+      'jest',
+      'supertest',
+      'ts-jest',
+      'vite',
+      'vitest',
+    ];
+
+    it('should leave out the test runner setup of an ESM project', async () => {
+      const tree = await withoutSpecs({ type: 'esm' });
+
+      expect(tree.files.sort()).toEqual(
+        [
+          '/project/.gitattributes',
+          '/project/.gitignore',
+          '/project/.oxlintrc.json',
+          '/project/.prettierrc',
+          '/project/AGENTS.md',
+          '/project/README.md',
+          '/project/nest-cli.json',
+          '/project/package.json',
+          '/project/src/app.controller.ts',
+          '/project/src/app.module.ts',
+          '/project/src/app.service.ts',
+          '/project/src/main.ts',
+          '/project/tsconfig.build.json',
+          '/project/tsconfig.json',
+        ].sort(),
+      );
+      const pkg = readJson(tree, '/project/package.json');
+      expect(
+        Object.keys(pkg.scripts).filter((s) => s.startsWith('test')),
+      ).toEqual([]);
+      expect(pkg.scripts.lint).toBe('oxlint --type-aware src/');
+      expect(pkg.scripts.format).toBe('prettier --write "src/**/*.ts"');
+      for (const name of TEST_PACKAGES) {
+        expect(pkg.devDependencies).not.toHaveProperty(name);
+      }
+      expect(pkg.devDependencies).toHaveProperty('typescript');
+      expect(
+        readJson(tree, '/project/tsconfig.json').compilerOptions.types,
+      ).toEqual(['node']);
+      expect(tree.readContent('/project/README.md')).not.toContain('run test');
+    });
+    it('should leave out the test runner setup of a CommonJS project', async () => {
+      const tree = await withoutSpecs({ type: 'cjs' });
+
+      expect(tree.files).not.toContain('/project/jest.config.ts');
+      expect(tree.files.some((f) => f.startsWith('/project/test/'))).toBe(
+        false,
+      );
+      const pkg = readJson(tree, '/project/package.json');
+      expect(
+        Object.keys(pkg.scripts).filter((s) => s.startsWith('test')),
+      ).toEqual([]);
+      expect(pkg.scripts.lint).toBe('oxlint --type-aware src/');
+      for (const name of TEST_PACKAGES) {
+        expect(pkg.devDependencies).not.toHaveProperty(name);
+      }
+      expect(pkg.devDependencies).toHaveProperty('ts-node');
+      expect(
+        readJson(tree, '/project/tsconfig.json').compilerOptions.types,
+      ).toEqual(['node']);
+      expect(tree.readContent('/project/README.md')).not.toContain('run test');
+    });
+    it('should leave out the test runner setup of a JavaScript project', async () => {
+      const tree = await withoutSpecs({ language: 'js' });
+
+      const pkg = readJson(tree, '/project/package.json');
+      expect(Object.keys(pkg.scripts)).toEqual([
+        'deploy',
+        'format',
+        'start',
+        'start:dev',
+      ]);
+      for (const name of TEST_PACKAGES) {
+        expect(pkg.devDependencies).not.toHaveProperty(name);
+      }
+      expect(tree.readContent('/project/README.md')).not.toContain('run test');
+    });
+    it('should keep the test runner setup when specs are on', async () => {
+      const tree = await runner.runSchematic<ApplicationOptions>(
+        'application',
+        { name: 'project', type: 'esm' },
+      );
+
+      const pkg = readJson(tree, '/project/package.json');
+      expect(pkg.scripts.test).toBe('vitest run');
+      expect(pkg.scripts.lint).toBe('oxlint --type-aware src/ test/');
+      expect(pkg.devDependencies).toHaveProperty('vitest');
+      expect(pkg.devDependencies).toHaveProperty('@nestjs/testing');
+      expect(tree.files).toContain('/project/vitest.config.ts');
+      expect(tree.readContent('/project/README.md')).toContain('run test:e2e');
+    });
+  });
+  describe('in a directory that already has files', () => {
+    const existing = (files: Record<string, string>) => {
+      const tree = Tree.empty();
+      for (const [file, content] of Object.entries(files)) {
+        tree.create(file, content);
+      }
+      return tree;
+    };
+
+    it('should generate around files the template does not write', async () => {
+      const host = existing({
+        '/SPEC.md': '# What to build',
+        '/.git/HEAD': 'ref: refs/heads/main',
+      });
+
+      const tree = await runner.runSchematic<ApplicationOptions>(
+        'application',
+        { name: '.', type: 'esm' },
+        host,
+      );
+
+      expect(tree.readContent('/SPEC.md')).toBe('# What to build');
+      expect(tree.readContent('/.git/HEAD')).toBe('ref: refs/heads/main');
+      expect(tree.files).toContain('/package.json');
+      expect(tree.files).toContain('/src/main.ts');
+    });
+    it('should keep an existing README.md and .gitignore instead of overwriting them', async () => {
+      const logs: string[] = [];
+      const subscription = runner.logger.subscribe((entry) =>
+        logs.push(entry.message),
+      );
+      const host = existing({
+        '/README.md': '# My service',
+        '/.gitignore': 'secrets/',
+      });
+
+      const tree = await runner.runSchematic<ApplicationOptions>(
+        'application',
+        { name: '.', type: 'esm' },
+        host,
+      );
+      subscription.unsubscribe();
+
+      expect(tree.readContent('/README.md')).toBe('# My service');
+      expect(tree.readContent('/.gitignore')).toBe('secrets/');
+      expect(tree.files).toContain('/package.json');
+      expect(logs).toContain(
+        'Kept the existing README.md (the generated one was not written).',
+      );
+    });
+    it('should refuse, naming every file it would overwrite, and write nothing', async () => {
+      const host = existing({
+        '/package.json': '{ "name": "mine" }',
+        '/tsconfig.json': '{}',
+        '/SPEC.md': '# What to build',
+      });
+
+      await expect(
+        runner.runSchematic<ApplicationOptions>(
+          'application',
+          { name: '.', type: 'esm' },
+          host,
+        ),
+      ).rejects.toThrow(
+        'Cannot create the application in the current directory: these files already exist and would be overwritten:\n' +
+          '  package.json\n' +
+          '  tsconfig.json\n',
+      );
+      expect(host.readText('/package.json')).toBe('{ "name": "mine" }');
+      expect(host.exists('/src/main.ts')).toBe(false);
+    });
+    it('should refuse a named directory holding a file it would overwrite', async () => {
+      const host = existing({ '/project/nest-cli.json': '{}' });
+
+      await expect(
+        runner.runSchematic<ApplicationOptions>(
+          'application',
+          { name: 'project', type: 'esm' },
+          host,
+        ),
+      ).rejects.toThrow(
+        'Cannot create the application in "project": these files already exist and would be overwritten:\n  nest-cli.json\n',
+      );
+    });
+    it('should refuse an existing AGENTS.md of a minimal application', async () => {
+      const host = existing({ '/AGENTS.md': '# Mine' });
+
+      await expect(
+        runner.runSchematic<ApplicationOptions>(
+          'application',
+          { name: '.', minimal: true, type: 'esm' },
+          host,
+        ),
+      ).rejects.toThrow('  AGENTS.md\n');
+      expect(host.readText('/AGENTS.md')).toBe('# Mine');
     });
   });
 });
