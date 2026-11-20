@@ -903,7 +903,7 @@ describe('Application Factory', () => {
       expect(plain).not.toContain('<%');
     });
 
-    it('should refuse a target the installer doesn't know', async () => {
+    it('should refuse a target the installer does not know', async () => {
       await expect(
         agentsMd({ skills: ['copilot'] } as unknown as ApplicationOptions),
       ).rejects.toThrow();
