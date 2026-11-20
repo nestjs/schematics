@@ -197,6 +197,7 @@ function generate(options: ApplicationOptions, path: string): Source {
     options.spec
       ? noop()
       : filter((path) => !isTestFile(path, options.language || 'ts')),
+    forClaudeCode(options) ? noop() : filter((path) => path !== '/CLAUDE.md'),
     template({
       ...strings,
       ...options,
@@ -209,6 +210,17 @@ function generate(options: ApplicationOptions, path: string): Source {
     renameTemplateFiles(),
     move(path),
   ]);
+}
+
+/**
+ * Whether the user chose the agent skills for Claude Code. Only then does the
+ * project get a CLAUDE.md: Claude Code reads CLAUDE.md rather than AGENTS.md,
+ * and the generated one just imports AGENTS.md.
+ */
+function forClaudeCode(options: ApplicationOptions): boolean {
+  return (options.skills ?? []).some(
+    (target) => target === 'all' || target === 'claude',
+  );
 }
 
 /**
@@ -233,7 +245,11 @@ function generateMinimalSharedFiles(
 ): Source {
   return apply(url(join('./files' as Path, 'ts')), [
     filter((path) =>
-      ['/AGENTS.md', '/CLAUDE.md', '/.gitignore'].includes(path),
+      [
+        '/AGENTS.md',
+        ...(forClaudeCode(options) ? ['/CLAUDE.md'] : []),
+        '/.gitignore',
+      ].includes(path),
     ),
     template({
       ...strings,
