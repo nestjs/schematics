@@ -670,6 +670,9 @@ describe('Application Factory', () => {
       expect(agents).toContain('is two instances, each with its own state');
       expect(agents).toContain("TypeORM's `synchronize: true`");
       expect(agents).toContain('`{ suppressErrors: false }`');
+      expect(agents).toContain('so `page + 1` is `"11"`');
+      expect(agents).toContain("`@Query('page', { schema })`");
+      expect(agents).toContain('A `Scope.REQUEST` provider makes every class');
       expect(agents).toContain('`accessToken.key`');
       expect(agents).toContain('When a task says how to test, follow it.');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
@@ -739,6 +742,9 @@ describe('Application Factory', () => {
     );
     expect(esmAgents).toContain('Vitest runs them');
     expect(js).toContain('`src/main.js`');
+    // JavaScript has no type annotations to show the string in.
+    expect(js).not.toContain('page: number');
+    expect(plain).toContain("`@Query('page') page: number` holds");
     expect(js).toContain('as `*.spec.js` and the e2e test is in `test/`; Jest');
     const custom = (
       await runner.runSchematic('application', {
