@@ -58,13 +58,6 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   target.observe = target.observe ?? false;
   target.minimal = target.minimal ?? false;
   target.skills = target.skills ?? [];
-  for (const name of target.skills) {
-    if (!(name in SKILLS_TARGETS) && !(name in SKILLS_GROUPS)) {
-      throw new SchematicsException(
-        `Unknown skills target "${name}": use ${[...Object.keys(SKILLS_TARGETS), ...Object.keys(SKILLS_GROUPS)].join(', ')}, or none.`,
-      );
-    }
-  }
   if (target.minimal && target.language !== 'ts') {
     throw new SchematicsException(
       'A minimal application is TypeScript only: JavaScript needs Babel and its own entry file to run decorators, so it would not stay one file.',
@@ -133,8 +126,6 @@ function generate(options: ApplicationOptions, path: string): Source {
     template({
       ...strings,
       ...options,
-      skillsTargets: skillsTargets(options),
-      SKILLS_TARGETS,
     }),
     // `package.json` ships as `package.json.template` so that security
     // scanners walking published packages for nested manifests don't
@@ -144,26 +135,6 @@ function generate(options: ApplicationOptions, path: string): Source {
     renameTemplateFiles(),
     move(path),
   ]);
-}
-
-/**
- * The folders `npx @nestjs/skills add --agent <name>` installs the official
- * NestJS agent skills into. `nest new` runs that installer after generating
- * the project; the schematic only names the folders in AGENTS.md.
- */
-const SKILLS_TARGETS: Record<string, string> = {
-  agents: '.agents/skills',
-  claude: '.claude/skills',
-  cursor: '.cursor/skills',
-};
-const SKILLS_GROUPS: Record<string, string[]> = { all: ['agents', 'claude'] };
-
-/** The targets the `skills` option names, `all` expanded, each once. */
-function skillsTargets(options: ApplicationOptions): string[] {
-  const names = (options.skills ?? []).flatMap(
-    (name) => SKILLS_GROUPS[name] ?? [name],
-  );
-  return [...new Set(names)].sort();
 }
 
 /**
@@ -179,8 +150,6 @@ function generateMinimalSharedFiles(
     template({
       ...strings,
       ...options,
-      skillsTargets: skillsTargets(options),
-      SKILLS_TARGETS,
     }),
     move(path),
   ]);

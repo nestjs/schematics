@@ -69,11 +69,10 @@ export interface ApplicationOptions {
    */
   minimal?: boolean;
   /**
-   * Where `nest new` installs the official NestJS agent skills
-   * (`npx @nestjs/skills add --agent`), so AGENTS.md can name the folders:
-   * `agents` (`.agents/skills/`: Codex, Cursor), `claude` (`.claude/skills/`:
-   * Claude Code), `cursor` (`.cursor/skills/`), `all` (`agents` and
-   * `claude`). Empty: AGENTS.md doesn't mention skills.
+   * The targets `nest new` installed the official NestJS agent skills for
+   * (`npx @nestjs/skills add --agent`), so AGENTS.md can give the command
+   * that updates them: `agents`, `claude`, `cursor` or `all`. Empty: AGENTS.md
+   * doesn't mention skills.
    * @default []
    */
   skills?: ('all' | 'agents' | 'claude' | 'cursor')[];

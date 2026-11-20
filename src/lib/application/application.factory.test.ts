@@ -649,7 +649,7 @@ describe('Application Factory', () => {
       // The pitfalls live in the agent skills, which load when a task needs them.
       expect(agents).not.toContain('`PasswordHasher.verify(');
       expect(agents).not.toContain('`@Res({ passthrough: true })`');
-      expect(agents).toContain('`accessToken.key`');
+      expect(agents).not.toContain('`accessToken.key`');
       expect(agents).toContain('When a task says how to test, follow it.');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
       expect(agents).not.toContain('<%');
@@ -873,7 +873,7 @@ describe('Application Factory', () => {
         } as ApplicationOptions)
       ).readContent('/project/AGENTS.md');
 
-    it('should name the folders the skills are installed into', async () => {
+    it('should give the command that installed and updates the skills', async () => {
       for (const extra of [
         {},
         { language: 'js' },
@@ -881,15 +881,12 @@ describe('Application Factory', () => {
       ] as const) {
         const agents = await agentsMd({ ...extra, skills: ['all'] });
         expect(agents).toContain(
-          '`.agents/skills/` and `.claude/skills/` hold the official NestJS agent skills, installed with `npx @nestjs/skills add --agent agents,claude`, which also updates them',
+          'The official NestJS agent skills are installed with `npx @nestjs/skills add --agent all`, which also updates them',
         );
         expect(agents).not.toContain('<%');
       }
-      expect(await agentsMd({ skills: ['claude'] })).toContain(
-        '`.claude/skills/` holds the official NestJS agent skills, installed with `npx @nestjs/skills add --agent claude`',
-      );
-      expect(await agentsMd({ skills: ['all', 'agents', 'cursor'] })).toContain(
-        '`.agents/skills/` and `.claude/skills/` and `.cursor/skills/` hold',
+      expect(await agentsMd({ skills: ['claude', 'cursor'] })).toContain(
+        '`npx @nestjs/skills add --agent claude,cursor`',
       );
     });
 
@@ -902,11 +899,11 @@ describe('Application Factory', () => {
         tree.files.filter((file) => /\/\.(agents|claude|cursor)\//.test(file)),
       ).toEqual([]);
       const plain = await agentsMd();
-      expect(plain).not.toContain('skills/');
+      expect(plain).not.toContain('@nestjs/skills');
       expect(plain).not.toContain('<%');
     });
 
-    it('should refuse a target it has no folder for', async () => {
+    it('should refuse a target the installer doesn't know', async () => {
       await expect(
         agentsMd({ skills: ['copilot'] } as unknown as ApplicationOptions),
       ).rejects.toThrow();
