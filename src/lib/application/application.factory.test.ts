@@ -665,6 +665,11 @@ describe('Application Factory', () => {
         '`forRootAsync()` with `inject: [ConfigService]`',
       );
       expect(agents).toContain("`app.set('trust proxy', ...)`");
+      expect(agents).toContain('`@Res({ passthrough: true })`');
+      expect(agents).toContain('`APP_PIPE`');
+      expect(agents).toContain('is two instances, each with its own state');
+      expect(agents).toContain("TypeORM's `synchronize: true`");
+      expect(agents).toContain('`{ suppressErrors: false }`');
       expect(agents).toContain('`accessToken.key`');
       expect(agents).toContain('When a task says how to test, follow it.');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
