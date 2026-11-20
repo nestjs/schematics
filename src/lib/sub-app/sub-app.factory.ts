@@ -4,6 +4,7 @@ import {
   branchAndMerge,
   chain,
   FileEntry,
+  filter,
   mergeWith,
   move,
   noop,
@@ -78,11 +79,42 @@ export function main(options: SubAppOptions): Rule {
     applyStartProdScript(options, appName),
     (tree) => {
       (options as any).isEsm = isEsmProject(tree);
+      (options as any).skipJestE2eConfig = usesVitestWithoutJest(tree);
       return tree;
     },
     branchAndMerge(mergeWith(generate(options))),
     options.format === true ? formatFiles() : noop(),
   ]);
+}
+
+/**
+ * Whether the workspace runs its tests with Vitest and not Jest, as a project
+ * created with the ESM template does. Nothing there reads the `jest-e2e.json`
+ * of an app: the root e2e config finds every app's e2e specs. A workspace
+ * that names neither runner, or has no readable package.json, still gets it.
+ */
+function usesVitestWithoutJest(host: Tree): boolean {
+  const buffer = host.read('package.json');
+  if (!buffer) {
+    return false;
+  }
+  let packageJson: Record<string, any>;
+  try {
+    packageJson = JSON.parse(stripBom(buffer.toString()));
+  } catch {
+    return false;
+  }
+  const dependencies = {
+    ...packageJson.dependencies,
+    ...packageJson.devDependencies,
+  };
+  const scripts = Object.values(packageJson.scripts ?? {}).filter(
+    (script): script is string => typeof script === 'string',
+  );
+  const uses = (runner: string) =>
+    runner in dependencies ||
+    scripts.some((script) => new RegExp(`\\b${runner}\\b`).test(script));
+  return uses('vitest') && !uses('jest') && packageJson.jest === undefined;
 }
 
 function getAppNameFromPackageJson(): string {
@@ -591,6 +623,9 @@ function generate(options: SubAppOptions): Source {
   return (context: SchematicContext) => {
     const path = join(options.path as Path, options.name);
     return apply(url(join('./files' as Path, options.language!)), [
+      (options as any).skipJestE2eConfig
+        ? filter((filePath) => !filePath.endsWith('/test/jest-e2e.json'))
+        : noop(),
       template({
         ...strings,
         ...options,
