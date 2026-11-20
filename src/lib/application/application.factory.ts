@@ -57,7 +57,12 @@ function transform(options: ApplicationOptions): ApplicationOptions {
   // factory is invoked directly, bypassing the schema defaults.
   target.observe = target.observe ?? false;
   target.minimal = target.minimal ?? false;
-  target.skills = target.skills ?? [];
+  // `nest new` repeats a lone target (`--skills=all --skills=all`): the
+  // schematics CLI makes an array only from a repeated flag. Each name once.
+  const skills: string | string[] = target.skills ?? [];
+  target.skills = [
+    ...new Set(Array.isArray(skills) ? skills : [skills]),
+  ] as ApplicationOptions['skills'];
   if (target.minimal && target.language !== 'ts') {
     throw new SchematicsException(
       'A minimal application is TypeScript only: JavaScript needs Babel and its own entry file to run decorators, so it would not stay one file.',

@@ -888,6 +888,10 @@ describe('Application Factory', () => {
       expect(await agentsMd({ skills: ['claude', 'cursor'] })).toContain(
         '`npx @nestjs/skills add --agent claude,cursor`',
       );
+      // `nest new` repeats a lone flag so that it arrives as an array.
+      expect(await agentsMd({ skills: ['all', 'all'] })).toContain(
+        '`npx @nestjs/skills add --agent all`, which',
+      );
     });
 
     it('should not mention skills by default, and write none', async () => {
