@@ -673,6 +673,20 @@ describe('Application Factory', () => {
       expect(agents).toContain('so `page + 1` is `"11"`');
       expect(agents).toContain("`@Query('page', { schema })`");
       expect(agents).toContain('A `Scope.REQUEST` provider makes every class');
+      expect(agents).toContain(
+        '`CacheInterceptor` keys cached responses by URL',
+      );
+      expect(agents).toContain('`reflector.getAllAndOverride(KEY, [');
+      expect(agents).toContain('extends `BaseExceptionFilter`');
+      expect(agents).toContain('`users/{*path}`');
+      expect(agents).toContain("`app.set('query parser', 'extended')`");
+      expect(agents).toContain(
+        "`@Cron(expression, { timeZone: 'Europe/Paris' })`",
+      );
+      expect(agents).toContain('`forwardRef()` on both sides');
+      expect(agents).toContain('`app.enableCors()` with no options');
+      expect(agents).toContain('A shared store passed as `storage`');
+      expect(agents).toContain('a schema that coerces');
       expect(agents).toContain('`accessToken.key`');
       expect(agents).toContain('When a task says how to test, follow it.');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
@@ -744,6 +758,8 @@ describe('Application Factory', () => {
     expect(js).toContain('`src/main.js`');
     // JavaScript has no type annotations to show the string in.
     expect(js).not.toContain('page: number');
+    expect(js).not.toContain('get<number>');
+    expect(plain).toContain("`ConfigService.get<number>('PORT')`");
     expect(plain).toContain("`@Query('page') page: number` holds");
     expect(js).toContain('as `*.spec.js` and the e2e test is in `test/`; Jest');
     const custom = (
