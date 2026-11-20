@@ -538,6 +538,57 @@ describe('SubApp Factory', () => {
     },
   );
 
+  describe('the e2e config of the app', () => {
+    const runInWorkspace = async (packageJson: Record<string, unknown>) => {
+      let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create('/package.json', JSON.stringify(packageJson));
+      tree.create('/tsconfig.json', JSON.stringify({ compilerOptions: {} }));
+      tree = await runner.runSchematic('sub-app', { name: 'project' }, tree);
+      return tree.files.filter((file) =>
+        file.startsWith('/apps/project/test/'),
+      );
+    };
+
+    it('should not be generated in a workspace that tests with Vitest', async () => {
+      const files = await runInWorkspace({
+        name: 'test',
+        type: 'module',
+        scripts: {
+          test: 'vitest run',
+          'test:e2e': 'vitest run --config ./vitest.config.e2e.ts',
+        },
+        devDependencies: { vitest: '^4.1.2' },
+      });
+
+      expect(files).toEqual(['/apps/project/test/app.e2e-spec.ts']);
+    });
+
+    it('should be generated in a workspace that tests with Jest', async () => {
+      const files = await runInWorkspace({
+        name: 'test',
+        scripts: {
+          'test:e2e':
+            'node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config ./test/jest-e2e.json',
+        },
+        devDependencies: { jest: '^30.0.0' },
+      });
+
+      expect(files.sort()).toEqual([
+        '/apps/project/test/app.e2e-spec.ts',
+        '/apps/project/test/jest-e2e.json',
+      ]);
+    });
+
+    it('should be generated in a workspace that uses both runners', async () => {
+      const files = await runInWorkspace({
+        name: 'test',
+        devDependencies: { jest: '^30.0.0', vitest: '^4.1.2' },
+      });
+
+      expect(files).toContain('/apps/project/test/jest-e2e.json');
+    });
+  });
+
   it('should generate files with .js imports for ESM projects', async () => {
     let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create(
