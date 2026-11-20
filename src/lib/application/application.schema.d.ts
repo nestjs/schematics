@@ -68,4 +68,13 @@ export interface ApplicationOptions {
    * @default false
    */
   minimal?: boolean;
+  /**
+   * Where to add the official NestJS agent skills, copied from
+   * `@nestjs/skills`, as `npx @nestjs/skills add --agent` names them:
+   * `agents` (`.agents/skills/`: Codex, Cursor), `claude` (`.claude/skills/`:
+   * Claude Code), `cursor` (`.cursor/skills/`), `all` (`agents` and
+   * `claude`). An empty list adds none.
+   * @default ["all"]
+   */
+  skills?: ('all' | 'agents' | 'claude' | 'cursor')[];
 }

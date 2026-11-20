@@ -94,6 +94,15 @@
       "type": "boolean",
       "default": false,
       "description": "Generate an application whose code is one file, src/main.ts."
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["all", "agents", "claude", "cursor"]
+      },
+      "default": ["all"],
+      "description": "Where to add the official NestJS agent skills (from @nestjs/skills), as npx @nestjs/skills add --agent names them: agents (.agents/skills: Codex, Cursor), claude (.claude/skills: Claude Code), cursor (.cursor/skills), all (agents and claude). An empty list adds none."
     }
   },
   "required": ["name"]
