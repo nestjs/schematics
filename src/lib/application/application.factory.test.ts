@@ -660,6 +660,11 @@ describe('Application Factory', () => {
       );
       expect(agents).toContain('`app.enableShutdownHooks()`');
       expect(agents).toContain('`forceCloseConnections: true`');
+      expect(agents).toContain('`new ValidationPipe({ whitelist: true })`');
+      expect(agents).toContain(
+        '`forRootAsync()` with `inject: [ConfigService]`',
+      );
+      expect(agents).toContain("`app.set('trust proxy', ...)`");
       expect(agents).toContain('`accessToken.key`');
       expect(agents).toContain('When a task says how to test, follow it.');
       expect(agents).toContain('https://observe-api.nestjs.com/mcp');
