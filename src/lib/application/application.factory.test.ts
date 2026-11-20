@@ -665,6 +665,13 @@ describe('Application Factory', () => {
       'This app reports its traces, errors, logs and metrics to [NestJS Observe](https://observe.nestjs.com) through `ObserveModule` in `src/app.module.ts`.',
     );
     expect(agents).not.toContain('nothing is sent');
+    // Observe is wired but sends nothing until a person approves a link code,
+    // which an agent can start but not finish: it offers, in words that stay
+    // true once linked.
+    expect(agents).toContain(
+      "When you finish a task and the app isn't linked, say so in your final message and offer to link it. If the user agrees, run `npx @nestjs/observe link --no-browser` in the background",
+    );
+    expect(agents).toContain('Never write the keys yourself.');
 
     // Answering no to Observe leaves it out of the app, not out of the notes:
     // they say where production data goes and the one command that links it,
@@ -679,6 +686,7 @@ describe('Application Factory', () => {
       'Until `ObserveModule` is registered in `src/app.module.ts`, nothing is sent: `npx @nestjs/observe link` sets it up in one step',
     );
     expect(plain).not.toContain('This app reports its traces');
+    expect(plain).not.toContain('offer to link it');
 
     const esm: UnitTestTree = await runner.runSchematic('application', {
       name: 'project',

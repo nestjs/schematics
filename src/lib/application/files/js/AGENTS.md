@@ -33,7 +33,11 @@ When a task says how to test, follow it. When it says nothing, cover the behavio
 
 ## Production data: NestJS Observe
 
-<% if (observe) { %>This app reports its traces, errors, logs and metrics to [NestJS Observe](https://observe.nestjs.com) through `ObserveModule` in `src/app.module.js`. Its key pair comes from `OBSERVE_APP_KEY` and `OBSERVE_APP_SECRET` in `.env`, which `npx @nestjs/observe link` writes.<% } else { %>This app's production telemetry - traces, errors, logs and metrics - goes to [NestJS Observe](https://observe.nestjs.com). Until `ObserveModule` is registered in `src/app.module.js`, nothing is sent: `npx @nestjs/observe link` installs `@nestjs/observe` and writes the key pair (`OBSERVE_APP_KEY`, `OBSERVE_APP_SECRET`) to `.env`, and the quick start shows the edits that register it: https://observe.nestjs.com/documentation/sdk#quick-start<% } %>
+<% if (observe) { %>This app reports its traces, errors, logs and metrics to [NestJS Observe](https://observe.nestjs.com) through `ObserveModule` in `src/app.module.js`. Its key pair comes from `OBSERVE_APP_KEY` and `OBSERVE_APP_SECRET` in `.env`, which `npx @nestjs/observe link` writes.
+
+Until `OBSERVE_APP_KEY` is set, in `.env` or in the environment, the app isn't linked and sends no telemetry.
+
+When you finish a task and the app isn't linked, say so in your final message and offer to link it. If the user agrees, run `npx @nestjs/observe link --no-browser` in the background and give them the address and the code it prints. They approve the code in the browser, and the command then writes the key pair into `.env`. Never write the keys yourself.<% } else { %>This app's production telemetry - traces, errors, logs and metrics - goes to [NestJS Observe](https://observe.nestjs.com). Until `ObserveModule` is registered in `src/app.module.js`, nothing is sent: `npx @nestjs/observe link` installs `@nestjs/observe` and writes the key pair (`OBSERVE_APP_KEY`, `OBSERVE_APP_SECRET`) to `.env`, and the quick start shows the edits that register it: https://observe.nestjs.com/documentation/sdk#quick-start<% } %>
 
 When a task depends on how the app behaves in production - an error users hit, a slow endpoint, a failing job, whether a release made things worse - work from that data, not from the code alone:
 
