@@ -673,6 +673,9 @@ describe('Application Factory', () => {
       expect(agents).toContain('so `page + 1` is `"11"`');
       expect(agents).toContain("`@Query('page', { schema })`");
       expect(agents).toContain('A `Scope.REQUEST` provider makes every class');
+      // Since Nest 12, a gateway's request scope is its socket connection.
+      expect(agents).toContain('one instance per connected socket');
+      expect(agents).not.toContain("gateways and `@Cron()` jobs can't");
       expect(agents).toContain(
         '`CacheInterceptor` keys cached responses by URL',
       );
