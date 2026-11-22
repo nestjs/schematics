@@ -589,6 +589,23 @@ describe('SubApp Factory', () => {
     });
   });
 
+  it('should read the PORT environment variable in main.ts', async () => {
+    const tsTree: UnitTestTree = await runner.runSchematic('sub-app', {
+      name: 'project',
+    });
+    expect(tsTree.readContent('/apps/project/src/main.ts')).toContain(
+      'await app.listen(process.env.PORT ?? 3000);',
+    );
+
+    const jsTree: UnitTestTree = await runner.runSchematic('sub-app', {
+      name: 'project',
+      language: 'js',
+    });
+    expect(jsTree.readContent('/apps/project/src/main.js')).toContain(
+      'await app.listen(process.env.PORT || 3000);',
+    );
+  });
+
   it('should generate files with .js imports for ESM projects', async () => {
     let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create(
