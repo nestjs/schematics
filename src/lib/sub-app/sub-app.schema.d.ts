@@ -18,6 +18,11 @@ export interface SubAppOptions {
    */
   rootDir?: string | Path;
   /**
+   * Specifies if spec files are generated. Defaults to whether the workspace
+   * has a test runner (Jest or Vitest).
+   */
+  spec?: boolean;
+  /**
    * Specifies the file suffix of spec files.
    * @default "spec"
    */

@@ -270,6 +270,28 @@ describe('SubApp Factory', () => {
     ]);
   });
 
+  it('should root tsconfig.json at the workspace once the source folder moves', async () => {
+    const rootDirAfter = async (rootDir: string) => {
+      let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create(
+        '/tsconfig.json',
+        JSON.stringify({ compilerOptions: { rootDir }, include: ['src'] }),
+      );
+      tree = await runner.runSchematic(
+        'sub-app',
+        { name: 'project' } as SubAppOptions,
+        tree,
+      );
+      return readJson(tree, '/tsconfig.json')['compilerOptions']['rootDir'];
+    };
+
+    // What `nest new --minimal` writes.
+    expect(await rootDirAfter('./src')).toEqual('.');
+    expect(await rootDirAfter('src')).toEqual('.');
+    expect(await rootDirAfter('.')).toEqual('.');
+    expect(await rootDirAfter('./source')).toEqual('./source');
+  });
+
   it('should lint the moved apps and the libraries', async () => {
     const lint = async (script: string) => {
       let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
@@ -538,19 +560,52 @@ describe('SubApp Factory', () => {
     },
   );
 
-  describe('the e2e config of the app', () => {
-    const runInWorkspace = async (packageJson: Record<string, unknown>) => {
+  describe('the test files of the app', () => {
+    const runInWorkspace = async (
+      packageJson: Record<string, unknown>,
+      options: Partial<SubAppOptions> = {},
+      rootFiles: string[] = [],
+    ) => {
       let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
       tree.create('/package.json', JSON.stringify(packageJson));
       tree.create('/tsconfig.json', JSON.stringify({ compilerOptions: {} }));
-      tree = await runner.runSchematic('sub-app', { name: 'project' }, tree);
-      return tree.files.filter((file) =>
-        file.startsWith('/apps/project/test/'),
+      for (const file of rootFiles) {
+        tree.create(`/${file}`, 'export default {};');
+      }
+      tree = await runner.runSchematic(
+        'sub-app',
+        { name: 'project', ...options },
+        tree,
       );
+      return tree;
+    };
+    const testFiles = (tree: UnitTestTree) =>
+      tree.files
+        .filter(
+          (file) =>
+            file.startsWith('/apps/project/test/') ||
+            file.endsWith('.controller.spec.ts'),
+        )
+        .sort();
+    // What `nest new --minimal` writes: no test runner, no `@nestjs/testing`.
+    const minimalPackageJson = {
+      name: 'test',
+      type: 'module',
+      scripts: {
+        build: 'nest build',
+        start: 'nest start',
+        'start:dev': 'nest start --watch',
+        'start:prod': 'node dist/main',
+      },
+      devDependencies: {
+        '@nestjs/cli': '^12.0.0',
+        '@nestjs/schematics': '^12.0.0',
+        typescript: '^6.0.2',
+      },
     };
 
-    it('should not be generated in a workspace that tests with Vitest', async () => {
-      const files = await runInWorkspace({
+    it('should leave out the Jest e2e config in a workspace that tests with Vitest', async () => {
+      const tree = await runInWorkspace({
         name: 'test',
         type: 'module',
         scripts: {
@@ -560,32 +615,150 @@ describe('SubApp Factory', () => {
         devDependencies: { vitest: '^4.1.2' },
       });
 
-      expect(files).toEqual(['/apps/project/test/app.e2e-spec.ts']);
+      expect(testFiles(tree)).toEqual([
+        '/apps/project/src/project.controller.spec.ts',
+        '/apps/project/test/app.e2e-spec.ts',
+      ]);
     });
 
-    it('should be generated in a workspace that tests with Jest', async () => {
-      const files = await runInWorkspace({
+    it('should recognize Vitest from its config file', async () => {
+      const tree = await runInWorkspace({ name: 'test', type: 'module' }, {}, [
+        'vitest.config.ts',
+      ]);
+
+      expect(testFiles(tree)).toEqual([
+        '/apps/project/src/project.controller.spec.ts',
+        '/apps/project/test/app.e2e-spec.ts',
+      ]);
+    });
+
+    it('should include the Jest e2e config in a workspace that tests with Jest', async () => {
+      const tree = await runInWorkspace({
         name: 'test',
         scripts: {
           'test:e2e':
             'node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config ./test/jest-e2e.json',
         },
         devDependencies: { jest: '^30.0.0' },
+        jest: { rootDir: 'src', roots: ['<rootDir>/src/'] },
       });
 
-      expect(files.sort()).toEqual([
+      expect(testFiles(tree)).toEqual([
+        '/apps/project/src/project.controller.spec.ts',
         '/apps/project/test/app.e2e-spec.ts',
         '/apps/project/test/jest-e2e.json',
       ]);
+      expect(readJson(tree, '/package.json')['jest']).toEqual({
+        rootDir: '.',
+        roots: ['<rootDir>/apps/'],
+        coverageDirectory: './coverage',
+      });
+      expect(readJson(tree, '/package.json')['scripts']['test:e2e']).toEqual(
+        'node --experimental-vm-modules ./node_modules/jest/bin/jest.js --projects "./apps/nestjs-schematics/test/jest-e2e.json" "./apps/project/test/jest-e2e.json"',
+      );
     });
 
-    it('should be generated in a workspace that uses both runners', async () => {
-      const files = await runInWorkspace({
+    it('should recognize Jest from its config file', async () => {
+      const tree = await runInWorkspace({ name: 'test' }, {}, [
+        'jest.config.ts',
+      ]);
+
+      expect(testFiles(tree)).toContain('/apps/project/test/jest-e2e.json');
+    });
+
+    it('should include the Jest e2e config in a workspace that uses both runners', async () => {
+      const tree = await runInWorkspace({
         name: 'test',
         devDependencies: { jest: '^30.0.0', vitest: '^4.1.2' },
       });
 
-      expect(files).toContain('/apps/project/test/jest-e2e.json');
+      expect(testFiles(tree)).toContain('/apps/project/test/jest-e2e.json');
+    });
+
+    it('should generate none in a workspace without a test runner', async () => {
+      const tree = await runInWorkspace(minimalPackageJson);
+
+      expect(testFiles(tree)).toEqual([]);
+      expect(tree.files.filter((file) => file.includes('spec'))).toEqual([
+        '/tsconfig.spec.json',
+      ]);
+    });
+
+    it('should not add Jest options to a package.json without a test runner', async () => {
+      const tree = await runInWorkspace(minimalPackageJson);
+
+      const packageJson = readJson(tree, '/package.json');
+      expect(packageJson['jest']).toBeUndefined();
+      expect(packageJson['scripts']).toEqual({
+        ...minimalPackageJson.scripts,
+        'start:prod': 'node dist/apps/nestjs-schematics/main',
+      });
+    });
+
+    it('should generate the spec files without the Jest e2e config when asked for them in a workspace without a test runner', async () => {
+      const tree = await runInWorkspace(minimalPackageJson, { spec: true });
+
+      expect(testFiles(tree)).toEqual([
+        '/apps/project/src/project.controller.spec.ts',
+        '/apps/project/test/app.e2e-spec.ts',
+      ]);
+    });
+
+    it('should generate none when spec files are turned off', async () => {
+      const tree = await runInWorkspace(
+        { name: 'test', devDependencies: { jest: '^30.0.0' } },
+        { spec: false },
+      );
+
+      expect(testFiles(tree)).toEqual([]);
+    });
+
+    it('should not name a missing e2e config in the Jest e2e script when spec files are turned off', async () => {
+      const jestCommand =
+        'node --experimental-vm-modules ./node_modules/jest/bin/jest.js';
+      const e2eScriptAfter = async (testE2e: string) => {
+        const tree = await runInWorkspace(
+          {
+            name: 'test',
+            scripts: { 'test:e2e': testE2e },
+            devDependencies: { jest: '^30.0.0' },
+          },
+          { spec: false },
+        );
+        return readJson(tree, '/package.json')['scripts']['test:e2e'];
+      };
+
+      expect(
+        await e2eScriptAfter(`${jestCommand} --config ./test/jest-e2e.json`),
+      ).toEqual(
+        `${jestCommand} --projects "./apps/nestjs-schematics/test/jest-e2e.json"`,
+      );
+      expect(
+        await e2eScriptAfter(
+          `${jestCommand} --projects "./apps/nestjs-schematics/test/jest-e2e.json"`,
+        ),
+      ).toEqual(
+        `${jestCommand} --projects "./apps/nestjs-schematics/test/jest-e2e.json"`,
+      );
+    });
+
+    it('should generate no JavaScript spec files when they are turned off', async () => {
+      const tree = await runInWorkspace(
+        { name: 'test', devDependencies: { jest: '^30.0.0' } },
+        { spec: false, language: 'js' },
+      );
+
+      expect(
+        tree.files.filter((file) => file.startsWith('/apps/project/')).sort(),
+      ).toEqual([
+        '/apps/project/.babelrc',
+        '/apps/project/index.js',
+        '/apps/project/jsconfig.json',
+        '/apps/project/src/app.controller.js',
+        '/apps/project/src/app.module.js',
+        '/apps/project/src/app.service.js',
+        '/apps/project/src/main.js',
+      ]);
     });
   });
 
@@ -610,7 +783,11 @@ describe('SubApp Factory', () => {
     let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
     tree.create(
       '/package.json',
-      JSON.stringify({ name: 'test', type: 'module' }),
+      JSON.stringify({
+        name: 'test',
+        type: 'module',
+        devDependencies: { vitest: '^4.1.2' },
+      }),
     );
     tree.create('/tsconfig.json', JSON.stringify({ compilerOptions: {} }));
 

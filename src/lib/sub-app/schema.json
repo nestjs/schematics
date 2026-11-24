@@ -27,6 +27,10 @@
       "format": "path",
       "description": "Applications root directory."
     },
+    "spec": {
+      "type": "boolean",
+      "description": "Specifies if spec files are generated. Defaults to whether the workspace has a test runner."
+    },
     "specFileSuffix": {
       "type": "string",
       "default": "spec",
