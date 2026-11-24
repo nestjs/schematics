@@ -63,7 +63,7 @@ export function main(options: SubAppOptions): Rule {
   options = transform(options);
   return chain([
     warnAboutLegacyNestCliConfig,
-    updateTsConfig(options.path!, appName),
+    updateTsConfig(options.path!, appName, options.sourceRoot),
     updatePackageJson(options, appName),
     (tree, context) =>
       isMonorepo(tree)
@@ -201,7 +201,11 @@ function updateJsonFile<T>(
   return host;
 }
 
-function updateTsConfig(projectRoot: string, appName: string) {
+function updateTsConfig(
+  projectRoot: string,
+  appName: string,
+  sourceRoot = DEFAULT_PATH_NAME,
+) {
   return (host: Tree) => {
     if (!host.exists('tsconfig.json')) {
       return host;
@@ -217,6 +221,17 @@ function updateTsConfig(projectRoot: string, appName: string) {
         // the tsconfig location once baseUrl is gone, and dropping them would
         // wipe the aliases written by the library schematic.
         delete tsconfig.compilerOptions.baseUrl;
+        // A minimal application roots the build at its source folder, which
+        // moves into the apps folder. The project tsconfigs set their own
+        // rootDir, but the spec tsconfig would inherit this one and then
+        // cover files outside it.
+        const rootDir = tsconfig.compilerOptions.rootDir;
+        if (
+          typeof rootDir === 'string' &&
+          normalize(rootDir) === normalize(sourceRoot)
+        ) {
+          tsconfig.compilerOptions.rootDir = '.';
+        }
 
         // Convert to solution-style tsconfig
         if (!tsconfig.files) {

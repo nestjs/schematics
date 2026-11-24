@@ -270,6 +270,28 @@ describe('SubApp Factory', () => {
     ]);
   });
 
+  it('should root tsconfig.json at the workspace once the source folder moves', async () => {
+    const rootDirAfter = async (rootDir: string) => {
+      let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
+      tree.create(
+        '/tsconfig.json',
+        JSON.stringify({ compilerOptions: { rootDir }, include: ['src'] }),
+      );
+      tree = await runner.runSchematic(
+        'sub-app',
+        { name: 'project' } as SubAppOptions,
+        tree,
+      );
+      return readJson(tree, '/tsconfig.json')['compilerOptions']['rootDir'];
+    };
+
+    // What `nest new --minimal` writes.
+    expect(await rootDirAfter('./src')).toEqual('.');
+    expect(await rootDirAfter('src')).toEqual('.');
+    expect(await rootDirAfter('.')).toEqual('.');
+    expect(await rootDirAfter('./source')).toEqual('./source');
+  });
+
   it('should lint the moved apps and the libraries', async () => {
     const lint = async (script: string) => {
       let tree: UnitTestTree = new UnitTestTree(new EmptyTree());
