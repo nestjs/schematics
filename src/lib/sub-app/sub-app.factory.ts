@@ -79,7 +79,7 @@ export function main(options: SubAppOptions): Rule {
     applyStartProdScript(options, appName),
     (tree) => {
       (options as any).isEsm = isEsmProject(tree);
-      (options as any).skipJestE2eConfig = usesVitestWithoutJest(tree);
+      (options as any).testRunner = detectTestRunner(tree);
       return tree;
     },
     branchAndMerge(mergeWith(generate(options))),
@@ -87,22 +87,28 @@ export function main(options: SubAppOptions): Rule {
   ]);
 }
 
+type TestRunner = 'jest' | 'vitest' | 'none';
+
+const JEST_CONFIG = /^jest\.config\.(ts|js|mjs|cjs|json)$/;
+const VITEST_CONFIG = /^vitest\.config(\.e2e)?\.(ts|js|mts|mjs|cts|cjs)$/;
+
 /**
- * Whether the workspace runs its tests with Vitest and not Jest, as a project
- * created with the ESM template does. Nothing there reads the `jest-e2e.json`
- * of an app: the root e2e config finds every app's e2e specs. A workspace
- * that names neither runner, or has no readable package.json, still gets it.
+ * The runner the workspace tests with, read from the root package.json and
+ * config files. A project created with the CommonJS template uses Jest, one
+ * created with the ESM template uses Vitest, and one created with `--minimal`
+ * has none. Jest wins when both are named. Without a readable package.json
+ * there is nothing to go by, so the app gets the Jest setup it always had.
  */
-function usesVitestWithoutJest(host: Tree): boolean {
+function detectTestRunner(host: Tree): TestRunner | undefined {
   const buffer = host.read('package.json');
   if (!buffer) {
-    return false;
+    return undefined;
   }
   let packageJson: Record<string, any>;
   try {
     packageJson = JSON.parse(stripBom(buffer.toString()));
   } catch {
-    return false;
+    return undefined;
   }
   const dependencies = {
     ...packageJson.dependencies,
@@ -111,10 +117,15 @@ function usesVitestWithoutJest(host: Tree): boolean {
   const scripts = Object.values(packageJson.scripts ?? {}).filter(
     (script): script is string => typeof script === 'string',
   );
-  const uses = (runner: string) =>
+  const rootFiles = host.getDir('/').subfiles;
+  const uses = (runner: string, config: RegExp) =>
     runner in dependencies ||
-    scripts.some((script) => new RegExp(`\\b${runner}\\b`).test(script));
-  return uses('vitest') && !uses('jest') && packageJson.jest === undefined;
+    scripts.some((script) => new RegExp(`\\b${runner}\\b`).test(script)) ||
+    rootFiles.some((file) => config.test(file));
+  if (packageJson.jest !== undefined || uses('jest', JEST_CONFIG)) {
+    return 'jest';
+  }
+  return uses('vitest', VITEST_CONFIG) ? 'vitest' : 'none';
 }
 
 function getAppNameFromPackageJson(): string {
@@ -379,15 +390,20 @@ function updateNpmScripts(
   const testScript = scripts[defaultTestScriptName];
   const appConfig = (name: string) =>
     `"./${join(options.path as Path, name, 'test', 'jest-e2e.json')}"`;
+  // Without spec files the new app has no e2e config for Jest to run.
+  const newAppConfigs = options.spec === false ? [] : [appConfig(options.name)];
   if (testScript === `${jestCommand} --config ./test/jest-e2e.json`) {
-    scripts[defaultTestScriptName] =
-      `${jestCommand} --projects ${appConfig(defaultAppName)} ${appConfig(options.name)}`;
+    scripts[defaultTestScriptName] = [
+      `${jestCommand} --projects`,
+      appConfig(defaultAppName),
+      ...newAppConfigs,
+    ].join(' ');
   } else if (
     typeof testScript === 'string' &&
     testScript.startsWith(`${jestCommand} --projects `)
   ) {
     const config = appConfig(options.name);
-    if (!testScript.includes(config)) {
+    if (options.spec !== false && !testScript.includes(config)) {
       scripts[defaultTestScriptName] = `${testScript} ${config}`;
     }
   } else if (testScript && testScript.indexOf(options.path as string) < 0) {
@@ -622,10 +638,22 @@ function generateWorkspace(options: SubAppOptions, appName: string): Source {
 function generate(options: SubAppOptions): Source {
   return (context: SchematicContext) => {
     const path = join(options.path as Path, options.name);
+    const testRunner: TestRunner | undefined = (options as any).testRunner;
+    // The CLI asks for no spec files where `@nestjs/testing` isn't installed,
+    // as in a project created with `nest new --minimal`. Called without it,
+    // the app gets them only if the workspace has a runner to run them.
+    const spec = options.spec ?? testRunner !== 'none';
+    // Only Jest reads the e2e config: in a Vitest workspace the root e2e
+    // config already finds every app's e2e specs.
+    const jestE2eConfig =
+      spec && (testRunner === undefined || testRunner === 'jest');
     return apply(url(join('./files' as Path, options.language!)), [
-      (options as any).skipJestE2eConfig
-        ? filter((filePath) => !filePath.endsWith('/test/jest-e2e.json'))
-        : noop(),
+      spec
+        ? noop()
+        : filter((filePath) => !isTestFile(filePath, options.language!)),
+      jestE2eConfig
+        ? noop()
+        : filter((filePath) => !filePath.endsWith('/test/jest-e2e.json')),
       template({
         ...strings,
         ...options,
@@ -633,4 +661,12 @@ function generate(options: SubAppOptions): Source {
       move(path),
     ])(context);
   };
+}
+
+/** The app's spec files and its e2e folder, with the runner config in it. */
+function isTestFile(path: string, languageExtension: string): boolean {
+  return (
+    path.endsWith(`__specFileSuffix__.${languageExtension}`) ||
+    path.startsWith('/test/')
+  );
 }
