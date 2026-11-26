@@ -323,6 +323,10 @@ describe('SubApp Factory', () => {
     expect(await lint('oxlint --type-aware src/ libs/')).toEqual(
       'oxlint --type-aware apps/ libs/',
     );
+    // A path that only ends in `src/` names another folder.
+    expect(await lint('oxlint --type-aware apps/api/src/')).toEqual(
+      'oxlint --type-aware apps/api/src/',
+    );
   });
 
   it('should give spec files and libraries a tsconfig of their own', async () => {

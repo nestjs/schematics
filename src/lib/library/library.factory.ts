@@ -172,7 +172,7 @@ function updateNpmScripts(
   // The generated script names the root folders, so a library would be skipped.
   if (typeof scripts.lint === 'string') {
     scripts.lint = scripts.lint.replace(
-      /\bsrc\/( test\/)?$/,
+      /(?<=^|\s)src\/( test\/)?$/,
       `$& ${defaultSourceRoot}/`,
     );
   }

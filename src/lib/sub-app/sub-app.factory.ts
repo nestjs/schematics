@@ -391,7 +391,7 @@ function updateNpmScripts(
     const defaultSourceRoot =
       options.rootDir !== undefined ? options.rootDir : DEFAULT_APPS_PATH;
     scripts.lint = scripts.lint.replace(
-      /\bsrc\/( test\/)?( libs\/)?$/,
+      /(?<=^|\s)src\/( test\/)?( libs\/)?$/,
       `${defaultSourceRoot}/ ${DEFAULT_LIB_PATH}/`,
     );
   }
