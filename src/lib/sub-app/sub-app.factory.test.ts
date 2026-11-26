@@ -316,6 +316,13 @@ describe('SubApp Factory', () => {
     expect(await lint('eslint "{src,apps,libs,test}/**/*.ts"')).toEqual(
       'eslint "{src,apps,libs,test}/**/*.ts"',
     );
+    // A project created with --skip-tests lints `src/` only.
+    expect(await lint('oxlint --type-aware src/')).toEqual(
+      'oxlint --type-aware apps/ libs/',
+    );
+    expect(await lint('oxlint --type-aware src/ libs/')).toEqual(
+      'oxlint --type-aware apps/ libs/',
+    );
   });
 
   it('should give spec files and libraries a tsconfig of their own', async () => {

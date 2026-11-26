@@ -419,6 +419,10 @@ describe('Library Factory', () => {
     expect(await lint('oxlint --type-aware apps/ libs/')).toEqual(
       'oxlint --type-aware apps/ libs/',
     );
+    // A project created with --skip-tests lints `src/` only.
+    expect(await lint('oxlint --type-aware src/')).toEqual(
+      'oxlint --type-aware src/ libs/',
+    );
   });
 
   it('should add paths to tsconfig.json', async () => {
