@@ -22,11 +22,13 @@ export class ModuleDeclarator {
   /**
    * Constructs a new `ModuleDeclarator` instance.
    *
-   * @param imports - The `ModuleImportDeclarator` instance for handling import declarations.
+   * @param imports - An optional legacy import declarator. Injected implementations
+   * are called through `declare()`; omitting it enables alias-aware generation.
    * @param metadata - The `ModuleMetadataDeclarator` instance for handling metadata declarations.
    */
   constructor(
-    private imports: ModuleImportDeclarator = new ModuleImportDeclarator(),
+    private imports:
+      Pick<ModuleImportDeclarator, 'declare'> | undefined = undefined,
     private metadata: ModuleMetadataDeclarator = new ModuleMetadataDeclarator(),
   ) {}
 
@@ -39,7 +41,17 @@ export class ModuleDeclarator {
    */
   public declare(content: string, options: DeclarationOptions): string {
     options = this.computeSymbol(options);
-    content = this.imports.declare(content, options);
+    if (this.imports) {
+      // Explicit injection retains the original declare() extension point.
+      content = this.imports.declare(content, options);
+    } else {
+      const declaration = new ModuleImportDeclarator().declareWithSymbol(
+        content,
+        options,
+      );
+      content = declaration.content;
+      options.symbol = declaration.symbol;
+    }
     content = this.metadata.declare(content, options);
     return content;
   }
